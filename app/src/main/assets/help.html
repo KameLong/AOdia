@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="width=360,initial-scale=1">
+   <meta http-equiv="Content-Style-Type" content="text/css" />
+   <meta http-equiv="Content-Script-Type" content="text/javascript" />
+   <meta http-equiv="imagetoolbar" content="no" />
+   <meta name="description" content="" />
+   <meta name="keywords" content="" />
+   <link rel="stylesheet" href="css/common.css" type="text/css" />
+   <script type="text/javascript" src="js/jquery.js"></script>
+   <script type="text/javascript" src="js/common.js"></script>
+   <title>AOdia公式ページ</title>
+   <!--[if lt IE 7]>
+   <script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js" type="text/javascript"></script>
+   <![endif]-->
+</head>
+<style>
+img{
+display:block;
+width:100%;
+max-width:400px;
+border:1px solid #000;
+}
+.icon{
+display:inline-block;
+width:40px;
+height:40px;
+border:0px solid #000;
+
+}
+.box{
+display:inline-block;
+width:calc(100% - 50px);
+}
+</style>
+<body>
+<div id="top">
+
+   <div id="contents">
+      <div id="main">
+         <h2>AOdiaのヘルプ</h2>
+         <h4>目次</h4>
+         <ul>
+            <li><a href="#openmenu">メニューの開きかた</a>
+            <li><a href="#textsize">文字サイズの変え方</a>
+            <li><a href="#diagram1">ダイヤグラム右下のボタンについて</a>
+            <li><a href="#diagram2">ダイヤグラム上で長押しすると…</a>
+         </ul>
+         <h3>v0.9.2変更・機能追加一覧（ベータ用）</h3>
+         駅時刻表画面
+         <ul>
+            <li>駅時刻表タイトルをタッチすることにより、駅ダイアログが開くようになりました。</li>
+            <li>終着駅名の凡例を時刻表下部にもうけました</li>
+            <li>最多終着駅を無印扱いにしました</li>
+            <li>当駅終着列車の終着駅名表示を無くしました</li>
+            <li>他線直通マークを追加しました。使用条件は終着駅の次の駅で、通過もしくは経由なしであることです</li>
+         </ul>
+         ダイヤグラム画面
+         <ul>
+            <li>３＊３個ある設定ボタンがandroid4.4以下ではレイアウトが崩れる問題を修正しています</li>
+            <li>列車名、列車番号ボタンを下中央のボタンに統一しました。
+            ボタンを押すごとに列車名、列車番号の表示が切替わります。４回タッチで１巡します</li>
+         </ul>
+
+         <h3>
+            v0.9変更・機能追加一覧（ベータ用）
+         </h3>
+         メニュー画面を変更しました。
+         <ul>
+            <li>サンプルダイヤの項目を廃止し、「ダウンロードフォルダを開く」を「ファイルを開く」に変更しました。
+            <li>項目ツリー表示内にファイル名を表示しました。（現状ファイル名の英字は大文字になります）
+            <li>ダイヤ数の上限をv0.8までの5ダイヤを無制限に拡張しました。
+            <li>横長タブレット用にメニューの固定機能を設けました（設定画面より有効化）</li>
+         </ul>
+         時刻表表示画面に機能追加しました
+         <ul>
+            <li>駅通過時刻、列車名、備考の表示が可能になりました（設定画面より有効化）</li>
+            <li>秒単位時刻に対応しました（設定画面より有効化）</li>
+            <li>長押しで「駅ダイアログ」を開くことができます。</li>
+         </ul>
+         ダイヤグラム画面
+         <ul>
+            <li>ダイヤ線が描画されないのに列車番号が表示される問題を修正</li>
+            <li>ダイヤ設定ボタンに縦軸リセットボタンを追加（右下）、同時に列車名のONOFFを列車番号のONOFFと統合</li>
+         </ul>
+         駅ダイアログを作成しました
+         <ul>
+            <li>駅ダイアログは時刻表表示画面で長押しすることで開くことができます</li>
+            <li>ここから、時刻表の並び替え、「駅時刻表」の起動を行うことができます</li>
+         </ul>
+         駅時刻表を作成しました。
+         <ul>
+            <li>駅時刻表はメニュー画面の「駅時刻表」、駅ダイアログより開くことができます</li>
+         </ul>
+         <h3>現在把握している問題</h3>
+         <ul>
+            <li>ファイル名を表示すると英語の小文字が大文字になる</li>
+            <li>並び替えが発時刻基準になっているので、長時間停車駅での乗り継ぎがおかしい。</li>
+            <li>日をまたぐ（3:00をまたぐ)列車が存在すると並び替えが成り立たない</li>
+            <li>駅時刻表の表示が他の表示と比べて非常に遅い（特に表示列車数が多い時）</li>
+
+         </ul>
+         ～以下はv0.8までのヘルプがそのままになっています。ただいまヘルプ制作中～
+         <h3 id="openmenu">メニューの開き方</h3>
+         左端から右側に向かってスワイプするか、左上の横三本のメニューボタンを押すとメニューが開きます。
+         <br><img src="helpimg/menu.png">
+         <h3>OuDiaファイルの開き方</h3>
+         メニューの中に「ファイルを開く」、「ダウンロードフォルダを開く」の項目がありますので、そこから開いてください。
+         <br>
+         <br>「ファイルを開く」からはAndroid/data/com.fc2.web.kamelong/filesのフォルダが開きます。
+         <br>「ダウンロードを開く」からは端末指定のダウンロードフォルダが開きます。
+         <br>
+         <br>（＊）もしOuDiaファイルをお持ちでなければ、「ファイルを開く」からsample.oudを開いてください。
+         <h3 id="textsize">文字サイズの変え方</h3>
+         右上のメニューボタンを開き、設定を選択。<br>
+         設定画面より「文字サイズの変更」より変更できます。
+         <br>時刻表の文字サイズをダイヤグラムの文字サイズは連動しております。
+         ご注意ください。
+         <br><br>
+         <h3 id="diagram1">ダイヤグラム描画画面</h3>
+         <h5>ダイヤグラム描画画面の設定機能を追加しました。</h5>
+         <img src="helpimg/diagram1.png">
+         <br>
+         設定ボタンを押すと以下のように詳細設定項目が展開されます。<br>
+         <img src="helpimg/diagram2.png" style="border:1px solid #000S"><br>
+         詳細項目を消したいときはもう一度設定ボタンを押すと詳細項目が消えます。
+         <br>
+         <h5>各ボタンの説明</h5>
+
+         <img class="icon" src="helpimg/down.png">
+         <div class="box">
+            下りダイヤ線の表示非表示を切り替えます（デフォルト：表示）
+         </div>
+         <img class="icon" src="helpimg/up.png">
+         <div class="box">
+            上りダイヤ線の表示非表示を切り替えます（デフォルト：表示）
+         </div>
+         <img class="icon" src="helpimg/stop.png">
+         <div class="box">
+            停車駅マークの表示非表示を切り替えます（デフォルト：非表示）
+         </div><img class="icon" src="helpimg/fine.png">
+         <div class="box">
+            縦軸（時間軸）の目盛を細かくします。
+         </div>
+         <img class="icon" src="helpimg/rough.png">
+         <div class="box">
+            縦軸（時間軸）の目盛を粗くします。
+         </div>
+         <img class="icon" src="helpimg/number.png">
+         <div class="box">
+            列車番号の表示非表示を切り替えます（デフォルト：表示）
+
+         </div>
+         <img class="icon" src="helpimg/name.png">
+         <div class="box">
+            列車名の表示非表示を切り替えます（デフォルト：表示）
+         </div>
+         <br><br>
+         <img class="icon" src="helpimg/auto.png">
+         <div class="box">
+            現在時刻に赤の縦線が引かれ、赤線が中心に来るよう自動でスクロールします。
+            <br>もう一度押すと、自動スクロールを停止します（一時停止マークに変わります）。
+            <br>自動スクロールが停止した状態でこのボタンを押すと赤線が消えます。
+         </div>
+         <h5 id="diagram2">ダイヤ線の長押しで、列車時刻が表示されます</h5>
+         ダイヤグラム線を長押しすると該当列車が強調表示され、時刻が表示されます。<br><br>
+         下り列車では駅の右上に到着時刻、左下に出発時刻が表示されます。<br>
+         上り列車では駅の右下に到着時刻、左上に出発時刻が表示されます。
+         <br><br>
+         強調表示を消したいときは、強調している列車を長押しすると解除されます。
+         <img src="helpimg/diagram3.png">
+
+         for AOdia v0.8.3
+         <div id="pageTop">
+            <a href="#">ページのトップへ戻る</a>
+            <!-- /#pageTop --></div>
+         <!-- /#contents --></div>
+      <div id="footer">
+         <div class="copyright">Copyright &copy; 2016 kamelong All Rights Reserved.</div>
+         <!-- /#footer --></div>
+      <!-- /#top --></div>
+</body>
+</html>

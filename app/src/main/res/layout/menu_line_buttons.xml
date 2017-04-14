@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:gravity="center_vertical">
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/hidden"
+        android:background="@drawable/menu_hidden"
+        android:visibility="visible" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/expand"
+        android:background="@drawable/menu_expand"
+        android:visibility="visible" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/upButton"
+        android:background="@drawable/menu_up"
+        android:minWidth="0dp"
+        android:visibility="visible" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/closeButton"
+        android:background="@drawable/menu_close"
+        android:minWidth="0dip"
+        android:minHeight="0dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/TitleView"
+        android:layout_weight="1" />
+
+</LinearLayout>

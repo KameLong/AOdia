@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AOdia</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="downTimeTable"><u>下り時刻表</u></string>
+    <string name="upTimeTable"><u>上り時刻表</u></string>
+    <string name="diagram"><u>ダイヤグラム</u></string>
+</resources>

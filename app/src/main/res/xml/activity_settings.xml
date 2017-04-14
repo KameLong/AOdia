@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="全体設定">
+        <CheckBoxPreference
+            android:key="fixedMenu"
+            android:title="メニューの固定"
+            android:summary="左端にメニューが固定されます（タブレット推奨）" />
+        <EditTextPreference
+            android:key="textsize2"
+            android:title="文字サイズ"
+            android:inputType="number"
+            android:summary="文字サイズを1~99までの大きさで入力してください"
+            android:dialogTitle="文字サイズ入力"
+            android:defaultValue="30"
+            android:maxLength="2">
+        </EditTextPreference>
+        <EditTextPreference
+            android:key="height"
+            android:title="画面分割縦座標"
+            android:inputType="number"
+            android:summary="左上のウインドウの高さを入力してください(px)"
+            android:defaultValue="960"
+            android:maxLength="4">
+        </EditTextPreference>
+        <EditTextPreference
+            android:key="width"
+            android:title="画面分割横座標"
+            android:inputType="number"
+            android:summary="左上のウインドウの幅を入力してください(px)"
+            android:defaultValue="540"
+            android:maxLength="4">
+        </EditTextPreference>
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="路線時刻表設定"
+        android:enabled="true"
+        >
+        <CheckBoxPreference
+            android:key="secondSystem"
+            android:title="秒単位時刻"
+            android:summary="時刻表が秒単位になります" />
+        <CheckBoxPreference
+            android:key="showPass"
+            android:title="駅通過時刻"
+            android:defaultValue="true"
+            android:summary="通過時刻をグレーの文字で表示します" />
+        <CheckBoxPreference
+            android:key="trainName"
+            android:title="列車名"
+            android:defaultValue="true"
+            android:summary="列車名と号数を表示します" />
+        <CheckBoxPreference
+            android:key="remark"
+            android:title="備考"
+            android:defaultValue="true"
+            android:summary="備考を表示します" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="駅時刻表設定"
+        android:enabled="true"
+        >
+        <CheckBoxPreference
+            android:key="STTpass"
+            android:title="通過列車を表示"
+            android:defaultValue="false"
+            android:summary="通過列車の時刻も表示します" />
+        <CheckBoxPreference
+            android:key="endTrain"
+            android:title="当駅どまりを表示"
+            android:defaultValue="true"
+            android:summary="当駅どまりの列車を表示します" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="有料オプション購入"
+        android:enabled="true"
+        >
+        <CheckBoxPreference
+            android:key="item001"
+            android:title="（有料オプション）複数ファイルのオープンを解禁する（近日中に解禁します）"
+            android:defaultValue="false"
+            android:enabled="false"
+            android:summary="有料オプションです" />
+        <!--
+        <CheckBoxPreference
+            android:key="paymentPass"
+            android:title="変更非推奨"
+            android:defaultValue="true"
+            android:summary="（ベータ版のみ）このチェックを外すと購入操作を行うことができます" />
+        <CheckBoxPreference
+            android:key="paymentClear"
+            android:title="購入取り消し"
+            android:defaultValue="false"
+            android:enabled="false"
+            android:summary="（ベータ版のみ）未購入状態に戻します" />
+            -->
+
+    </PreferenceCategory>
+</PreferenceScreen>
