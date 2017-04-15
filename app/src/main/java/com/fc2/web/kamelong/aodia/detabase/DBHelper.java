@@ -11,9 +11,7 @@ import android.util.Log;
 
 import com.fc2.web.kamelong.aodia.SdLog;
 
-/**
- * Created by kame on 2017/01/08.
- */
+
 /*
  *     This file is part of AOdia.
 
@@ -34,10 +32,17 @@ AOdia is free software: you can redistribute it and/or modify
  * ソースコートの再利用、改変し、公開することは自由ですが、
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
- * あと、これは強制というわけではないですが、このソースコードを利用したときは、
- * 作者に一言メールなりで連絡して欲しいなと思ってます。
- * こちらが全く知らないところで使われていたりするのは、ちょっと気分悪いですよね。
- * まあ、強制はできないので、皆さんの良識におまかせします。
+ */
+
+/**
+ * @author KameLong
+ *
+ * AOdia内で用いるデータベースを管理するクラス
+ * Activityが閉じられても保持しなければならないデータはすべてこのデータベースに保存する
+ *
+ * v1.0以降データベースはaodia.dbを使用する
+ *
+ * データベースに保存するデータについてはonCreate内のコメントを参照
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DETABASE_NAME="aodia.db";
@@ -80,7 +85,10 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate( SQLiteDatabase db ) {
         try {
-            // テーブルを作成。SQLの文法は通常のSQLiteと同様
+            /*line dataのテーブルには
+            各ファイル各ダイヤの上り下り、ダイヤグラムに対するデータが入っている
+
+            */
             db.execSQL(
                     "create table "+TABLE_LINEDATA+" ("
                             +ID+ " integer primary key autoincrement not null, "

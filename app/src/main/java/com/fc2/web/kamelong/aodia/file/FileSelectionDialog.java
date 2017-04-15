@@ -51,7 +51,7 @@ public class FileSelectionDialog implements OnItemClickListener
         List<FileInfo> listFileInfo = new ArrayList<FileInfo>();
         if( null != aFile ){
             for( File fileTemp : aFile ){
-                if(fileTemp.getName().endsWith(".oud")) {
+                if(fileTemp.getName().endsWith(".oud")||fileTemp.getName().endsWith(".oud2")) {
                     String[] stationName=loadStartEndStation(fileTemp);
                     listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+fileTemp.getName(), fileTemp));
                 }

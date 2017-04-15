@@ -67,7 +67,7 @@ public class HelpFragment extends KLFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.web.fc2.com/aodia/help-v1.0.3.html");
+        helpView.loadUrl("http://kamelong.web.fc2.com/aodia/help-v1.0.4.html");
         return helpView;
     }
 }

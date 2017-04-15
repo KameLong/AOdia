@@ -43,10 +43,6 @@ AOdia is free software: you can redistribute it and/or modify
  * ソースコートの再利用、改変し、公開することは自由ですが、
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
- * あと、これは強制というわけではないですが、このソースコードを利用したときは、
- * 作者に一言メールなりで連絡して欲しいなと思ってます。
- * こちらが全く知らないところで使われていたりするのは、ちょっと気分悪いですよね。
- * まあ、強制はできないので、皆さんの良識におまかせします。
  */
 public class MenuFragment extends Fragment {
     private LinearLayout layout;
@@ -133,7 +129,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.0.3のヘルプを開く");
+            openHelp.setText("　v1.0.4のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.LEFT);
             openHelp.setOnClickListener(new View.OnClickListener() {
