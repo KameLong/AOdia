@@ -1,6 +1,5 @@
 package com.fc2.web.kamelong.aodia.stationInfo;
 
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,10 +11,8 @@ import android.widget.TextView;
 
 import com.fc2.web.kamelong.aodia.KLFragment;
 import com.fc2.web.kamelong.aodia.MainActivity;
-import com.fc2.web.kamelong.aodia.PreferenceSample;
 import com.fc2.web.kamelong.aodia.R;
 import com.fc2.web.kamelong.aodia.SdLog;
-import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.oudia.Train;
 import com.google.android.flexbox.FlexboxLayout;
 

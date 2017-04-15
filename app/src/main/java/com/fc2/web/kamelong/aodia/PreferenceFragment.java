@@ -30,7 +30,7 @@ AOdia is free software: you can redistribute it and/or modify
  * PreferenceFragmentを継承したクラス
  * 個々で定義したPreferenceのリソースを設定します
  */
-public class PreferenceSample extends PreferenceFragment {
+public class PreferenceFragment extends android.preference.PreferenceFragment {
     Payment payment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
