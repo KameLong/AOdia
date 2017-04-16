@@ -3,11 +3,8 @@ package com.fc2.web.kamelong.aodia.detabase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.Settings;
-import android.util.Log;
 
 import com.fc2.web.kamelong.aodia.SdLog;
 
@@ -87,7 +84,8 @@ public class DBHelper extends SQLiteOpenHelper {
         try {
             /*line dataのテーブルには
             各ファイル各ダイヤの上り下り、ダイヤグラムに対するデータが入っている
-
+            それぞれに対し、現在のスクロール位置
+            ダイヤグラムに対しては拡大縮小率も保存する
             */
             db.execSQL(
                     "create table "+TABLE_LINEDATA+" ("
@@ -102,13 +100,21 @@ public class DBHelper extends SQLiteOpenHelper {
                             +DIA_SCROLL_Y+ " Integer, "
                             +DIA_SCALE_X+ " Integer, "
                             +DIA_SCALE_Y+ " Integer )");
-            // 必要なら、ここで他のテーブルを作成したり、初期データを挿入したりする
+            /*
+            table app dataのテーブルには
+            最後に開いたファイル名、ダイヤ、上り時刻表か下り時刻表かダイヤグラムのどれを開いたかを記録する
+            directは下り時刻表=0、上り時刻表=1、ダイヤグラム=2
+             */
             db.execSQL(
                     "create table "+TABLE_APP_DATA+" ("
                             + ID+" Integer, "
                             + FILE_PATH+" text, "
                             + DIA_NUM+" Integer , "
                             + "direct Integer )");
+            /*
+            オープンしたファイルの履歴を保存する
+             */
+
             db.execSQL(
                     "create table "+TABLE_HISTORY+"("
                             +ID+" integer primary key autoincrement not null, "
@@ -117,14 +123,25 @@ public class DBHelper extends SQLiteOpenHelper {
                     "create table "+TABLE_PREVIEW+" ("
                             +ID+" integer primary key autoincrement not null, "
                             +FILE_PATH+ " text)");
+            /*
+            Fragmentを表示するそれぞれのFrameについて、どのFragmentが表示されていたかを保存する
+             */
+
             db.execSQL(
                     "create table "+TABLE_WINDOW+" ("
                             +ID+" integer , "
                             +WINDOW_DATA+ " text)");
+
+            //v1.0.5追記、このテーブルは使用を中止しようと考えています
             db.execSQL(
                     "create table "+TABLE_WINDOW_TYPE+" ("
                             +ID+" integer primary key autoincrement not null, "
                             +WINDOW_TYPE+ " text)");
+            /*
+            同一駅データを保存する
+            今後の　乗り継ぎ検索　に向けてのテーブル
+            現在使用されていない
+             */
             db.execSQL(
                     "create table "+TABLE_SAME_STATION+" ("
                             +ID+" integer primary key autoincrement not null, "
@@ -142,6 +159,19 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
+
+    /**
+     * 直近に開いたファイルを保存する
+     * @param filePath　直近に開いたファイル
+     * @param diaNum　開いたダイヤインデックス
+     * @param direct　開いた方向(下り時刻表=0、上り時刻表=1、ダイヤグラム=2)
+     *
+     *
+     * @see #getRecentFilePath()
+     * @see #getRecentDiaNum()
+     * @see #getRecentDirect()
+     * これらはsetRecentFileで保存したデータを読み込むためのメソッド
+     */
     public  void setRecentFile(String filePath,int diaNum,int direct){
         String[] filePathSplit=filePath.split("/");
         if(filePathSplit.length>3&&filePathSplit[filePathSplit.length-1].equals("sample.oud")){
@@ -152,11 +182,14 @@ public class DBHelper extends SQLiteOpenHelper {
         val.put(FILE_PATH,filePath);
         val.put(DIA_NUM,diaNum);
         val.put("direct",direct);
-        val.put(ID,1);
-        System.out.println(getWritableDatabase().insert(TABLE_APP_DATA,null,val));
-        System.out.println(getRecentFilePath());
-
+        val.put(ID,1);//IDを１に固定することで最新版のみデータが残るようになる
     }
+
+    /**
+     * 直近に開いたファイルを取得する
+     * @return ファイルパス
+     * @see #setRecentFile(String, int, int)
+     */
     public String getRecentFilePath(){
         try {
             Cursor cursor = getReadableDatabase().rawQuery("select * from " + TABLE_APP_DATA + " where " + ID + " =?" + ";", new String[]{"1"});
@@ -167,11 +200,23 @@ public class DBHelper extends SQLiteOpenHelper {
             return"";
         }
     }
+
+    /**
+     * 直近に開いたダイヤインデックスを取得する
+     * @return ダイヤインデックス(int)
+     * @see #setRecentFile(String, int, int)
+     */
     public int getRecentDiaNum(){
         Cursor cursor = getReadableDatabase().rawQuery("select * from "+TABLE_APP_DATA+" where "+ID+" =?"+";",new String[]{"1"});
         cursor.moveToFirst();
         return cursor.getInt(2);
     }
+
+    /**
+     * 直近に開いた方向を取得する
+     * @return (下り時刻表=0、上り時刻表=1、ダイヤグラム=2)
+     * @see #setRecentFile(String, int, int)
+     */
     public int getRecentDirect(){
         Cursor  cursor = getReadableDatabase().query(TABLE_APP_DATA,
                 null,
@@ -180,8 +225,8 @@ public class DBHelper extends SQLiteOpenHelper {
         cursor.moveToFirst();
         return cursor.getInt(3);
     }
-    /** エントリ追加 */
-    private void addNew( SQLiteDatabase db, String filepath,int diaNum ){
+
+    private void addLineData(SQLiteDatabase db, String filepath, int diaNum ){
 
         // 挿入するデータはContentValuesに格納
         for(int i=0;i<diaNum;i++){
@@ -199,23 +244,16 @@ public class DBHelper extends SQLiteOpenHelper {
             db.insert(TABLE_LINEDATA, null, val );
         }
     }
-    /** 年齢が一致するデータを検索 */
     private Cursor searchByFilePath( SQLiteDatabase db, String  filePath,int diaNum ){
-        // Cursorを確実にcloseするために、try{}～finally{}にする
         Cursor cursor = null;
         try{
-            // name_book_tableからnameとageのセットを検索する
-            // ageが指定の値であるものを検索
             cursor = db.query(TABLE_LINEDATA,
                     null,
                     "filePath = ? AND diaNum = ?", new String[]{ filePath ,""+diaNum},
                     null, null, null );
-
-            // 検索結果をcursorから読み込んで返す
             return cursor;
         }
         finally{
-            // Cursorを忘れずにcloseする
             if( cursor != null ){
 //                cursor.close();
             }
@@ -223,7 +261,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     public void addNewFile( SQLiteDatabase db,String filePath,int diaNum){
         if(searchByFilePath(db,filePath,0).getCount()==0){
-            addNew(db,filePath,diaNum);
+            addLineData(db,filePath,diaNum);
         }
     }
      public void update(SQLiteDatabase db,String filePath,int diaNum,ContentValues cv){
@@ -232,7 +270,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 各路線ファイル、各画面のスクロール位置を保存し、読みだす
+     * 各路線ファイル、各画面のスクロール位置を読みだす
      * @param db
      * @param filePath
      * @param diaNum

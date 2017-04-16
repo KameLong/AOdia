@@ -67,6 +67,7 @@ public class SdLog {
 
     }
     public static void log(Exception e){
+        e.printStackTrace();
         if(!able){
             return;
         }
@@ -74,12 +75,12 @@ public class SdLog {
             PrintWriter pw=getLogFile();
             e.printStackTrace(pw);
             pw.close();
-            e.printStackTrace();
         } catch (Exception e1) {
             e1.printStackTrace();
         }
     }
     public static void log(Object value) {
+        Log.d("null",value.toString());
         if(!able){
             return;
         }
@@ -87,7 +88,6 @@ public class SdLog {
         try {
             PrintWriter pw = getLogFile();
             pw.println(value);
-            Log.d("null",value.toString());
             for (StackTraceElement stack : Thread.currentThread().getStackTrace()) {
                 pw.println(stack);
             }
@@ -97,6 +97,7 @@ public class SdLog {
         }
     }
     public static void log(Object value1,Object value2) {
+        Log.d(""+value1,""+value2);
         if(!able){
             return;
         }
@@ -104,7 +105,6 @@ public class SdLog {
         try {
             PrintWriter pw = getLogFile();
             pw.println(value1+":"+value2);
-            Log.d(""+value1,""+value2);
             for (StackTraceElement stack : Thread.currentThread().getStackTrace()) {
                 pw.println(stack);
             }

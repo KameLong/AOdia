@@ -7,7 +7,9 @@ import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -45,6 +47,10 @@ AOdia is free software: you can redistribute it and/or modify
  * ソースコートの再利用、改変し、公開することは自由ですが、
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
+ */
+/*
+v1.0.5変更
+各ボタンの開くスピードを500msから200msに変更
  */
 public class DiagramSetting {
     public boolean downFrag;
@@ -84,6 +90,29 @@ public class DiagramSetting {
         nameFrag = true;
         numberFrag = true;
         fabDiagramVisible = false;
+        LoadChange();
+    }
+    public void SaveChange(){
+        SharedPreferences spf= PreferenceManager.getDefaultSharedPreferences(context);
+        spf.edit().putBoolean("DiagramSetting.downFrag",downFrag).apply();
+        spf.edit().putBoolean("DiagramSetting.upFrag",upFrag).apply();
+        spf.edit().putBoolean("DiagramSetting.stopFrag",stopFrag).apply();
+
+        spf.edit().putInt("DiagramSetting.numberState",numberState).apply();
+        spf.edit().putInt("DiagramSetting.verticalAxis",verticalAxis).apply();
+    }
+    public void LoadChange(){
+        try {
+            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
+            downFrag = spf.getBoolean("DiagramSetting.downFrag", downFrag);
+            upFrag = spf.getBoolean("DiagramSetting.upFrag", upFrag);
+            stopFrag = spf.getBoolean("DiagramSetting.stopFrag", stopFrag);
+            numberState = spf.getInt("DiagramSetting.numberState", numberState);
+            verticalAxis = spf.getInt("DiagramSetting.verticalAxis", verticalAxis);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
     private void buttonInit(){
         FloatingActionButton fabAuto = (FloatingActionButton) fragment.findViewById(R.id.autoScroll);
@@ -169,61 +198,61 @@ public class DiagramSetting {
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.settingFrame)
                             , PropertyValuesHolder.ofFloat( "translationX",  -fabSize ,0f)
                             , PropertyValuesHolder.ofFloat( "translationY",  -fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.upFrame)
                             , PropertyValuesHolder.ofFloat( "translationX",  -2*fabSize ,0f)
                             , PropertyValuesHolder.ofFloat( "translationY",  -2*fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabUp)
                             , PropertyValuesHolder.ofFloat( "alpha", 1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.stopFrame)
                             , PropertyValuesHolder.ofFloat( "translationX",  -fabSize ,0f)
                             , PropertyValuesHolder.ofFloat( "translationY",  -2*fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabStop)
                             , PropertyValuesHolder.ofFloat( "alpha",  1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.downFrame)
                             , PropertyValuesHolder.ofFloat( "translationY", -2*fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabDown)
                             , PropertyValuesHolder.ofFloat( "alpha", 1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.FinelyFrame)
                             , PropertyValuesHolder.ofFloat( "translationX",  -2*fabSize,0f )
                             , PropertyValuesHolder.ofFloat( "translationY", -fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabFinely)
                             , PropertyValuesHolder.ofFloat( "alpha", 1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.roughFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", -2*fabSize,0f ))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabRough)
                             , PropertyValuesHolder.ofFloat( "alpha", 1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.nameFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", -fabSize,0f ))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabFit)
                             , PropertyValuesHolder.ofFloat( "alpha",  1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.textname)
                             , PropertyValuesHolder.ofFloat( "alpha",  1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.textNumber)
                             , PropertyValuesHolder.ofFloat( "alpha",  1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabNumber)
                             , PropertyValuesHolder.ofFloat( "alpha",  1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.autoFrame)
                             , PropertyValuesHolder.ofFloat( "translationY", -fabSize,0f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.autoScroll)
                             , PropertyValuesHolder.ofFloat( "alpha", 1f,0f))
-                            .setDuration(500));
+                            .setDuration(200));
 
                     final AnimatorSet animatorSet = new AnimatorSet();
                     // リストのAnimatorを順番に実行します
@@ -232,17 +261,6 @@ public class DiagramSetting {
                     // アニメーションを開始します
                     animatorSet.start();
 
-
-
-/*                    fragment.findViewById(R.id.fabFinely).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fabRough).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fitFrame).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fabName).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fabDown).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fabStop).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.fabUp).setVisibility(View.GONE);
-                    fragment.findViewById(R.id.autoScroll).setVisibility(View.GONE);
-*/
                     fabDiagramVisible = false;
 
                 } else {
@@ -260,61 +278,61 @@ public class DiagramSetting {
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.settingFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -fabSize )
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.upFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -2*fabSize )
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -2*fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabUp)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.stopFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -fabSize )
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -2*fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabStop)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.downFrame)
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -2*fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabDown)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.FinelyFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -2*fabSize )
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabFinely)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.roughFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -2*fabSize ))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabRough)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.nameFrame)
                             , PropertyValuesHolder.ofFloat( "translationX", 0f, -fabSize ))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabFit)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.textname)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.textNumber)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.fabNumber)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.autoFrame)
                             , PropertyValuesHolder.ofFloat( "translationY", 0f, -fabSize))
-                            .setDuration(500));
+                            .setDuration(200));
                     animatorList.add(ObjectAnimator.ofPropertyValuesHolder(fragment.findViewById(R.id.autoScroll)
                             , PropertyValuesHolder.ofFloat( "alpha", 0f, 1f))
-                            .setDuration(500));
+                            .setDuration(200));
 
                     final AnimatorSet animatorSet = new AnimatorSet();
                     // リストのAnimatorを順番に実行します

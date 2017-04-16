@@ -343,6 +343,8 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.container, helpFragment);
         fragmentTransaction.commit();
         showContainer(255);
+        diaFiles.add(new OuDiaDiaFile(this,null));
+        diaFilesIndex.add(0);
 
         if (Build.VERSION.SDK_INT < 23) {
         } else {
@@ -503,7 +505,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            PreferenceFragment preference=new PreferenceFragment();
+            SettingFragment preference=new SettingFragment();
             try {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

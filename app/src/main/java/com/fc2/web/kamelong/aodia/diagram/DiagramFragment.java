@@ -326,6 +326,7 @@ public class DiagramFragment extends KLFragment {
     public void onStop(){
         int scrollX=findViewById(R.id.diagramFrame).getScrollX();
         int scrollY=findViewById(R.id.diagramFrame).getScrollY();
+        setting.SaveChange();
         super.onStop();
         try {
             DBHelper db = new DBHelper(getActivity());

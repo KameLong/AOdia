@@ -2,7 +2,7 @@ AOdia
 ====
 ##OverView
 AOdia is Japanese Android App of train diagram.
-AOdiaは鉄道ダイヤグラムに関する日本後のアンドロイドアプリです。
+AOdiaは鉄道ダイヤグラムに関する日本語のアンドロイドアプリです。
 
 ##Description
 鉄道・バスなどの時刻表の閲覧をするためのアプリです。
@@ -19,7 +19,7 @@ AndroidでOuDiaのファイルを閲覧を可能にするアプリだと思っ�
 AOdiaはFragmentを組み合わせて表示するアプリです。
 Fragmentの種類として
 +MenuFragment:メニューを表示するためのものです
-+PreferenceFragment:設定画面を表示するためのものです
++SettingFragment:設定画面を表示するためのものです
 +HelpFragment:ヘルプを表示するためのものです
 +CommentFragment:ダイヤファイル内のコメントを表示するためのものです
 +TimeTableFragment:路線時刻表を表示するためのものです
@@ -29,8 +29,9 @@ Fragmentの種類として
 
 これらのFragmentを画面内に重ねて表示します
 なお
-MenuFragmentとHelpFragment,PreferenceFragmentは他とは異なる特殊なFragmentで、
-MenuFragmentは画面左端からスワイプすることで出現し、Help-Preferenceは全画面表示のみ対応します。
+MenuFragmentとHelpFragment,SettingFragmentは他とは異なる特殊なFragmentで、
+MenuFragmentは画面左端からスワイプすることで出現し、Help-Settingは全画面表示のみ対応します。
+
 
 Fragment用の一つのサブパッケージの中には、役割の似た１つないし複数のFragmentとFragment内に用いる独自Viewが含まれています。
 

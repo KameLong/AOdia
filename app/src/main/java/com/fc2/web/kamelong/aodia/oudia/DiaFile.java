@@ -473,7 +473,7 @@ abstract public class DiaFile{
 
             //基準駅より後方から出発する列車に着いてソートを行う
             baseStation:
-            for (int station = stationNumber; station < getStationNum(); station++) {
+            for (int station = stationNumber+1; station < getStationNum(); station++) {
                 if(this.station.get(station-1).border()) {
                     for (int i = station; i > 0; i--) {
                         if (getStationName(station).equals(getStationName(i - 1))) {

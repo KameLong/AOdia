@@ -7,9 +7,9 @@ android {
         applicationId "com.fc2.web.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 38
+        versionCode 40
 
-        versionName "1.0.4"
+        versionName "1.0.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
