@@ -160,6 +160,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
+
+
     /**
      * 直近に開いたファイルを保存する
      * @param filePath　直近に開いたファイル
@@ -172,17 +174,21 @@ public class DBHelper extends SQLiteOpenHelper {
      * @see #getRecentDirect()
      * これらはsetRecentFileで保存したデータを読み込むためのメソッド
      */
-    public  void setRecentFile(String filePath,int diaNum,int direct){
-        String[] filePathSplit=filePath.split("/");
-        if(filePathSplit.length>3&&filePathSplit[filePathSplit.length-1].equals("sample.oud")){
-            return;
+    public  void setRecentFile(final String filePath,final int diaNum,final int direct){
+        try {
+            String[] filePathSplit = filePath.split("/");
+            if (filePathSplit.length > 3 && filePathSplit[filePathSplit.length - 1].equals("sample.oud")) {
+                return;
+            }
+            getWritableDatabase().delete(TABLE_APP_DATA, null, null);
+            ContentValues val = new ContentValues();
+            val.put(FILE_PATH, filePath);
+            val.put(DIA_NUM, diaNum);
+            val.put("direct", direct);
+            val.put(ID, 1);//IDを１に固定することで最新版のみデータが残るようになる
+        }catch(Exception e){
+            SdLog.log(e);
         }
-        getWritableDatabase().delete(TABLE_APP_DATA,null,null);
-        ContentValues val = new ContentValues();
-        val.put(FILE_PATH,filePath);
-        val.put(DIA_NUM,diaNum);
-        val.put("direct",direct);
-        val.put(ID,1);//IDを１に固定することで最新版のみデータが残るようになる
     }
 
     /**
@@ -207,9 +213,14 @@ public class DBHelper extends SQLiteOpenHelper {
      * @see #setRecentFile(String, int, int)
      */
     public int getRecentDiaNum(){
-        Cursor cursor = getReadableDatabase().rawQuery("select * from "+TABLE_APP_DATA+" where "+ID+" =?"+";",new String[]{"1"});
-        cursor.moveToFirst();
-        return cursor.getInt(2);
+        try {
+            Cursor cursor = getReadableDatabase().rawQuery("select * from " + TABLE_APP_DATA + " where " + ID + " =?" + ";", new String[]{"1"});
+            cursor.moveToFirst();
+            return cursor.getInt(2);
+        }catch(Exception e){
+            SdLog.log(e);
+            return 0;
+        }
     }
 
     /**
@@ -218,100 +229,177 @@ public class DBHelper extends SQLiteOpenHelper {
      * @see #setRecentFile(String, int, int)
      */
     public int getRecentDirect(){
-        Cursor  cursor = getReadableDatabase().query(TABLE_APP_DATA,
-                null,
-                null, null,
-                null, null, null);
-        cursor.moveToFirst();
-        return cursor.getInt(3);
-    }
-
-    private void addLineData(SQLiteDatabase db, String filepath, int diaNum ){
-
-        // 挿入するデータはContentValuesに格納
-        for(int i=0;i<diaNum;i++){
-            ContentValues val = new ContentValues();
-            val.put(FILE_PATH, filepath );
-            val.put(DIA_NUM ,String.valueOf(i) );
-            val.put(DOWN_SCROLL_X, 0 );
-            val.put(DOWN_SCROLL_Y, 0 );
-            val.put(UP_SCROLL_X, 0 );
-            val.put(UP_SCROLL_Y, 0 );
-            val.put(DIA_SCROLL_X, 0 );
-            val.put(DIA_SCROLL_X, 0 );
-            val.put(DIA_SCALE_X, 0 );
-            val.put(DIA_SCALE_Y, 0 );
-            db.insert(TABLE_LINEDATA, null, val );
-        }
-    }
-    private Cursor searchByFilePath( SQLiteDatabase db, String  filePath,int diaNum ){
-        Cursor cursor = null;
-        try{
-            cursor = db.query(TABLE_LINEDATA,
+        try {
+            Cursor cursor = getReadableDatabase().query(TABLE_APP_DATA,
                     null,
-                    "filePath = ? AND diaNum = ?", new String[]{ filePath ,""+diaNum},
-                    null, null, null );
-            return cursor;
+                    null, null,
+                    null, null, null);
+            cursor.moveToFirst();
+            return cursor.getInt(3);
+        }catch(Exception e){
+            SdLog.log(e);
+            return 0;
         }
-        finally{
-            if( cursor != null ){
-//                cursor.close();
-            }
-        }
-    }
-    public void addNewFile( SQLiteDatabase db,String filePath,int diaNum){
-        if(searchByFilePath(db,filePath,0).getCount()==0){
-            addLineData(db,filePath,diaNum);
-        }
-    }
-     public void update(SQLiteDatabase db,String filePath,int diaNum,ContentValues cv){
-
-       db.update(TABLE_LINEDATA,cv,"filePath = \""+filePath+"\" AND diaNum = "+diaNum,null);
     }
 
     /**
+     * line dataに新しいファイルを追加する。
+     * もしすでに同じファイルパスが登録されている場合、
+     * ダイヤ数が同じならそのままデータを再利用する
+     * ダイヤ数が異なるならデータを削除し再生成する
+     *
+     * @param filePath
+     * @param fileDiaNum
+     */
+    public void addNewFileToLineData(final String filePath,final int fileDiaNum){
+        Cursor cursor=null;
+        try {
+            cursor = getReadableDatabase().query(TABLE_LINEDATA, null, FILE_PATH + "= ?", new String[]{filePath}, null, null, null);
+            if(cursor.getCount()!=fileDiaNum){
+                getWritableDatabase().delete(TABLE_LINEDATA,FILE_PATH+"= ?",new String[]{filePath});
+                for(int i=0;i<fileDiaNum;i++){
+                    ContentValues val = new ContentValues();
+                    val.put(FILE_PATH, filePath );
+                    val.put(DIA_NUM ,String.valueOf(i) );
+                    val.put(DOWN_SCROLL_X, 0 );
+                    val.put(DOWN_SCROLL_Y, 0 );
+                    val.put(UP_SCROLL_X, 0 );
+                    val.put(UP_SCROLL_Y, 0 );
+                    val.put(DIA_SCROLL_X, 0 );
+                    val.put(DIA_SCROLL_X, 0 );
+                    val.put(DIA_SCALE_X, 0 );
+                    val.put(DIA_SCALE_Y, 0 );
+                    getWritableDatabase().insert(TABLE_LINEDATA, null, val );
+                }
+            }
+        }
+        catch(Exception e){
+            SdLog.log(e);
+
+        }
+        finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+    }
+
+    /**
+     * line deta をアップデートする
+     * これは路線時刻表のデータを更新するためのメソッド
+     * あらかじめ該当するfilePath,diaNumについてのデータを作成しておく必要がある。
+     * @see #addNewFileToLineData(String, int)
+     * @param filePath
+     * @param diaNum
+     * @param direct
+     * @param scrollX
+     * @param scrollY
+     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
+     */
+    public void updateLineData(final String filePath,final int diaNum,final int direct,final int scrollX,final int scrollY){
+        ContentValues cv=new ContentValues();
+        if(direct==0){
+            cv.put(DOWN_SCROLL_X,scrollX);
+            cv.put(DOWN_SCROLL_Y,scrollY);
+        }else{
+            cv.put(UP_SCROLL_X,scrollX);
+            cv.put(UP_SCROLL_Y,scrollY);
+        }
+        getWritableDatabase().update(TABLE_LINEDATA,cv,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum});
+    }
+    /**
+     * line deta をアップデートする
+     * これはダイヤグラムのデータを更新するためのメソッド
+     * あらかじめ該当するfilePath,diaNumについてのデータを作成しておく必要がある。
+     * @see #addNewFileToLineData(String, int)
+     * @param filePath
+     * @param diaNum
+     * @param scrollX
+     * @param scrollY
+     * @param scaleX
+     * @param scaleY
+     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
+     */
+    public void updateLineData(final String filePath,final int diaNum,final int scrollX,final int scrollY,final int scaleX,final int scaleY){
+        ContentValues cv=new ContentValues();
+        cv.put(DIA_SCROLL_X,scrollX);
+        cv.put(DIA_SCROLL_Y,scrollY);
+        cv.put(DIA_SCALE_X,scaleX);
+        cv.put(DIA_SCALE_Y,scaleY);
+        getWritableDatabase().update(TABLE_LINEDATA,cv,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum});
+    }
+
+
+    /**
      * 各路線ファイル、各画面のスクロール位置を読みだす
+     *
      * @param db
      * @param filePath
      * @param diaNum
-     * @param key
+     * @param key 方向識別　下り路線時刻表=0　上り路線時刻表=1 ダイヤグラム=2
      * @return
+     * @see #updateLineData(String, int, int, int, int)  データの保存方法
      */
     public int[] getPositionData(SQLiteDatabase db, String filePath, int diaNum, int key){
-        Cursor cursor=searchByFilePath(db,filePath,diaNum);
-        cursor.moveToFirst();
-        int[] result;
-        switch(key){
-            case 0:
-                result=new int[2];
-                result[0]=cursor.getInt(3);
-                result[1]=cursor.getInt(4);
+        Cursor cursor = null;
+        try{
+            cursor = db.query(TABLE_LINEDATA, null,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum}, null, null, null );
+            if(cursor.getCount()==0){
+                throw new Exception("no data in lineData");
+            }
+            cursor.moveToFirst();
+            int[] result;
+            switch(key){
+                case 0:
+                    result=new int[2];
+                    result[0]=cursor.getInt(3);
+                    result[1]=cursor.getInt(4);
+                    cursor.close();
+                    return result;
+                case 1:
+                    result=new int[2];
+                    result[0]=cursor.getInt(5);
+                    result[1]=cursor.getInt(6);
+                    cursor.close();
+                    return result;
+                case 2:
+                    result=new int[4];
+                    result[0]=cursor.getInt(7);
+                    result[1]=cursor.getInt(8);
+                    result[2]=cursor.getInt(9);
+                    result[3]=cursor.getInt(10);
+                    cursor.close();
+                    return result;
+                default:
+                    return null;
+            }
+        }
+        catch(Exception e){
+            switch(key){
+                case 0:
+                    return new int[]{0,0};
+                case 1:
+                    return new int[]{0,0};
+                case 2:
+                    return new int[]{0,0,0,0};
+                default:
+                    return null;
+            }
+        }
+        finally{
+            if( cursor != null ){
                 cursor.close();
-                return result;
-            case 1:
-                result=new int[2];
-                result[0]=cursor.getInt(5);
-                result[1]=cursor.getInt(6);
-                cursor.close();
-                return result;
-            case 2:
-                result=new int[4];
-                result[0]=cursor.getInt(7);
-                result[1]=cursor.getInt(8);
-                result[2]=cursor.getInt(9);
-                result[3]=cursor.getInt(10);
-                cursor.close();
-                return result;
-            default:
-                return null;
+            }
         }
     }
 
     /**
      * ファイル履歴を追加する。
      * ファイルを開いた際にファイルパスを使って呼び出す。
-     * データベースに開いたファイルが追加される。
+     * データベースに同名のファイルが記録されている場合はそれを削除したのち
+     * 引数のファイルが追加される。
      * @param filePath
+     * @see #getHistory()
      */
     public void addHistory(String filePath){
         try {
@@ -328,6 +416,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * ファイル履歴を取得する。
      *
      * @return 過去最大10件分の履歴をファイルパスの文字列にして返す。
+     * @see #addHistory(String)
      */
     public String[] getHistory(){
         String[] result;
@@ -350,10 +439,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     /**
      * 今開いているファイルをすべて記録する
-     *
+     * 複数ファイル読み込みに対応するために用意された
+     * アプリが終了されるときに呼び出される
      * @param filePaths
+     * @see #getFilePaths()
      */
-    public void memoryFilePaths(String[] filePaths){
+    public void addFilePaths(String[] filePaths){
         getWritableDatabase().delete(TABLE_PREVIEW,null,null);
 
         for(int i=0;i<filePaths.length;i++){
@@ -361,18 +452,13 @@ public class DBHelper extends SQLiteOpenHelper {
             values.put(DBHelper.FILE_PATH,filePaths[i]);
             getWritableDatabase().insert(TABLE_PREVIEW,null,values);
         }
-
-        String[] data=readFilePaths();
-        for(int i=0;i<data.length;i++){
-            System.out.println(data[i]);
-        }
-
-
     }
     /**
-     * 直前に開いていたファイルのリストを返す。
+     *　前回開いていたファイルを読み込む
+     * 　前回の復元の操作を行ったときに呼び出される
+     *
      */
-    public String[] readFilePaths(){
+    public String[] getFilePaths(){
         Cursor c = getReadableDatabase().rawQuery("select * from "+TABLE_PREVIEW+";",null);
         String[] result=new String[c.getCount()];
         c.moveToFirst();
@@ -383,12 +469,6 @@ public class DBHelper extends SQLiteOpenHelper {
         c.close();
         return result;
     }
-    /**
-     * 開いていた画面の記録（v1.0以降の多い画面用)
-     * @param windows サイズ５の文字列配列。
-     *                それぞれの文字列は識別子をハイフンで繋がれたもの
-     *
-     */
     public static final String LINE_TIME_TABLE="LineTimeTable";
     public static final String DIAGRAM="Diagram";
     public static final String STATION_TIME_TABLE="StationTimeTable";
@@ -397,6 +477,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String HELP="help";
     public static final int WINDOW_NUM=5;
 
+    /**
+     * 開いていた画面の記録（v1.0以降の多い画面用)
+     * @param windows サイズ５の文字列配列。
+     *                それぞれの文字列は識別子をハイフンで繋がれたもの
+     *                識別子については別記する
+     * @see #readWindows()
+     */
     public void saveWindows(String[] windows){
         try {
             getWritableDatabase().delete(TABLE_WINDOW, null, null);
@@ -411,6 +498,11 @@ public class DBHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @see #readWindows()  readWindowsで保存したFragment識別子を読み込む
+     * @return
+     */
     public String[] readWindows(){
         try {
             String[] result = new String[WINDOW_NUM];
@@ -426,7 +518,4 @@ public class DBHelper extends SQLiteOpenHelper {
             return new String[]{"","","","",""};
         }
     }
-
-
-
 }

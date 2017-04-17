@@ -18,9 +18,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.fc2.web.kamelong.aodia.SdLog;
 import com.fc2.web.kamelong.aodia.detabase.DBHelper;
-import com.fc2.web.kamelong.aodia.oudia.Station;
-import com.fc2.web.kamelong.aodia.oudia.Train;
-import com.fc2.web.kamelong.aodia.oudia.TrainType;
 
 public class FileSelectionDialog implements OnItemClickListener
 {
@@ -77,7 +74,7 @@ public class FileSelectionDialog implements OnItemClickListener
             @Override
             public void onClick(DialogInterface dialogInterface, int j) {
                 DBHelper db=new DBHelper(m_parent);
-                String[] fileList=db.readFilePaths();
+                String[] fileList=db.getFilePaths();
                 File[] files=new File[fileList.length];
                 for(int i=0;i<fileList.length;i++){
                     files[i]=new File(fileList[i]);

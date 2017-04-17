@@ -15,7 +15,6 @@ import com.fc2.web.kamelong.aodia.KLFragment;
 import com.fc2.web.kamelong.aodia.MainActivity;
 import com.fc2.web.kamelong.aodia.R;
 import com.fc2.web.kamelong.aodia.SdLog;
-import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.stationInfo.StationIndoDialog;
 
 /**
@@ -263,7 +262,7 @@ public class TimeTableFragment extends KLFragment {
             final LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
             cont.put(d + "ScrollX", "" + trainTimeLinear.getScrollX());
             cont.put(d + "ScrollY", "" + trainTimeLinear.getScrollY());
-            db.update(db.getWritableDatabase(), diaFile.getFilePath(), diaNumber, cont);
+            db.updateLineData( diaFile.getFilePath(), diaNumber, direct,trainTimeLinear.getScrollX(), trainTimeLinear.getScrollY());
 
         }catch(Exception e){
             SdLog.log(e);

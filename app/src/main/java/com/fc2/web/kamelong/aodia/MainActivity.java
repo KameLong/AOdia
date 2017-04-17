@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity
             filePaths[i]=diaFiles.get(diaFilesIndex.get(i)).getFilePath();
         }
         DBHelper db=new DBHelper(this);
-        db.memoryFilePaths(filePaths);
+        db.addFilePaths(filePaths);
 
         String[] windowData=new String[DBHelper.WINDOW_NUM];
         int[] ids=new int[]{R.id.container,R.id.container1,R.id.container2,R.id.container3,R.id.container4};
@@ -776,7 +776,7 @@ public class MainActivity extends AppCompatActivity
             DBHelper db=new DBHelper(this);
             db.addHistory(filePath);
 
-            db.addNewFile(db.getWritableDatabase(),filePath,dia.getDiaNum());
+            db.addNewFileToLineData(filePath,dia.getDiaNum());
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(this);
             if(spf.getBoolean("item001",false)) {
                 diaFiles.add(dia);
@@ -810,7 +810,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 if (dia == null) return;
                 db.addHistory(filePath);
-                db.addNewFile(db.getWritableDatabase(), filePath, dia.getDiaNum());
+                db.addNewFileToLineData(filePath, dia.getDiaNum());
                 diaFiles.add(dia);
                 diaFilesIndex.add(diaFiles.size() - 1);
             } catch (Exception e) {

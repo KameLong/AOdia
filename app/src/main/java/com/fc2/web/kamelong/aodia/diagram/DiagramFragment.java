@@ -15,7 +15,6 @@ import com.fc2.web.kamelong.aodia.KLFragment;
 import com.fc2.web.kamelong.aodia.MainActivity;
 import com.fc2.web.kamelong.aodia.R;
 import com.fc2.web.kamelong.aodia.SdLog;
-import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 
 /**
  * Created by kame on 2016/11/30.
@@ -330,12 +329,7 @@ public class DiagramFragment extends KLFragment {
         super.onStop();
         try {
             DBHelper db = new DBHelper(getActivity());
-            ContentValues cont = new ContentValues();
-            cont.put("diaScrollX", "" + findViewById(R.id.diagramFrame).getScrollX());
-            cont.put("diaScrollY", "" + findViewById(R.id.diagramFrame).getScrollY());
-            cont.put("diaScaleX", "" + scaleX);
-            cont.put("diaScaleY", "" + scaleY);
-            db.update(db.getWritableDatabase(),  diaFile.getFilePath(), diaNumber, cont);
+            db.updateLineData(diaFile.getFilePath(), diaNumber,findViewById(R.id.diagramFrame).getScrollX(),findViewById(R.id.diagramFrame).getScrollY(),(int)scaleY,(int)scaleY);
             db.setRecentFile(diaFile.getFilePath(),diaNumber,2);
 
         }catch(Exception e){
