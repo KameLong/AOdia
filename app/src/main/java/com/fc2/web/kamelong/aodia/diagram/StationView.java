@@ -37,6 +37,12 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
+
+/**
+ * @author KameLong
+ * ダイヤグラム表示画面において、駅名を表示するView
+ *
+ */
 public class StationView extends KLView {
     DiaFile diaFile;
     DiagramSetting setting;

@@ -646,12 +646,15 @@ AOdia is free software: you can redistribute it and/or modify
         }
     }
     public int getStopType(int station) {
+        if(station<0||station>=time.length){
+            return 5;
+        }
         long result = time[station] & 0x0F00000000000000L;
         result = result >>> 56;
         if (result < 4) {
             return (int) result;
         } else {
-            return 0;
+            return 5;
         }
     }
     public int getRequiredTime(int startStation,int endStation){
@@ -680,28 +683,40 @@ AOdia is free software: you can redistribute it and/or modify
 
     /**
      * 着時刻が存在する時trueを返す。
+     * 駅インデックスが範囲外の時はfalseを返す
      * @param station　駅インデックス
      * @return　着時刻存在フラグ
      */
     public boolean arriveExist(int station){
-        return (time[station] & 0x2000000000000000L) != 0;
+        if(station<0||station>=time.length){
+            return false;
+        }
+            return (time[station] & 0x2000000000000000L) != 0;
     }
     /**
      * 発時刻が存在する時trueを返す。
+     * 駅インデックスが範囲外の時はfalseを返す
      * @param station　駅インデックス
      * @return　発時刻存在フラグ
      */
-    public boolean departExist(int station){
+    public boolean departExist(int station) {
+        if(station<0||station>=time.length){
+            return false;
+        }
         return (time[station] & 0x1000000000000000L) != 0;
     }
     /**
      * 時刻の存在。
      * 発時刻と着時刻のどちらかが存在する時trueを返す。
+     * 駅インデックスが範囲外の時はfalseを返す
      * @param station　駅インデックス
      * @return　時刻存在フラグ
      */
 
     public boolean timeExist(int station) {
+        if(station<0||station>=time.length){
+            return false;
+        }
         return (time[station] & 0x3000000000000000L) != 0;
     }
 

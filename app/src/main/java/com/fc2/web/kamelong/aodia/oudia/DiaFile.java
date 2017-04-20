@@ -356,6 +356,26 @@ abstract public class DiaFile{
         return stationTime;
     }
     /**
+     * 始発駅からの累計最小所要時間を返します。
+     * 最小所要時間は別スレッドで計算されている場合がありますので、
+     * 計算が終了するまで、スレッドを待機させます。
+     * @return
+     */
+    public int getStationTime(int station){
+        if(station<0||station>=getStationNum()){
+            return 0;
+        }
+        while(stationTime.size()<getStationNum()){
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return stationTime.get(station);
+    }
+
+    /**
      * 時刻表を並び替える。
      * 並び替えに関しては、基準駅の通過時刻をもとに並び替えた後
      * @param diaNum 並び替え対象ダイヤ

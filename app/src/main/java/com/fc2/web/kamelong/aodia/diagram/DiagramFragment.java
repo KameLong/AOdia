@@ -1,6 +1,5 @@
 package com.fc2.web.kamelong.aodia.diagram;
 
-import android.content.ContentValues;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -325,7 +324,7 @@ public class DiagramFragment extends KLFragment {
     public void onStop(){
         int scrollX=findViewById(R.id.diagramFrame).getScrollX();
         int scrollY=findViewById(R.id.diagramFrame).getScrollY();
-        setting.SaveChange();
+        setting.saveChange();
         super.onStop();
         try {
             DBHelper db = new DBHelper(getActivity());
