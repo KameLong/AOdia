@@ -135,7 +135,7 @@ public class DiagramView extends KLView {
                         if (train.departExist(j - (1 - 2 * direct))) {
                             //一つ前の駅にも発時刻が存在する場合　最小所要時間を考慮
                             if (!train.arriveExist(j)&&
-                                    Math.abs(diaFile.getStationTime(j) - diaFile.getStationTime(j - (1 - 2 * direct))) + 30 < train.getArriveTime(j) - train.getDepartureTime(j - (1 - 2 * direct))) {
+                                    Math.abs(diaFile.getStationTime(j) - diaFile.getStationTime(j - (1 - 2 * direct))) + 60 < train.getArriveTime(j) - train.getDepartureTime(j - (1 - 2 * direct))) {
                                 //最小所要時間以上かかっているので最小所要時間を適用
                                 trainPath.add(train.getDepartureTime(j - (1 - 2 * direct)) + Math.abs(this.diaFile.getStationTime().get(j) - this.diaFile.getStationTime().get(j - (1 - 2 * direct))) + 30 - diaFile.getDiagramStartTime());
                             } else {

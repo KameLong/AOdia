@@ -54,6 +54,9 @@ import com.fc2.web.kamelong.aodia.stationInfo.StationInfoIndexFragment;
 import com.fc2.web.kamelong.aodia.timeTable.KLView;
 import com.fc2.web.kamelong.aodia.timeTable.TimeTableFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -93,6 +96,7 @@ public class MainActivity extends AppCompatActivity
     boolean chooseContainer=false;
     boolean showMiniTitle=true;
     boolean showContainer=true;
+    Payment payment;
     public IInAppBillingService mService;
     public ServiceConnection mServiceConn = new ServiceConnection() {
         @Override
@@ -116,10 +120,10 @@ public class MainActivity extends AppCompatActivity
     public ArrayList<DiaFile> diaFiles=new ArrayList<DiaFile>();
     public ArrayList<Integer> diaFilesIndex=new ArrayList<Integer>();
     MenuFragment menuFragment;
-    public DiagramSetting diagramSetting=new DiagramSetting(this);
     private boolean tabletStyle=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        payment=new Payment(this);
         String filePath="";
         int diaNum = 0;
         int direct = 0;
@@ -777,8 +781,7 @@ public class MainActivity extends AppCompatActivity
             db.addHistory(filePath);
 
             db.addNewFileToLineData(filePath,dia.getDiaNum());
-            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(this);
-            if(spf.getBoolean("item001",false)) {
+            if(payment.buyCheck("item001")) {
                 diaFiles.add(dia);
                 diaFilesIndex.add(0, diaFiles.size() - 1);
             }else{
@@ -977,6 +980,33 @@ public class MainActivity extends AppCompatActivity
                     SdLog.log(e);
                 }
                 break;
+
+            case 1001:
+                int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+                String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+
+                if (resultCode == RESULT_OK) {
+                    try {
+                        JSONObject jo = new JSONObject(purchaseData);
+                        String productId = jo.getString("productId");
+                        System.out.println(productId);
+                        SharedPreferences spf=PreferenceManager.getDefaultSharedPreferences(this);
+                        spf.edit().putBoolean("item001",true).commit();
+                        onBackPressed();
+
+                        //alert("購入成功しました");
+                        // 購入成功後すぐに消費する
+                        // use();
+                    }
+                    catch (JSONException e) {
+                        //alert("Failed to parse purchase data.");
+                        e.printStackTrace();
+                    }
+                } else {
+                    //alert("課金に失敗しました");
+                }
+
+
         }
     }
     public void killDiaFile(int index,int menuIndex){

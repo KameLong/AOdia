@@ -38,27 +38,21 @@ public class SettingFragment extends android.preference.PreferenceFragment {
         payment=new Payment(getActivity());
 
         addPreferencesFromResource(R.xml.activity_settings);
-        ((CheckBoxPreference) findPreference("item001")).setChecked(false);
-        if(true){
-            return;
-        }
+
         try {
             findPreference("item001").setOnPreferenceChangeListener(
                     new Preference.OnPreferenceChangeListener() {
                         @Override
                         public boolean onPreferenceChange(Preference preference, Object o) {
-                            if(((CheckBoxPreference)preference).isChecked()){
-                                ((CheckBoxPreference) preference).setChecked(false);
+
+                            if(payment.buyCheck("item001")){
+                                ((CheckBoxPreference) preference).setChecked(true);
+                                ((CheckBoxPreference) preference).setEnabled(false);
                             }else{
+                                payment.buy("item001");
                                 if(payment.buyCheck("item001")){
                                     ((CheckBoxPreference) preference).setChecked(true);
                                     ((CheckBoxPreference) preference).setEnabled(false);
-                                }else{
-                                    payment.buy("item001");
-                                    if(payment.buyCheck("item001")){
-                                        ((CheckBoxPreference) preference).setChecked(true);
-                                        ((CheckBoxPreference) preference).setEnabled(false);
-                                    }
                                 }
                             }
                             return false;
@@ -103,7 +97,11 @@ public class SettingFragment extends android.preference.PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        //(findPreference("item001")).setEnabled(!((CheckBoxPreference) findPreference("item001")).isChecked());
+        /*
+        ((CheckBoxPreference)findPreference("item001")).setChecked(false);
+        ((CheckBoxPreference)findPreference("item001")).setEnabled(true);
+        */
+        (findPreference("item001")).setEnabled(!((CheckBoxPreference) findPreference("item001")).isChecked());
     }
     @Override
     public void onStop(){

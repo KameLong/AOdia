@@ -186,6 +186,8 @@ public class DBHelper extends SQLiteOpenHelper {
             val.put(DIA_NUM, diaNum);
             val.put("direct", direct);
             val.put(ID, 1);//IDを１に固定することで最新版のみデータが残るようになる
+            getWritableDatabase().insert(TABLE_APP_DATA,null,val);
+
         }catch(Exception e){
             SdLog.log(e);
         }

@@ -76,11 +76,10 @@ public class Payment {
             }
             // BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED
             else if(response == 7){
-                alert("既に同じものを購入している");
+                alert("既に購入している");
             }
         } catch(Exception e) {
             e.printStackTrace();
-            alert("購入を完了しました");
         }
     }
     public void alert(String str){
@@ -158,7 +157,8 @@ public class Payment {
                 return false;
             }
         }catch(Exception e) {
-            alert("購入チェック時にエラーが発生しました");
+            e.printStackTrace();
+//            alert("購入チェック時にエラーが発生しました");
         }
         return false;
     }
