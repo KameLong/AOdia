@@ -5,11 +5,11 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.fc2.web.kamelong.aodia"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 25
-        versionCode 42
+        versionCode 36
 
-        versionName "1.1.1"
+        versionName "1.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
