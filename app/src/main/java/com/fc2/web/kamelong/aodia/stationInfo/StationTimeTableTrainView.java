@@ -1,13 +1,9 @@
 package com.fc2.web.kamelong.aodia.stationInfo;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -77,6 +73,6 @@ public class StationTimeTableTrainView extends LinearLayout implements View.OnCl
         if(fileNum<0){
             return;
         }
-        ((MainActivity)getContext()).openTrainTime(fileNum,diaNum,direct,trainNum);
+        ((MainActivity)getContext()).openLineTimeTable(fileNum,diaNum,direct,trainNum);
     }
 }

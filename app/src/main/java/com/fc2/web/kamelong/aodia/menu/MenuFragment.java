@@ -44,6 +44,13 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
+
+/**
+ * メニューを表示するFragment.
+ * LinearLayout内にButtonを配置することでメニューを構成する
+ *
+ *
+ */
 public class MenuFragment extends Fragment {
     private LinearLayout layout;
     private ArrayList<DiaFile>diaFiles;
@@ -95,7 +102,7 @@ public class MenuFragment extends Fragment {
             openFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openFile();
+                    activity.openFileDialog();
                 }
             });
             layout.addView(openFile);
@@ -129,7 +136,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.1.0のヘルプを開く");
+            openHelp.setText("　v1.1.1のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.LEFT);
             openHelp.setOnClickListener(new View.OnClickListener() {

@@ -34,6 +34,11 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
+
+/**
+ * メニューの各路線内の「上り時刻表」「下り時刻表」「ダイヤグラム」に使われるButton
+ * 毎回setOnClickListenerをするのがめんどくさいからfileNumber,diaNumber,fragmetnNumberを使って先に定義してしまった
+ */
 public class MenuButton extends Button {
     public int fileNumber;
     public int diaNumber;

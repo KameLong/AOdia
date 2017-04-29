@@ -1,10 +1,8 @@
 package com.fc2.web.kamelong.aodia;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceFragment;
 /*
  *     This file is part of AOdia.
 
@@ -106,7 +104,7 @@ public class SettingFragment extends android.preference.PreferenceFragment {
     @Override
     public void onStop(){
         try {
-            ((MainActivity)getActivity()).setting();
+            ((MainActivity)getActivity()).onCloseSetting();
             //Intent intent = new Intent();
             //intent.setClass(getActivity(), getActivity().getClass());
             //getActivity().startActivity(intent);

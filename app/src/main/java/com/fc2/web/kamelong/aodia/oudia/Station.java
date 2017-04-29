@@ -234,6 +234,13 @@ public class Station {
             case "Jikokukeisiki_KudariChaku":
                 setTimeShow(SHOW_KUDARITYAKU);
                 break;
+            case "Jikokukeisiki_KudariHatsuchaku":
+                setTimeShow(7);
+                break;
+            case "Jikokukeisiki_NoboriHatsuchaku":
+                setTimeShow(13);
+                break;
+
             case "0":
                 setTimeShow(SHOW_HATU);
                 break;

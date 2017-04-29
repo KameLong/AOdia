@@ -230,7 +230,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/dragLayuout"
+        android:id="@+id/sizeChangeLayuout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#AAFFFFFF"

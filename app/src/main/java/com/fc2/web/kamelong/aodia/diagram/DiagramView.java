@@ -65,9 +65,17 @@ public class DiagramView extends KLView {
     //削るべき
     //private ArrayList<Integer>stationTime=new ArrayList<Integer>();
     private int diaNum=0;
+    /**
+     * ダイヤグラム画面のスケールサイズ
+     * １分当たりのピクセル数で定義しています
+     */
     public  float scaleX =15;
     public  float scaleY =42;
 
+    /**
+     * ダイヤグラムに表示する列車のリスト
+     * DiaFile内で順番が変更されることを考慮し、配列に取得しています。
+     */
     ArrayList<Train>[]trainList=new ArrayList[2];
     /**
      * ダイヤグラム描画に用いるパス
@@ -75,12 +83,23 @@ public class DiagramView extends KLView {
      * diagramPath[1]は上りダイヤ
      * diagrampath[x].get(i)には、１列車のダイヤグラム描画パスがArrayListで入っている
      * このArrayListには描画する線の数*4個のIntegerが入っており、
-     * (startX,startY,endX,endY)の４つの値が入っている
+     * １つの線当たり(startX,startY,endX,endY)の４つの値が入っている
      *
      */
     ArrayList<ArrayList<Integer>>[] diagramPath=new ArrayList[2];
+    /**
+     * 停車マークを描画する点
+     * １つのマーク当たり(xPoint,yPoint)の２つの値が追加される
+     */
     ArrayList<Integer>[] stopMark=new ArrayList[2];
 
+
+    /**
+     * 強調表示されている列車
+     * この列車を太線で表示する
+     *
+     * ダイヤグラム画面内を長押しすることで近くにあるダイヤ線の列車が強調表示に切り替わります
+     */
     private Train focsTrain=null;
     private float defaultLineSize=1;
     DiagramView(Context context){
@@ -167,9 +186,10 @@ public class DiagramView extends KLView {
                         }
                     }else{
                         if(drawable&&train.getStopType(j)==Train.STOP_TYPE_PASS&&train.getStopType(j + (1 - 2 * direct))==Train.STOP_TYPE_NOVIA&&!train.timeExist(j)){
-                            if(train.getPredictionTime(j)<0){
 
+                            if(train.getPredictionTime(j)<0){
                             }else{
+                                //この次の駅から経由なしになるとき
                                 trainPath.add(train.getPredictionTime(j)-diaFile.getDiagramStartTime());
                                 trainPath.add(this.diaFile.getStationTime().get(j));
                                 drawable=false;
@@ -179,15 +199,15 @@ public class DiagramView extends KLView {
                             if(train.getPredictionTime(j)<0){
 
                             }else{
+                                //この前の駅めで経由なしのとき
                                 trainPath.add(train.getPredictionTime(j)-diaFile.getDiagramStartTime());
                                 trainPath.add(this.diaFile.getStationTime().get(j));
                                 drawable=true;
                             }
                         }
-
-
                     }
                     if(train.departExist(j)){
+                        //停車時間を描画する
                         trainPath.add((train.getDepartureTime(j)- diaFile.getDiagramStartTime()));
                         trainPath.add( this.diaFile.getStationTime().get(j) );
                         if(drawable) {
@@ -212,6 +232,7 @@ public class DiagramView extends KLView {
                                     j!=train.getStartStation(0)&&
                                     j!=train.getEndStation(0)&&
                                     trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
+                                //始発終着駅を除き　停車マークを用意する
                                 stopMark[direct].add(trainPath.get(trainPath.size() - 4));
                                 stopMark[direct].add(trainPath.get(trainPath.size() - 3));
                             }
@@ -230,9 +251,6 @@ public class DiagramView extends KLView {
 
             }
         }
-
-
-
     }
     DiagramView(Context context,DiagramSetting s, DiaFile dia,int num){
         this(context);
@@ -392,6 +410,13 @@ public class DiagramView extends KLView {
             SdLog.log(e);
         }
     }
+
+    /**
+     * 時間軸を描画する
+     * DiagramSettingのverticalAxicsの値によってダイヤ線のスタイルが異なる
+     * @see DiagramSetting#verticalAxis
+     * @param canvas
+     */
     private void drawAxis(Canvas canvas){
         //通常線
         Paint paint = new Paint();
@@ -542,6 +567,13 @@ public class DiagramView extends KLView {
         }
 
     }
+
+    /**
+     * 列車番号・列車名を描画する
+     * ダイヤ線の傾きに合わせて描画する
+     * 上り列車、下り列車で描画する場所が違うので注意
+     * @param canvas
+     */
     private void drawTrainNumber(Canvas canvas){
         for(int direct=0;direct<2;direct++){
             if((direct==0&&setting.downFrag)||(direct==1&&setting.upFrag)) {
@@ -554,19 +586,23 @@ public class DiagramView extends KLView {
                         }
                     }
                     if(pathNum<0)continue;
+                    //列車番号を表示する部分のダイヤ線の座標を取得
                     int x1=(int)(diagramPath[direct].get(i).get(pathNum)*scaleX/60);
                     int y1=(int)(diagramPath[direct].get(i).get(pathNum+1)*scaleY/60);
                     int x2=(int)(diagramPath[direct].get(i).get(pathNum+2)*scaleX/60);
                     int y2=(int)(diagramPath[direct].get(i).get(pathNum+3)*scaleY/60);
                     canvas.save();
                     double rad=Math.atan2((double)(y2-y1),(double)(x2-x1));
+                    //canvasを回転して
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
+                    //列車番号を描画
                     textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getDiaColor());
                     if(focsTrain==null||focsTrain==trainList[direct].get(i)){
                         textPaint.setAlpha(255);
                     }else{
                         textPaint.setAlpha(100);
                     }
+                    //textに表示したい文字列を代入
                     String text="";
                     if(setting.numberFrag){
                         if(trainList[direct].get(i).getNumber().length()>0) {
@@ -581,11 +617,13 @@ public class DiagramView extends KLView {
                             text = text + trainList[direct].get(i).getCount();
                         }
                     }
+                    //文字列を描画
                     if(rad>0) {
                         canvas.drawText(text, x1 + (int) (textPaint.getTextSize() / Math.tan(rad)), y1 - textPaint.getTextSize() / 6, textPaint);
                     }else{
                         canvas.drawText(text, x1+(int) (textPaint.getTextSize()), y1 - textPaint.getTextSize() / 6, textPaint);
                     }
+                    //canvasの回転をもとに戻す
                     canvas.restore();
 
                 }
@@ -593,6 +631,10 @@ public class DiagramView extends KLView {
         }
     }
 
+    /**
+     * 現在時刻の線を描画する
+     * @param canvas
+     */
     private void drawNowTime(Canvas canvas){
         if(setting.autoScrollState==0){
             return;
@@ -606,6 +648,7 @@ public class DiagramView extends KLView {
         if(nowTime>24*60*60){
             nowTime=nowTime-24*60*60;
         }
+        //これによりnowTimeに現在時刻が入った（秒単位）
         Paint paint=new Paint();
         paint.setColor(Color.argb(255,255,0,0));
         paint.setStrokeWidth(defaultLineSize*1.0f);
@@ -613,7 +656,11 @@ public class DiagramView extends KLView {
         canvas.drawLine(nowTime*scaleX/60,0,nowTime*scaleX/60, diaFile.getStationTime().get(diaFile.getStationNum() - 1)* scaleY / 60,paint);
     }
     /**
-     * ダイヤグラム内の特定の列車をフォーカスする。
+     * フォーカスする列車を選択する。
+     * ダイヤグラム画面内を長押しすることで実行する。
+     * @see #focsTrain フォーカスする列車
+     *
+     * これらのパラメーターは、DiagramViewの左上を基準とした座標
      * @param x
      * @param y
      */
@@ -671,11 +718,29 @@ public class DiagramView extends KLView {
         }
 
     }
+
+    /**
+     * DiagramViewのスケールを変更する
+     * 同時にStationView,TimeViewのスケールも変更すること
+     * @param x
+     * @param y
+     *
+     * @see StationView#setScale(float, float)
+     * @see TimeView#setScale(float, float)
+     */
     public void setScale(float x,float y){
         scaleX =x;
         scaleY =y;
         this.layout(0,0, getXsize(),getYsize());
     }
+
+    /**
+     * onMesureをオーバーライドすることで
+     * このViewのサイズを設定する
+     * @see KLView#onMeasure(int, int)
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if(MeasureSpec.getSize(heightMeasureSpec)>getYsize()){
@@ -686,20 +751,51 @@ public class DiagramView extends KLView {
     }
 
 
+    /**
+     * このViewの実際の描画範囲のサイズ
+     * @return
+     */
     public int getmHeight(){
         return getYsize();
     }
+    /**
+     * このViewの実際の描画範囲のサイズ
+     * @return
+     */
+
     public int getmWidth(){
         return getXsize();
     }
+    /**
+     * このViewの実際の描画範囲のサイズ
+     * @return
+     */
+
     protected int getXsize(){
         return (int)(1440* scaleX);
     }
+    /**
+     * このViewの実際の描画範囲のサイズ
+     * @return
+     */
+
     protected int getYsize(){
         return (int)(diaFile.getStationTime().get(diaFile.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4);
     }
 
 
+    /**
+     * 破線を描画する
+     * canvas.drawLineと同様の使い方ができると考えてよい
+     * @param canvas
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param dash1
+     * @param dash2
+     * @param paint
+     */
     private void drawDashLine(Canvas canvas,float x1,float y1,float x2,float y2,float dash1,float dash2,Paint paint){
         float x=(x2-x1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
         float y=(y2-y1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
@@ -714,11 +810,34 @@ public class DiagramView extends KLView {
         }
 
     }
+
+    /**
+     * 配列を用いてdrawDashLineを実行する
+     * @param canvas
+     * @param list
+     * @param dash1
+     * @param dash2
+     * @param paint
+     *
+     * @see #drawDashLine(Canvas, float, float, float, float, float, float, Paint)
+     */
     private void drawDashLines(Canvas canvas,float[] list,float dash1,float dash2,Paint paint){
         for(int i=0;i<list.length/4;i++){
             drawDashLine(canvas,list[4*i+0],list[4*i+1],list[4*i+2],list[4*i+3],dash1,dash2,paint);
         }
     }
+
+    /**
+     * 点線を描画する
+     * canvas.drawLineと同様の使い方ができると考えてよい
+
+     * @param canvas
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param paint
+     */
     private void drawDotLine(Canvas canvas,float x1,float y1,float x2,float y2,Paint paint){
         float x=(x2-x1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
         float y=(y2-y1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
@@ -732,11 +851,32 @@ public class DiagramView extends KLView {
             canvas.drawPoint(x1 + (loop) * x * i, y1 + (loop) * y * i, paint);
         }
     }
+    /**
+     * 配列を用いてdrawDotLineを実行する
+     * @param canvas
+     * @param list
+     * @param paint
+     *
+     * @see #drawDotLine(Canvas, float, float, float, float, Paint)
+     */
     private void drawDotLines(Canvas canvas,float[] list,Paint paint){
         for(int i=0;i<list.length/4;i++){
             drawDotLine(canvas,list[4*i+0],list[4*i+1],list[4*i+2],list[4*i+3],paint);
         }
     }
+
+    /**
+     * 一点鎖線を描画する
+     * canvas.drawLineと同様の使い方ができると考えてよい
+     * @param canvas
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param chain
+     * @param space
+     * @param paint
+     */
     private void drawChainLine(Canvas canvas,float x1,float y1,float x2,float y2,float chain,float space,Paint paint){
         float x=(x2-x1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
         float y=(y2-y1)/(float)Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
@@ -746,6 +886,17 @@ public class DiagramView extends KLView {
             canvas.drawPoint(x1+(loop*i+chain+space)*x,y1+(loop*i+chain+space)*y,paint);
         }
     }
+
+    /**
+     * drawChainLineを配列を用いて描画する
+     * @param canvas
+     * @param list
+     * @param chain
+     * @param space
+     * @param paint
+     *
+     * @see #drawChainLine(Canvas, float, float, float, float, float, float, Paint)
+     */
     private void drawChainLines(Canvas canvas,float[] list,float chain,float space,Paint paint){
         for(int i=0;i<list.length/4;i++){
             drawChainLine(canvas,list[4*i+0],list[4*i+1],list[4*i+2],list[4*i+3],chain,space,paint);

@@ -38,6 +38,11 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
+
+/**
+ * １つのダイヤファイルについてメニューを構築する。
+ * 全てのボタンは１つのLinearLayout内に含まれる
+ */
 public class LineMenu  extends LinearLayout{
     LinearLayout lineButtonLinear;
     LinearLayout lineContLinear;

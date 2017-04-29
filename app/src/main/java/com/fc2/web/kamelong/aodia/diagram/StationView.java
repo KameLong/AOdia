@@ -41,6 +41,9 @@ AOdia is free software: you can redistribute it and/or modify
 /**
  * @author KameLong
  * ダイヤグラム表示画面において、駅名を表示するView
+ * scaleサイズに合わせて、駅間距離を調整する
+ *
+ * 駅間距離は最小所要時間に比例するようにする
  *
  */
 public class StationView extends KLView {
@@ -63,18 +66,22 @@ public class StationView extends KLView {
     @Override
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
+        final float defaultLineSize=getResources().getDisplayMetrics().densityDpi / 160f;
+
+
         textPaint.setColor(Color.BLACK);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200,200,200));
-        paint.setStrokeWidth(4);
+        paint.setStrokeWidth(defaultLineSize);
         canvas.drawLine(getWidth()-2, 0,getWidth()-2, stationTime.get(diaFile.getStationNum()-1) * scaleY / 60+(int)textPaint.getTextSize(), paint);
         for(int i=0;i< diaFile.getStationNum();i++){
+            //主要駅なら太字にする
             if(diaFile.getStation(i).getBigStation()){
-                paint.setStrokeWidth(4);
+                paint.setStrokeWidth(defaultLineSize);
             }else{
-                paint.setStrokeWidth(2);
+                paint.setStrokeWidth(defaultLineSize*0.5f);
             }
             canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize(),1440* scaleX,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize(),paint);
             canvas.drawText(diaFile.getStationName(i),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6,textPaint);

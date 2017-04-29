@@ -125,7 +125,7 @@ public class FileSelectionDialog implements OnItemClickListener
             result[0]="";
             result[1]="";
             FileInputStream is = new FileInputStream(file);
-            if (file.getPath().endsWith(".oud")) {
+            if (file.getPath().endsWith(".oud")||file.getPath().endsWith(".oud2")) {
                 InputStreamReader filereader = new InputStreamReader(is, "SJIS");
                 BufferedReader br = new BufferedReader(filereader);
                 String line = "";

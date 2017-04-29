@@ -31,6 +31,12 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
+
+/**
+ * @author KameLong
+ * TimeViewはダイヤグラム画面上部の時刻表示の部分に使われます。
+ * ダイヤ線が細かい時は分単位まで表示する
+ */
 public class TimeView extends KLView {
     public  float scaleX =15;
     public  float scaleY =42;
@@ -45,6 +51,8 @@ public class TimeView extends KLView {
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
         textPaint.setColor(Color.BLACK);
+        //時間軸表示に合わせて描画する内容を切り替える
+        //隣の文字との間隔が狭くなる時は一部の表示を無くすことで文字がかぶらないようにする
         switch(setting.veriticalAxis()){
             case 0:
                 for(int i=0;i<24;i++){
