@@ -31,7 +31,7 @@ public class FileSelectionDialog implements OnItemClickListener
     // コンストラクタ
     public FileSelectionDialog( Context context, OnFileSelectListener listener ){
         m_parent = context;
-        m_listener = (OnFileSelectListener)listener;
+        m_listener =listener;
     }
 
     // ダイアログの作成と表示
@@ -45,14 +45,14 @@ public class FileSelectionDialog implements OnItemClickListener
         listview.setOnItemClickListener( this );
         // ファイルリスト
         File[] aFile = fileDirectory.listFiles();
-        List<FileInfo> listFileInfo = new ArrayList<FileInfo>();
+        List<FileInfo> listFileInfo = new ArrayList<>();
         if( null != aFile ){
             for( File fileTemp : aFile ){
                 if(fileTemp.getName().endsWith(".oud")||fileTemp.getName().endsWith(".oud2")) {
                     String[] stationName=loadStartEndStation(fileTemp);
                     listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+fileTemp.getName(), fileTemp));
                 }
-                if(fileTemp.isDirectory()) {
+                if(fileTemp.isDirectory()||fileTemp.getName().endsWith(".ZIP")) {
                     listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
                 }
 
@@ -108,7 +108,7 @@ public class FileSelectionDialog implements OnItemClickListener
 
         FileInfo fileinfo = m_fileinfoarrayadapter.getItem( position );
 
-        if( true == fileinfo.getFile().isDirectory() ) {
+        if(fileinfo.getFile().isDirectory() ) {
             show( fileinfo.getFile() );
         }
         else{
@@ -118,7 +118,7 @@ public class FileSelectionDialog implements OnItemClickListener
 
 
     }
-    public String[] loadStartEndStation(File file) {
+    private String[] loadStartEndStation(File file) {
 
         try {
             String[] result=new String[2];
@@ -128,7 +128,7 @@ public class FileSelectionDialog implements OnItemClickListener
             if (file.getPath().endsWith(".oud")||file.getPath().endsWith(".oud2")) {
                 InputStreamReader filereader = new InputStreamReader(is, "SJIS");
                 BufferedReader br = new BufferedReader(filereader);
-                String line = "";
+                String line;
                 while ((line = br.readLine()) != null) {
                     if (line.equals("Eki.")) {
                         while (!line.equals(".")) {
@@ -154,7 +154,7 @@ public class FileSelectionDialog implements OnItemClickListener
             return new String[]{"", ""};
         }
     }
-    public void showHistory(){
+    private void showHistory(){
         // タイトル
         String strTitle = "履歴";
         // リストビュー
@@ -168,7 +168,7 @@ public class FileSelectionDialog implements OnItemClickListener
         for(int i=0;i<fileHistory.length;i++){
             aFile[i]=new File(fileHistory[i]);
         }
-        List<FileInfo> listFileInfo = new ArrayList<FileInfo>();
+        List<FileInfo> listFileInfo = new ArrayList<>();
         if( null != aFile ){
             for( File fileTemp : aFile ){
                 if(fileTemp.getName().endsWith(".oud")) {

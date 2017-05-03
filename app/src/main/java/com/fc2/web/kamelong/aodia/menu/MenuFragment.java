@@ -20,9 +20,6 @@ import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 
 import java.util.ArrayList;
 
-/**
- * Created by kame on 2017/01/23.
- */
 /*
  *     This file is part of AOdia.
 
@@ -65,9 +62,7 @@ public class MenuFragment extends Fragment {
         activity=(MainActivity) getActivity();
         diaFiles=activity.diaFiles;
             diaFilesIndex=activity.diaFilesIndex;
-            View v = inflater.inflate(R.layout.menu, container, false);
-
-            return v;
+            return inflater.inflate(R.layout.menu, container, false);
         }catch(Exception e){
             SdLog.log(e);
         }
@@ -97,7 +92,7 @@ public class MenuFragment extends Fragment {
             Button openFile = new Button(activity);
             openFile.setText("　ファイルを開く");
             openFile.setBackgroundColor(Color.TRANSPARENT);
-            openFile.setGravity(Gravity.LEFT);
+            openFile.setGravity(Gravity.START);
             //fileOpenLayout.addView(openFile);
             openFile.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,7 +105,7 @@ public class MenuFragment extends Fragment {
             Button connectNetgram = new Button(activity);
             connectNetgram.setText("　ネットグラムにアクセス");
             connectNetgram.setBackgroundColor(Color.TRANSPARENT);
-            connectNetgram.setGravity(Gravity.LEFT);
+            connectNetgram.setGravity(Gravity.START);
             //fileOpenLayout.addView(openFile);
             connectNetgram.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,7 +120,7 @@ public class MenuFragment extends Fragment {
 
             resetButton.setText("　内部データを初期化する");
             resetButton.setBackgroundColor(Color.TRANSPARENT);
-            resetButton.setGravity(Gravity.LEFT);
+            resetButton.setGravity(Gravity.START);
             //fileOpenLayout.addView(openFile);
             resetButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -136,9 +131,9 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.1.1のヘルプを開く");
+            openHelp.setText("　v1.1.2のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
-            openHelp.setGravity(Gravity.LEFT);
+            openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

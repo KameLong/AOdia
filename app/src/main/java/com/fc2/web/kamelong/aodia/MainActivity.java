@@ -37,6 +37,7 @@ import com.fc2.web.kamelong.aodia.menu.MenuFragment;
 import com.fc2.web.kamelong.aodia.netgram.NetgramActivity;
 import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.file.FileSelectionDialog;
+import com.fc2.web.kamelong.aodia.GTMF.GTMFFile;
 import com.fc2.web.kamelong.aodia.oudia.OuDiaDiaFile;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoIndexFragment;
@@ -557,6 +558,10 @@ public class MainActivity extends AppCompatActivity
         try {
             if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
                 diaFile= new OuDiaDiaFile(this, file);
+            }
+            if(filePath.endsWith(".ZIP")){
+                GTMFFile test=new GTMFFile(this,filePath);
+
             }
             if(file.isDirectory()){
                 //for netgram
