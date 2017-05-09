@@ -136,7 +136,7 @@ public class TrainNameView extends KLView {
         }
     }
     public int getXsize(){
-        int lineTextSize=Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("lineTimetableWidth","0"))+1;
+        int lineTextSize=Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("lineTimetableWidth","4"))+1;
         if(secondFrag){
             lineTextSize+=3;
         }
