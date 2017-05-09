@@ -1,11 +1,11 @@
-package com.fc2.web.kamelong.aodia.GTMF;
+package com.fc2.web.kamelong.aodia.GTFS;
 
 import com.fc2.web.kamelong.aodia.oudia.Station;
 
 import java.util.ArrayList;
 
 
-public class GTMFStation extends Station {
+public class GTFSStation extends Station {
     public String stopCode;
     public ArrayList<String> stopID=new ArrayList<>();
     public boolean equals(String str){

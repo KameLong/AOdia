@@ -1,4 +1,4 @@
-package com.fc2.web.kamelong.aodia.GTMF;
+package com.fc2.web.kamelong.aodia.GTFS;
 
 import android.app.Activity;
 
@@ -16,22 +16,22 @@ import java.util.zip.ZipInputStream;
 
 
 /**
- * GTMFを読み込むためのクラス
+ * GTFSを読み込むためのクラス
  */
-public class GTMFFile {
+public class GTFSFile {
     private String folderPath;
     private ArrayList<String>tripIDList=new ArrayList<>();
     private ArrayList<String>routeIDList=new ArrayList<>();
     private ArrayList<String>serviceIDList=new ArrayList<>();
 
-    public ArrayList<GTMFTrain>trainList=new ArrayList<>();
-    public ArrayList<GTMFStation>stationList=new ArrayList<>();
+    public ArrayList<GTFSTrain>trainList=new ArrayList<>();
+    public ArrayList<GTFSStation>stationList=new ArrayList<>();
 
     /**
      * zipファイルのパスからzipを展開する、
      * @param zipFilePath
      */
-    public GTMFFile(Activity activity,String zipFilePath) {
+    public GTFSFile(Activity activity, String zipFilePath) {
         ZipInputStream in = null;
         ZipEntry zipEntry = null;
         BufferedOutputStream out = null;
@@ -82,12 +82,12 @@ public class GTMFFile {
             String str=br.readLine();
             str=br.readLine();
             String tripID=null;
-            GTMFTrain mtrain=new GTMFTrain();
+            GTFSTrain mtrain=new GTFSTrain();
             while(str!=null){
                 String[] strs=str.split(",");
                 if(!strs[0].equals(tripID)){
                     int tripIndex=tripIDList.indexOf(strs[0]);
-                    mtrain=new GTMFTrain(routeIDList.get(tripIndex),serviceIDList.get(tripIndex),tripIDList.get(tripIndex));
+                    mtrain=new GTFSTrain(routeIDList.get(tripIndex),serviceIDList.get(tripIndex),tripIDList.get(tripIndex));
                     trainList.add(mtrain);
                     tripID=strs[0];
                 }
@@ -121,12 +121,12 @@ public class GTMFFile {
             String str=br.readLine();
             str=br.readLine();
             String stopCode=null;
-            GTMFStation station=new GTMFStation();
+            GTFSStation station=new GTFSStation();
             while(str!=null){
                 String[] strs=str.split(",");
                 if(!strs[1].equals(stopCode)){
                     stopCode=strs[1];
-                    station=new GTMFStation();
+                    station=new GTFSStation();
                     station.setName(strs[2]);
                     station.stopCode=stopCode;
                     stationList.add(station);
@@ -137,7 +137,13 @@ public class GTMFFile {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+    }
+    public String[] getStationName(){
+        String[] result=new String[stationList.size()];
+        for(int i=0;i<stationList.size();i++){
+            result[i]=stationList.get(i).getName();
+        }
+        return result;
     }
 
 }

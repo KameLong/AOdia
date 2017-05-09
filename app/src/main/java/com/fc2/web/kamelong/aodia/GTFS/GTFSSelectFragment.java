@@ -1,4 +1,4 @@
-package com.fc2.web.kamelong.aodia.GTMF;
+package com.fc2.web.kamelong.aodia.GTFS;
 
 /**
  * Created by kame on 2017/05/03.
@@ -8,5 +8,5 @@ package com.fc2.web.kamelong.aodia.GTMF;
  * GTMFのデータを読み込んで
  * @since 2017/05/03
  */
-public class GTMFSelectFragment {
+public class GTFSSelectFragment {
 }

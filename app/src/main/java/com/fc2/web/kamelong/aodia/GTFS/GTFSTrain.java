@@ -1,12 +1,12 @@
-package com.fc2.web.kamelong.aodia.GTMF;
+package com.fc2.web.kamelong.aodia.GTFS;
 
 import java.util.ArrayList;
 
 /**
- * GTMF向けのDiaFile
+ * GTFS向けのDiaFile
  * １つのrouteIDにつき１つのオブジェクトを生成する
  */
-public class GTMFTrain{
+public class GTFSTrain {
     public String routeID;
     public String serviceID;
     public String tripID;
@@ -15,12 +15,12 @@ public class GTMFTrain{
     public ArrayList<String> stopID=new ArrayList<>();
 
 
-    public GTMFTrain(String route,String service,String trip){
+    public GTFSTrain(String route, String service, String trip){
         routeID=route;
         serviceID=service;
         tripID=trip;
     }
-    public GTMFTrain(){
+    public GTFSTrain(){
     }
     public void addNewLine(String[] strs){
         arrivalTime.add(timeStoI(strs[1]));
