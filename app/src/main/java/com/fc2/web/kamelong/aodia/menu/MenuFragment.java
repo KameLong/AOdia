@@ -136,7 +136,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.1.1のヘルプを開く");
+            openHelp.setText("　v1.1.3のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.LEFT);
             openHelp.setOnClickListener(new View.OnClickListener() {

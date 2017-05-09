@@ -14,23 +14,16 @@ import com.fc2.web.kamelong.aodia.KLFragment;
 import com.fc2.web.kamelong.aodia.MainActivity;
 import com.fc2.web.kamelong.aodia.R;
 import com.fc2.web.kamelong.aodia.SdLog;
-
-/**
- * Created by kame on 2016/11/30.
- */
 /*
  *     This file is part of AOdia.
-
 AOdia is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
-
  Foobar is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
  When you want to know about GNU, see <http://www.gnu.org/licenses/>.
  */
 /*
@@ -238,10 +231,6 @@ public class DiagramFragment extends KLFragment {
     /**
      * 初期設定をする
      * bundleで必要なデータを送ること
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -427,7 +416,7 @@ public class DiagramFragment extends KLFragment {
         try {
             setting.saveChange();
             DBHelper db = new DBHelper(getActivity());
-            db.updateLineData(diaFile.getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)scaleY,(int)scaleY);
+            db.updateLineData(diaFile.getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
             db.setRecentFile(diaFile.getFilePath(),diaNumber,2);
         }catch(Exception e){
             SdLog.log(e);
@@ -447,8 +436,8 @@ public class DiagramFragment extends KLFragment {
         try {
             DBHelper db = new DBHelper(getActivity());
             int[] scroll = db.getPositionData(db.getReadableDatabase(),  diaFile.getFilePath(), diaNumber, 2);
-            scaleX=scroll[2];
-            scaleY=scroll[3];
+            scaleX=scroll[2]/100f;
+            scaleY=scroll[3]/100f;
             if(scaleX<0.5f){
                 scaleX=10;
             }
