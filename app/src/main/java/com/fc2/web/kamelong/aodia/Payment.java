@@ -135,6 +135,9 @@ public class Payment {
     }
     public boolean buyCheck(String id){
         try {
+            if(BuildConfig.BUILD_TYPE.equals("beta")){
+                return true;
+            }
             // 購入したものを確認する
             Bundle ownedItems = mService.getPurchases(3, activity.getPackageName(), "inapp", null);
 

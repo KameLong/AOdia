@@ -115,27 +115,14 @@ public class GTFSFile {
         }
     }
     private void loadStops(){
-        File stopTimes=new File(folderPath+"/stops.txt");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(stopTimes));
-            String str=br.readLine();
-            str=br.readLine();
-            String stopCode=null;
-            GTFSStation station=new GTFSStation();
-            while(str!=null){
-                String[] strs=str.split(",");
-                if(!strs[1].equals(stopCode)){
-                    stopCode=strs[1];
-                    station=new GTFSStation();
-                    station.setName(strs[2]);
-                    station.stopCode=stopCode;
-                    stationList.add(station);
-                }
-                station.stopID.add(strs[0]);
-                str=br.readLine();
+        GtfsCsvContainer stops=new GtfsCsvContainer(new File(folderPath+"/stops.txt"));
+        for(int i=0;i<stops.indexNum();i++){
+                GTFSStation station=new GTFSStation();
+                station.setName(stops.fileData("stop_name",i));
+            if(stationList.indexOf(station)<0){
+                stationList.add(station);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
         }
     }
     public String[] getStationName(){
