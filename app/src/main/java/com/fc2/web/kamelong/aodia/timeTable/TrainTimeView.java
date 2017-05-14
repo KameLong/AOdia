@@ -16,27 +16,6 @@ import com.fc2.web.kamelong.aodia.oudia.Station;
 import com.fc2.web.kamelong.aodia.oudia.Train;
 import com.fc2.web.kamelong.aodia.timeTable.KLView;
 
-/*
- *     This file is part of AOdia.
-
-AOdia is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- Foobar is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- When you want to know about GNU, see <http://www.gnu.org/licenses/>.
- */
-/*
- * AOdiaはGNUに従う、オープンソースのフリーソフトです。
- * ソースコートの再利用、改変し、公開することは自由ですが、
- * 公開した場合はそのアプリにもGNUライセンスとしてください。
- *
- */
 public class TrainTimeView extends KLView {
     private DiaFile dia;
     private Train train;
@@ -308,9 +287,6 @@ public class TrainTimeView extends KLView {
     private boolean charIsEng(char c){
         return c<256;
     }
-    private boolean charIsNumber(char c){
-        return c>='0'&&c<='9';
-    }
     public int getYsize(){
         int result=textSize;
         for(int i=0;i<dia.getStationNum();i++){
@@ -349,10 +325,11 @@ public class TrainTimeView extends KLView {
         return result;
     }
     public int getXsize(){
+        int lineTextSize=Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("lineTimetableWidth","4"))+1;
         if(secondFrag){
-            return (int)(textSize*4.0f);
+            lineTextSize+=3;
         }
-        return (int)(textSize*2.5f);
+        return (int)(textSize*lineTextSize*0.5f);
     }
     public String getDepartureTime(Train train,int station,int direct){
         try {
