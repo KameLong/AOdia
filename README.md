@@ -9,6 +9,10 @@ AOdiaは鉄道ダイヤグラムに関する日本語のアンドロイドアプ
 時刻表を作成、編集するものとして、WindowsソフトのOuDiaというものがあり、AOdiaはOuDiaのデータファイルの読み込みに対応しています。
 AndroidでOuDiaのファイルを閲覧を可能にするアプリだと思ってください。
 
+## このBranchについて
+このBranchはGTMF形式のファイルの読み込みに対応させるためのブランチです
+
+
 ## Author
 カメロング
 　twitter @LongKame
