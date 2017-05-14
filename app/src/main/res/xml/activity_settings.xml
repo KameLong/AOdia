@@ -86,23 +86,9 @@
         >
         <CheckBoxPreference
             android:key="item001"
-            android:title="（有料オプション）複数ファイルのオープンを解禁する（近日中に解禁します）"
+            android:title="（100円）複数ファイルのオープンを解禁する"
             android:defaultValue="false"
-            android:enabled="false"
+            android:enabled="true"
             android:summary="有料オプションです" />
-        <!--
-        <CheckBoxPreference
-            android:key="paymentPass"
-            android:title="変更非推奨"
-            android:defaultValue="true"
-            android:summary="（ベータ版のみ）このチェックを外すと購入操作を行うことができます" />
-        <CheckBoxPreference
-            android:key="paymentClear"
-            android:title="購入取り消し"
-            android:defaultValue="false"
-            android:enabled="false"
-            android:summary="（ベータ版のみ）未購入状態に戻します" />
-            -->
-
     </PreferenceCategory>
 </PreferenceScreen>
