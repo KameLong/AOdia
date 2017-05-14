@@ -5,14 +5,26 @@ android {
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.fc2.web.kamelong.aodia"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 25
-        versionCode 45
+        versionCode 111
 
-        versionName "1.1.3"
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            debuggable true  // debug の時デフォルト値として true になっているので本来書く必要は無いのだが説明の為
+            versionNameSuffix = 'a'
+        }
+        beta {
+            versionNameSuffix = 'b'
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            minifyEnabled false
+            zipAlignEnabled false
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -25,7 +37,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-
     compile 'com.android.support:cardview-v7:25.0.1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:design:25.0.1'
