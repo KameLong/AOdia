@@ -37,6 +37,7 @@ import com.fc2.web.kamelong.aodia.menu.MenuFragment;
 import com.fc2.web.kamelong.aodia.netgram.NetgramActivity;
 import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.file.FileSelectionDialog;
+import com.fc2.web.kamelong.aodia.oudia.OuDia2DiaFile;
 import com.fc2.web.kamelong.aodia.oudia.OuDiaDiaFile;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoIndexFragment;
@@ -550,8 +551,11 @@ public class MainActivity extends AppCompatActivity
         DiaFile diaFile=null;
         String filePath=file.getPath();
         try {
-            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+            if(filePath.endsWith(".oud")){
                 diaFile= new OuDiaDiaFile(this, file);
+            }
+            if(filePath.endsWith(".oud2")){
+                diaFile=new OuDia2DiaFile(this,file);
             }
             if(file.isDirectory()){
                 //for netgram
