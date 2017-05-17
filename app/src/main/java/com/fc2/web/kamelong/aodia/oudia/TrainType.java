@@ -154,49 +154,7 @@ public class TrainType {
         diaColor=color;
     }
 
-    /**
-     * 時刻表文字色をセットする
-     *  oudiaファイルでの色表記は"aabbggrr"の8文字の文字列
-     *  netgramの色表記は"#rrggbb"の7文字の文字列
-     *              これらの違いを踏まえつつ、int型の色を作成します。
-     * @param color 色を表す文字列
-     */
-    public void setTextColor(String color){
-        if(color.startsWith("#")){
-            int blue=Integer.parseInt(color.substring(5,7),16);
-            int green=Integer.parseInt(color.substring(3,5),16);
-            int red=Integer.parseInt(color.substring(1,3),16);
-            setTextColor(Color.rgb(red,green,blue));
 
-        }else{
-            int blue=Integer.parseInt(color.substring(2,4),16);
-            int green=Integer.parseInt(color.substring(4,6),16);
-            int red=Integer.parseInt(color.substring(6,8),16);
-            setTextColor(Color.rgb(red,green,blue));
-        }
-    }
-    /**
-     * ダイヤグラム文字色をセットする
-     *  oudiaファイルでの色表記は"aabbggrr"の8文字の文字列
-     *  netgramの色表記は"#rrggbb"の7文字の文字列
-     *              これらの違いを踏まえつつ、int型の色を作成します。
-     * @param color 色を表す文字列
-     */
-    public void setDiaColor(String color) {
-        if(color.startsWith("#")){
-            int blue=Integer.parseInt(color.substring(5,7),16);
-            int green=Integer.parseInt(color.substring(3,5),16);
-            int red=Integer.parseInt(color.substring(1,3),16);
-            setDiaColor(Color.rgb(red,green,blue));
-
-        }else{
-            int blue=Integer.parseInt(color.substring(2,4),16);
-            int green=Integer.parseInt(color.substring(4,6),16);
-            int red=Integer.parseInt(color.substring(6,8),16);
-            setDiaColor(Color.rgb(red,green,blue));
-        }
-
-    }
 
     /**
      * ダイヤグラム線スタイルをセットします。

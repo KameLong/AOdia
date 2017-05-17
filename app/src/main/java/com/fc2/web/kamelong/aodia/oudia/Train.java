@@ -27,11 +27,13 @@ AOdia is free software: you can redistribute it and/or modify
  */
 
 /**
- * @author  KameLong
- *
  * 列車データを格納するクラス。
  * 一つの列車に関するデータはここに格納する
- */public class Train {
+ * Stationクラスには全種類のダイヤ形式で統一できる入力と、出力を書く。
+ * それぞれのダイヤ形式に合わせた変換はxxxDiaFileクラスに記述する
+ * @author  KameLong
+ */
+public class Train {
     /**
      * 駅扱いの定数。long timeの9~12bitがstop typeに対応する。
      */
@@ -105,10 +107,6 @@ AOdia is free software: you can redistribute it and/or modify
      */
     public void setNumber(String value) {
         try {
-            String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-            for (String moji : dameMoji) {
-                value = value.replace(moji + "\\", moji);
-            }
             if (value.length() == 0) {
                 number = "";
                 return;
@@ -312,67 +310,11 @@ AOdia is free software: you can redistribute it and/or modify
 
     /**
      * この列車の発着時刻を入力します。
-     * oudiaのEkiJikoku形式の文字列を発着時刻に変換し、入力していきます。
-     * @param str　oudiaファイル　EkiJikoku=の形式の文字列
-     * @param direct　方向
-     */
-    public void setTime(String str,int direct){
-        try {
-            String[] timeString = str.split(",");
-            for (int i = 0; i < timeString.length; i++) {
-                if (timeString[i].length() == 0) {
-                    setStopType((1 - 2 * direct) * i + direct * (time.length - 1), STOP_TYPE_NOSERVICE);
-                } else {
-                    if (!timeString[i].contains(";")) {
-                        setStopType((1 - 2 * direct) * i + direct * (time.length - 1),Integer.parseInt(timeString[i]));
-                    } else {
-                        setStopType((1 - 2 * direct) * i + direct * (time.length - 1), Integer.parseInt(timeString[i].split(";")[0]));
-                        try {
-                            String stationTime = timeString[i].split(";")[1];
-                            if (!stationTime.contains("/")) {
-                                setDepartTime((1 - 2 * direct) * i + direct * (time.length - 1), stationTime);
-                            } else {
-                                if( stationTime.split("/").length==2) {
-                                    setArriveTime((1 - 2 * direct) * i + direct * (time.length - 1), stationTime.split("/")[0]);
-                                    setDepartTime((1 - 2 * direct) * i + direct * (time.length - 1), stationTime.split("/")[1]);
-                                }else{
-                                    setArriveTime((1 - 2 * direct) * i + direct * (time.length - 1), stationTime.split("/")[0]);
-                                }
-                            }
-                        } catch (Exception e) {
-                            SdLog.log(e);
-                        }
-                    }
-                }
-            }
-        }catch(Exception e){
-            SdLog.log(e);
-        }
-    }
-    public void setStationTime(int station,String str){
-        if(str.contains(";")){
-            if(str.split(";",-1)[0].contains("_")){
-                setStopType(station,Integer.parseInt(str.split(";",-1)[0].split("_",-1)[0]));
-            }else{
-                setStopType(station,Integer.parseInt(str.split(";",-1)[0]));
-            }
-            if(str.split(";",-1)[1].contains("/")){
-                setArriveTime(station,str.split(";",-1)[1].split("/",-1)[0]);
-                setDepartTime(station,str.split(";",-1)[1].split("/",-1)[1]);
-            }else{
-                setDepartTime(station,str.split(";",-1)[1]);
-            }
-        }else{
-            setStopType(station,STOP_TYPE_NOSERVICE);
-        }
-    }
-    /**
-     * この列車の発着時刻を入力します。
      * netgramのJson形式の文字列を発着時刻に変換し、入力していきます。
      * @param timeArray　netgramのJSON形式の時刻
      * @param direct　方向
      */
-
+/*
     public void setTime(JSONArray timeArray, int direct){
         try {
             for (int i = 0 ;i < time.length; i++) {
@@ -394,12 +336,14 @@ AOdia is free software: you can redistribute it and/or modify
             SdLog.log(e);
         }
     }
+*/
 
     /**
      * 駅扱いをセットする。
      * @param station　駅インデックス
      * @param value　停車駅扱い番号（番号を文字列にしたもの）
      */
+    /*
     public void setStopType(int station,String value){
         try{
             setStopType(station,Integer.parseInt(value));
@@ -407,6 +351,7 @@ AOdia is free software: you can redistribute it and/or modify
             setStopType(station,0);
         }
     }
+    */
     /**
      * 駅扱いをセットする。
      * @param station　駅インデックス
@@ -725,11 +670,6 @@ AOdia is free software: you can redistribute it and/or modify
      * @param value　列車名文字列
      */
     public void setName(String value){
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
-
         name=value;
     }
 
@@ -746,11 +686,6 @@ AOdia is free software: you can redistribute it and/or modify
      * @param value　号数文字列
      */
     public void setCount(String value){
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
-
         if(value.length()>0){
             count=value+"号";
         }
@@ -775,10 +710,6 @@ AOdia is free software: you can redistribute it and/or modify
      * @param value　備考文字列
      */
     public void setRemark(String value){
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
         remark=value;
     }
 
@@ -868,6 +799,7 @@ AOdia is free software: you can redistribute it and/or modify
 
     /**
      * trainより前の列車ならtrueを返す
+     * 未使用＆未実装
      * @param train　比較対象列車
      * @param station 駅インデックス
      * @return
