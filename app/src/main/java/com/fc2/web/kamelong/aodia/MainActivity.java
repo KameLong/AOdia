@@ -74,7 +74,6 @@ AOdia is free software: you can redistribute it and/or modify
  * AOdiaはGNUに従う、オープンソースのフリーソフトです。
  * ソースコートの再利用、改変し、公開することは自由ですが、
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
- *
  */
 /**
  * AOdiaのメインアクティビティー。
@@ -561,8 +560,9 @@ public class MainActivity extends AppCompatActivity
             if(filePath.endsWith(".oud")){
                 diaFile= new OuDiaDiaFile(this, file);
             }
-            if(filePath.endsWith(".oud2")){
-                diaFile=new OuDia2DiaFile(this,file);
+            if(filePath.endsWith(".oud2")) {
+                diaFile = new OuDia2DiaFile(this, file);
+            }
             if(filePath.endsWith(".ZIP")){
                 gtfs =new GTFSFile(this,filePath);
                 openGTFSStationList();
