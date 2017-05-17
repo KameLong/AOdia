@@ -38,6 +38,7 @@ import com.fc2.web.kamelong.aodia.menu.MenuFragment;
 import com.fc2.web.kamelong.aodia.netgram.NetgramActivity;
 import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.file.FileSelectionDialog;
+import com.fc2.web.kamelong.aodia.oudia.OuDia2DiaFile;
 import com.fc2.web.kamelong.aodia.GTFS.GTFSFile;
 import com.fc2.web.kamelong.aodia.oudia.OuDiaDiaFile;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoFragment;
@@ -90,14 +91,14 @@ public class MainActivity extends AppCompatActivity
      */
     public ArrayList<DiaFile> diaFiles=new ArrayList<DiaFile>();
     /**
-     * diaFilesの
+     * MenuにおけるdiaFilesの並び順を定義する、数値インデックス。
      */
     public ArrayList<Integer> diaFilesIndex=new ArrayList<Integer>();
+
+
     MenuFragment menuFragment;
-
     Windows windows;
-
-
+    int openId=R.id.container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,19 +119,8 @@ public class MainActivity extends AppCompatActivity
         windows.windowsInit();
 
 
-        String filePath="";
-        int diaNum = 0;
-        int direct = 0;
-        DBHelper db = new DBHelper(this);
-        try{
-            filePath=db.getRecentFilePath();
-            diaNum=db.getRecentDiaNum();
-            direct=db.getRecentDirect();
-        }catch(Exception e){
-            SdLog.log(e);
-        }
 
-
+        //ツールバーの定義
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         try{
@@ -144,100 +134,106 @@ public class MainActivity extends AppCompatActivity
             SdLog.log(e);
         }
         if(!windows.tabletStyle) {
-            // drawer
+            //tabletスタイルでないときはメニューdrawerを実装する
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
                 public void onDrawerClosed(View view) {
                     menuFragment.createMenu();
                 }
-
                 public void onDrawerOpened(View drawerView) {
 
                 }
             };
             drawer.setDrawerListener(toggle);
             toggle.syncState();
-        }else{
         }
-        createSample();
 
-        if (Build.VERSION.SDK_INT < 23) {
-        } else {
-            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        createSample();//sample.oudを作成する
+
+        //データベースより前回開いたデータを取得
+        String filePath;
+        int diaNum ;
+        int direct = 0;
+        DBHelper db = new DBHelper(this);
+        try{
+            filePath=db.getRecentFilePath();
+            diaNum=db.getRecentDiaNum();
+            direct=db.getRecentDirect();
+            //前回のデータが存在するときは、そのファイルを開く
+            if(filePath.length()>0&&new File(filePath).exists()){
+                onFileSelect(new File(filePath));
+                setFragment(0,diaNum,direct);
                 return;
-            } else {
             }
+        }catch(Exception e){
+            SdLog.log(e);
         }
-
-        if(filePath.length()>0&&new File(filePath).exists()){
-            onFileSelect(new File(filePath));
-            setFragment(0,diaNum,direct);
-            return;
-        }
-
-        if(diaFiles.size()==0){
-            diaFiles.add(new OuDiaDiaFile(this,null));
-            diaFilesIndex.add(0);
-            openHelp();
-        }
+        //もし前回のデータが無ければsample.oudを開く
+        diaFiles.add(new OuDiaDiaFile(this,null));
+        diaFilesIndex.add(0);
+        openHelp();
     }
 
 
     @Override
     public void onStop(){
-        String[] filePaths=new String[diaFilesIndex.size()];
-        for(int i=0;i<diaFilesIndex.size();i++){
-            filePaths[i]=diaFiles.get(diaFilesIndex.get(i)).getFilePath();
+        String[] filePaths = new String[diaFilesIndex.size()];
+        for (int i = 0; i < diaFilesIndex.size(); i++) {
+            filePaths[i] = diaFiles.get(diaFilesIndex.get(i)).getFilePath();
         }
-        DBHelper db=new DBHelper(this);
+        DBHelper db = new DBHelper(this);
         db.addFilePaths(filePaths);
 
-        String[] windowData=new String[DBHelper.WINDOW_NUM];
-        int[] ids=new int[]{R.id.container,R.id.container1,R.id.container2,R.id.container3,R.id.container4};
-        for(int i=0;i<5;i++){
-            try {
-                if (getFragmentManager().findFragmentById(ids[i]) == null) {
+        String[] windowData = new String[DBHelper.WINDOW_NUM];
+
+        try {
+            int[] ids = new int[]{R.id.container, R.id.container1, R.id.container2, R.id.container3, R.id.container4};
+            for (int i = 0; i < 5; i++) {
+                try {
+                    if (getFragmentManager().findFragmentById(ids[i]) == null) {
+                        windowData[i] = "";
+                        continue;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     windowData[i] = "";
                     continue;
                 }
-            }catch(Exception e){
-                e.printStackTrace();
-                windowData[i]="";
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(HelpFragment.class.getName())) {
-                windowData[i]=DBHelper.HELP;
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(CommentFragment.class.getName())) {
-                windowData[i]=DBHelper.COMMENT+"-"+getDiaFileIndexNumByFragment(((CommentFragment)getFragmentManager().findFragmentById(ids[i])).diaFile);
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoIndexFragment.class.getName())) {
-                windowData[i]=DBHelper.STATION_TIME_INDEX+"-"+getDiaFileIndexNumByFragment(((StationInfoIndexFragment)getFragmentManager().findFragmentById(ids[i])).diaFile);
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoFragment.class.getName())) {
-                StationInfoFragment fragment=((StationInfoFragment)getFragmentManager().findFragmentById(ids[i]));
-                windowData[i]=DBHelper.STATION_TIME_TABLE+"-"+getDiaFileIndexNumByFragment(fragment.diaFile)+"-"+fragment.diaNumber+"-"+fragment.direct+"-"+fragment.station;
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(DiagramFragment.class.getName())) {
-                DiagramFragment fragment=((DiagramFragment)getFragmentManager().findFragmentById(ids[i]));
-                windowData[i]=DBHelper.DIAGRAM+"-"+getDiaFileIndexNumByFragment(fragment.diaFile)+"-"+fragment.diaNumber;
-                continue;
-            }
-            if(getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(TimeTableFragment.class.getName())) {
-                TimeTableFragment fragment=((TimeTableFragment)getFragmentManager().findFragmentById(ids[i]));
-                windowData[i]=DBHelper.LINE_TIME_TABLE+"-"+getDiaFileIndexNumByFragment(fragment.diaFile)+"-"+fragment.diaNumber+"-"+fragment.direct;
-                continue;
-            }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(HelpFragment.class.getName())) {
+                    windowData[i] = DBHelper.HELP;
+                    continue;
+                }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(CommentFragment.class.getName())) {
+                    windowData[i] = DBHelper.COMMENT + "-" + getDiaFileIndexNumByFragment(((CommentFragment) getFragmentManager().findFragmentById(ids[i])).diaFile);
+                    continue;
+                }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoIndexFragment.class.getName())) {
+                    windowData[i] = DBHelper.STATION_TIME_INDEX + "-" + getDiaFileIndexNumByFragment(((StationInfoIndexFragment) getFragmentManager().findFragmentById(ids[i])).diaFile);
+                    continue;
+                }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoFragment.class.getName())) {
+                    StationInfoFragment fragment = ((StationInfoFragment) getFragmentManager().findFragmentById(ids[i]));
+                    windowData[i] = DBHelper.STATION_TIME_TABLE + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber + "-" + fragment.direct + "-" + fragment.station;
+                    continue;
+                }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(DiagramFragment.class.getName())) {
+                    DiagramFragment fragment = ((DiagramFragment) getFragmentManager().findFragmentById(ids[i]));
+                    windowData[i] = DBHelper.DIAGRAM + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber;
+                    continue;
+                }
+                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(TimeTableFragment.class.getName())) {
+                    TimeTableFragment fragment = ((TimeTableFragment) getFragmentManager().findFragmentById(ids[i]));
+                    windowData[i] = DBHelper.LINE_TIME_TABLE + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber + "-" + fragment.direct;
+                    continue;
+                }
 
+
+            }
+        }catch(Exception e){
+            SdLog.log(e);
         }
         db.saveWindows(windowData);
-
         super.onStop();
     }
 
@@ -354,7 +350,7 @@ public class MainActivity extends AppCompatActivity
                         Environment.DIRECTORY_DOWNLOADS));
             } else {
                 // 拒否された
-                Toast.makeText(this, "拒否された", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "エラー：ファイルへのアクセスを許可してください", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -562,14 +558,14 @@ public class MainActivity extends AppCompatActivity
         DiaFile diaFile=null;
         String filePath=file.getPath();
         try {
-            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+            if(filePath.endsWith(".oud")){
                 diaFile= new OuDiaDiaFile(this, file);
             }
+            if(filePath.endsWith(".oud2")){
+                diaFile=new OuDia2DiaFile(this,file);
             if(filePath.endsWith(".ZIP")){
                 gtfs =new GTFSFile(this,filePath);
                 openGTFSStationList();
-
-
             }
             if(file.isDirectory()){
                 //for netgram
@@ -625,12 +621,12 @@ public class MainActivity extends AppCompatActivity
         }
         String[] windowList=db.readWindows();
         int[] ids=new int[]{R.id.container,R.id.container1,R.id.container2,R.id.container3,R.id.container4};
-        for(int i=windowList.length;i>1;i--){
-            if(openFragment(windowList[i-1])){
-                moveFragment(ids[0],ids[i-1]);
-            }
+        for(int i=0;i<5;i++){
+            openId=ids[i];
+            openFragment(windowList[i]);
+
         }
-        openFragment(windowList[0]);
+        openId=ids[0];
     }
     /**
      * diaFileが指定されたとき、そのdiaFileがどのDiaFIleIndexに対応するかを調べる
@@ -658,7 +654,7 @@ public class MainActivity extends AppCompatActivity
         }
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.container, fragment);
+        fragmentTransaction.replace(openId, fragment);
         fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
         fragmentTransaction.commit();
         windows.showContainer(255);
@@ -713,7 +709,7 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             KLFragment fragment = (KLFragment) fragmentManager.findFragmentById(fromId);
-            fragmentTransaction.remove(fragment).commit();
+            //fragmentTransaction.remove(fragment).commit();
             fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().remove(fragment).commit();
             fragmentManager.executePendingTransactions();

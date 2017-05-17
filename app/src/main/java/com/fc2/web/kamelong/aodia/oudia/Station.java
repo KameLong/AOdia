@@ -23,10 +23,12 @@ AOdia is free software: you can redistribute it and/or modify
  */
 
 /**
- * @author  KameLong
  *
  * 駅データを格納するクラス。
  * 一つの駅に関するデータはここに格納する
+ * Stationクラスには全種類のダイヤ形式で統一できる入力と、出力を書く。
+ * それぞれのダイヤ形式に合わせた変換はxxxDiaFileクラスに記述する
+ * @author  KameLong
  */
 public class Station {
     /**
@@ -69,10 +71,6 @@ public class Station {
     public static final int STOP_ARRIVE=1;
 
     public void setName(String value){
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
         if(value.length()>0){
             name=value;
         }
@@ -194,65 +192,5 @@ public class Station {
         return size!=0;
     }
 
-    /**
-     * OuDiaのEkikiboの文字列から駅規模を入力する。
-     * @param value OuDiaファイル内のEkikiboの文字列
-     */
-    public void setSize(String value){
-        switch (value){
-            case "Ekikibo_Ippan":
-                setSize(0);
-                break;
-            case "Ekikibo_Syuyou":
-                setSize(1);
-                break;
 
-            case "0":
-                setSize(0);
-                break;
-            case "1":
-                setSize(1);
-                break;
-        }
-    }
-
-    /**
-     * OuDiaのJikokukeisikiの文字列から時刻表示形式を入力する。
-     * @param value OuDiaファイル内のJikokukeisikiの文字列
-     */
-    public void setTimeShow(String value){
-        switch (value){
-            case "Jikokukeisiki_Hatsu":
-                setTimeShow(SHOW_HATU);
-                break;
-            case "Jikokukeisiki_Hatsuchaku":
-                setTimeShow(SHOW_HATUTYAKU);
-                break;
-            case "Jikokukeisiki_NoboriChaku":
-                setTimeShow(SHOW_NOBORITYAKU);
-                break;
-            case "Jikokukeisiki_KudariChaku":
-                setTimeShow(SHOW_KUDARITYAKU);
-                break;
-            case "Jikokukeisiki_KudariHatsuchaku":
-                setTimeShow(7);
-                break;
-            case "Jikokukeisiki_NoboriHatsuchaku":
-                setTimeShow(13);
-                break;
-
-            case "0":
-                setTimeShow(SHOW_HATU);
-                break;
-            case "1":
-                setTimeShow(SHOW_HATUTYAKU);
-                break;
-            case "3":
-                setTimeShow(SHOW_NOBORITYAKU);
-                break;
-            case "2":
-                setTimeShow(SHOW_KUDARITYAKU);
-                break;
-        }
-    }
 }

@@ -46,8 +46,8 @@ public class NetgramDiaFile extends DiaFile {
             while(stationLine!=null){
                 Station mStation=new Station();
                 mStation.setName(stationLine.split(",",-1)[1]);
-                mStation.setTimeShow(stationLine.split(",",-1)[2]);
-                mStation.setSize(stationLine.split(",",-1)[3]);
+                //mStation.setTimeShow(stationLine.split(",",-1)[2]);
+                //mStation.setSize(stationLine.split(",",-1)[3]);
                 mStation.setBorder(Integer.valueOf(stationLine.split(",",-1)[4]));
                 station.add(mStation);
                 stationLine=stationBr.readLine();
@@ -65,8 +65,8 @@ public class NetgramDiaFile extends DiaFile {
                 TrainType mTrainType=new TrainType();
                 mTrainType.setName(trainTypeLine.split(",")[1]);
                 mTrainType.setShortName(trainTypeLine.split(",")[2]);
-                mTrainType.setTextColor(trainTypeLine.split(",")[3]);
-                mTrainType.setDiaColor(trainTypeLine.split(",")[3]);
+                //mTrainType.setTextColor(trainTypeLine.split(",")[3]);
+                //mTrainType.setDiaColor(trainTypeLine.split(",")[3]);
                 mTrainType.setLineStyle(trainTypeLine.split(",")[4]);
                 mTrainType.setLineBold(trainTypeLine.split(",")[5]);
                 trainTypeLine=trainTypeBr.readLine();
@@ -88,7 +88,7 @@ public class NetgramDiaFile extends DiaFile {
                         mTrain.setName(trainLine.split(",")[2]);
                         mTrain.setNumber(trainLine.split(",")[3]);
                         for (int s = 0; s < getStationNum(); s++) {
-                            mTrain.setStationTime(s, trainLine.split(",")[5 + s]);
+                           // mTrain.setStationTime(s, trainLine.split(",")[5 + s]);
                         }
                         train.get(dia)[direct].add(mTrain);
                         trainLine = trainBr.readLine();
