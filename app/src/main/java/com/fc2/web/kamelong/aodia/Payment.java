@@ -165,7 +165,7 @@ public class Payment {
         }
         return false;
     }
-    private void close(){
+    public void close(){
         if (mService != null) {
             activity.unbindService(mServiceConn);
         }

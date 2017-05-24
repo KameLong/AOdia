@@ -55,8 +55,12 @@ public class StationInfoIndexFragment extends KLFragment {
             SdLog.log(e);
         }
         activity=(MainActivity)getActivity();
-        diaFile=activity.diaFiles.get(fileNum);
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
+        diaFile=activity.diaFiles.get(fileNum);
+        if(diaFile==null){
+            onDestroy();
+            return contentView;
+        }
         return contentView;
     }
 

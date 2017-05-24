@@ -5,9 +5,12 @@ import android.content.Context;
 import java.io.File;
 
 /**
- * Created by kame on 2017/05/17.
+ * OuDiaSecondのファイルを読み込むためのクラス
+ * ほとんどOuDiaDiaFileと同じだが、OuDiaSecondがこれからも進歩し続けるようなので
+ * 別クラスを作って特別対応する。
+ * @since v1.2
+ * @author kamelong
  */
-
 public class OuDia2DiaFile extends OuDiaDiaFile {
     public OuDia2DiaFile(Context context, File file) {
         super(context, file);

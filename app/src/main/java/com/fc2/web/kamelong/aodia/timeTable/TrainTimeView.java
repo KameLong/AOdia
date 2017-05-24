@@ -347,7 +347,7 @@ public class TrainTimeView extends KLView {
             }
             if (!train.departExist(station)) {
                 if (!train.arriveExist(station)) {
-                    return "null";
+                    return "○";
                 }
                 return getArriveTime(train,station, direct);
             }
@@ -368,7 +368,7 @@ public class TrainTimeView extends KLView {
         }catch(Exception e){
             SdLog.log(e);
         }
-        return "null";
+        return "○";
     }
     private String getArriveTime(Train train,int station,int direct){
         try {
@@ -386,7 +386,7 @@ public class TrainTimeView extends KLView {
             }
             if (!train.arriveExist(station)) {
                 if (!train.departExist(station)) {
-                    return "null";
+                    return "○";
                 }
                 return getDepartureTime(train,station, direct);
             }
@@ -407,7 +407,7 @@ public class TrainTimeView extends KLView {
         }catch(Exception e){
             SdLog.log(e);
         }
-        return "null";
+        return "○";
     }
     private void drawText(Canvas canvas,String text,int x,int y,Paint paint,boolean centerFrag){
         if(centerFrag){

@@ -178,29 +178,37 @@ public class TimeTableFragment extends KLFragment {
     }
 
     private void init() {
-        diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
-        FrameLayout lineNameFrame = (FrameLayout)findViewById(R.id.lineNameFrame);
-        LineNameView lineNameView = new LineNameView(getActivity(), diaFile,diaNumber);
-        lineNameFrame.removeAllViews();
-        lineNameFrame.addView(lineNameView);
-        LinearLayout stationNameLinea = (LinearLayout)findViewById(R.id.stationNameLinear);
-        StationNameView stationNameView = new StationNameView(getActivity(), diaFile, direct);
-        stationNameLinea.removeAllViews();
-        stationNameLinea.addView(stationNameView);
+        try {
+            diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+            if(diaFile==null){
+                onDestroy();
+                return;
+            }
+            FrameLayout lineNameFrame = (FrameLayout) findViewById(R.id.lineNameFrame);
+            LineNameView lineNameView = new LineNameView(getActivity(), diaFile, diaNumber);
+            lineNameFrame.removeAllViews();
+            lineNameFrame.addView(lineNameView);
+            LinearLayout stationNameLinea = (LinearLayout) findViewById(R.id.stationNameLinear);
+            StationNameView stationNameView = new StationNameView(getActivity(), diaFile, direct);
+            stationNameLinea.removeAllViews();
+            stationNameLinea.addView(stationNameView);
 
-        LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
-        trainNameLinea.removeAllViews();
-        TrainNameView[] trainNameViews = new TrainNameView[diaFile.getTrainNum(diaNumber, direct)];
-        for (int i = 0; i < diaFile.getTrainNum(diaNumber, direct); i++) {
-            trainNameViews[i] = new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i));
-            trainNameLinea.addView(trainNameViews[i]);
-        }
-        LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
-        trainTimeLinear.removeAllViews();
-        TrainTimeView[] trainTimeViews = new TrainTimeView[diaFile.getTrainNum(diaNumber, direct)];
-        for (int i = 0; i < trainNameViews.length; i++) {
-            trainTimeViews[i] = new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i), direct);
-            trainTimeLinear.addView(trainTimeViews[i]);
+            LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
+            trainNameLinea.removeAllViews();
+            TrainNameView[] trainNameViews = new TrainNameView[diaFile.getTrainNum(diaNumber, direct)];
+            for (int i = 0; i < diaFile.getTrainNum(diaNumber, direct); i++) {
+                trainNameViews[i] = new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i));
+                trainNameLinea.addView(trainNameViews[i]);
+            }
+            LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
+            trainTimeLinear.removeAllViews();
+            TrainTimeView[] trainTimeViews = new TrainTimeView[diaFile.getTrainNum(diaNumber, direct)];
+            for (int i = 0; i < trainNameViews.length; i++) {
+                trainTimeViews[i] = new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i), direct);
+                trainTimeLinear.addView(trainTimeViews[i]);
+            }
+        }catch(Exception e){
+            SdLog.log(e);
         }
     }
     private void scrollBy(int dx, int dy) {

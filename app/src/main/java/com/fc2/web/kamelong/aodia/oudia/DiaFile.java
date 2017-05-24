@@ -263,7 +263,30 @@ abstract public class DiaFile{
             return "e";
         }
     }
+    /**
+     * 基準運転時間が定義されている時に最小所要時間を返す
+     *
+     */
+    public int getMinReqiredTime2(int diaNum,int startStation,int endStation) {
+        int result=360000;
+            for(int train=0;train<this.train.get(diaNum)[0].size();train++){
+                int value=this.getTrain(diaNum,0,train).getRequiredTime(startStation,endStation);
+                if(value>0&&result>value){
+                    result=value;
+                }
+            }
+            for(int train=0;train<this.train.get(diaNum)[1].size();train++){
+                int value=this.getTrain(diaNum,1,train).getRequiredTime(startStation,endStation);
+                if(value>0&&result>value){
+                    result=value;
+                }
+        }
+        if(result==360000){
+            result=120;
+        }
+        return result;
 
+    }
     /**
      *  駅間最小所要時間を返す。
      *  startStatioin endStationの両方に止まる列車のうち、
@@ -277,6 +300,11 @@ abstract public class DiaFile{
      */
     public int getMinReqiredTime(int startStation,int endStation){
         int result=360000;
+        for(int i=0;i<getDiaNum();i++){
+            if(getDiaName(i).equals("基準運転時分")){
+                return getMinReqiredTime2(i,startStation,endStation);
+            }
+        }
         for(int i=0;i<this.train.size();i++){
 
             for(int train=0;train<this.train.get(i)[0].size();train++){

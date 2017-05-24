@@ -75,6 +75,10 @@ public class StationInfoFragment extends KLFragment {
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         diaFile=((MainActivity)getActivity()).diaFiles.get(fileNum);
+        if(diaFile==null){
+            onDestroy();
+            return contentView;
+        }
         subName=new String[diaFile.getStationNum()];
         subNameCount=new int[diaFile.getStationNum()];
         usedTrainType=new boolean[diaFile.getTypeNum()];

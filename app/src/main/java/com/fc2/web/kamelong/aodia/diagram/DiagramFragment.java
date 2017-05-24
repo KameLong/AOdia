@@ -257,6 +257,10 @@ public class DiagramFragment extends KLFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         diaFile=((MainActivity) getActivity()).diaFiles.get(fileNum);
+        if(diaFile==null){
+            onDestroy();
+            return;
+        }
         //新しくDiagramSettingを作成する
         setting=new DiagramSetting(getActivity());
         setting.create(this);

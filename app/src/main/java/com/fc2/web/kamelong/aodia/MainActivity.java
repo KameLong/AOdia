@@ -161,9 +161,10 @@ public class MainActivity extends AppCompatActivity
             direct=db.getRecentDirect();
             //前回のデータが存在するときは、そのファイルを開く
             if(filePath.length()>0&&new File(filePath).exists()){
+                if(getStoragePermission()){
                 onFileSelect(new File(filePath));
                 setFragment(0,diaNum,direct);
-                return;
+                return;}
             }
         }catch(Exception e){
             SdLog.log(e);
@@ -174,6 +175,11 @@ public class MainActivity extends AppCompatActivity
         openHelp();
     }
 
+    @Override
+    public void onDestroy(){
+        payment.close();
+        super.onDestroy();
+    }
 
     @Override
     public void onStop(){
@@ -242,7 +248,7 @@ public class MainActivity extends AppCompatActivity
     private void createSample() {
         File file = new File(getExternalFilesDir(null), "sample.oud");
         if(file.exists()){
-            return;
+            //return;
         }
         try {
             AssetManager assetManager = getAssets();
@@ -266,6 +272,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
+
         if(windows.tabletStyle){
             super.onBackPressed();
         }else{
@@ -563,7 +570,7 @@ public class MainActivity extends AppCompatActivity
             if(filePath.endsWith(".oud2")) {
                 diaFile = new OuDia2DiaFile(this, file);
             }
-            if(filePath.endsWith(".ZIP")){
+            if(filePath.endsWith(".ZIP")&&(BuildConfig.BUILD_TYPE.equals("beta")||BuildConfig.BUILD_TYPE.equals("debug"))){
                 gtfs =new GTFSFile(this,filePath);
                 openGTFSStationList();
             }
@@ -707,9 +714,7 @@ public class MainActivity extends AppCompatActivity
     public KLFragment moveFragment(int fromId,int toId){
         try {
             FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             KLFragment fragment = (KLFragment) fragmentManager.findFragmentById(fromId);
-            //fragmentTransaction.remove(fragment).commit();
             fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().remove(fragment).commit();
             fragmentManager.executePendingTransactions();
@@ -743,13 +748,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
-        diaFiles.remove(index);
+        diaFiles.set(index,null);
         diaFilesIndex.remove(menuIndex);
-        for(int i=0;i<diaFilesIndex.size();i++){
-            if(diaFilesIndex.get(i)>index) {
-                diaFilesIndex.set(i, diaFilesIndex.get(i) - 1);
-            }
-        }
         menuFragment.createMenu();
     }
 

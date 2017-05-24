@@ -39,6 +39,12 @@ public class CommentFragment extends KLFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         LinearLayout main=new LinearLayout(getActivity());
+        main.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                return;
+            }
+        });
         try {
 
             Bundle bundle = getArguments();

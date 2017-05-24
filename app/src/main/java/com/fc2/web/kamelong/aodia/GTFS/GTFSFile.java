@@ -132,5 +132,8 @@ public class GTFSFile {
         }
         return result;
     }
+    public ArrayList<GTFSStation>getStationList(){
+        return stationList;
+    }
 
 }

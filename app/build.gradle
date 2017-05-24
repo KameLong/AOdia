@@ -7,9 +7,9 @@ android {
         applicationId "com.fc2.web.kamelong.aodia"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 46
+        versionCode 113
 
-        versionName "1.1.4"
+        versionName "1.1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,7 +26,7 @@ android {
             zipAlignEnabled false
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
