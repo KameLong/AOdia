@@ -319,12 +319,16 @@ public class TimeTableFragment extends KLFragment {
     }
     @Override
     public String fragmentName(){
-        if(direct==0){
-            return "下り時刻表　"+ diaFile.getDiaName(diaNumber)+"　"+ diaFile.getLineName();
+        try {
+            if (direct == 0) {
+                return "下り時刻表　" + diaFile.getDiaName(diaNumber) + "　" + diaFile.getLineName();
 
-        }else{
-            return "上り時刻表　"+ diaFile.getDiaName(diaNumber)+"　"+ diaFile.getLineName();
+            } else {
+                return "上り時刻表　" + diaFile.getDiaName(diaNumber) + "　" + diaFile.getLineName();
 
+            }
+        }catch(Exception e){
+            return "";
         }
     }
 

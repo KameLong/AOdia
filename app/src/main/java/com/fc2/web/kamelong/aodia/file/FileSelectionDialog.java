@@ -52,8 +52,12 @@ public class FileSelectionDialog implements OnItemClickListener
                     String[] stationName=loadStartEndStation(fileTemp);
                     listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+fileTemp.getName(), fileTemp));
                 }
-                if(fileTemp.isDirectory()||fileTemp.getName().endsWith(".ZIP")) {
+                if(fileTemp.isDirectory()) {
                     listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
+                }
+                if(fileTemp.getName().endsWith(".ZIP")){
+//                    listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
+
                 }
 
             }

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.fc2.web.kamelong.aodia.detabase.DBHelper;
 import com.fc2.web.kamelong.aodia.KLFragment;
@@ -256,11 +257,20 @@ public class DiagramFragment extends KLFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        diaFile=((MainActivity) getActivity()).diaFiles.get(fileNum);
-        if(diaFile==null){
+        try{
+            diaFile=((MainActivity) getActivity()).diaFiles.get(fileNum);
+            if(diaFile==null){
+                Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
+                onDestroy();
+                return;
+            }
+        }catch(Exception e){
+            Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
             onDestroy();
             return;
+
         }
+
         //新しくDiagramSettingを作成する
         setting=new DiagramSetting(getActivity());
         setting.create(this);
