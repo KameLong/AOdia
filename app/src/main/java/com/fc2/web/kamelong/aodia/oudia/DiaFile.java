@@ -170,6 +170,17 @@ abstract public class DiaFile{
             return "";
         }
     }
+    /**
+     * この路線の全ての駅のリストを返す
+     */
+    public String[] getStationNameList(){
+        String[] result=new String[station.size()];
+        for(int i=0;i<station.size();i++){
+            result[i]=getStationName(i);
+        }
+        return result;
+    }
+
 
     /**
      * 駅を返す。

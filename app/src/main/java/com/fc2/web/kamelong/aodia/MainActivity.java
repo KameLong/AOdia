@@ -581,6 +581,7 @@ public class MainActivity extends AppCompatActivity
             DBHelper db=new DBHelper(this);
             db.addHistory(filePath);
             db.addNewFileToLineData(filePath,diaFile.getDiaNum());
+            db.addStation(diaFile.getStationNameList(),diaFile.getFilePath());
             if(payment.buyCheck("item001")) {
                 diaFiles.add(diaFile);
                 diaFilesIndex.add(0, diaFiles.size() - 1);

@@ -7,17 +7,18 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.SearchView;
 
 import com.fc2.web.kamelong.aodia.MainActivity;
 import com.fc2.web.kamelong.aodia.R;
 import com.fc2.web.kamelong.aodia.SdLog;
+import com.fc2.web.kamelong.aodia.detabase.DBHelper;
+import com.fc2.web.kamelong.aodia.file.SearchFileDialog;
 import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /*
@@ -101,6 +102,37 @@ public class MenuFragment extends Fragment {
                 }
             });
             layout.addView(openFile);
+            SearchView stationSearch=new SearchView(activity);
+            stationSearch.setQueryHint("駅検索");
+            stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String stationName) {
+                    SdLog.log("検索");
+                    SearchFileDialog.OnFileSelectListener test=new SearchFileDialog.OnFileSelectListener() {
+                        @Override
+                        public void onFileSelect(File file) {
+                            //MainActivityに処理を投げる
+                            activity.onFileSelect(file);
+                        }
+                        @Override
+                        public void onFileListSelect(File[] file) {
+                            //nothing to do
+                        }
+                    };
+                    SearchFileDialog searchDialog=new SearchFileDialog(getActivity(),test);
+                    DBHelper db=new DBHelper(activity);
+                    ArrayList<String> fileList=db.searchStationPath(stationName);
+                    searchDialog.show(stationName,fileList);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+            layout.addView(stationSearch);
+
 
             Button connectNetgram = new Button(activity);
             connectNetgram.setText("　ネットグラムにアクセス");
@@ -131,7 +163,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.1.7のヘルプを開く");
+            openHelp.setText("　v1.1.8のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {

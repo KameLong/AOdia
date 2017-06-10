@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import com.fc2.web.kamelong.aodia.detabase.DBHelper;
 import com.fc2.web.kamelong.aodia.KLFragment;
 import com.fc2.web.kamelong.aodia.MainActivity;
@@ -179,7 +181,11 @@ public class TimeTableFragment extends KLFragment {
 
     private void init() {
         try {
-            diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+            try {
+                diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+            }catch(Exception e){
+                Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+            }
             if(diaFile==null){
                 onDestroy();
                 return;

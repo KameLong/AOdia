@@ -423,17 +423,13 @@ public class DiagramView extends KLView {
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200, 200, 200));
+        paint.setStrokeWidth(defaultLineSize);
+
         //点線
-        Paint dotPaint = new Paint();
-        dotPaint.setAntiAlias(true);
-        dotPaint.setStyle(Paint.Style.STROKE);
-        dotPaint.setPathEffect(new DashPathEffect(new float[]{10.0f, 10.0f}, 0)); // 5pixel描いたら5pixel描かないを繰り返す
-        dotPaint.setColor(Color.rgb(200, 200, 200));
+        Paint dotPaint = new Paint(paint);
+        dotPaint.setPathEffect(new DashPathEffect(new float[]{10.0f, 10.0f}, 0)); // 10pixel描いたら10pixel描かないを繰り返す
         //点線の代わりに用いる細線
-        Paint dot2Paint = new Paint();
-        dot2Paint.setAntiAlias(true);
-        dot2Paint.setStyle(Paint.Style.STROKE);
-        dot2Paint.setColor(Color.rgb(200, 200, 200));
+        Paint dot2Paint = new Paint(paint);
         dot2Paint.setStrokeWidth(defaultLineSize*0.25f);
 
         //縦線の高さ
@@ -442,7 +438,6 @@ public class DiagramView extends KLView {
 
         //1時間ごとの目盛
         //以下太実線
-        paint.setStrokeWidth(defaultLineSize);
         if(setting.veriticalAxis()==7){
             for (int i = 0; i < 48; i++) {
                 canvas.drawLine(scaleX * (30 + 30 * i), 0, scaleX * (30 + 30 * i),axisHeight * scaleY / 60, paint);
@@ -486,16 +481,14 @@ public class DiagramView extends KLView {
                     if(diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60>2048) {
                         canvas.drawLine(scaleX * (10 + 30 * i), 0, scaleX * (10 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60, dot2Paint);
                         canvas.drawLine(scaleX * (20 + 30 * i), 0, scaleX * (20 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60, dot2Paint);
-                    }else {
+                    }else{
                         Path dotLine = new Path();
                         dotLine.moveTo(scaleX * (10 + 30 * i), 0);
-                        dotLine.lineTo(scaleX * (10 + 30 * i),axisHeight * scaleY / 60);
+                        dotLine.lineTo(scaleX * (10 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60);
                         dotLine.moveTo(scaleX * (20 + 30 * i), 0);
-                        dotLine.lineTo(scaleX * (20 + 30 * i),axisHeight * scaleY / 60);
+                        dotLine.lineTo(scaleX * (20 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60);
                         canvas.drawPath(dotLine, dotPaint);
                     }
-
-
                 }
                 break;
             case 5:

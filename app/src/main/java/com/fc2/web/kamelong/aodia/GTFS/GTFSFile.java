@@ -3,6 +3,8 @@ package com.fc2.web.kamelong.aodia.GTFS;
 import android.app.Activity;
 
 import com.fc2.web.kamelong.aodia.SdLog;
+import com.fc2.web.kamelong.aodia.oudia.DiaFile;
+import com.fc2.web.kamelong.aodia.oudia.OuDia2DiaFile;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -20,6 +22,7 @@ import java.util.zip.ZipInputStream;
  */
 public class GTFSFile {
     private String folderPath;
+    public String agencyName="";
     private ArrayList<String>tripIDList=new ArrayList<>();
     private ArrayList<String>routeIDList=new ArrayList<>();
     private ArrayList<String>serviceIDList=new ArrayList<>();
@@ -136,4 +139,15 @@ public class GTFSFile {
         return stationList;
     }
 
+    /**
+     * 時刻表生成に必要な駅リスtなどを用いて
+     * GTFSのデータからDiaFile形式のデータを作成する
+     * @param useStation
+     * @param nessStation
+     * @return
+     */
+    public DiaFile makeOuDiaFile(ArrayList<GTFSStation> useStation,ArrayList<Integer>nessStation){
+        return null;
+
+    }
 }

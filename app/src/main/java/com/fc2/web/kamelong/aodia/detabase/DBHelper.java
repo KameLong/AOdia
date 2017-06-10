@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fc2.web.kamelong.aodia.SdLog;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /*
  *     This file is part of AOdia.
@@ -43,7 +46,7 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DETABASE_NAME="aodia.db";
-    public static final int DETABASE_VERSION=1;
+    public static final int DETABASE_VERSION=2;
     public static final String ID="_id";
 
     public static final String FILE_PATH="filePath";
@@ -71,6 +74,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_WINDOW_TYPE="windowType";
 
     public static final String TABLE_SAME_STATION="sameStation";
+    public static final String TABLE_STATION="stationList";
     public DBHelper(Context context){
 
         super(context,DETABASE_NAME,null,DETABASE_VERSION);
@@ -148,6 +152,14 @@ public class DBHelper extends SQLiteOpenHelper {
                             +STATION_ID+" integer, "
                             +STATION_NAME+" text, "
                             +FILE_PATH+ " text)");
+            /*
+            駅とファイルパスを対応させる
+             */
+            db.execSQL(
+                    "create table "+TABLE_STATION+" ("
+                            +ID+" integer primary key autoincrement not null, "
+                            +STATION_NAME+" text, "
+                            +FILE_PATH+ " text)");
 
         }catch(Exception e){
             SdLog.log("データベースの作成に失敗しました");
@@ -156,7 +168,15 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        if(i==1) {
+            db.execSQL(
+                    "create table " + TABLE_STATION + " ("
+                            + ID + " integer primary key autoincrement not null, "
+                            + STATION_NAME + " text, "
+                            + FILE_PATH + " text)");
+        }
+
 
     }
 
@@ -520,4 +540,40 @@ public class DBHelper extends SQLiteOpenHelper {
             return new String[]{"","","","",""};
         }
     }
+
+    /**
+     * TABLE_STATIONに新しい駅データを付け加える。
+     * 駅名とそのファイルパスをセットにして追加する。
+     * @param stationName
+     * @param filePath
+     */
+    public void addStation(ArrayList<String> stationName, String filePath){
+        try {
+            getWritableDatabase().delete(TABLE_STATION, FILE_PATH + "=?", new String[]{filePath});
+            for(int i=0;i<stationName.size();i++) {
+                ContentValues values = new ContentValues();
+                values.put(FILE_PATH, filePath);
+                values.put(STATION_NAME, stationName.get(i));
+                getWritableDatabase().insert(TABLE_STATION, null, values);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void addStation(String[] stationName, String filePath){
+        addStation(new ArrayList<String>(Arrays.asList(stationName)),filePath);
+    }
+    public ArrayList<String>searchStationPath(String stationName){
+        ArrayList<String>result=new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("select * from " + TABLE_STATION + " where " + STATION_NAME + "=?", new String[]{stationName});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            result.add(c.getString(2));//3列目がファイルパス
+            c.moveToNext();
+
+        }
+        return result;
+
+    }
+
 }

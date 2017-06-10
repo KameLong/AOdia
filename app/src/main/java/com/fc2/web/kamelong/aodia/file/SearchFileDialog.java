@@ -19,81 +19,53 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.fc2.web.kamelong.aodia.SdLog;
 import com.fc2.web.kamelong.aodia.detabase.DBHelper;
 
-public class FileSelectionDialog implements OnItemClickListener
+public class SearchFileDialog implements OnItemClickListener
 {
     private Context					m_parent;				// 呼び出し元
     private OnFileSelectListener	m_listener;			// 結果受取先
     private AlertDialog				m_dlg;					// ダイアログ
     private FileInfoArrayAdapter m_fileinfoarrayadapter; // ファイル情報配列アダプタ
 
-    private File fileDirectory;
-
     // コンストラクタ
-    public FileSelectionDialog( Context context, OnFileSelectListener listener ){
+    public SearchFileDialog( Context context, OnFileSelectListener listener ){
         m_parent = context;
         m_listener =listener;
     }
 
     // ダイアログの作成と表示
-    public void show( File fileDirectory ){
-        this.fileDirectory=fileDirectory;
+    public void show(String searchName,ArrayList<String> filePathList){
         // タイトル
-        String strTitle = fileDirectory.getAbsolutePath();
+        String strTitle = searchName+"駅を検索";
         // リストビュー
         ListView listview = new ListView( m_parent );
         listview.setScrollingCacheEnabled( false );
         listview.setOnItemClickListener( this );
         // ファイルリスト
-        File[] aFile = fileDirectory.listFiles();
         List<FileInfo> listFileInfo = new ArrayList<>();
-        if( null != aFile ){
-            for( File fileTemp : aFile ){
-                if(fileTemp.getName().endsWith(".oud")||fileTemp.getName().endsWith(".oud2")) {
-                    String[] stationName=loadStartEndStation(fileTemp);
-                    listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+fileTemp.getName(), fileTemp));
-                }
-                if(fileTemp.isDirectory()) {
-                    listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
-                }
-                if(fileTemp.getName().endsWith(".ZIP")){
+        for( String filePath : filePathList ){
+            File file=new File(filePath);
+            if(!file.exists()){
+                continue;
+            }
+            System.out.println(filePath);
+            if(file.getName().endsWith(".oud")||file.getName().endsWith(".oud2")) {
+                String[] stationName=loadStartEndStation(file);
+                listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+file.getName(),file));
+            }
+            if(file.getName().endsWith(".ZIP")){
 //                    listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
 
-                }
-
             }
-            Collections.sort( listFileInfo );
+
         }
-        // 親フォルダに戻るパスの追加
-        if( null != fileDirectory.getParent() )
-        {
-            listFileInfo.add( 0, new FileInfo( "..", new File( fileDirectory.getParent() ) ) );
-        }
+        Collections.sort( listFileInfo );
+
         m_fileinfoarrayadapter = new FileInfoArrayAdapter( m_parent, listFileInfo );
         listview.setAdapter( m_fileinfoarrayadapter );
 
         Builder builder = new AlertDialog.Builder( m_parent );
         builder.setTitle( strTitle );
         builder.setNeutralButton("キャンセル", null );
-        builder.setPositiveButton("前回の復元", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int j) {
-                DBHelper db=new DBHelper(m_parent);
-                String[] fileList=db.getFilePaths();
-                ArrayList<File>files=new ArrayList<>();
-                for(int i=0;i<fileList.length;i++){
-                    files.add(new File(fileList[i]));
-                }
-                m_listener.onFileListSelect(files.toArray(new File[0]));
-
-
-            }
-        });
-        builder.setNegativeButton("履歴", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                showHistory();
-            }
-        });
         builder.setView( listview );
         m_dlg = builder.show();
     }
@@ -112,14 +84,7 @@ public class FileSelectionDialog implements OnItemClickListener
 
         FileInfo fileinfo = m_fileinfoarrayadapter.getItem( position );
 
-        if(fileinfo.getFile().isDirectory() ) {
-            show( fileinfo.getFile() );
-        }
-        else{
-            // ファイルが選ばれた：リスナーのハンドラを呼び出す
             m_listener.onFileSelect( fileinfo.getFile() );
-        }
-
 
     }
     private String[] loadStartEndStation(File file) {
@@ -157,49 +122,6 @@ public class FileSelectionDialog implements OnItemClickListener
             SdLog.log(e);
             return new String[]{"", ""};
         }
-    }
-    private void showHistory(){
-        // タイトル
-        String strTitle = "履歴";
-        // リストビュー
-        ListView listview = new ListView( m_parent );
-        listview.setScrollingCacheEnabled( false );
-        listview.setOnItemClickListener( this );
-        // ファイルリスト
-        DBHelper db=new DBHelper(m_parent);
-        String[] fileHistory=db.getHistory();
-        File[] aFile = new File[fileHistory.length];
-        for(int i=0;i<fileHistory.length;i++){
-            aFile[i]=new File(fileHistory[i]);
-        }
-        List<FileInfo> listFileInfo = new ArrayList<>();
-        if( null != aFile ){
-            for( File fileTemp : aFile ){
-                if(fileTemp.getName().endsWith(".oud")) {
-                    String[] stationName=loadStartEndStation(fileTemp);
-                    listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+fileTemp.getName(), fileTemp));
-                }
-                if(fileTemp.isDirectory()) {
-                    String[] stationName=loadStartEndStation(fileTemp);
-                    listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
-                }
-
-            }
-        }
-        m_fileinfoarrayadapter = new FileInfoArrayAdapter( m_parent, listFileInfo );
-        listview.setAdapter( m_fileinfoarrayadapter );
-
-        Builder builder = new AlertDialog.Builder( m_parent );
-        builder.setTitle( strTitle );
-        builder.setNeutralButton("キャンセル", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                show(fileDirectory);
-            }
-        });
-        builder.setView( listview );
-        m_dlg = builder.show();
-
     }
 
     // 選択したファイルの情報を取り出すためのリスナーインターフェース

@@ -102,14 +102,15 @@ public class TrainNameView extends KLView {
                 }
                 if (charIsEng(str[i])) {
                     space--;
-                    canvas.rotate(90);
-                    drawText(canvas,String.valueOf(str[i]), startY,(int)( -startX-(textSize*0.2f)), textPaint,true);
-                    canvas.rotate(-90);
+                    canvas.save();
+                    canvas.rotate(90,0,0);
+                    drawText(canvas,String.valueOf(str[i]), startY+2,(int)( -startX-(textSize*0.2f)), textPaint,false);
+                    canvas.restore();
                     startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
                 } else {
                     space = space - 2;
                     startY = startY +textSize;
-                    drawText(canvas,String.valueOf(str[i]), startX, startY, textPaint,true);
+                    drawText(canvas,String.valueOf(str[i]), startX, startY, textPaint,false);
                 }
 
             }

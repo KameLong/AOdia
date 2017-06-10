@@ -258,7 +258,13 @@ public class DiagramFragment extends KLFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try{
-            diaFile=((MainActivity) getActivity()).diaFiles.get(fileNum);
+            try {
+                diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+            }catch(Exception e){
+                SdLog.log(e);
+                Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+
+            }
             if(diaFile==null){
                 Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
                 onDestroy();

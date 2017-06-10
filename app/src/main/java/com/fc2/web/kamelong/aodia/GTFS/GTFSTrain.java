@@ -32,5 +32,15 @@ public class GTFSTrain {
         return Integer.parseInt(timeStrs[0])*3600+Integer.parseInt(timeStrs[1])*60+Integer.parseInt(timeStrs[2]);
     }
 
+    /**
+     * この列車がstationIDを持つ駅に停車するかどうかかを返す
+     * @param stationId
+     * @return
+     */
+    public boolean containsStation(String stationId){
+        return false;
+
+    }
+
 
 }
