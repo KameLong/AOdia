@@ -131,7 +131,7 @@ public class MenuFragment extends Fragment {
                     return false;
                 }
             });
-            layout.addView(stationSearch);
+            //layout.addView(stationSearch);
 
 
             Button connectNetgram = new Button(activity);

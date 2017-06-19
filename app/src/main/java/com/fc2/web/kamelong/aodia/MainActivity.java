@@ -54,6 +54,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 /*
  *     This file is part of AOdia.
@@ -149,25 +150,51 @@ public class MainActivity extends AppCompatActivity
         }
 
         createSample();//sample.oudを作成する
+        if(Intent.ACTION_VIEW.equals(getIntent().getAction())) {
+            // ファイル関連付けで開く
+            String fname[] = String.valueOf(getIntent().getData()).split("//");
 
-        //データベースより前回開いたデータを取得
-        String filePath;
-        int diaNum ;
-        int direct = 0;
-        DBHelper db = new DBHelper(this);
-        try{
-            filePath=db.getRecentFilePath();
-            diaNum=db.getRecentDiaNum();
-            direct=db.getRecentDirect();
-            //前回のデータが存在するときは、そのファイルを開く
-            if(filePath.length()>0&&new File(filePath).exists()){
-                if(getStoragePermission()){
-                onFileSelect(new File(filePath));
-                setFragment(0,diaNum,direct);
-                return;}
+            if (fname.length == 2) {
+                // 「file:」と「/～.gpx」に分けられたと仮定
+                // 受け取ったファイル名をオープンして読み込んで表示する
+                try{
+                    String filePath= URLDecoder.decode(fname[1], "UTF-8");;
+                    //前回のデータが存在するときは、そのファイルを開く
+                    System.out.println(filePath);
+                    if(filePath.length()>0&&new File(filePath).exists()){
+                        if(getStoragePermission()){
+                            onFileSelect(new File(filePath));
+                            setFragment(0,0,0);
+                            return;
+                        }
+                    }
+                }catch(Exception e){
+                    SdLog.log(e);
+                }
             }
-        }catch(Exception e){
-            SdLog.log(e);
+        }
+        else {
+            // 通常起動の時
+            //データベースより前回開いたデータを取得
+            String filePath;
+            int diaNum ;
+            int direct = 0;
+            DBHelper db = new DBHelper(this);
+            try{
+                filePath=db.getRecentFilePath();
+                diaNum=db.getRecentDiaNum();
+                direct=db.getRecentDirect();
+                //前回のデータが存在するときは、そのファイルを開く
+                if(filePath.length()>0&&new File(filePath).exists()){
+                    if(getStoragePermission()){
+                        onFileSelect(new File(filePath));
+                        setFragment(0,diaNum,direct);
+                        return;
+                    }
+                }
+            }catch(Exception e){
+                SdLog.log(e);
+            }
         }
         //もし前回のデータが無ければsample.oudを開く
         diaFiles.add(new OuDiaDiaFile(this,null));
