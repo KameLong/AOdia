@@ -57,6 +57,14 @@ public class HelpFragment extends KLFragment {
         }
         handler=new Handler();
         helpView = new WebView(getActivity());
+
+        helpView.getSettings().setJavaScriptEnabled(true);
+        helpView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });
         helpView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -67,7 +75,7 @@ public class HelpFragment extends KLFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.web.fc2.com/aodia/help-v1.1.0.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
         return helpView;
     }
 }

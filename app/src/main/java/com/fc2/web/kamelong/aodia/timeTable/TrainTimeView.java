@@ -160,6 +160,8 @@ public class TrainTimeView extends KLView {
             value=value.replace('ー','｜');
             value=value.replace('（','(');
             value=value.replace('）',')');
+            value=value.replace('「','┐');
+            value=value.replace('」','└');
             char[] str =value.toCharArray();
             int lineNum = 1;
             int space = heightSpace;

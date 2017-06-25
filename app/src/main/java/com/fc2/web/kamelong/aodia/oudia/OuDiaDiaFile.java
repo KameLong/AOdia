@@ -270,10 +270,10 @@ public class OuDiaDiaFile extends DiaFile {
                 station.setTimeShow(15);
                 break;
             case "Jikokukeisiki_NoboriChaku":
-                station.setTimeShow(6);
+                station.setTimeShow(9);
                 break;
             case "Jikokukeisiki_KudariChaku":
-                station.setTimeShow(9);
+                station.setTimeShow(6);
                 break;
             case "Jikokukeisiki_KudariHatsuchaku":
                 station.setTimeShow(7);
