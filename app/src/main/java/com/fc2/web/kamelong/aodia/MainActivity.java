@@ -31,7 +31,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.fc2.web.kamelong.aodia.GTFS.GTFSListFragment;
 import com.fc2.web.kamelong.aodia.detabase.DBHelper;
 import com.fc2.web.kamelong.aodia.diagram.DiagramFragment;
 import com.fc2.web.kamelong.aodia.menu.MenuFragment;
@@ -39,7 +38,6 @@ import com.fc2.web.kamelong.aodia.netgram.NetgramActivity;
 import com.fc2.web.kamelong.aodia.oudia.DiaFile;
 import com.fc2.web.kamelong.aodia.file.FileSelectionDialog;
 import com.fc2.web.kamelong.aodia.oudia.OuDia2DiaFile;
-import com.fc2.web.kamelong.aodia.GTFS.GTFSFile;
 import com.fc2.web.kamelong.aodia.oudia.OuDiaDiaFile;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.fc2.web.kamelong.aodia.stationInfo.StationInfoIndexFragment;
@@ -576,12 +574,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-    public GTFSFile gtfs;
-    public void openGTFSStationList(){
-        GTFSListFragment gtfsFragment=new GTFSListFragment();
-        openFragment(gtfsFragment);
-    }
-
     /**
      * ファイル一つが選択された時の処理。
      *
@@ -596,10 +588,6 @@ public class MainActivity extends AppCompatActivity
             }
             if(filePath.endsWith(".oud2")) {
                 diaFile = new OuDia2DiaFile(this, file);
-            }
-            if(filePath.endsWith(".ZIP")&&(BuildConfig.BUILD_TYPE.equals("beta")||BuildConfig.BUILD_TYPE.equals("debug"))){
-                gtfs =new GTFSFile(this,filePath);
-                openGTFSStationList();
             }
             if(file.isDirectory()){
                 //for netgram

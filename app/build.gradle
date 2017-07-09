@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         vectorDrawables.useSupportLibrary = true
         applicationId "com.fc2.web.kamelong.aodia"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 54
 
         versionName "1.1.9"
@@ -37,8 +37,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:cardview-v7:25.0.1'
+    compile 'com.android.support:appcompat-v7:26.+'
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:design:26.+'
     compile 'com.google.android:flexbox:0.2.5'
 }
