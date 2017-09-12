@@ -66,6 +66,17 @@
             android:summary="備考を表示します" />
     </PreferenceCategory>
     <PreferenceCategory
+        android:title="ダイヤグラム設定"
+        android:enabled="true"
+        >
+        <CheckBoxPreference
+            android:key="onlySolid"
+            android:title="ダイヤグラム実線表示"
+            android:defaultValue="false"
+            android:summary="ダイヤ線の点線を実線にかえパフォーマンスを上げます" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="駅時刻表設定"
         android:enabled="true"
         >
