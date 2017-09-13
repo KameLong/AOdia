@@ -1,4 +1,4 @@
-package com.kamelong.aodia.oudia;
+package com.kamelong.aodia.diadata;
 
 /*
  *     This file is part of AOdia.
@@ -22,6 +22,8 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 
+import com.kamelong.JPTIOuDia.OuDia.OuDiaStation;
+
 /**
  *
  * 駅データを格納するクラス。
@@ -30,45 +32,7 @@ AOdia is free software: you can redistribute it and/or modify
  * それぞれのダイヤ形式に合わせた変換はxxxDiaFileクラスに記述する
  * @author  KameLong
  */
-public class Station {
-    /**
-     * 駅名。
-     */
-    private String name="";
-    /**
-     * 発時刻、着時刻の表示非表示を管理する整数。
-     * 4bitで記述し
-     * 上り着、上り発、下り着、下り着
-     * の順でバイナリ記述する。
-     * この形を用いることであらゆるパターンの表示を可能とするであろう
-     *
-     * SHOW_XXXの形の定数はよく使われる発着表示のパターンを定数にしたもの
-     */
-    private int timeShow=SHOW_HATU;
-
-    static final int SHOW_HATU=5;
-    static final int SHOW_HATUTYAKU=15;
-    static final int SHOW_KUDARITYAKU=6;
-    static final int SHOW_NOBORITYAKU=9;
-
-    /**
-     * 駅規模。
-     */
-    private int size=SIZE_NORMAL;
-    static final int SIZE_NORMAL=0;
-    static final int SIZE_BIG=1;
-
-    /**
-     * 境界駅を示す。
-     * 境界駅の場合1、境界駅ではない場合0が入る。
-     */
-    private int border;
-
-    /**
-     * 発着表示を取得する際に使う定数
-     */
-    public static final int STOP_DEPART=0;
-    public static final int STOP_ARRIVE=1;
+public class AOdiaStation extends OuDiaStation{
 
     public void setName(String value){
         if(value.length()>0){

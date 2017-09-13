@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
 /**
  * Created by kame on 2017/01/24.
@@ -50,7 +50,7 @@ public class LineMenu  extends LinearLayout{
     private int fileNum;
     private int menuIndex;
 //    private View container;
-    public LineMenu(final Context context, final DiaFile diaFile, int index, int mMenuIndex){
+    public LineMenu(final Context context, final AOdiaDiaFile diaFile, int index, int mMenuIndex){
         this(context);
         fileNum=index;
         menuIndex=mMenuIndex;

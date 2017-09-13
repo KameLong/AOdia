@@ -6,8 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
 
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+
 /*
  *     This file is part of AOdia.
 
@@ -35,7 +35,7 @@ AOdia is free software: you can redistribute it and/or modify
  * @author kamelong
  */
 public class LineNameView extends KLView {
-    DiaFile dia;
+    AOdiaDiaFile dia;
     int diaNum;
 
     public LineNameView(Context context) {
@@ -48,7 +48,7 @@ public class LineNameView extends KLView {
      * @param diaFile　このViewに表示するダイヤファイル
      * @param num　このViewに表示するダイヤのインデックス
      */
-    public LineNameView(Context context,DiaFile diaFile,int num){
+    public LineNameView(Context context,AOdiaDiaFile diaFile,int num){
         this(context);
         dia=diaFile;
         diaNum=num;

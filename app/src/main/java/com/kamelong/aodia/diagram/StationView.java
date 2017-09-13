@@ -1,14 +1,11 @@
 package com.kamelong.aodia.diagram;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 
-import com.kamelong.aodia.R;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -47,7 +44,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationView extends KLView {
-    DiaFile diaFile;
+    AOdiaDiaFile diaFile;
     DiagramSetting setting;
     int diaNum;
     public  float scaleX =15;
@@ -56,7 +53,7 @@ public class StationView extends KLView {
     StationView(Context context){
         super(context);
     }
-    StationView(Context context, DiagramSetting s,DiaFile dia, int num){
+    StationView(Context context, DiagramSetting s, AOdiaDiaFile dia, int num){
        this(context);
         setting=s;
         diaFile=dia;
@@ -84,7 +81,7 @@ public class StationView extends KLView {
                 paint.setStrokeWidth(defaultLineSize*0.5f);
             }
             canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize(),1440* scaleX,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize(),paint);
-            canvas.drawText(diaFile.getStationName(i),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6,textPaint);
+            canvas.drawText(diaFile.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6,textPaint);
         }
     }
     @Override

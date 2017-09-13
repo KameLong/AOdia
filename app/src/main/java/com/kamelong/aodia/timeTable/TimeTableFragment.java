@@ -112,7 +112,7 @@ public class TimeTableFragment extends KLFragment {
                         if(station<0){
                             return;
                         }
-                        SdLog.log("timeTableLongPress", diaFile.getStationName(station));
+                        SdLog.log("timeTableLongPress", diaFile.getStation(station).getName());
                         StationIndoDialog dialog = new StationIndoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
                         dialog.show();
 

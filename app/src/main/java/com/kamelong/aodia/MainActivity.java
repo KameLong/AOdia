@@ -34,10 +34,8 @@ import android.widget.Toast;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
-import com.kamelong.aodia.oudia.DiaFile;
 import com.kamelong.aodia.file.FileSelectionDialog;
-import com.kamelong.aodia.oudia.OuDia2DiaFile;
-import com.kamelong.aodia.oudia.OuDiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment;
 import com.kamelong.aodia.timeTable.KLView;
@@ -86,7 +84,7 @@ public class MainActivity extends AppCompatActivity
      * ダイヤデータを保持する。
      * ダイヤファイルをクローズするとArrayListの順番を詰めずに空白にする
      */
-    public ArrayList<DiaFile> diaFiles=new ArrayList<DiaFile>();
+    public ArrayList<AOdiaDiaFile> diaFiles=new ArrayList<>();
     /**
      * MenuにおけるdiaFilesの並び順を定義する、数値インデックス。
      */
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         //もし前回のデータが無ければsample.oudを開く
-        diaFiles.add(new OuDiaDiaFile(this,null));
+        diaFiles.add(new AOdiaDiaFile(this));
         diaFilesIndex.add(0);
         openHelp();
     }
@@ -571,14 +569,11 @@ public class MainActivity extends AppCompatActivity
      * @param file
      */
     public void onUrlSelect(File file) {
-        DiaFile diaFile=null;
+        AOdiaDiaFile diaFile=null;
         String filePath=file.getPath();
         try {
-            if(filePath.endsWith(".oud")){
-                diaFile= new OuDiaDiaFile(this, file);
-            }
-            if(filePath.endsWith(".oud2")) {
-                diaFile = new OuDia2DiaFile(this, file);
+            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+                diaFile= new AOdiaDiaFile(this, file);
             }
             if(file.isDirectory()){
                 //for netgram
@@ -611,14 +606,11 @@ public class MainActivity extends AppCompatActivity
      * @param file
      */
     public void onFileSelect(File file) {
-        DiaFile diaFile=null;
+        AOdiaDiaFile diaFile=null;
         String filePath=file.getPath();
         try {
-            if(filePath.endsWith(".oud")){
-                diaFile= new OuDiaDiaFile(this, file);
-            }
-            if(filePath.endsWith(".oud2")) {
-                diaFile = new OuDia2DiaFile(this, file);
+            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+                diaFile= new AOdiaDiaFile(this, file);
             }
             if(file.isDirectory()){
                 //for netgram
@@ -627,7 +619,6 @@ public class MainActivity extends AppCompatActivity
             DBHelper db=new DBHelper(this);
             db.addHistory(filePath);
             db.addNewFileToLineData(filePath,diaFile.getDiaNum());
-            db.addStation(diaFile.getStationNameList(),diaFile.getFilePath());
             if(payment.buyCheck("item001")) {
                 diaFiles.add(diaFile);
                 diaFilesIndex.add(0, diaFiles.size() - 1);
@@ -653,12 +644,12 @@ public class MainActivity extends AppCompatActivity
         DBHelper db = new DBHelper(this);
         diaFiles.clear();
         diaFilesIndex.clear();
-        DiaFile dia=null;
+        AOdiaDiaFile dia=null;
         for(int i=0;i<files.length;i++) {
             String filePath = files[i].getPath();
             try {
                 if (filePath.endsWith(".oud")||filePath.endsWith(".oud2")) {
-                    dia = new OuDiaDiaFile(this, files[i]);
+                    dia = new AOdiaDiaFile(this, files[i]);
                 }
                 if (files[i].isDirectory()) {
                     //for netgram
@@ -687,7 +678,7 @@ public class MainActivity extends AppCompatActivity
      * @param diaFile
      * @return
      */
-    private int getDiaFileIndexNumByFragment(DiaFile diaFile){
+    private int getDiaFileIndexNumByFragment(AOdiaDiaFile diaFile){
         for(int i=0;i<diaFilesIndex.size();i++){
             if(diaFiles.get(diaFilesIndex.get(i))==diaFile){
                 return i;

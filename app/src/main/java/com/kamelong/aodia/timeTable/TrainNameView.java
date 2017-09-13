@@ -5,12 +5,10 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.oudia.Train;
-import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaTrain;
 
 /**
  * Created by kamelong on 2016/11/21.
@@ -37,15 +35,15 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class TrainNameView extends KLView {
-    private DiaFile dia;
-    private Train train;
+    private AOdiaDiaFile dia;
+    private AOdiaTrain train;
     private int direct;
     private boolean secondFrag=false;
     private boolean showTrainName=false;
     TrainNameView(Context context){
         super(context);
     }
-    TrainNameView(Context context,DiaFile diaFile,Train t){
+    TrainNameView(Context context,AOdiaDiaFile diaFile,AOdiaTrain t){
         this(context);
         dia=diaFile;
         train=t;
@@ -56,7 +54,7 @@ public class TrainNameView extends KLView {
     public void onDraw(Canvas canvas){
 
         int startLine=(int)textPaint.getTextSize();
-        textPaint.setColor(dia.getTrainType(train.getType()).getTextColor());
+        textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
         if(secondFrag) {
             drawText(canvas,dia.getTrainType(train.getType()).getName(), 1, startLine, textPaint,true);
         }else{

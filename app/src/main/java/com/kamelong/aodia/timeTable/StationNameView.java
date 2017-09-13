@@ -3,12 +3,10 @@ package com.kamelong.aodia.timeTable;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.oudia.Station;
-import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaStation;
 /*
  *     This file is part of AOdia.
 
@@ -35,9 +33,9 @@ AOdia is free software: you can redistribute it and/or modify
  */
 
 public class StationNameView extends KLView {
-    private DiaFile dia;
+    private AOdiaDiaFile dia;
     private int direct;
-    StationNameView(Context context, DiaFile diaFile,int d){
+    StationNameView(Context context, AOdiaDiaFile diaFile,int d){
         super(context);
         dia=diaFile;
         direct=d;
@@ -46,7 +44,7 @@ public class StationNameView extends KLView {
         int startLine=(int)blackPaint.getTextSize();
         for(int i=0;i<dia.getStationNum();i++){
             int stationNumber=(dia.getStationNum()-1)*direct+(1-2*direct)*i;
-            Station station=dia.getStation(stationNumber);
+            AOdiaStation station=dia.getStation(stationNumber);
             switch (station.getTimeShow(direct)){
                 case 0:
                     break;
@@ -92,7 +90,7 @@ public class StationNameView extends KLView {
         int result=textSize;
         for(int i=0;i<dia.getStationNum();i++){
             int stationNumber=(dia.getStationNum()-1)*direct+(1-2*direct)*i;
-            Station station=dia.getStation(stationNumber);
+            AOdiaStation station=dia.getStation(stationNumber);
             switch (station.getTimeShow(direct)){
                 case 0:
                     break;
@@ -131,7 +129,7 @@ public class StationNameView extends KLView {
         for(int i=0;i<dia.getStationNum();i++){
             int stationNumber=(dia.getStationNum()-1)*direct+(1-2*direct)*i;
 
-            Station station=dia.getStation(stationNumber);
+            AOdiaStation station=dia.getStation(stationNumber);
             switch (station.getTimeShow(direct)){
                 case 0:
                     break;

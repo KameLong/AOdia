@@ -1,19 +1,15 @@
 package com.kamelong.aodia.stationInfo;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.kamelong.aodia.KLFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
 
 /**
  * Created by kame on 2017/02/02.

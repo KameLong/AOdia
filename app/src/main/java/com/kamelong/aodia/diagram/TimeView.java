@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.KLView;
 
 /**
@@ -41,8 +41,8 @@ public class TimeView extends KLView {
     public  float scaleX =15;
     public  float scaleY =42;
     private DiagramSetting setting;
-    private DiaFile diaFile;
-    TimeView (Context context,DiagramSetting s,DiaFile d) {
+    private AOdiaDiaFile diaFile;
+    TimeView (Context context,DiagramSetting s,AOdiaDiaFile d) {
         super(context);
         setting=s;
         diaFile=d;

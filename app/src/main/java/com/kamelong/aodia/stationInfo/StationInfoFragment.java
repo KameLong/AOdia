@@ -14,7 +14,7 @@ import com.kamelong.aodia.KLFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.Train;
+import com.kamelong.aodia.diadata.AOdiaTrain;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
@@ -111,7 +111,7 @@ public class StationInfoFragment extends KLFragment {
                 directS="上り";
             }
             String title="";
-            title=title+diaFile.getStationName(station)+"駅　時刻表("+diaFile.getDiaName(diaNumber)+")\n"+directS+"　"+diaFile.getStationName((1-direct)*(diaFile.getStationNum()-1))+"方面";
+            title=title+diaFile.getStation(station).getName()+"駅　時刻表("+diaFile.getDiaName(diaNumber)+")\n"+directS+"　"+diaFile.getStation((1-direct)*(diaFile.getStationNum()-1)).getName()+"方面";
             TextView titleView=(TextView)findViewById(R.id.titleView);
             titleView.setText(title);
             titleView.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +144,7 @@ public class StationInfoFragment extends KLFragment {
         }
         addStationLegend();
         for(int i=trainList.size()-1;i>=0;i--){
-            Train train=diaFile.getTrain(diaNumber, direct, trainList.get(i));
+            AOdiaTrain train=diaFile.getTrain(diaNumber, direct, trainList.get(i));
             int hour=train.getPredictionTime(station)/3600;
             if(hour<3||hour>26){
                 hour=hour+21;
@@ -152,14 +152,14 @@ public class StationInfoFragment extends KLFragment {
                 hour=hour+3;
             }
             String min=""+(train.getPredictionTime(station)/60)%60;
-            int color=diaFile.getTrainType(train.getType()).getTextColor();
-            if(train.getStopType(station)!=Train.STOP_TYPE_STOP){
+            int color=diaFile.getTrainType(train.getType()).getAOdiaTextColor();
+            if(train.getStopType(station)!= AOdiaTrain.STOP_TYPE_STOP){
                color=Color.rgb(150,150,150);
             }
             if(!train.timeExist(station)){
                 min=min+"?";
             }
-            String destination=diaFile.getStationName(train.getEndStation(direct));
+            String destination=diaFile.getStation(train.getEndStation(direct)).getName();
             String addInfo="";
 
             if(train.getStartStation(direct)==station){
@@ -171,7 +171,7 @@ public class StationInfoFragment extends KLFragment {
                 existEndStation=true;
             }
             if(train.getEndStation(direct)+(1-2*direct)>=0&&train.getEndStation(direct)+(1-2*direct)<diaFile.getStationNum()){
-                if(train.getStopType(train.getEndStation(direct)+(1-2*direct))==Train.STOP_TYPE_PASS||train.getStopType(train.getEndStation(direct)+(1-2*direct))==Train.STOP_TYPE_NOVIA){
+                if(train.getStopType(train.getEndStation(direct)+(1-2*direct))== AOdiaTrain.STOP_TYPE_PASS||train.getStopType(train.getEndStation(direct)+(1-2*direct))== AOdiaTrain.STOP_TYPE_NOVIA){
                     addInfo+="||";
                     existGoOther=true;
                 }
@@ -205,7 +205,7 @@ public class StationInfoFragment extends KLFragment {
             if(usedTrainType[i]){
                 TextView typeView=new TextView(getActivity());
                 typeView.setText(diaFile.getTrainType(i).getName()+"　");
-                typeView.setTextColor(diaFile.getTrainType(i).getTextColor());
+                typeView.setTextColor(diaFile.getTrainType(i).getAOdiaTextColor());
 //                StationTimeTableTrainView exampleView=new StationTimeTableTrainView(getActivity(),"00:"+diaFile.getTrainType(i).getName(),"","",diaFile.getTrainType(i).getTextColor(),fileNum,diaNumber,direct,-1);
 //                ((FlexboxLayout)findViewById(R.id.example)).addView(exampleView);
                 ((FlexboxLayout)findViewById(R.id.example)).addView(typeView);
@@ -255,14 +255,14 @@ public class StationInfoFragment extends KLFragment {
         ArrayList<Integer> trainList = new ArrayList<Integer>();
         for (int i = 0; i < diaFile.getTrainNum(diaNumber, direct); i++) {
             if (diaFile.getTrain(diaNumber, direct, i).getPredictionTime(station)>0){
-                if(diaFile.getTrain(diaNumber, direct, i).getStopType(station)!=Train.STOP_TYPE_STOP&&!spf.getBoolean("STTpass",false)){
+                if(diaFile.getTrain(diaNumber, direct, i).getStopType(station)!= AOdiaTrain.STOP_TYPE_STOP&&!spf.getBoolean("STTpass",false)){
                     continue;
                 }
                 if(diaFile.getTrain(diaNumber, direct, i).getEndStation(direct)==station&&!spf.getBoolean("endTrain",false)){
                     continue;
                 }
                 addStationSubName(diaFile.getTrain(diaNumber, direct, i).getEndStation(direct));
-                if(diaFile.getTrain(diaNumber, direct, i).getStopType(station)==Train.STOP_TYPE_STOP){
+                if(diaFile.getTrain(diaNumber, direct, i).getStopType(station)== AOdiaTrain.STOP_TYPE_STOP){
                     usedTrainType[diaFile.getTrain(diaNumber, direct, i).getType()]=true;
                 }
                 int j = 0;
@@ -300,9 +300,9 @@ public class StationInfoFragment extends KLFragment {
 
             String title="";
         if(maxIndex>=0) {
-            title = title + diaFile.getStationName(station) + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　" + diaFile.getStationName(maxIndex) + "方面";
+            title = title + diaFile.getStation(station).getName() + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　" + diaFile.getStation(maxIndex).getName() + "方面";
         }else{
-            title = title + diaFile.getStationName(station) + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　列車なし";
+            title = title + diaFile.getStation(station).getName() + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　列車なし";
         }
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(title);
@@ -310,21 +310,21 @@ public class StationInfoFragment extends KLFragment {
 
             if(maxIndex>=0){
 
-            result=result+"無印:"+diaFile.getStationName(maxIndex);
+            result=result+"無印:"+diaFile.getStation(maxIndex).getName();
             subName[maxIndex]="";
             subNameCount[maxIndex]=0;
             for(int station=0;station<diaFile.getStationNum();station++){
                 if(subNameCount[station]==0)continue;
-                subName[station]=diaFile.getStationName(station).substring(0,1);
-                for(int i=0;i<diaFile.getStationName(station).length();i++){
+                subName[station]=diaFile.getStation(station).getName().substring(0,1);
+                for(int i=0;i<diaFile.getStation(station).getName().length();i++){
                     boolean sameFrag=false;//同じものがあるかどうか
                     for(int j=0;j<station;j++){
-                        if(subName[j].equals(diaFile.getStationName(station).substring(i,i+1))){
+                        if(subName[j].equals(diaFile.getStation(station).getName().substring(i,i+1))){
                             sameFrag=true;
                         }
                     }
                     if(!sameFrag){
-                        subName[station]=diaFile.getStationName(station).substring(i,i+1);
+                        subName[station]=diaFile.getStation(station).getName().substring(i,i+1);
                         break;
                     }
                 }
@@ -332,7 +332,7 @@ public class StationInfoFragment extends KLFragment {
             }
             for(int i=0;i<subName.length;i++){
                 if(!subName[i].equals("")){
-                    result=result+"　"+subName[i]+":"+diaFile.getStationName(i);
+                    result=result+"　"+subName[i]+":"+diaFile.getStation(i).getName();
                 }
             }}
         TextView textView=(TextView)findViewById(R.id.textView);
@@ -345,7 +345,7 @@ public class StationInfoFragment extends KLFragment {
         }else{
             directS="上り";
         }
-        return "駅時刻表　"+diaFile.getStationName(station)+"　"+directS+diaFile.getLineName();
+        return "駅時刻表　"+diaFile.getStation(station).getName()+"　"+directS+diaFile.getLineName();
     }
     public View findViewById(int id){
         return contentView.findViewById(id);

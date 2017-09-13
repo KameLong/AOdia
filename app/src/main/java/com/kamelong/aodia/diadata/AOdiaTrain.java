@@ -1,8 +1,10 @@
-package com.kamelong.aodia.oudia;
+package com.kamelong.aodia.diadata;
 
 import android.util.Log;
+
+import com.kamelong.JPTIOuDia.OuDia.OuDiaTrain;
 import com.kamelong.aodia.SdLog;
-import org.json.JSONArray;
+
 import java.util.ArrayList;
 /*
  *     This file is part of AOdia.
@@ -33,66 +35,17 @@ AOdia is free software: you can redistribute it and/or modify
  * それぞれのダイヤ形式に合わせた変換はxxxDiaFileクラスに記述する
  * @author  KameLong
  */
-public class Train {
-    /**
-     * 駅扱いの定数。long timeの9~12bitがstop typeに対応する。
-     */
-    public static final int STOP_TYPE_STOP=1;
-    public static final int STOP_TYPE_PASS=2;
-    public static final int STOP_TYPE_NOSERVICE=0;
-    public static final int STOP_TYPE_NOVIA=3;
-    /**
-     * 列車種別
-     */
-    private int type = 0;
-    /**
-     * 列車番号
-     */
-    private String number ="";
-    /**
-     * 列車名
-     */
-    private String name="";
-    /**
-     * 号数
-     */
-    private String count="";
-    /**
-     * 備考
-     */
-    private String remark="";//備考
-    /**
-     * １列車の駅依存の情報を格納する。
-     * このデータは駅数分できるため、サイズの大きいオブジェクトはメモリを圧迫します。
-     * 省メモリのため文字列などを用いず、すべてlongで表記します。
-     * longは64bitなので、各ビットごとに役割を持たせたいます。
-     * 先頭より　
-     * 4bit フラグエリア：どの情報が存在するのかを示したもの（1:存在する,0:存在しない)
-     *       [free,free,着時刻の存在,発時刻の存在,free,free,free,free]
-     * 4bit 駅扱いを記述する。この4bitの値がそのままstopTypeとなる
-     * 8bit 空き領域(free)
-     * 24bit 着時刻（秒単位）
-     * 24bit 発時刻（秒単位）
-     */
-
-    private long time[];
-    /**
-     * この列車が所属するDiaFile
-     */
-    private DiaFile diaFile;
-    /**
-     * 日付をまたぐ列車はtrueになります.
-     */
-    public boolean doubleDay=false;
+public class AOdiaTrain extends OuDiaTrain {
 
     /**
      * 列車の生成には所属するDiaFileが必要となります。
      * @param dia　呼び出し元のDiaFile
      */
-    public Train(DiaFile dia) {
+    public AOdiaTrain(AOdiaDiaFile dia) {
+        super(dia);
         diaFile=dia;
         try {
-            time = new long[diaFile.getStationNum()];
+            time = new long[getDiaFile().getStationNum()];
             for (int i = 0; i < time.length; i++) {
                 time[i] = 0;
             }
@@ -737,10 +690,10 @@ public class Train {
             int afterMinTime=0;//後方の時刻あり駅までの最小時間
             int beforeMinTime=0;//前方の時刻あり駅までの最小時間
 
-            ArrayList<Integer> minstationTime=diaFile.getStationTime();
+            ArrayList<Integer> minstationTime=getDiaFile().getStationTime();
 
             //対象駅より先の駅で駅時刻が存在する駅までの最小所要時間と
-            for(int i=station+1;i<diaFile.getStationNum();i++){
+            for(int i=station+1;i<getDiaFile().getStationNum();i++){
                 if(getStopType(i)==STOP_TYPE_NOSERVICE||getStopType(i)==STOP_TYPE_NOVIA||getStopType(i-1)==STOP_TYPE_NOSERVICE||getStopType(i-1)==STOP_TYPE_NOVIA){
                     continue;
                 }
@@ -804,8 +757,12 @@ public class Train {
      * @param station 駅インデックス
      * @return
      */
-    public boolean beforeTrain(Train train,int station){
+    public boolean beforeTrain(AOdiaTrain train, int station){
         return true;
     }
+    public AOdiaDiaFile getDiaFile(){
+        return (AOdiaDiaFile)diaFile;
+    }
+
 
 }

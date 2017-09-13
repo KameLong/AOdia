@@ -2,7 +2,8 @@ package com.kamelong.aodia;
 
 import android.app.Fragment;
 
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+
 
 /**
  * Created by kame on 2017/02/20.
@@ -12,7 +13,7 @@ import com.kamelong.aodia.oudia.DiaFile;
  * KLFragmentを継承すると
  */
 public abstract class KLFragment extends Fragment{
-    public DiaFile diaFile;
+    public AOdiaDiaFile diaFile;
     public String fragmentName(){
         return "";
     }

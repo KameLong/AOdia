@@ -1,24 +1,20 @@
 package com.kamelong.aodia.timeTable;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
-import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.oudia.Station;
-import com.kamelong.aodia.oudia.Train;
-import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaStation;
+import com.kamelong.aodia.diadata.AOdiaTrain;
 
 public class TrainTimeView extends KLView {
-    private DiaFile dia;
-    private Train train;
+    private AOdiaDiaFile dia;
+    private AOdiaTrain train;
     private int direct;
     private boolean secondFrag=false;
     private boolean remarkFrag=false;
@@ -27,7 +23,7 @@ public class TrainTimeView extends KLView {
     TrainTimeView(Context context){
         super(context);
     }
-    TrainTimeView(Context context,DiaFile diaFile,Train t,int d){
+    TrainTimeView(Context context, AOdiaDiaFile diaFile, AOdiaTrain t, int d){
         this(context);
         dia=diaFile;
         train=t;
@@ -48,9 +44,9 @@ public class TrainTimeView extends KLView {
         try {
             int startLine = textSize;
             for (int i = 0; i < dia.getStationNum(); i++) {
-                textPaint.setColor(dia.getTrainType(train.getType()).getTextColor());
+                textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
                 int stationNumber = (dia.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
-                Station station = dia.getStation(stationNumber);
+                AOdiaStation station = dia.getStation(stationNumber);
                 switch (station.getTimeShow(direct)) {
                     case 0:
                         break;
@@ -101,7 +97,7 @@ public class TrainTimeView extends KLView {
                         canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
                         startLine = startLine + (int) (textSize * 7 / 6);
 
-                        textPaint.setColor(dia.getTrainType(train.getType()).getTextColor());
+                        textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
 
                         int forwordStation = stationNumber + (1 - direct * 2);
                         if (forwordStation < 0 || forwordStation >= dia.getStationNum()) {
@@ -293,7 +289,7 @@ public class TrainTimeView extends KLView {
         int result=textSize;
         for(int i=0;i<dia.getStationNum();i++){
             int stationNumber=(dia.getStationNum()-1)*direct+(1-2*direct)*i;
-            Station station=dia.getStation(stationNumber);
+            AOdiaStation station=dia.getStation(stationNumber);
             switch (station.getTimeShow(direct)){
                 case 0:
                     break;
@@ -333,14 +329,14 @@ public class TrainTimeView extends KLView {
         }
         return (int)(textSize*lineTextSize*0.5f);
     }
-    public String getDepartureTime(Train train,int station,int direct){
+    public String getDepartureTime(AOdiaTrain train, int station, int direct){
         try {
             switch(train.getStopType(station)){
-                case Train.STOP_TYPE_NOSERVICE:
+                case AOdiaTrain.STOP_TYPE_NOSERVICE:
                     return ": :";
-                case Train.STOP_TYPE_NOVIA:
+                case AOdiaTrain.STOP_TYPE_NOVIA:
                     return "| |";
-                case Train.STOP_TYPE_PASS:
+                case AOdiaTrain.STOP_TYPE_PASS:
                     if(showPassFrag&&train.timeExist(station)) {
                         textPaint.setColor(Color.GRAY);
                     }else{
@@ -372,14 +368,14 @@ public class TrainTimeView extends KLView {
         }
         return "○";
     }
-    private String getArriveTime(Train train,int station,int direct){
+    private String getArriveTime(AOdiaTrain train, int station, int direct){
         try {
             switch(train.getStopType(station)){
-                case Train.STOP_TYPE_NOSERVICE:
+                case AOdiaTrain.STOP_TYPE_NOSERVICE:
                     return ": :";
-                case Train.STOP_TYPE_NOVIA:
+                case AOdiaTrain.STOP_TYPE_NOVIA:
                     return "| |";
-                case Train.STOP_TYPE_PASS:
+                case AOdiaTrain.STOP_TYPE_PASS:
                     if(showPassFrag&&train.timeExist(station)) {
                         textPaint.setColor(Color.GRAY);
                     }else{

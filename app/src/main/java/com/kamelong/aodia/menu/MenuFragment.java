@@ -15,8 +15,8 @@ import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.file.SearchFileDialog;
-import com.kamelong.aodia.oudia.DiaFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class MenuFragment extends Fragment {
     private LinearLayout layout;
-    private ArrayList<DiaFile>diaFiles;
+    private ArrayList<AOdiaDiaFile>diaFiles;
     private ArrayList<Integer>diaFilesIndex;
     private MainActivity activity;
 

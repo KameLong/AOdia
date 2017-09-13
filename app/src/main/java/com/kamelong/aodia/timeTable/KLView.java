@@ -1,12 +1,9 @@
 package com.kamelong.aodia.timeTable;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
-
-import com.kamelong.aodia.oudia.Station;
 /*
  *     This file is part of AOdia.
 

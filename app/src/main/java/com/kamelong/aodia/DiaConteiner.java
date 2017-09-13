@@ -4,13 +4,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.diagram.DiagramSetting;
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.oudia.OuDiaDiaFile;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 
-import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -38,7 +36,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class DiaConteiner {
-    public DiaFile diaFile;
+    public AOdiaDiaFile diaFile;
     public ArrayList<Fragment[]> dataFragment;
     public ArrayList<DiagramSetting> diagramsetting;
 
@@ -51,7 +49,7 @@ public class DiaConteiner {
      */
     public int indexNumber;
 
-    public DiaConteiner(Context c,DiaFile dia){
+    public DiaConteiner(Context c,AOdiaDiaFile dia){
         context=c;
         diaFile=dia;
 

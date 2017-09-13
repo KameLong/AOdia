@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 
 /**
@@ -38,7 +38,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationIndoDialog extends Dialog{
-    DiaFile diaFile;
+    AOdiaDiaFile diaFile;
     TimeTableFragment fragment;
     int fileNum;
     int station;
@@ -46,7 +46,7 @@ public class StationIndoDialog extends Dialog{
     int diaNum;
     MainActivity activity;
 
-    public StationIndoDialog(Context context, TimeTableFragment f,DiaFile dia,int fileN,int diaN,int d, int s){
+    public StationIndoDialog(Context context, TimeTableFragment f,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
         super(context);
         diaFile=dia;
         fragment=f;
@@ -56,7 +56,7 @@ public class StationIndoDialog extends Dialog{
         fileNum=fileN;
         activity=(MainActivity)context;
     }
-    public StationIndoDialog(Context context,DiaFile dia,int fileN,int diaN,int d, int s){
+    public StationIndoDialog(Context context,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
         super(context);
         diaFile=dia;
         fragment=null;
@@ -78,10 +78,10 @@ public class StationIndoDialog extends Dialog{
     private void init(){
         try {
             TextView stationNameView = (TextView) findViewById(R.id.stationNameView);
-            stationNameView.setText(diaFile.getStationName(station) + "駅");
+            stationNameView.setText(diaFile.getStation(station).getName() + "駅");
             Button beforeStationButton = (Button) findViewById(R.id.beforeStationButton);
             if (station - (1 - 2 * direct) >= 0 && station - (1 - 2 * direct) < diaFile.getStationNum()) {
-                beforeStationButton.setText("⇦" + diaFile.getStationName(station - (1 - 2 * direct)) + "駅");
+                beforeStationButton.setText("⇦" + diaFile.getStation(station - (1 - 2 * direct)).getName() + "駅");
                 beforeStationButton.setVisibility(View.VISIBLE);
             } else {
                 beforeStationButton.setVisibility(View.INVISIBLE);
@@ -95,7 +95,7 @@ public class StationIndoDialog extends Dialog{
             });
             Button afterStationButton = (Button) findViewById(R.id.afterStationButton);
             if (station + (1 - 2 * direct) >= 0 && station + (1 - 2 * direct) < diaFile.getStationNum()) {
-                afterStationButton.setText(diaFile.getStationName(station + (1 - 2 * direct)) + "駅⇨");
+                afterStationButton.setText(diaFile.getStation(station + (1 - 2 * direct)).getName() + "駅⇨");
                 afterStationButton.setVisibility(View.VISIBLE);
             } else {
                 afterStationButton.setVisibility(View.INVISIBLE);

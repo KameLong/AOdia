@@ -1,6 +1,8 @@
-package com.kamelong.aodia.oudia;
+package com.kamelong.aodia.diadata;
 
 import android.graphics.Color;
+
+import com.kamelong.JPTIOuDia.OuDia.OuDiaTrainType;
 
 
 /*
@@ -30,49 +32,14 @@ AOdia is free software: you can redistribute it and/or modify
  * 列車種別を格納するクラス。
  * 1つの列車種別は１つのオブジェクトになります。
  */
-public class TrainType {
-    /**
-     * 種別名
-     */
-    private String name="";
-    /**
-     * 種別名略称
-     */
-    private String shortName="";
-    /**
-     * 時刻表文字色
-     */
-    private int textColor=Color.BLACK;
-    /**
-     * ダイヤグラム線色
-     */
-    private int diaColor=Color.BLACK;
-    /**
-     * ダイヤグラムを太線で描画するか
-     */
-    private boolean boldLine=false;
-    /**
-     * ダイヤグラムの線のスタイル
-     * LINESTYLE_XXXの定数を用いる
-     */
-    private int lineStyle=LINESTYLE_NORMAL;
-
-    public static final int LINESTYLE_NORMAL=0;
-    public static final int LINESTYLE_DASH=1;
-    public static final int LINESTYLE_DOT=2;
-    public static final int LINESTYLE_CHAIN=3;
-    /**
-     * ダイヤグラム上で、停車駅を表示するかどうか
-     */
-    private boolean showStop=false;
-
+public class AOdiaTrainType extends OuDiaTrainType{
     /**
      * コンストラクタ。
      * 特に情報がない列車種別を作成する。
      * 種別名から文字列
      * 各色はすべて黒
      */
-    public TrainType(){
+    public AOdiaTrainType(){
     }
 
     /**
@@ -80,12 +47,6 @@ public class TrainType {
      * @param value 種別名
      */
     public void setName(String value){
-        //shift-jis特有の0x5c問題の解決策です
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
-
         name=value;
     }
 
@@ -103,11 +64,6 @@ public class TrainType {
      * @param value 略称
      */
     public void setShortName(String value){
-        //shift-jis特有の0x5c問題の解決策です
-        String[] dameMoji={"\\","―","ソ","Ы","Ⅸ","噂","浬","欺","圭","構.","蚕","十","申","曾","箪","貼","能","表","暴","予","禄","兔","喀","媾","彌","拿","杤","歃","濬","畚","秉","綵","臀","藹","觸","軆","鐔","饅","鷭","偆","砡","纊","犾"};
-        for (String moji: dameMoji){
-            value=value.replace(moji+"\\",moji);
-        }
         if(value.length()>2) {
             shortName = value.substring(0, 2);
         }else{
@@ -128,32 +84,16 @@ public class TrainType {
      * 時刻表文字色を取得する
      * @return 色を表すint
      */
-    public int getTextColor(){
-        return textColor;
+    public int getAOdiaTextColor(){
+        return textColor.getAndroidColor();
     }
     /**
      * ダイヤグラム線色を取得する
      * @return 色を表すint
      */
-    public int getDiaColor(){
-        return diaColor;
+    public int getAOdiaDiaColor(){
+        return diaColor.getAndroidColor();
     }
-
-    /**
-     * 時刻表文字色をセットする
-     * @param color 色を表すint
-     */
-    public void setTextColor(int color){
-        textColor=color;
-    }
-    /**
-     * ダイヤグラム線色をセットする
-     * @param color 色を表すint
-     */
-    public void setDiaColor(int color){
-        diaColor=color;
-    }
-
 
 
     /**

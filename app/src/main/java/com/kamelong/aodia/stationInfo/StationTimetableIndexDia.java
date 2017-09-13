@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
 /**
  * Created by kame on 2017/02/03.
@@ -39,7 +39,7 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class StationTimetableIndexDia extends LinearLayout {
     MainActivity activity;
-    public StationTimetableIndexDia(Context context, DiaFile diaFile, final int fileNum,final int stationNum, final int diaNum){
+    public StationTimetableIndexDia(Context context, AOdiaDiaFile diaFile, final int fileNum, final int stationNum, final int diaNum){
         super(context);
         activity=(MainActivity)context;
         try{

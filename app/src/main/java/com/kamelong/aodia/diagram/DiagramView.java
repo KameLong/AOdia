@@ -1,27 +1,18 @@
 package com.kamelong.aodia.diagram;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.widget.FrameLayout;
 
-import com.kamelong.aodia.MainActivity;
-import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
-import com.kamelong.aodia.oudia.Train;
-import com.kamelong.aodia.oudia.TrainType;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadata.AOdiaTrainType;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -62,7 +53,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class DiagramView extends KLView {
-    private DiaFile diaFile;
+    private AOdiaDiaFile diaFile;
     private DiagramSetting setting;
     private int diaNum=0;
     /**
@@ -76,7 +67,7 @@ public class DiagramView extends KLView {
      * ダイヤグラムに表示する列車のリスト
      * DiaFile内で順番が変更されることを考慮し、配列に取得しています。
      */
-    ArrayList<Train>[]trainList=new ArrayList[2];
+    ArrayList<AOdiaTrain>[]trainList=new ArrayList[2];
     /**
      * ダイヤグラム描画に用いるパス
      * diagramPath[0]は下りダイヤ
@@ -100,7 +91,7 @@ public class DiagramView extends KLView {
      *
      * ダイヤグラム画面内を長押しすることで近くにあるダイヤ線の列車が強調表示に切り替わります
      */
-    private Train focsTrain=null;
+    private AOdiaTrain focsTrain=null;
     /**
      * これがtrueの時は実線表示のみとなり、点線などは使えなくなる
      */
@@ -125,14 +116,14 @@ public class DiagramView extends KLView {
         //makeDiagramData
         diagramPath[0]=new  ArrayList<ArrayList<Integer>>();
         diagramPath[1]=new  ArrayList<ArrayList<Integer>>();
-        trainList[0]=new ArrayList<Train>();
-        trainList[1]=new ArrayList<Train>();
+        trainList[0]=new ArrayList<AOdiaTrain>();
+        trainList[1]=new ArrayList<AOdiaTrain>();
         stopMark[0]=new ArrayList<Integer>();
         stopMark[1]=new ArrayList<Integer>();
 
         for(int direct=0;direct<2;direct++){
             for (int i = 0; i < this.diaFile.getTrainNum(diaNum, direct); i++) {
-                Train train= diaFile.getTrain(diaNum, direct, i);
+                AOdiaTrain train= diaFile.getTrain(diaNum, direct, i);
                 //この列車のdiagramPath
                 ArrayList<Integer> trainPath=new ArrayList<Integer>();
                 //始発部分のパスを追加
@@ -141,13 +132,13 @@ public class DiagramView extends KLView {
                 boolean drawable=true;
                 //駅ループ
                 for (int j = train.getStartStation(direct) + (1-direct*2);(1-direct*2)* j <(1-direct*2)* (train.getEndStation(direct)+ (1-direct*2)); j=j+(1-direct*2)) {
-                    if(drawable&&train.getStopType(j)==Train.STOP_TYPE_NOSERVICE){
+                    if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_NOSERVICE){
                         //描画打ち切り
                         drawable=false;
                         trainPath.add(trainPath.get(trainPath.size()-2));
                         trainPath.add(trainPath.get(trainPath.size()-2));
                     }
-                    if(drawable&&train.getStopType(j)==Train.STOP_TYPE_NOVIA){
+                    if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_NOVIA){
                         //未処理
                         drawable=false;
                         trainPath.add(trainPath.get(trainPath.size()-2));
@@ -189,7 +180,7 @@ public class DiagramView extends KLView {
                             //no problem
                         }
                     }else{
-                        if(drawable&&train.getStopType(j)==Train.STOP_TYPE_PASS&&train.getStopType(j + (1 - 2 * direct))==Train.STOP_TYPE_NOVIA&&!train.timeExist(j)){
+                        if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_PASS&&train.getStopType(j + (1 - 2 * direct))== AOdiaTrain.STOP_TYPE_NOVIA&&!train.timeExist(j)){
 
                             if(train.getPredictionTime(j)<0){
                             }else{
@@ -199,7 +190,7 @@ public class DiagramView extends KLView {
                                 drawable=false;
                             }
                         }
-                        if(!drawable&&train.getStopType(j )==Train.STOP_TYPE_PASS&&train.getStopType(j - (1 - 2 * direct))==Train.STOP_TYPE_NOVIA&&!train.timeExist(j)){
+                        if(!drawable&&train.getStopType(j )== AOdiaTrain.STOP_TYPE_PASS&&train.getStopType(j - (1 - 2 * direct))== AOdiaTrain.STOP_TYPE_NOVIA&&!train.timeExist(j)){
                             if(train.getPredictionTime(j)<0){
 
                             }else{
@@ -256,7 +247,7 @@ public class DiagramView extends KLView {
             }
         }
     }
-    DiagramView(Context context,DiagramSetting s, DiaFile dia,int num){
+    DiagramView(Context context,DiagramSetting s, AOdiaDiaFile dia,int num){
         this(context);
         try {
             setting=s;
@@ -332,7 +323,7 @@ public class DiagramView extends KLView {
                 if ((direct == 0 && setting.downFrag) || (direct == 1 && setting.upFrag)) {
                     for (int i = 0; i < trainList[direct].size(); i++) {
                         //ダイヤ線色を指定
-                        paint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getDiaColor());
+                        paint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
                         if (focsTrain != null) {
                             //強調表示の列車があるときは半透明化
                             paint.setAlpha(100);
@@ -351,7 +342,7 @@ public class DiagramView extends KLView {
                             //線の太さを太くする
                             paint.setStrokeWidth(defaultLineSize * 3f);
                             //文字色もダイヤ色に合わせて変更
-                            textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getDiaColor());
+                            textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
                             textPaint.setAlpha(255);
                             for (int j = 0; j < diaFile.getStationNum(); j++) {
                                 if (focsTrain.arriveExist(j)) {
@@ -368,16 +359,16 @@ public class DiagramView extends KLView {
                             canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                         }else {
                             switch ((diaFile.getTrainType(trainList[direct].get(i).getType()).getLineStyle())) {
-                                case TrainType.LINESTYLE_NORMAL:
+                                case AOdiaTrainType.LINESTYLE_NORMAL:
                                     canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case TrainType.LINESTYLE_DASH:
+                                case AOdiaTrainType.LINESTYLE_DASH:
                                     drawDashLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
-                                case TrainType.LINESTYLE_DOT:
+                                case AOdiaTrainType.LINESTYLE_DOT:
                                     drawDotLines(canvas, toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case TrainType.LINESTYLE_CHAIN:
+                                case AOdiaTrainType.LINESTYLE_CHAIN:
                                     drawChainLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
                             }
@@ -602,7 +593,7 @@ public class DiagramView extends KLView {
                     //canvasを回転して
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
                     //列車番号を描画
-                    textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getDiaColor());
+                    textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
                     if(focsTrain==null||focsTrain==trainList[direct].get(i)){
                         textPaint.setAlpha(255);
                     }else{
