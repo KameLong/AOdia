@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
@@ -38,10 +38,10 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimetableIndexDia extends LinearLayout {
-    MainActivity activity;
+    AOdiaActivity activity;
     public StationTimetableIndexDia(Context context, AOdiaDiaFile diaFile, final int fileNum, final int stationNum, final int diaNum){
         super(context);
-        activity=(MainActivity)context;
+        activity=(AOdiaActivity)context;
         try{
             View layout = LayoutInflater.from(context).inflate(R.layout.station_timetable_index_onedia, this);
             ((TextView)findViewById(R.id.diaName)).setText(diaFile.getDiaName(diaNum));

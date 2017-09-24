@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
@@ -65,13 +65,13 @@ public class LineMenu  extends LinearLayout{
             findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getContext()).killDiaFile(fileNum,menuIndex);
+                    ((AOdiaActivity)getContext()).killDiaFile(fileNum,menuIndex);
                 }
             });
             findViewById(R.id.upButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getContext()).upDiaFile(menuIndex);
+                    ((AOdiaActivity)getContext()).upDiaFile(menuIndex);
 
                 }
             });
@@ -107,7 +107,7 @@ public class LineMenu  extends LinearLayout{
             timetable.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).openStationTimeTableIndex(fileNum);
+                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
             lineContLinear.addView(timetable);
@@ -154,7 +154,7 @@ public class LineMenu  extends LinearLayout{
             comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).openComment(fileNum);
+                    ((AOdiaActivity) context).openComment(fileNum);
                 }
             });
             lineContLinear.addView(comment);

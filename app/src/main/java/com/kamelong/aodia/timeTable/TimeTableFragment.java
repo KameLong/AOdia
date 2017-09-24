@@ -13,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.stationInfo.StationIndoDialog;
@@ -48,7 +48,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 一つの路線時刻表（上り、下りで独立している）につき一つの生成が必要
  * @author kamelong
  */
-public class TimeTableFragment extends KLFragment {
+public class TimeTableFragment extends AOdiaFragment {
 	/**
 	* このFragmentのcontainer
 	*/
@@ -182,7 +182,7 @@ public class TimeTableFragment extends KLFragment {
     private void init() {
         try {
             try {
-                diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+                diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
             }catch(Exception e){
                 Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
             }

@@ -11,12 +11,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.file.SearchFileDialog;
+import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,14 +53,14 @@ public class MenuFragment extends Fragment {
     private LinearLayout layout;
     private ArrayList<AOdiaDiaFile>diaFiles;
     private ArrayList<Integer>diaFilesIndex;
-    private MainActivity activity;
+    private AOdiaActivity activity;
 
     // 初期フォルダ
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-        activity=(MainActivity) getActivity();
+        activity=(AOdiaActivity) getActivity();
         diaFiles=activity.diaFiles;
             diaFilesIndex=activity.diaFilesIndex;
             return inflater.inflate(R.layout.menu, container, false);

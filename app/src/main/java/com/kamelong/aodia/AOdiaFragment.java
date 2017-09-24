@@ -12,7 +12,7 @@ import com.kamelong.aodia.diadata.AOdiaDiaFile;
 /**
  * KLFragmentを継承すると
  */
-public abstract class KLFragment extends Fragment{
+public abstract class AOdiaFragment extends TabFragment{
     public AOdiaDiaFile diaFile;
     public String fragmentName(){
         return "";

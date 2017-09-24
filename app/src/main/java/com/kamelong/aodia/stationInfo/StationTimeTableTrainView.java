@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 
@@ -73,6 +73,6 @@ public class StationTimeTableTrainView extends LinearLayout implements View.OnCl
         if(fileNum<0){
             return;
         }
-        ((MainActivity)getContext()).openLineTimeTable(fileNum,diaNum,direct,trainNum);
+        ((AOdiaActivity)getContext()).openLineTimeTable(fileNum,diaNum,direct,trainNum);
     }
 }

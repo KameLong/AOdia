@@ -104,7 +104,7 @@ public class SettingFragment extends android.preference.PreferenceFragment {
     @Override
     public void onStop(){
         try {
-            ((MainActivity)getActivity()).onCloseSetting();
+            ((AOdiaActivity)getActivity()).onCloseSetting();
             //Intent intent = new Intent();
             //intent.setClass(getActivity(), getActivity().getClass());
             //getActivity().startActivity(intent);

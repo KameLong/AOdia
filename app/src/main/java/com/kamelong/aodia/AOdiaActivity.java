@@ -31,10 +31,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
-import com.kamelong.aodia.file.FileSelectionDialog;
+import com.kamelong.aodia.AOdiaIO.FileSelectionDialog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment;
@@ -77,7 +78,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 表示する各Fragmentページはアクティビティーが管理する。
  *アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
  */
-public class MainActivity extends AppCompatActivity
+public class AOdiaActivity extends AppCompatActivity
         implements FileSelectionDialog.OnFileSelectListener {
     private Payment payment;
     /**
@@ -91,6 +92,8 @@ public class MainActivity extends AppCompatActivity
     public ArrayList<Integer> diaFilesIndex=new ArrayList<Integer>();
 
 
+    public ArrayList<Fragment> fragments=new ArrayList<>();
+    public int fragmentIndex=-1;
     MenuFragment menuFragment;
     Windows windows;
     int openId=R.id.container;
@@ -104,14 +107,9 @@ public class MainActivity extends AppCompatActivity
         windows=new Windows(this);
 
         //MainActivityに用いるContentViewを設定
-        //これはタブレットモードかどうかで用いるものが異なる
-        if(windows.tabletStyle){
-            setContentView(R.layout.activity_main_tablet);
-        }else{
-            setContentView(R.layout.activity_main);
-        }
+        setContentView(R.layout.activity_main);
         setting();
-        windows.windowsInit();
+
 
 
 
@@ -215,8 +213,8 @@ public class MainActivity extends AppCompatActivity
         String[] windowData = new String[DBHelper.WINDOW_NUM];
 
         try {
-            int[] ids = new int[]{R.id.container, R.id.container1, R.id.container2, R.id.container3, R.id.container4};
-            for (int i = 0; i < 5; i++) {
+            int[] ids = new int[]{R.id.container};
+            for (int i = 0; i < 1; i++) {
                 try {
                     if (getFragmentManager().findFragmentById(ids[i]) == null) {
                         windowData[i] = "";
@@ -314,20 +312,39 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        if(windows.showContainer){
-            menu.findItem(R.id.action_split_window).setIcon(R.drawable.four_display);
-            menu.findItem(R.id.action_shrinking).setVisible(true);
-            menu.findItem(R.id.action_change_window_size).setVisible(false);
-        }else{
-            menu.findItem(R.id.action_split_window).setIcon(R.drawable.spread);
-            menu.findItem(R.id.action_shrinking).setVisible(false);
-            menu.findItem(R.id.action_change_window_size).setVisible(true);
-        }
-        if(windows.chooseContainer){
-            menu.findItem(R.id.action_shrinking).setIcon(R.drawable.spread);
-        }else{
-            menu.findItem(R.id.action_shrinking).setIcon(R.drawable.shrinking);
-        }
+        menu.findItem(R.id.backFragment).setVisible(true);
+        menu.findItem(R.id.backFragment).setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        fragmentIndex--;
+                        System.out.println("fragment="+fragmentIndex+",max="+fragments.size());
+                        if(fragmentIndex<=0){
+                            fragmentIndex=0;
+                        }
+                        moveFragment(fragments.get(fragmentIndex));
+                        return false;
+                    }
+                }
+        );
+
+        menu.findItem(R.id.proceedFragment).setVisible(true);
+
+        menu.findItem(R.id.proceedFragment).setOnMenuItemClickListener(
+                new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        fragmentIndex++;
+                        System.out.println("fragment="+fragmentIndex+",max="+fragments.size());
+                        if(fragmentIndex>=fragments.size()){
+                            fragmentIndex=fragments.size()-1;
+                        }
+                        moveFragment(fragments.get(fragmentIndex));
+                        return false;
+                    }
+                }
+        );
+
         return true;
     }
 
@@ -353,16 +370,14 @@ public class MainActivity extends AppCompatActivity
                 }
                 fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
                 fragmentTransaction.commit();
-                windows.showContainer(255);
+
 
             } catch (Exception e) {
                 SdLog.log(e);
             }
             return true;
         }
-        if(windows.optionMenu(id)){
-            return true;
-        }
+
 
 
         return super.onOptionsItemSelected(item);
@@ -447,6 +462,11 @@ public class MainActivity extends AppCompatActivity
      * そのフォルダを基準にFileSelectionDialogを開く
      */
     public void openFileDialog(){
+        if(getStoragePermission()) {
+            Fragment fragment = new FileSelectFragment();
+            openFragment(fragment);
+        }
+        /*
         DBHelper db = new DBHelper(this);
         File beforeFile=new File(db.getRecentFilePath());
         db.close();
@@ -460,6 +480,7 @@ public class MainActivity extends AppCompatActivity
                         Environment.DIRECTORY_DOWNLOADS));
             }
         }
+        */
     }
 
 
@@ -665,7 +686,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         String[] windowList=db.readWindows();
-        int[] ids=new int[]{R.id.container,R.id.container1,R.id.container2,R.id.container3,R.id.container4};
+        int[] ids=new int[]{R.id.container};
         for(int i=0;i<5;i++){
             openId=ids[i];
             openFragment(windowList[i]);
@@ -702,7 +723,24 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(openId, fragment);
         fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
         fragmentTransaction.commit();
-        windows.showContainer(255);
+        fragmentIndex++;
+        fragments.add(fragmentIndex,fragment);
+    }
+    /**
+     * 任意のFragmentをcontainerに開きます。
+     * @param fragment
+     */
+    private void moveFragment(Fragment fragment){
+        if(!windows.tabletStyle) {
+            //もしメニューが開いていたら閉じる
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(openId, fragment);
+        fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
+        fragmentTransaction.commit();
     }
 
     /**
@@ -746,24 +784,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    /**
-     * fromIDに置かれたFragmentをtoIDに移動させる
-     */
-    public KLFragment moveFragment(int fromId,int toId){
-        try {
-            FragmentManager fragmentManager = getFragmentManager();
-            KLFragment fragment = (KLFragment) fragmentManager.findFragmentById(fromId);
-            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().remove(fragment).commit();
-            fragmentManager.executePendingTransactions();
-            fragmentManager.beginTransaction().replace(toId, fragment).commit();
-            windows.hiddenContainer(255);
-            return fragment;
-        }catch(Exception e){
-            SdLog.log(e);
-        }
-        return null;
-    }
 
     /**
      * DiaFileを閉じる
@@ -772,12 +792,12 @@ public class MainActivity extends AppCompatActivity
      * @param menuIndex
      */
     public void killDiaFile(int index,int menuIndex){
-        int[] ids=new int[]{R.id.container,R.id.container1,R.id.container2,R.id.container3,R.id.container4};
+        int[] ids=new int[]{R.id.container};
         for(int i=0;i<ids.length;i++){
             try{
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                KLFragment fragment = (KLFragment) fragmentManager.findFragmentById(ids[i]);
+                AOdiaFragment fragment = (AOdiaFragment) fragmentManager.findFragmentById(ids[i]);
                 System.out.println(fragment.diaFile+","+diaFiles.get(index));
                 if(fragment.diaFile==diaFiles.get(index)){
                     fragmentTransaction.remove(fragment).commit();
@@ -818,7 +838,7 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         deleteDatabase(DBHelper.DETABASE_NAME);
                         Intent intent=new Intent();
-                        intent.setClass(MainActivity.this,MainActivity.class);
+                        intent.setClass(AOdiaActivity.this,AOdiaActivity.class);
                         startActivity(intent);
                     }
                 });
@@ -840,7 +860,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void onCloseSetting(){
         Intent intent=new Intent();
-        intent.setClassName(this,MainActivity.class.getName());
+        intent.setClassName(this,AOdiaActivity.class.getName());
         startActivity(intent);
     }
 
@@ -856,35 +876,13 @@ public class MainActivity extends AppCompatActivity
             if (textSize > 0 && textSize < 100) {
                 KLView.setTextSize((int)(textSize/3.0f*scale));
             }
-            int width=Integer.parseInt(spf.getString("width", "540"));
-            int height=Integer.parseInt(spf.getString("height", "960"));
-            findViewById(R.id.layout1).setLayoutParams(new RelativeLayout.LayoutParams(width,height));
 
-            FrameLayout movingFrame=(FrameLayout)findViewById(R.id.movingFrame);
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)movingFrame.getLayoutParams();
-            mlp.setMargins(width,height, mlp.rightMargin, mlp.bottomMargin);
-            //マージンを設定
-            movingFrame.setLayoutParams(mlp);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-    private Fragment recreateFragment(Fragment f)
-    {
-        try {
-            Fragment.SavedState savedState = getFragmentManager().saveFragmentInstanceState(f);
 
-            Fragment newInstance = f.getClass().newInstance();
-            newInstance.setInitialSavedState(savedState);
-
-            return newInstance;
-        }
-        catch (Exception e) // InstantiationException, IllegalAccessException
-        {
-            throw new RuntimeException("Cannot reinstantiate fragment " + f.getClass().getName(), e);
-        }
-    }
 
 }

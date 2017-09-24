@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
@@ -44,7 +44,7 @@ public class StationIndoDialog extends Dialog{
     int station;
     int direct;
     int diaNum;
-    MainActivity activity;
+    AOdiaActivity activity;
 
     public StationIndoDialog(Context context, TimeTableFragment f,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
         super(context);
@@ -54,7 +54,7 @@ public class StationIndoDialog extends Dialog{
         direct=d;
         diaNum=diaN;
         fileNum=fileN;
-        activity=(MainActivity)context;
+        activity=(AOdiaActivity)context;
     }
     public StationIndoDialog(Context context,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
         super(context);
@@ -64,7 +64,7 @@ public class StationIndoDialog extends Dialog{
         direct=d;
         diaNum=diaN;
         fileNum=fileN;
-        activity=(MainActivity)context;
+        activity=(AOdiaActivity)context;
     }
 
     protected void onCreate(Bundle savedInstanceState){

@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 /*
@@ -60,7 +60,7 @@ AOdia is free software: you can redistribute it and/or modify
  * @author KameLong
  *
  */
-public class DiagramFragment extends KLFragment {
+public class DiagramFragment extends AOdiaFragment {
     /**
      * このFragment全体のView
      */
@@ -259,7 +259,7 @@ public class DiagramFragment extends KLFragment {
         super.onViewCreated(view, savedInstanceState);
         try{
             try {
-                diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+                diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
             }catch(Exception e){
                 SdLog.log(e);
                 Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);

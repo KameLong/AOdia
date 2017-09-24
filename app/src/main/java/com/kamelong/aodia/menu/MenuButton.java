@@ -3,11 +3,10 @@ package com.kamelong.aodia.menu;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.SdLog;
 
 /**
@@ -52,7 +51,7 @@ public class MenuButton extends Button {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).setFragment(fileNumber,diaNumber, fragmentNumber);
+                    ((AOdiaActivity) context).setFragment(fileNumber,diaNumber, fragmentNumber);
                 }
             });
         }catch(Exception e){

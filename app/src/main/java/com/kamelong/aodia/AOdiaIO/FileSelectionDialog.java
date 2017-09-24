@@ -1,4 +1,4 @@
-package com.kamelong.aodia.file;
+package com.kamelong.aodia.AOdiaIO;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaTrain;
@@ -43,7 +43,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-public class StationInfoFragment extends KLFragment {
+public class StationInfoFragment extends AOdiaFragment {
     private int fileNum=0;
     public int diaNumber=0;
     public int direct=0;
@@ -76,7 +76,7 @@ public class StationInfoFragment extends KLFragment {
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         try {
-            diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+            diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
         }catch(Exception e){
             SdLog.log(e);
             Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);

@@ -1,4 +1,4 @@
-package com.kamelong.aodia.file;
+package com.kamelong.aodia.AOdiaIO;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,14 +10,12 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.detabase.DBHelper;
 
 public class SearchFileDialog implements OnItemClickListener
 {
@@ -52,11 +50,6 @@ public class SearchFileDialog implements OnItemClickListener
                 String[] stationName=loadStartEndStation(file);
                 listFileInfo.add(new FileInfo(stationName[0]+"～"+stationName[1]+"\n"+file.getName(),file));
             }
-            if(file.getName().endsWith(".ZIP")){
-//                    listFileInfo.add(new FileInfo(fileTemp.getName(), fileTemp));
-
-            }
-
         }
         Collections.sort( listFileInfo );
 

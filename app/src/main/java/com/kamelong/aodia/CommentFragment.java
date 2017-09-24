@@ -1,6 +1,5 @@
 package com.kamelong.aodia;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,7 +30,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 
-public class CommentFragment extends KLFragment {
+public class CommentFragment extends AOdiaFragment {
     private int fileNum=0;
     public CommentFragment(){
         super();
@@ -67,7 +66,7 @@ public class CommentFragment extends KLFragment {
             title.setTextSize(30);
 
             title.setTextColor(Color.BLACK);
-            text.setText(((MainActivity) getActivity()).diaFiles.get(fileNum).getComment());
+            text.setText(((AOdiaActivity) getActivity()).diaFiles.get(fileNum).getComment());
             text.setTextColor(Color.BLACK);
 
             main.addView(title);

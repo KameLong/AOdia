@@ -3,8 +3,7 @@ package com.kamelong.aodia.diadata;
 import android.content.Context;
 
 import com.kamelong.JPTIOuDia.OuDia.OuDiaFile;
-import com.kamelong.JPTIOuDia.OuDia.OuDiaTrainType;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
  */
 
 public class AOdiaDiaFile extends OuDiaFile{
-    MainActivity activity;//このアプリのアクティビティー
+    AOdiaActivity activity;//このアプリのアクティビティー
     String filePath="";
     /**
      * メニューを開いているかどうか
@@ -35,7 +34,7 @@ public class AOdiaDiaFile extends OuDiaFile{
      */
     public AOdiaDiaFile(Context context, final File file){
         super(file);
-        activity=(MainActivity)context;
+        activity=(AOdiaActivity)context;
         filePath=file.getPath();
         calcMinReqiredTime();
     }

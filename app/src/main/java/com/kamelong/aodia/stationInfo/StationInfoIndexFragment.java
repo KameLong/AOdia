@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 
@@ -35,9 +35,9 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-public class StationInfoIndexFragment extends KLFragment {
+public class StationInfoIndexFragment extends AOdiaFragment {
     int fileNum = 0;
-    MainActivity activity;
+    AOdiaActivity activity;
     View contentView;
 
     @Override
@@ -50,7 +50,7 @@ public class StationInfoIndexFragment extends KLFragment {
         }catch(Exception e){
             SdLog.log(e);
         }
-        activity=(MainActivity)getActivity();
+        activity=(AOdiaActivity)getActivity();
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
         diaFile=activity.diaFiles.get(fileNum);
         if(diaFile==null){
