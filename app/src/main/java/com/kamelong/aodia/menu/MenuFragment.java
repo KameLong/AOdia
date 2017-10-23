@@ -102,6 +102,19 @@ public class MenuFragment extends Fragment {
                 }
             });
             layout.addView(openFile);
+            Button saveFile = new Button(activity);
+            saveFile.setText("　ファイルを保存する");
+            saveFile.setBackgroundColor(Color.TRANSPARENT);
+            saveFile.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            saveFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.saveFile();
+                }
+            });
+
+            layout.addView(saveFile);
             SearchView stationSearch=new SearchView(activity);
             stationSearch.setQueryHint("駅検索");
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -165,6 +178,19 @@ public class MenuFragment extends Fragment {
                 LineMenu lineMenu=new LineMenu(activity,diaFiles.get(diaFilesIndex.get(i)),diaFilesIndex.get(i),i);
                 layout.addView(lineMenu);
             }
+            Button openSetting = new Button(activity);
+            openSetting.setText("　設定");
+            openSetting.setBackgroundColor(Color.TRANSPARENT);
+            openSetting.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            openSetting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.openSetting();
+                }
+            });
+            layout.addView(openSetting);
+
         }catch(Exception e){
             SdLog.log(e);
         }

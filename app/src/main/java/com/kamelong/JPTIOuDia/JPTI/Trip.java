@@ -19,7 +19,7 @@ public class Trip extends com.kamelong.JPTI.Trip {
         return new Time(jpti,this,json);
     }
 
-    public Trip(OuDiaTrain train, int startStation, int endStation, int block, int direct, Calendar calendar, OuDiaFile oudia, JPTI jptiData,Route route){
+    public Trip(OuDiaTrain train, int block, int direct, Calendar calendar, OuDiaFile oudia, JPTI jptiData,Route route){
         super(jptiData,route);
         jpti=jptiData;
         if(train.getName().length()>0){
@@ -34,13 +34,13 @@ public class Trip extends com.kamelong.JPTI.Trip {
         this.traihType=route.getTrainType(train.getType());
 
         if(direct==0){
-            for(int i=startStation;i<endStation+1;i++){
+            for(int i=0;i<oudia.getStationNum();i++){
                 if(train.getStopType(i)==1||train.getStopType(i)==2){
                     timeList.add(new Time(jptiData,this,train,oudia,i));
                 }
             }
         }else{
-            for(int i=endStation;i>startStation-1;i--){
+            for(int i=oudia.getStationNum()-1;i>=0;i--){
                 if(train.getStopType(i)==1||train.getStopType(i)==2){
                     timeList.add(new Time(jptiData,this,train,oudia,i));
                 }

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.AOdiaActivity;
+import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 
@@ -76,8 +76,13 @@ public class StationInfoIndexFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-        return "駅時刻表一覧　"+diaFile.getLineName();
+        return "駅時刻表一覧\n"+diaFile.getLineName();
     }
+    @Override
+    public String fragmentHash(){
+        return "StationInfoIndex-"+diaFile.getFilePath();
+    }
+
     public View findViewById(int id){
         return contentView.findViewById(id);
     }

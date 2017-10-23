@@ -22,6 +22,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 
+import com.kamelong.JPTIOuDia.JPTI.RouteStation;
 import com.kamelong.JPTIOuDia.OuDia.OuDiaStation;
 
 /**
@@ -33,6 +34,12 @@ import com.kamelong.JPTIOuDia.OuDia.OuDiaStation;
  * @author  KameLong
  */
 public class AOdiaStation extends OuDiaStation{
+    public AOdiaStation(){
+        super();
+    }
+    public AOdiaStation(RouteStation station){
+        super(station);
+    }
 
     public void setName(String value){
         if(value.length()>0){

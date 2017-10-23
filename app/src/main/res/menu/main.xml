@@ -7,15 +7,4 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/backFragment"
-        android:icon="@drawable/four_display"
-        android:title="test"
-        android:visible="false"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/proceedFragment"
-        android:icon="@drawable/shrinking"
-        android:title="test"
-        app:showAsAction="always" />
 </menu>

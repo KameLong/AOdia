@@ -13,34 +13,37 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
-import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.kamelong.JPTIOuDia.JPTI.JPTI;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.detabase.DBHelper;
+import com.kamelong.aodia.diadata.Operation;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.aodia.AOdiaIO.FileSelectionDialog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.operation.OperationFragment;
 import com.kamelong.aodia.stationInfo.StationInfoFragment;
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment;
 import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.aodia.timeTable.SelectTrainTimeTable;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
+import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,7 +79,7 @@ AOdia is free software: you can redistribute it and/or modify
  * AOdiaのメインアクティビティー。
  * 起動時に呼ばれるアクティビティー。
  * 表示する各Fragmentページはアクティビティーが管理する。
- *アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
+ * アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
  */
 public class AOdiaActivity extends AppCompatActivity
         implements FileSelectionDialog.OnFileSelectListener {
@@ -92,61 +95,91 @@ public class AOdiaActivity extends AppCompatActivity
     public ArrayList<Integer> diaFilesIndex=new ArrayList<Integer>();
 
 
-    public ArrayList<Fragment> fragments=new ArrayList<>();
+    /**
+     * 開いているFragmentを保存する
+     * fragmentsはFragmentを削除すると順番を詰める
+     */
+    public ArrayList<AOdiaFragmentInterface> fragments=new ArrayList<>();
+    /**
+     * 現在開いているFragmentのインデックス
+     */
     public int fragmentIndex=-1;
-    MenuFragment menuFragment;
-    Windows windows;
-    int openId=R.id.container;
 
+    /**
+     * 使用するMenuFragment
+     */
+    MenuFragment menuFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //あらかじめ購入処理関係を起動
         payment=new Payment(this);
-        //画面処理補助クラスを起動
-        windows=new Windows(this);
-
         //MainActivityに用いるContentViewを設定
         setContentView(R.layout.activity_main);
         setting();
-
-
-
-
-        //ツールバーの定義
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        try{
-            FragmentManager fragmentManager = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            menuFragment = new MenuFragment();
-            fragmentTransaction.replace(R.id.menu, menuFragment);
-            fragmentTransaction.commit();
-        }
-        catch(Exception e){
-            SdLog.log(e);
-        }
-        if(!windows.tabletStyle) {
-            //tabletスタイルでないときはメニューdrawerを実装する
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-                public void onDrawerClosed(View view) {
-                    menuFragment.createMenu();
+        //Drawer初期化
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Button openDrawer=(Button)findViewById(R.id.Button2);
+        openDrawer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!drawer.isDrawerOpen(GravityCompat.START)){
+                    drawer.openDrawer(GravityCompat.START);
+                }else{
+                    drawer.closeDrawer(GravityCompat.START);
                 }
-                public void onDrawerOpened(View drawerView) {
-                    menuFragment.createMenu();
+            }
+        });
+        //メニュー初期化
+        menuFragment=new MenuFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.menu,menuFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentIndex--;
+                System.out.println("fragment="+fragmentIndex+",max="+fragments.size());
+                if(fragmentIndex<=0){
+                    fragmentIndex=0;
                 }
-            };
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
-        }
+                selectFragment(fragments.get(fragmentIndex));
+                findViewById(R.id.backFragment).setVisibility(fragmentIndex==0?View.INVISIBLE:View.VISIBLE);
+                findViewById(R.id.proceedFragment).setVisibility(fragmentIndex<fragments.size()-1?View.VISIBLE:View.INVISIBLE);
+
+            }
+
+
+        });
+        findViewById(R.id.proceedFragment).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentIndex++;
+                System.out.println("fragment=" + fragmentIndex + ",max=" + fragments.size());
+                if (fragmentIndex >= fragments.size()) {
+                    fragmentIndex = fragments.size() - 1;
+                }
+                selectFragment(fragments.get(fragmentIndex));
+                findViewById(R.id.backFragment).setVisibility(fragmentIndex == 0 ? View.INVISIBLE : View.VISIBLE);
+                findViewById(R.id.proceedFragment).setVisibility(fragmentIndex < fragments.size() - 1 ? View.VISIBLE : View.INVISIBLE);
+            }
+
+        });
+        findViewById(R.id.killFragment).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        killFragment(fragmentIndex);
+                    }
+                }
+        );
 
         createSample();//sample.oudを作成する
+        // ファイル関連付けで開くことをできるようにする
         if(Intent.ACTION_VIEW.equals(getIntent().getAction())) {
-            // ファイル関連付けで開く
             String fname[] = String.valueOf(getIntent().getData()).split("//");
-
             if (fname.length == 2) {
                 // 「file:」と「/～.gpx」に分けられたと仮定
                 // 受け取ったファイル名をオープンして読み込んで表示する
@@ -157,7 +190,7 @@ public class AOdiaActivity extends AppCompatActivity
                     if(filePath.length()>0&&new File(filePath).exists()){
                         if(getStoragePermission()){
                             onFileSelect(new File(filePath));
-                            setFragment(0,0,0);
+                            openDiaOrTimeFragment(0,0,0);
                             return;
                         }
                     }
@@ -169,19 +202,17 @@ public class AOdiaActivity extends AppCompatActivity
         else {
             // 通常起動の時
             //データベースより前回開いたデータを取得
-            String filePath;
-            int diaNum ;
-            int direct = 0;
-            DBHelper db = new DBHelper(this);
+
             try{
-                filePath=db.getRecentFilePath();
-                diaNum=db.getRecentDiaNum();
-                direct=db.getRecentDirect();
+                SharedPreferences preference=getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+                String filePath=preference.getString("RecentFilePath","");
+                int diaNum=preference.getInt("RecentDiaNum",0);
+                int direct=preference.getInt("RecentDirect",0);
                 //前回のデータが存在するときは、そのファイルを開く
                 if(filePath.length()>0&&new File(filePath).exists()){
                     if(getStoragePermission()){
                         onFileSelect(new File(filePath));
-                        setFragment(0,diaNum,direct);
+                        openDiaOrTimeFragment(0,diaNum,direct);
                         return;
                     }
                 }
@@ -192,6 +223,7 @@ public class AOdiaActivity extends AppCompatActivity
         //もし前回のデータが無ければsample.oudを開く
         diaFiles.add(new AOdiaDiaFile(this));
         diaFilesIndex.add(0);
+        //全開のデータがない場合はsampleを開いたうえでヘルプを開く
         openHelp();
     }
 
@@ -203,62 +235,6 @@ public class AOdiaActivity extends AppCompatActivity
 
     @Override
     public void onStop(){
-        String[] filePaths = new String[diaFilesIndex.size()];
-        for (int i = 0; i < diaFilesIndex.size(); i++) {
-            filePaths[i] = diaFiles.get(diaFilesIndex.get(i)).getFilePath();
-        }
-        DBHelper db = new DBHelper(this);
-        db.addFilePaths(filePaths);
-
-        String[] windowData = new String[DBHelper.WINDOW_NUM];
-
-        try {
-            int[] ids = new int[]{R.id.container};
-            for (int i = 0; i < 1; i++) {
-                try {
-                    if (getFragmentManager().findFragmentById(ids[i]) == null) {
-                        windowData[i] = "";
-                        continue;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    windowData[i] = "";
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(HelpFragment.class.getName())) {
-                    windowData[i] = DBHelper.HELP;
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(CommentFragment.class.getName())) {
-                    windowData[i] = DBHelper.COMMENT + "-" + getDiaFileIndexNumByFragment(((CommentFragment) getFragmentManager().findFragmentById(ids[i])).diaFile);
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoIndexFragment.class.getName())) {
-                    windowData[i] = DBHelper.STATION_TIME_INDEX + "-" + getDiaFileIndexNumByFragment(((StationInfoIndexFragment) getFragmentManager().findFragmentById(ids[i])).diaFile);
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(StationInfoFragment.class.getName())) {
-                    StationInfoFragment fragment = ((StationInfoFragment) getFragmentManager().findFragmentById(ids[i]));
-                    windowData[i] = DBHelper.STATION_TIME_TABLE + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber + "-" + fragment.direct + "-" + fragment.station;
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(DiagramFragment.class.getName())) {
-                    DiagramFragment fragment = ((DiagramFragment) getFragmentManager().findFragmentById(ids[i]));
-                    windowData[i] = DBHelper.DIAGRAM + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber;
-                    continue;
-                }
-                if (getFragmentManager().findFragmentById(ids[i]).getClass().getName().equals(TimeTableFragment.class.getName())) {
-                    TimeTableFragment fragment = ((TimeTableFragment) getFragmentManager().findFragmentById(ids[i]));
-                    windowData[i] = DBHelper.LINE_TIME_TABLE + "-" + getDiaFileIndexNumByFragment(fragment.diaFile) + "-" + fragment.diaNumber + "-" + fragment.direct;
-                    continue;
-                }
-
-
-            }
-        }catch(Exception e){
-            SdLog.log(e);
-        }
-        db.saveWindows(windowData);
         super.onStop();
     }
 
@@ -292,65 +268,23 @@ public class AOdiaActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
-
-        if(windows.tabletStyle){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
             super.onBackPressed();
-        }else{
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            if (drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
         }
     }
 
-    /**
-     * R.menu.mainを右上のメニューボタンを押したときに開くよう設定する
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        menu.findItem(R.id.backFragment).setVisible(true);
-        menu.findItem(R.id.backFragment).setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        fragmentIndex--;
-                        System.out.println("fragment="+fragmentIndex+",max="+fragments.size());
-                        if(fragmentIndex<=0){
-                            fragmentIndex=0;
-                        }
-                        moveFragment(fragments.get(fragmentIndex));
-                        return false;
-                    }
-                }
-        );
-
-        menu.findItem(R.id.proceedFragment).setVisible(true);
-
-        menu.findItem(R.id.proceedFragment).setOnMenuItemClickListener(
-                new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-                        fragmentIndex++;
-                        System.out.println("fragment="+fragmentIndex+",max="+fragments.size());
-                        if(fragmentIndex>=fragments.size()){
-                            fragmentIndex=fragments.size()-1;
-                        }
-                        moveFragment(fragments.get(fragmentIndex));
-                        return false;
-                    }
-                }
-        );
-
-        return true;
-    }
 
     /**
      * 設定を押したときの処理
      */
+    public void openSetting(){
+        SettingFragment preference=new SettingFragment();
+        openFragment(preference);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -359,27 +293,14 @@ public class AOdiaActivity extends AppCompatActivity
             try {
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                if(windows.tabletStyle){
-                    FrameLayout menuFrame=(FrameLayout)findViewById(R.id.menu);
-                    menuFrame.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT));
-                    fragmentTransaction.replace(R.id.menu, preference);
-                }else{
-                    fragmentTransaction.replace(R.id.container, preference);
-                }
+                fragmentTransaction.replace(R.id.container, preference);
                 fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
                 fragmentTransaction.commit();
-
-
             } catch (Exception e) {
                 SdLog.log(e);
             }
             return true;
         }
-
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -410,7 +331,7 @@ public class AOdiaActivity extends AppCompatActivity
                     if (textSize > 0 && textSize < 100) {
                         KLView.setTextSize(textSize);
                     }
-                    setFragment(0,0, 0);
+                    openDiaOrTimeFragment(0,0, 0);
                 } catch (Exception e) {
                     SdLog.log(e);
                 }
@@ -456,34 +377,159 @@ public class AOdiaActivity extends AppCompatActivity
             }
         }
     }
-    /**
-     * ファイルダイアログを開く
-     * ストレージのパミッションを確認し、過去に開いたフォルダがあれば、
-     * そのフォルダを基準にFileSelectionDialogを開く
-     */
-    public void openFileDialog(){
-        if(getStoragePermission()) {
-            Fragment fragment = new FileSelectFragment();
-            openFragment(fragment);
-        }
-        /*
-        DBHelper db = new DBHelper(this);
-        File beforeFile=new File(db.getRecentFilePath());
-        db.close();
-        if(getStoragePermission()){
-            FileSelectionDialog dlg = new FileSelectionDialog(this, this);
 
-            if(beforeFile.exists()) {
-                dlg.show(new File(beforeFile.getParent()));
+
+    /**
+     * ファイル一つが選択された時の処理。
+     *
+     * @param file
+     */
+    public void onFileSelect(File file) {
+        AOdiaDiaFile diaFile=null;
+        String filePath=file.getPath();
+        try {
+            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+                diaFile= new AOdiaDiaFile(this, file);
+            }
+            if(filePath.endsWith(".jpti")){
+                diaFile=new AOdiaDiaFile(new JPTI(new File(filePath)));
+                diaFile.setFilePath(filePath);
+            }
+            if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
+            DBHelper db=new DBHelper(this);
+            db.addHistory(filePath);
+            db.addNewFileToLineData(filePath,diaFile.getDiaNum());
+            if(payment.buyCheck("item001")) {
+                diaFiles.add(diaFile);
+                diaFilesIndex.add(0, diaFiles.size() - 1);
             }else{
-                dlg.show(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS));
+                if(diaFiles.size()>0){
+                    killDiaFile(0,0);
+                }
+                diaFiles.add(diaFile);
+                diaFilesIndex.add(0, diaFiles.size() - 1);
+            }
+            menuFragment.createMenu();
+            openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
+        } catch (Exception e) {
+            SdLog.log(e);
+            Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
+        }
+    }
+    /**
+     * 複数ファイルが選択されたときの処理
+     * @param files
+     */
+    public void onFileListSelect(File[] files) {
+        for(int i=0;i<files.length;i++){
+            onFileSelect(files[files.length-1-i]);
+        }
+    }
+    /**
+     * 任意のFragmentをcontainerに開きます。
+     * @param fragment
+     */
+    public void openFragment(AOdiaFragmentInterface fragment){
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment.getFragment());
+        fragmentTransaction.commit();
+        fragmentIndex++;
+        fragments.add(fragmentIndex,fragment);
+        findViewById(R.id.backFragment).setVisibility(fragmentIndex==0?View.INVISIBLE:View.VISIBLE);
+        findViewById(R.id.proceedFragment).setVisibility(fragmentIndex<fragments.size()-1?View.VISIBLE:View.INVISIBLE);
+
+
+    }
+    /**
+     * 任意のFragmentをcontainerに開きます。
+     * @param fragment
+     */
+    private void selectFragment(AOdiaFragmentInterface fragment){
+        //もしメニューが開いていたら閉じる
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, fragment.getFragment());
+        fragmentTransaction.commit();
+
+    }
+    /**
+     * DiaFileを閉じる
+     * DiaFileを閉じるときはリソースの解放とそのDiaFileを使用していたfragmentを閉じる動作が必要
+     * @param index
+     * @param menuIndex
+     */
+    public void killDiaFile(int index,int menuIndex){
+        for(int i=0;i<fragments.size();i++){
+            try{
+                AOdiaFragment fragment=(AOdiaFragment)fragments.get(i);
+                if(fragment.diaFile==diaFiles.get(index)){
+                    killFragment(i);
+                    i--;
+                }
+            }catch (Exception e) {
             }
         }
-        */
+        diaFiles.set(index,null);
+        diaFilesIndex.remove(menuIndex);
+        menuFragment.createMenu();
+
+    }
+
+    /**
+     * 指定されたIndexのFragmentをkillする
+     * @param index
+     */
+    public void killFragment(int index){
+        if(index<0){
+            return;
+        }
+        try {
+            fragments.remove(index);
+            if (fragmentIndex >= index) {
+                fragmentIndex--;
+            }
+            findViewById(R.id.backFragment).setVisibility(fragmentIndex == 0 ? View.INVISIBLE : View.VISIBLE);
+            findViewById(R.id.proceedFragment).setVisibility(fragmentIndex < fragments.size() - 1 ? View.VISIBLE : View.INVISIBLE);
+            if (fragmentIndex == -1) {
+                if (fragments.size() > 0) {
+                    fragmentIndex++;
+                    selectFragment(fragments.get(0));
+
+                } else {
+                    openHelp();
+                }
+            } else {
+                selectFragment(fragments.get(fragmentIndex));
+            }
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+    }
+
+    /**
+     */
+    public void killFragment(Fragment fragment){
+        killFragment(fragments.indexOf(fragment));
+
     }
 
 
+
+
+    /**
+     * ファイルダイアログを開く
+     */
+    public void openFileDialog(){
+        if(getStoragePermission()) {
+            AOdiaFragment fragment = new FileSelectFragment();
+            openFragment(fragment);
+        }
+    }
     /**
      * ヘルプを開く
      */
@@ -491,8 +537,6 @@ public class AOdiaActivity extends AppCompatActivity
         HelpFragment helpFragment = new HelpFragment();
         openFragment(helpFragment);
     }
-
-
     /**
      * コメント画面を開く。
      */
@@ -533,7 +577,7 @@ public class AOdiaActivity extends AppCompatActivity
      * ダイヤグラムを開く
      */
     public void openDiagram(int fileNum,int diaNum){
-        Fragment fragment=new DiagramFragment();
+        AOdiaFragment fragment=new DiagramFragment();
         Bundle args=new Bundle();
         args.putInt("fileNum",fileNum);
         args.putInt("diaN", diaNum);
@@ -542,14 +586,13 @@ public class AOdiaActivity extends AppCompatActivity
 
     }
 
-    public void setFragment(int fileNum,int diaNum, int direct) {
+    public void openDiaOrTimeFragment(int fileNum, int diaNum, int direct) {
         try {
             if(direct<2){
                 openLineTimeTable(fileNum,diaNum,direct);
             }else{
                 openDiagram(fileNum,diaNum);
             }
-
         } catch (Exception e) {
             SdLog.log(e);
         }
@@ -574,11 +617,25 @@ public class AOdiaActivity extends AppCompatActivity
             args.putInt("direct", direct);
             fragment.setArguments(args);
             openFragment(fragment);
-
             if(train!=-1){
                 fragment.goTrain(train);
-
             }
+        } catch (Exception e) {
+            SdLog.log(e);
+        }
+
+    }
+    /**
+     * 運用表を開く
+     */
+    public void openOperationFragment(int fileNum,int diaNum,int operationNum){
+        try {
+            OperationFragment fragment=new OperationFragment();
+            Bundle args=new Bundle();
+            args.putInt("fileNum",fileNum);
+            args.putInt("diaNum", diaNum);
+            fragment.setArguments(args);
+            openFragment(fragment);
         } catch (Exception e) {
             SdLog.log(e);
         }
@@ -589,7 +646,7 @@ public class AOdiaActivity extends AppCompatActivity
      *
      * @param file
      */
-    public void onUrlSelect(File file) {
+    private void onUrlSelect(File file) {
         AOdiaDiaFile diaFile=null;
         String filePath=file.getPath();
         try {
@@ -614,86 +671,14 @@ public class AOdiaActivity extends AppCompatActivity
                 diaFiles.add(diaFile);
                 diaFilesIndex.add(0, diaFiles.size() - 1);
             }
-            setFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
+            openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
         } catch (Exception e) {
             SdLog.log(e);
             Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
         }
     }
 
-    /**
-     * ファイル一つが選択された時の処理。
-     *
-     * @param file
-     */
-    public void onFileSelect(File file) {
-        AOdiaDiaFile diaFile=null;
-        String filePath=file.getPath();
-        try {
-            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
-                diaFile= new AOdiaDiaFile(this, file);
-            }
-            if(file.isDirectory()){
-                //for netgram
-            }
-            if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
-            DBHelper db=new DBHelper(this);
-            db.addHistory(filePath);
-            db.addNewFileToLineData(filePath,diaFile.getDiaNum());
-            if(payment.buyCheck("item001")) {
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }else{
-                if(diaFiles.size()>0){
-                    killDiaFile(0,0);
-                }
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }
-            setFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
-        } catch (Exception e) {
-            SdLog.log(e);
-            Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
-        }
-    }
 
-    /**
-     * 複数ファイルが選択されたときの処理
-     * @param files
-     */
-    public void onFileListSelect(File[] files) {
-        DBHelper db = new DBHelper(this);
-        diaFiles.clear();
-        diaFilesIndex.clear();
-        AOdiaDiaFile dia=null;
-        for(int i=0;i<files.length;i++) {
-            String filePath = files[i].getPath();
-            try {
-                if (filePath.endsWith(".oud")||filePath.endsWith(".oud2")) {
-                    dia = new AOdiaDiaFile(this, files[i]);
-                }
-                if (files[i].isDirectory()) {
-                    //for netgram
-                }
-                if (dia == null) return;
-                db.addHistory(filePath);
-                db.addNewFileToLineData(filePath, dia.getDiaNum());
-                diaFiles.add(dia);
-                diaFilesIndex.add(diaFiles.size() - 1);
-            } catch (Exception e) {
-                SdLog.log(e);
-                Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
-            }
-        }
-        String[] windowList=db.readWindows();
-        int[] ids=new int[]{R.id.container};
-        for(int i=0;i<5;i++){
-            openId=ids[i];
-            openFragment(windowList[i]);
-
-        }
-        openId=ids[0];
-    }
     /**
      * diaFileが指定されたとき、そのdiaFileがどのDiaFIleIndexに対応するかを調べる
      * @param diaFile
@@ -707,40 +692,6 @@ public class AOdiaActivity extends AppCompatActivity
         }
         return 0;
 
-    }
-    /**
-     * 任意のFragmentをcontainerに開きます。
-     * @param fragment
-     */
-    private void openFragment(Fragment fragment){
-        if(!windows.tabletStyle) {
-            //もしメニューが開いていたら閉じる
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(openId, fragment);
-        fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
-        fragmentTransaction.commit();
-        fragmentIndex++;
-        fragments.add(fragmentIndex,fragment);
-    }
-    /**
-     * 任意のFragmentをcontainerに開きます。
-     * @param fragment
-     */
-    private void moveFragment(Fragment fragment){
-        if(!windows.tabletStyle) {
-            //もしメニューが開いていたら閉じる
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-        }
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(openId, fragment);
-        fragmentTransaction.addToBackStack(null); // 戻るボタンでreplace前に戻る
-        fragmentTransaction.commit();
     }
 
     /**
@@ -769,11 +720,11 @@ public class AOdiaActivity extends AppCompatActivity
                 return true;
             }
             if (strs[0].equals(DBHelper.DIAGRAM)) {
-                setFragment(Integer.parseInt(strs[1]), Integer.parseInt(strs[2]), 2);
+                openDiaOrTimeFragment(Integer.parseInt(strs[1]), Integer.parseInt(strs[2]), 2);
                 return true;
             }
             if (strs[0].equals(DBHelper.LINE_TIME_TABLE)) {
-                setFragment(Integer.parseInt(strs[1]), Integer.parseInt(strs[2]), Integer.parseInt(strs[3]));
+                openDiaOrTimeFragment(Integer.parseInt(strs[1]), Integer.parseInt(strs[2]), Integer.parseInt(strs[3]));
                 return true;
             }
             return false;
@@ -785,31 +736,7 @@ public class AOdiaActivity extends AppCompatActivity
     }
 
 
-    /**
-     * DiaFileを閉じる
-     * DiaFileを閉じるときはリソースの解放とそのDiaFileを使用していたfragmentを閉じる動作が必要
-     * @param index
-     * @param menuIndex
-     */
-    public void killDiaFile(int index,int menuIndex){
-        int[] ids=new int[]{R.id.container};
-        for(int i=0;i<ids.length;i++){
-            try{
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                AOdiaFragment fragment = (AOdiaFragment) fragmentManager.findFragmentById(ids[i]);
-                System.out.println(fragment.diaFile+","+diaFiles.get(index));
-                if(fragment.diaFile==diaFiles.get(index)){
-                    fragmentTransaction.remove(fragment).commit();
-                }
-            }catch(Exception e){
 
-            }
-        }
-        diaFiles.set(index,null);
-        diaFilesIndex.remove(menuIndex);
-        menuFragment.createMenu();
-    }
 
     /**
      * DiaFileをメニュー上部に移動
@@ -871,7 +798,6 @@ public class AOdiaActivity extends AppCompatActivity
         try {
             final float scale=getResources().getDisplayMetrics().density;
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(this);
-            windows.tabletStyle=spf.getBoolean("fixedMenu",false);
             int textSize = Integer.parseInt(spf.getString("textsize2", "30"));
             if (textSize > 0 && textSize < 100) {
                 KLView.setTextSize((int)(textSize/3.0f*scale));
@@ -881,6 +807,41 @@ public class AOdiaActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+    public void openSelectTrainTimeTable(int fileNum, int diaNum, int direct, TrainSelectListener listener){
+        try {
+            SelectTrainTimeTable fragment=new SelectTrainTimeTable();
+            Bundle args=new Bundle();
+            args.putInt("fileNum",fileNum);
+            args.putInt("diaN", diaNum);
+            args.putInt("direct", direct);
+            fragment.setArguments(args);
+            openFragment(fragment);
+            fragment.setTrainSelectListener(listener);
+        } catch (Exception e) {
+            SdLog.log(e);
+        }
+
+    }
+    public void saveFile(){
+        try {
+            AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
+            System.out.println(fragments.get(fragments.size() - 1));
+            File outFile = new File(saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti");
+            JPTI jpti = new JPTI(saveFile);
+            jpti.makeJSONdata(outFile);
+            Toast.makeText(this, saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti"+"\nにファイルを保存しました", Toast.LENGTH_LONG).show();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+
+        }catch (Exception e){
+            SdLog.log(e);
+            Toast.makeText(this, "ファイルを保存時にエラーが発生しました。", Toast.LENGTH_LONG).show();
+
+
+        }
+
 
     }
 

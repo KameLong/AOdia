@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.web.UrlOpenDialog;
 
 /**
@@ -51,9 +52,6 @@ public class HelpFragment extends AOdiaFragment {
     WebView helpView;
     Handler handler;
 
-    // ダウンロード変数
-    DownloadManager dl_manager;
-    DownloadManager.Query query;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -87,7 +85,6 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-//        helpView.loadUrl("http://kamelong.com/OuDiaDataBase/");
         helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
 
         helpView.setDownloadListener(new DownloadListener() {
@@ -97,10 +94,6 @@ public class HelpFragment extends AOdiaFragment {
                 oudiaUrlLoad(url);
             }
         });
-
-
-
-//        helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
         return helpView;
     }
     private void oudiaUrlLoad(String url){
@@ -112,5 +105,12 @@ public class HelpFragment extends AOdiaFragment {
         }
 
     }
-
+    @Override
+    public String fragmentName(){
+        return "AOdiaヘルプv2.0.0b";
+    }
+    @Override
+    public String fragmentHash() {
+        return "help";
+    }
 }

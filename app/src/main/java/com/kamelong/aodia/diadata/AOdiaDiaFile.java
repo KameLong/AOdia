@@ -2,11 +2,28 @@ package com.kamelong.aodia.diadata;
 
 import android.content.Context;
 
+import com.kamelong.JPTIOuDia.JPTI.JPTI;
+import com.kamelong.JPTIOuDia.JPTI.Route;
+import com.kamelong.JPTIOuDia.JPTI.RouteStation;
+import com.kamelong.JPTIOuDia.JPTI.Service;
+import com.kamelong.JPTIOuDia.JPTI.Station;
+import com.kamelong.JPTIOuDia.JPTI.TrainType;
+import com.kamelong.JPTIOuDia.JPTI.Trip;
 import com.kamelong.JPTIOuDia.OuDia.OuDiaFile;
+import com.kamelong.JPTIOuDia.OuDia.OuDiaStation;
+import com.kamelong.JPTIOuDia.OuDia.OuDiaTrain;
+import com.kamelong.JPTIOuDia.OuDia.OuDiaTrainType;
 import com.kamelong.aodia.AOdiaActivity;
+import com.kamelong.aodia.SdLog;
+import com.kamelong.tool.Font;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * AOdiaで使用するDiaFile
@@ -15,7 +32,6 @@ import java.util.ArrayList;
 
 public class AOdiaDiaFile extends OuDiaFile{
     AOdiaActivity activity;//このアプリのアクティビティー
-    String filePath="";
     /**
      * メニューを開いているかどうか
      */
@@ -26,6 +42,12 @@ public class AOdiaDiaFile extends OuDiaFile{
     protected ArrayList<Integer>stationTime=new ArrayList<Integer>();
 
     /**
+     * 運用のリストダイヤの数だけ、リストを用意する
+     */
+    public ArrayList<ArrayList<Operation>>operationList=new ArrayList<>();
+
+
+    /**
      * 推奨コンストラクタ。
      * コンストラクタでは読み込みファイルが与えられるので、そのファイルを読み込む。
      * ダイヤを読み込んだ後に最小所要時間をこのスレッドで作成する
@@ -34,6 +56,10 @@ public class AOdiaDiaFile extends OuDiaFile{
      */
     public AOdiaDiaFile(Context context, final File file){
         super(file);
+        //運用の準備をする
+        for(int i=0;i<getDiaNum();i++){
+            operationList.add(new ArrayList<Operation>());
+        }
         activity=(AOdiaActivity)context;
         filePath=file.getPath();
         calcMinReqiredTime();
@@ -42,12 +68,139 @@ public class AOdiaDiaFile extends OuDiaFile{
         this(context,new File(context.getExternalFilesDir(null).getPath()+"/sample.oud"));
 
     }
+    public AOdiaDiaFile(JPTI jpti){
+        super();
+        Service service=jpti.getService(0);
+        Map<Integer,AOdiaTrain> trainMap=new HashMap<>();
+        //fileType
+        fileType="OuDia.1.02";
+        lineName=service.getName();
+        //まず駅一覧、種別を作る
+        Station station=null;
+        for(int i=0;i<service.getRouteNum();i++){
+            for(int j=0;j<service.getRoute(i,0).getStationNum();j++){
+                RouteStation routeStation=service.getRoute(i,0).getRouteStation(j,service.getRouteDirect(service.getRoute(i,0)));
+
+/*                if(station==routeStation.getStation()){
+                    this.getStation(this.station.size()-1).setTimeShow(OuDiaStation.SHOW_HATUTYAKU);
+
+                }else{
+                    if(j==0&&i!=0){
+                        this.getStation(this.station.size()-1).setBorder(true);
+                    }
+                    this.station.add(new OuDiaStation(routeStation));
+                }
+                */
+                station=routeStation.getStation();
+                this.station.add(newOuDiaStation(routeStation));
+            }
+            for(int j=0;j<service.getRoute(i,0).getTrainTypeNum();j++){
+                boolean existTrainType=false;
+                for(int k=0;k<trainType.size();k++){
+                    if(getTrainType(k).compare(service.getRoute(i,0).getTrainType(j))){
+                        existTrainType=true;
+                        break;
+                    }
+                }
+                if(!existTrainType) {
+                    trainType.add(newOuDiaTrainType(service.getRoute(i, 0).getTrainType(j)));
+                }
+
+            }
+        }
+
+        for(int diaNum=0;diaNum<jpti.getCalenderNum();diaNum++) {
+            ArrayList<? extends com.kamelong.OuDia.OuDiaTrain>[] diaTrain = new ArrayList[2];
+            for (int direct = 0; direct < 2; direct++) {
+                ArrayList<Integer> useBlockID = new ArrayList<>();
+                ArrayList<OuDiaTrain> trains = new ArrayList<>();
+                for (int i = 0; i < service.getRouteNum(); i++) {
+                    Route route = service.getRoute(i, 0);
+                    for (int j = 0; j < route.getTripNum(); j++) {
+                        Trip trip = route.getTrip(j);
+                        if (trip.getCalender().index() == diaNum &&trip.getDirect()==(direct+service.getRouteDirect(service.getRoute(i, direct)))%2&& !useBlockID.contains(trip.getBlockID())) {
+                            ArrayList<Trip> trips = new ArrayList<>();
+                            for (int k = 0; k < service.getRouteNum(); k++) {
+                                trips.add(service.getRoute(k, 0).getTripByBlockID(trip.getBlockID(),(direct+service.getRouteDirect(service.getRoute(k, direct)))%2));
+                            }
+                            AOdiaTrain newTrain=newTrain(service,trips);
+                            trainMap.put(trips.get(0).getBlockID(),newTrain);
+                            newTrain.setType(trip.getType());
+                            newTrain.setName(trip.getName());
+                            newTrain.setNumber(trip.getNumber());
+
+                            trains.add(newTrain);
+                            useBlockID.add(trip.getBlockID());
+                        }
+
+                    }
+                }
+                diaTrain[direct]=trains;
+            }
+            train.add(diaTrain);
+            diaName.add(jpti.getCalendar(diaNum).getName());
+        }
+        //フォントを作る
+        for(int i=0;i<6;i++){
+            if(service.getTimeTableFontNum()>i) {
+                jikokuhyouFont.add(service.getTimeTableFont(i));
+            }else{
+                jikokuhyouFont.add(Font.OUDIA_DEFAULT);
+            }
+        }
+
+        if(service.getTimeTableVFont()!=null){
+            jikokuVFont =service.getTimeTableVFont();
+        }
+        if(service.getDiaStationFont()!=null){
+            diaEkimeiFont =service.getDiaStationFont();
+        }
+        if(service.getDiaTimeFont()!=null){
+            diaJikokuFont =service.getDiaTimeFont();
+        }
+        if(service.getDiaTrainFont()!=null){
+            diaRessyaFont =service.getDiaTrainFont();
+        }
+        if(service.getCommentFont()!=null){
+            commentFont =service.getCommentFont();
+        }
+        if(service.getDiaTextColor()!=null){
+            diaMojiColor=service.getDiaTextColor();
+        }
+        if(service.getDiaBackColor()!=null){
+            diaHaikeiColor=service.getDiaBackColor();
+        }
+        if(service.getDiaTrainColor()!=null){
+            diaResyaColor=service.getDiaTrainColor();
+        }
+        if(service.getDiaAxisColor()!=null){
+            diaJikuColor=service.getDiaAxisColor();
+        }
+        for(int i=0;i<getDiaNum();i++){
+            operationList.add(new ArrayList<Operation>());
+        }
+
+        for(int i=0;i<jpti.operationList.size();i++){
+            Operation ope=new Operation((com.kamelong.JPTIOuDia.JPTI.Operation) jpti.operationList.get(i),trainMap);
+            int diaNum=jpti.operationList.get(i).getCalenderID();
+            if(diaNum>=0){
+                operationList.get(diaNum).add(ope);
+
+            }
+        }
+        calcMinReqiredTime();
+
+
+    }
     /**
      * OuDiaTrainを生成する
      * これをオーバーライドすることで任意のOuDiaTrainを継承したTrainクラスで生成できる
      */
     protected AOdiaTrain newTrain(){
         return new AOdiaTrain(this);
+    }
+    protected AOdiaTrain newTrain(Service service,ArrayList<Trip> trips){
+        return new AOdiaTrain(this,service,trips);
     }
     /**
      * OuDiaTrainTypeを生成する
@@ -489,5 +642,26 @@ public class AOdiaDiaFile extends OuDiaFile{
         }
 
     }
+    public int getOperationNum(int diaNum){
+        return operationList.get(diaNum).size();
+    }
+    public Operation getOperation(int diaNum,int index){
+        return operationList.get(diaNum).get(index);
+    }
+    protected OuDiaTrain newOuDiaTrain(Service service, ArrayList<Trip> trips){
+        return new AOdiaTrain(this,service, trips);
+    }
+    protected OuDiaStation newOuDiaStation(RouteStation station){
+        return new AOdiaStation(station);
+    }
+    protected OuDiaTrainType newOuDiaTrainType(TrainType type){
+        return new AOdiaTrainType(type);
+    }
+
+    public void setFilePath(String path){
+        filePath=path;
+    }
+
+
 
 }

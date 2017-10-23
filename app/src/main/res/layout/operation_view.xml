@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/opeID"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@+id/opeID"
+                android:text="運用名："
+                android:textColor="@android:color/black"
+                android:textSize="16dp" />
+
+            <EditText
+                android:id="@+id/opeNameEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+            <Button
+                android:id="@+id/addButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@android:drawable/ic_input_add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/closeButton"
+                android:text="運用番号："
+                android:textColor="@android:color/black"
+                android:textSize="16dp" />
+
+
+            <EditText
+                android:id="@+id/opeNumberEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@android:drawable/ic_delete" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_toLeftOf="@+id/edit"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/opeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="運用名：0000"
+            android:textColor="@android:color/black"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/opeID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="運用番号：0000"
+            android:textColor="@android:color/black"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/opeList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="2dp">
+
+        <Button
+            android:id="@+id/addbutton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@android:drawable/ic_input_add" />
+    </LinearLayout>
+
+</LinearLayout>

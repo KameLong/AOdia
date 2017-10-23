@@ -1,6 +1,7 @@
 package com.kamelong.aodia.timeTable;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -12,12 +13,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.stationInfo.StationIndoDialog;
+import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.stationInfo.StationInfoDialog;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Owner on 2016/11/21.
@@ -48,7 +52,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 一つの路線時刻表（上り、下りで独立している）につき一つの生成が必要
  * @author kamelong
  */
-public class TimeTableFragment extends AOdiaFragment {
+public class TimeTableFragment extends AOdiaFragment implements TrainSelectListener{
 	/**
 	* このFragmentのcontainer
 	*/
@@ -99,10 +103,17 @@ public class TimeTableFragment extends AOdiaFragment {
                         fling = false;
                         return true;
                     }
-
                     @Override
-                    public void onShowPress(MotionEvent motionEvent) {
+                    public boolean onDoubleTap(MotionEvent event){
+                        int x=(int)event.getX();
+                        int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
+                        int train=timeTablex/((LinearLayout)findViewById(R.id.trainNameLinear)).getChildAt(0).getWidth();
+                        selectTrain(diaFile.getTrain(diaNumber,direct,train));
+
+                        System.out.println(train);
+                        return false;
                     }
+
                     @Override
                     public void onLongPress(MotionEvent motionEvent) {
 
@@ -113,7 +124,7 @@ public class TimeTableFragment extends AOdiaFragment {
                             return;
                         }
                         SdLog.log("timeTableLongPress", diaFile.getStation(station).getName());
-                        StationIndoDialog dialog = new StationIndoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
+                        StationInfoDialog dialog = new StationInfoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
                         dialog.show();
 
                     }
@@ -145,6 +156,7 @@ public class TimeTableFragment extends AOdiaFragment {
                     }
                 });
 
+
         fragmentContainer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -170,7 +182,6 @@ public class TimeTableFragment extends AOdiaFragment {
         super.onStart();
         try {
             DBHelper db = new DBHelper(getActivity());
-            db.setRecentFile(diaFile.getFilePath(),diaNumber,direct);
             int[] scroll = db.getPositionData(db.getReadableDatabase(), diaFile.getFilePath(), diaNumber, direct);
             db.close();
             scrollTo(scroll[0], scroll[1]);
@@ -210,14 +221,15 @@ public class TimeTableFragment extends AOdiaFragment {
             trainTimeLinear.removeAllViews();
             TrainTimeView[] trainTimeViews = new TrainTimeView[diaFile.getTrainNum(diaNumber, direct)];
             for (int i = 0; i < trainNameViews.length; i++) {
-                trainTimeViews[i] = new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i), direct);
+                trainTimeViews[i] = new TrainTimeView(getActivity(),this, diaFile, diaFile.getTrain(diaNumber, direct, i), direct);
+                trainTimeViews[i].setOnTrainSelectListener(this);
                 trainTimeLinear.addView(trainTimeViews[i]);
             }
         }catch(Exception e){
             SdLog.log(e);
         }
     }
-    private void scrollBy(int dx, int dy) {
+    public void scrollBy(int dx, int dy) {
         final LinearLayout trainTimeLinear = (LinearLayout)findViewById(R.id.trainTimeLinear);
         int scrollX = trainTimeLinear.getScrollX() + dx;
         int scrollY = trainTimeLinear.getScrollY() + dy;
@@ -263,8 +275,16 @@ public class TimeTableFragment extends AOdiaFragment {
     }
     @Override
     public void onStop(){
-        super.onStop();
         try {
+                SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+                SharedPreferences.Editor editor = preference.edit();
+                editor.putString("RecentFilePath",diaFile.getFilePath());
+                editor.putInt("RecentDiaNum",diaNumber);
+                editor.putInt("RecentDirect",direct);
+                editor.apply();
+
+                super.onStop();
+
             DBHelper db = new DBHelper(getActivity());
             ContentValues cont = new ContentValues();
             String d;
@@ -281,6 +301,8 @@ public class TimeTableFragment extends AOdiaFragment {
         }catch(Exception e){
             SdLog.log(e);
         }
+        super.onStop();
+
     }
     public void sortTrain(int station){
         if(station>=0&&station< diaFile.getStationNum()){
@@ -327,15 +349,31 @@ public class TimeTableFragment extends AOdiaFragment {
     public String fragmentName(){
         try {
             if (direct == 0) {
-                return "下り時刻表　" + diaFile.getDiaName(diaNumber) + "　" + diaFile.getLineName();
+                return "下り時刻表　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
 
             } else {
-                return "上り時刻表　" + diaFile.getDiaName(diaNumber) + "　" + diaFile.getLineName();
+                return "上り時刻表　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
 
             }
         }catch(Exception e){
+            e.printStackTrace();
+            return "e";
+        }
+    }
+    @Override
+    public String fragmentHash(){
+        try{
+            return "LineTime-"+diaFile.getFilePath()+"-"+diaNumber+"-"+direct;
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"error-TimeTableFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
             return "";
         }
     }
+
+    @Override
+    public void selectTrain(AOdiaTrain train) {
+
+    }
+
 
 }

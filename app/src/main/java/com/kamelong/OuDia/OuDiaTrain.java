@@ -17,6 +17,12 @@ public class OuDiaTrain {
     public static final int STOP_TYPE_PASS=2;
     public static final int STOP_TYPE_NOSERVICE=0;
     public static final int STOP_TYPE_NOVIA=3;
+
+    /**
+     * 列車の進行方向
+     */
+    protected int direct=0;
+
     /**
      * 列車種別
      */
@@ -592,6 +598,9 @@ public class OuDiaTrain {
     }
     public int getStationNum(){
         return time.length;
+    }
+    public void setDirect(int direct){
+        this.direct=direct;
     }
 
 

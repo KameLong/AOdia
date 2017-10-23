@@ -31,13 +31,6 @@
                 <data android:pathPattern=".*\\.oud2" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".netgram.NetgramActivity"
-            android:label="Netgram"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-
-        </activity>
     </application>
 
 </manifest>

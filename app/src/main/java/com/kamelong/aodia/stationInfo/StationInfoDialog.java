@@ -37,7 +37,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-public class StationIndoDialog extends Dialog{
+public class StationInfoDialog extends Dialog{
     AOdiaDiaFile diaFile;
     TimeTableFragment fragment;
     int fileNum;
@@ -46,7 +46,7 @@ public class StationIndoDialog extends Dialog{
     int diaNum;
     AOdiaActivity activity;
 
-    public StationIndoDialog(Context context, TimeTableFragment f,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
+    public StationInfoDialog(Context context, TimeTableFragment f, AOdiaDiaFile dia, int fileN, int diaN, int d, int s){
         super(context);
         diaFile=dia;
         fragment=f;
@@ -56,7 +56,7 @@ public class StationIndoDialog extends Dialog{
         fileNum=fileN;
         activity=(AOdiaActivity)context;
     }
-    public StationIndoDialog(Context context,AOdiaDiaFile dia,int fileN,int diaN,int d, int s){
+    public StationInfoDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN, int d, int s){
         super(context);
         diaFile=dia;
         fragment=null;
@@ -90,7 +90,7 @@ public class StationIndoDialog extends Dialog{
                 @Override
                 public void onClick(View view) {
                     station = station - (1 - 2 * direct);
-                    StationIndoDialog.this.init();
+                    StationInfoDialog.this.init();
                 }
             });
             Button afterStationButton = (Button) findViewById(R.id.afterStationButton);
@@ -104,7 +104,7 @@ public class StationIndoDialog extends Dialog{
                 @Override
                 public void onClick(View view) {
                     station = station + (1 - 2 * direct);
-                    StationIndoDialog.this.init();
+                    StationInfoDialog.this.init();
                 }
             });
             Button sortButton = (Button) findViewById(R.id.sortButton);
@@ -113,7 +113,7 @@ public class StationIndoDialog extends Dialog{
                     @Override
                     public void onClick(View view) {
                         fragment.sortTrain(station);
-                        StationIndoDialog.this.dismiss();
+                        StationInfoDialog.this.dismiss();
                     }
                 });
             }else{
@@ -124,7 +124,7 @@ public class StationIndoDialog extends Dialog{
                 @Override
                 public void onClick(View view) {
                     activity.openStationTimeTable(fileNum, diaNum, 0, station);
-                    StationIndoDialog.this.dismiss();
+                    StationInfoDialog.this.dismiss();
                 }
             });
             Button upTimetable = (Button) findViewById(R.id.upTimeTableButton);
@@ -132,7 +132,7 @@ public class StationIndoDialog extends Dialog{
                 @Override
                 public void onClick(View view) {
                     activity.openStationTimeTable(fileNum, diaNum, 1, station);
-                    StationIndoDialog.this.dismiss();
+                    StationInfoDialog.this.dismiss();
                 }
             });
         }catch(Exception e){

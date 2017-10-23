@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
@@ -194,7 +195,7 @@ public class DiagramView extends KLView {
                             if(train.getPredictionTime(j)<0){
 
                             }else{
-                                //この前の駅めで経由なしのとき
+                                //この前の駅まで経由なしのとき
                                 trainPath.add(train.getPredictionTime(j)-diaFile.getDiagramStartTime());
                                 trainPath.add(this.diaFile.getStationTime().get(j));
                                 drawable=true;
@@ -271,8 +272,6 @@ public class DiagramView extends KLView {
 
     /**
      * floatのArrayListをArrayに変換する
-     * @param list
-     * @return
      */
     public  float[] toArr(List<Integer> list){
         // List<Integer> -> int[]
@@ -290,7 +289,6 @@ public class DiagramView extends KLView {
     /**
      * 駅軸を描画する
      *
-     * @param canvas
      */
     private void drawStationLine(Canvas canvas){
         Paint paint = new Paint();
@@ -311,7 +309,6 @@ public class DiagramView extends KLView {
 
     /**
      * 列車を描画する
-     * @param canvas
      */
     public void drawTrain(Canvas canvas){
         try {
@@ -394,7 +391,6 @@ public class DiagramView extends KLView {
     /**
      * onDrawをオーバーライドしたもの。
      * 描画処理はこの中に記述する
-     * @param canvas
      */
     @Override
     public void onDraw(Canvas canvas){
@@ -419,7 +415,6 @@ public class DiagramView extends KLView {
      * 時間軸を描画する
      * DiagramSettingのverticalAxicsの値によってダイヤ線のスタイルが異なる
      * @see DiagramSetting#verticalAxis
-     * @param canvas
      */
     private void drawAxis(Canvas canvas){
         //通常線
@@ -899,4 +894,5 @@ public class DiagramView extends KLView {
             drawChainLine(canvas,list[4*i+0],list[4*i+1],list[4*i+2],list[4*i+3],chain,space,paint);
         }
     }
+
 }

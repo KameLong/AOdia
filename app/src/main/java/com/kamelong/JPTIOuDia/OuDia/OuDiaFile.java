@@ -17,16 +17,22 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
     public OuDiaFile(File file) {
         super(file);
     }
+    public OuDiaFile(JPTI jpti){
+        this(jpti,jpti.getService(0));
+    }
+
     public OuDiaFile(JPTI jpti, Service service){
         super();
         //fileType
         fileType="OuDia.1.02";
+        lineName=service.getName();
         //まず駅一覧、種別を作る
         Station station=null;
         for(int i=0;i<service.getRouteNum();i++){
             for(int j=0;j<service.getRoute(i,0).getStationNum();j++){
                 RouteStation routeStation=service.getRoute(i,0).getRouteStation(j,service.getRouteDirect(service.getRoute(i,0)));
-                if(station==routeStation.getStation()){
+
+/*                if(station==routeStation.getStation()){
                     this.getStation(this.station.size()-1).setTimeShow(OuDiaStation.SHOW_HATUTYAKU);
 
                 }else{
@@ -35,7 +41,9 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
                     }
                     this.station.add(new OuDiaStation(routeStation));
                 }
+                */
                 station=routeStation.getStation();
+                this.station.add(newOuDiaStation(routeStation));
             }
             for(int j=0;j<service.getRoute(i,0).getTrainTypeNum();j++){
                 boolean existTrainType=false;
@@ -46,7 +54,7 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
                     }
                 }
                 if(!existTrainType) {
-                    trainType.add(new OuDiaTrainType(service.getRoute(i, 0).getTrainType(j)));
+                    trainType.add(newOuDiaTrainType(service.getRoute(i, 0).getTrainType(j)));
                 }
 
             }
@@ -66,7 +74,7 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
                             for (int k = 0; k < service.getRouteNum(); k++) {
                                 trips.add(service.getRoute(k, 0).getTripByBlockID(trip.getBlockID(),(direct+service.getRouteDirect(service.getRoute(k, direct)))%2));
                             }
-                            OuDiaTrain newTrain=new OuDiaTrain(this, service, trips);
+                            OuDiaTrain newTrain=newOuDiaTrain(service,trips);
                             newTrain.setType(trip.getType());
                             newTrain.setName(trip.getName());
                             newTrain.setNumber(trip.getNumber());
@@ -226,6 +234,15 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
             return new OuDiaTrain(this);
         }
 
+    }
+    protected OuDiaTrain newOuDiaTrain(Service service,ArrayList<Trip> trips){
+        return new OuDiaTrain(this,service, trips);
+    }
+    protected OuDiaStation newOuDiaStation(RouteStation station){
+        return new OuDiaStation(station);
+    }
+    protected OuDiaTrainType newOuDiaTrainType(TrainType type){
+        return new OuDiaTrainType(type);
     }
 
 

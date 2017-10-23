@@ -51,7 +51,11 @@ public class MenuButton extends Button {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).setFragment(fileNumber,diaNumber, fragmentNumber);
+                    if(fragmentNumber==3){
+                        ((AOdiaActivity) context).openOperationFragment(fileNumber,diaNumber,0);
+                    }else {
+                        ((AOdiaActivity) context).openDiaOrTimeFragment(fileNumber, diaNumber, fragmentNumber);
+                    }
                 }
             });
         }catch(Exception e){

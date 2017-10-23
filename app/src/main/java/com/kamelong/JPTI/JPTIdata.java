@@ -18,12 +18,15 @@ public abstract class JPTIdata {
     protected static final String ROUTE="route";
     protected static final String CALENDAR="calendar";
     protected static final String SERVICE="service";
+    protected static final String OPERATION="operation";
 
     public ArrayList<Agency> agency=new ArrayList<>();
     public ArrayList<Station> stationList=new ArrayList<>();
     public ArrayList<Route> routeList=new ArrayList<>();
     public ArrayList<Calendar> calendarList=new ArrayList<>();
     public ArrayList<Service>serviceList=new ArrayList<>();
+    public ArrayList<Operation>operationList=new ArrayList<>();
+
 
     /**
      * 新規作成コンストラクタ
@@ -95,6 +98,14 @@ public abstract class JPTIdata {
             }
         }catch(JSONException e){
         }
+        try{
+            JSONArray operation=json.getJSONArray(OPERATION);
+            for(int i=0;i<operation.length();i++) {
+                operationList.add(newOperation(operation.getJSONObject(i)));
+            }
+        }catch (Exception e){
+
+        }
 
 
 
@@ -162,6 +173,11 @@ public abstract class JPTIdata {
                 serviceArray.put(service.makeJSONObject());
             }
             outJSON.put(SERVICE,serviceArray);
+            JSONArray operationArray=new JSONArray();
+            for(Operation operation:operationList){
+                operationArray.put(operation.makeJSONObject());
+            }
+            outJSON.put(OPERATION,operationArray);
             outFile.write(outJSON.toString());
             outFile.close();
         }catch(Exception e){
@@ -180,4 +196,5 @@ public abstract class JPTIdata {
     protected abstract Service newService(JSONObject json);
     protected abstract Station newStation(JSONObject json);
     protected abstract Calendar newCalendar(JSONObject json);
+    protected abstract Operation newOperation(JSONObject json);
 }

@@ -183,12 +183,6 @@ public class TimeView extends KLView {
         }
 
 
-        for(int i=3;i<24;i++){
-            canvas.drawText(String.valueOf(i),(i-3)*60* scaleX,(float)(textPaint.getTextSize()*0.8),textPaint);
-        }
-        for(int i=24;i<27;i++){
-            canvas.drawText(String.valueOf(i-24),(i-3)*60* scaleX,(float)(textPaint.getTextSize()*0.8),textPaint);
-        }
     }
     protected int getXsize(){
         return (int)(scaleX *60*24);

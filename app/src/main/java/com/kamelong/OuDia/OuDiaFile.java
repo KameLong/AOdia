@@ -4,6 +4,7 @@ package com.kamelong.OuDia;
 import java.io.*;
 import java.util.ArrayList;
 
+import com.kamelong.aodia.diadata.Operation;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
 import com.kamelong.tool.ShiftJISBufferedReader;
@@ -180,6 +181,8 @@ public class OuDiaFile {
     protected Font newFont(){
         return new Font();
     }
+    protected String filePath="";
+
 
     /**
      * oudファイルを読み込んでオブジェクトを構成する。
@@ -208,6 +211,7 @@ public class OuDiaFile {
                                     if(line.split("=",-1)[1].equals("Nobori")){
                                         direct=1;
                                     }
+                                    t.setDirect(direct);
                                 }
 
                                 if(line.split("=",-1)[0].equals("Syubetsu")) {
@@ -509,5 +513,11 @@ public class OuDiaFile {
     }
 
 
+    public int getOperationNum(int i){
+        return 0;
+    }
+    public Operation getOperation(int i,int j){
+        return null;
+    }
 
 }

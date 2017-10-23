@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.AOdiaActivity;
+import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaTrain;
@@ -79,7 +79,7 @@ public class StationInfoFragment extends AOdiaFragment {
             diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+            Toast.makeText(getActivity(),"Error-StationInfoFragment-onCreateView-E1",Toast.LENGTH_SHORT).show();
         }
         if(diaFile==null){
             onDestroy();
@@ -117,7 +117,7 @@ public class StationInfoFragment extends AOdiaFragment {
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    StationIndoDialog dialog = new StationIndoDialog(getActivity(),diaFile,fileNum,diaNumber,direct,station);
+                    StationInfoDialog dialog = new StationInfoDialog(getActivity(),diaFile,fileNum,diaNumber,direct,station);
                     dialog.show();
 
                 }
@@ -338,6 +338,7 @@ public class StationInfoFragment extends AOdiaFragment {
         TextView textView=(TextView)findViewById(R.id.textView);
         textView.setText(result);
     }
+    @Override
     public String fragmentName(){
         String directS="";
         if(direct==0){
@@ -345,7 +346,11 @@ public class StationInfoFragment extends AOdiaFragment {
         }else{
             directS="上り";
         }
-        return "駅時刻表　"+diaFile.getStation(station).getName()+"　"+directS+diaFile.getLineName();
+        return "駅時刻表　"+diaFile.getStation(station).getName()+"　"+directS+"\n"+diaFile.getLineName();
+    }
+    @Override
+    public String fragmentHash(){
+        return "StationInfo-"+diaFile.getFilePath()+"-"+diaNumber+"-"+direct;
     }
     public View findViewById(int id){
         return contentView.findViewById(id);

@@ -50,7 +50,7 @@ public class OuDiaTrain extends com.kamelong.OuDia.OuDiaTrain {
 
 
                     }else{
-                        setStopType(stationIndex, STOP_TYPE_PASS);
+                        setStopType(stationIndex, STOP_TYPE_NOVIA);
 
                     }
                 }else{

@@ -2,6 +2,9 @@ package com.kamelong.aodia.diadata;
 
 import android.util.Log;
 
+import com.kamelong.JPTIOuDia.JPTI.Service;
+import com.kamelong.JPTIOuDia.JPTI.Trip;
+import com.kamelong.JPTIOuDia.OuDia.OuDiaFile;
 import com.kamelong.JPTIOuDia.OuDia.OuDiaTrain;
 import com.kamelong.aodia.SdLog;
 
@@ -53,11 +56,15 @@ public class AOdiaTrain extends OuDiaTrain {
             SdLog.log(e);
         }
     }
+    public AOdiaTrain(OuDiaFile diaFile, Service service, ArrayList<Trip> tripList){
+        super(diaFile,service,tripList);
+    }
 
-    /**
-     * 列車番号を設定します
-     * @param value　列車番号
-     */
+
+        /**
+         * 列車番号を設定します
+         * @param value　列車番号
+         */
     public void setNumber(String value) {
         try {
             if (value.length() == 0) {
@@ -693,8 +700,15 @@ public class AOdiaTrain extends OuDiaTrain {
             ArrayList<Integer> minstationTime=getDiaFile().getStationTime();
 
             //対象駅より先の駅で駅時刻が存在する駅までの最小所要時間と
+            boolean noViaBorder=false;
             for(int i=station+1;i<getDiaFile().getStationNum();i++){
-                if(getStopType(i)==STOP_TYPE_NOSERVICE||getStopType(i)==STOP_TYPE_NOVIA||getStopType(i-1)==STOP_TYPE_NOSERVICE||getStopType(i-1)==STOP_TYPE_NOVIA){
+                if(getStopType(i)==STOP_TYPE_NOSERVICE||getStopType(i-1)==STOP_TYPE_NOSERVICE){
+                    continue;
+                }
+                if(getDiaFile().getStation(i-1).border()){
+                    noViaBorder=true;
+                }
+                if(noViaBorder&&(getStopType(i)==STOP_TYPE_NOVIA||getStopType(i-1)==STOP_TYPE_NOVIA)){
                     continue;
                 }
                 afterMinTime=afterMinTime+minstationTime.get(i)-minstationTime.get(i-1);
@@ -710,11 +724,20 @@ public class AOdiaTrain extends OuDiaTrain {
             }
             //対象駅より前方の駅で駅時刻が存在する駅までの最小所要時間と駅時刻
             int startStation=0;
+            noViaBorder=false;
             for(int i=station;i>0;i--){
-                if(getStopType(i)==STOP_TYPE_NOSERVICE||getStopType(i)==STOP_TYPE_NOVIA||getStopType(i-1)==STOP_TYPE_NOSERVICE||getStopType(i-1)==STOP_TYPE_NOVIA){
+                if(getStopType(i)==STOP_TYPE_NOSERVICE||getStopType(i-1)==STOP_TYPE_NOSERVICE){
                     continue;
                 }
+                if(getDiaFile().getStation(i-1).border()){
+                    noViaBorder=true;
+                }
+                if(noViaBorder&&(getStopType(i)==STOP_TYPE_NOVIA||getStopType(i-1)==STOP_TYPE_NOVIA)){
+                    continue;
+                }
+
                 beforeMinTime=beforeMinTime+minstationTime.get(i)-minstationTime.get(i-1);
+                startStation=i-1;
                 if(timeExist(i-1)){
                     beforeTime=getDepartureTime(i-1);
                     startStation=i-1;
@@ -762,6 +785,15 @@ public class AOdiaTrain extends OuDiaTrain {
     }
     public AOdiaDiaFile getDiaFile(){
         return (AOdiaDiaFile)diaFile;
+    }
+
+    /**
+     * この列車が走る方向を返します
+     * @return
+     */
+    public int getDirect(){
+        return direct;
+
     }
 
 

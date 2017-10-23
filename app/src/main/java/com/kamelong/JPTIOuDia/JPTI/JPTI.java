@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * JPTI-OuDia用のJPTIクラス
@@ -36,18 +37,16 @@ public class JPTI extends JPTIdata {
      */
     public JPTI(OuDiaFile oudiaFile){
         Service service=new Service(this);
+        service.loadOuDia(oudiaFile);
         serviceList.add(service);
-        ArrayList<Integer> borderList=service.loadOuDia(oudiaFile);
-        int startStation=0;
-        for(int border:borderList){
-            if(border-startStation>0){
-                routeList.add(new Route(this,oudiaFile,startStation,border));
-                service.route.put(routeList.get(routeList.size()-1),0);
-                startStation=border;
-                if(oudiaFile.getStation(border).border()){
-                    startStation++;
-                }
+        Route route=new Route(this,oudiaFile);
+        service.addRoute(route);
+        routeList.add(route);
 
+        for(int diaNum=0;diaNum<oudiaFile.getDiaNum();diaNum++){
+            for(int i=0;i<oudiaFile.getOperationNum(diaNum);i++){
+                operationList.add(oudiaFile.getOperation(diaNum,i));
+                oudiaFile.getOperation(diaNum,i).move2JPTI(diaNum,getRoute(0).trainIDmap);
             }
         }
     }
@@ -76,6 +75,12 @@ public class JPTI extends JPTIdata {
         return new Calendar(this,json);
 
     }
+
+    @Override
+    protected com.kamelong.JPTI.Operation newOperation(JSONObject json) {
+        return new Operation(this,json);
+    }
+
     public Agency getAgency(int index){
         try{
             return (Agency) agency.get(index);
@@ -98,6 +103,9 @@ public class JPTI extends JPTIdata {
     }
     public int getCalenderNum(){
         return calendarList.size();
+    }
+    public Route getRoute(int index){
+        return (Route)routeList.get(index);
     }
 
 }

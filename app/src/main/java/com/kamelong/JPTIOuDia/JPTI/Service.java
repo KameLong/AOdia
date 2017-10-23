@@ -19,7 +19,7 @@ public class Service extends com.kamelong.JPTI.Service{
         super(jpti,json);
     }
 
-    public ArrayList<Integer> loadOuDia(OuDiaFile diaFile){
+    public void loadOuDia(OuDiaFile diaFile){
         name=diaFile.getLineName();
         stationWidth=diaFile.getStationNameLength();
         trainWidth=diaFile.getTrainWidth();
@@ -36,40 +36,6 @@ public class Service extends com.kamelong.JPTI.Service{
         diaTimeFont=diaFile.getDiaTimeFont();
         diaTrainFont=diaFile.getDiaTextFont();
         commentFont=diaFile.getCommnetFont();
-
-        ArrayList<Integer>borderStation=new ArrayList<>();
-        for(int i=0;i<diaFile.getStationNum();i++){
-            if(diaFile.getStation(i).border()){
-                borderStation.add(i);
-                String borderName=diaFile.getStation(i).getName();
-                int nextBorder=-1;
-                for(int j=i+1;j<diaFile.getStationNum();j++){
-                    if(diaFile.getStation(j).getName().equals(borderName)){
-                        nextBorder=j;
-                        break;
-                    }
-                }
-                if(nextBorder!=-1){
-                    borderStation.add(nextBorder);
-                }
-                if(i+1<diaFile.getStationNum()){
-                    String borderName2=diaFile.getStation(i+1).getName();
-                    int beforeBorder=-1;
-                    for(int j=0;j<i;j++){
-                        if(diaFile.getStation(j).getName().equals(borderName2)){
-                            beforeBorder=j;
-                            break;
-                        }
-                    }
-                    if(beforeBorder!=-1){
-                        borderStation.add(beforeBorder);
-                    }
-                }
-            }
-        }
-        borderStation.add(diaFile.getStationNum()-1);
-        Collections.sort(borderStation);
-        return borderStation;
     }
     public int getRouteNum(){
         return route.size();
@@ -79,6 +45,9 @@ public class Service extends com.kamelong.JPTI.Service{
     }
     public int getRouteDirect(Route mroute){
         return route.get(mroute);
+    }
+    public void addRoute(Route route){
+        this.route.put(route,0);
     }
 
 }

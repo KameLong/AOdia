@@ -16,6 +16,7 @@ public abstract class Time {
     protected int departure_days=-1;
     protected int departureTime=-1;
 
+
     protected static final String STATION_ID="station_id";
     protected static final String STOP_ID="stop_id";
     protected static final String PICKUP="pickup_type";
@@ -24,6 +25,7 @@ public abstract class Time {
     protected static final String ARRIVAL_TIME="arrivel_time";
     protected static final String DEPARTURE_DAYS="depature_days";
     protected static final String DEPARTURE_TIME ="departure_time";
+    protected static final String STOP_TYPE ="stop_type";
 
 
     public Time(JPTIdata jpti,Trip trip){

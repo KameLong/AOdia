@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
@@ -19,11 +22,12 @@ public class TrainTimeView extends KLView {
     private boolean secondFrag=false;
     private boolean remarkFrag=false;
     private boolean showPassFrag=false;
+    private TrainSelectListener trainSelectListener=null;
 
     TrainTimeView(Context context){
         super(context);
     }
-    TrainTimeView(Context context, AOdiaDiaFile diaFile, AOdiaTrain t, int d){
+    TrainTimeView(Context context, TimeTableFragment timeTableFragment,AOdiaDiaFile diaFile, AOdiaTrain t, int d){
         this(context);
         dia=diaFile;
         train=t;
@@ -32,6 +36,34 @@ public class TrainTimeView extends KLView {
         secondFrag=spf.getBoolean("secondSystem",secondFrag);
         remarkFrag=spf.getBoolean("remark",remarkFrag);
         showPassFrag=spf.getBoolean("showPass",showPassFrag);
+
+
+        final GestureDetector gesture = new GestureDetector(getContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDown(MotionEvent event){
+                        return true;
+                    }
+                    @Override
+                    public boolean onDoubleTap(MotionEvent event){
+                        System.out.println("Double tap");
+                        if(TrainTimeView.this.trainSelectListener!=null){
+                            TrainTimeView.this.trainSelectListener.selectTrain(TrainTimeView.this.train);
+                        }
+
+                     return true;
+                    }
+                    @Override
+                    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float vx, float vy) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
+                        return false;
+                    }
+                });
+
     }
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
@@ -413,6 +445,9 @@ public class TrainTimeView extends KLView {
         }else{
             canvas.drawText(text,x,y,paint);
         }
+    }
+    public void setOnTrainSelectListener(TrainSelectListener l){
+        this.trainSelectListener=l;
     }
 
 }

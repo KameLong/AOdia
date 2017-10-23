@@ -77,15 +77,6 @@ public class FileSelectionDialog implements OnItemClickListener
         builder.setPositiveButton("前回の復元", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int j) {
-                DBHelper db=new DBHelper(m_parent);
-                String[] fileList=db.getFilePaths();
-                ArrayList<File>files=new ArrayList<>();
-                for(int i=0;i<fileList.length;i++){
-                    files.add(new File(fileList[i]));
-                }
-                m_listener.onFileListSelect(files.toArray(new File[0]));
-
-
             }
         });
         builder.setNegativeButton("履歴", new DialogInterface.OnClickListener() {

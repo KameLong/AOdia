@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,8 @@ import android.widget.Toast;
 
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.TabFragment;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.detabase.DBHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +44,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -49,7 +56,7 @@ import javax.net.ssl.HttpsURLConnection;
  * ファイル選択のためのFragment
  */
 
-public class FileSelectFragment extends TabFragment{
+public class FileSelectFragment extends AOdiaFragment {
     Handler handler=new Handler();
     boolean tab2searchOpen=true;
 
@@ -146,7 +153,7 @@ public class FileSelectFragment extends TabFragment{
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        tab1OpenFile(new File(rootFolderName[0]));//初期設定
+        tab1OpenFile(rootFolderList[0]);//初期設定
 
 
 
@@ -162,6 +169,7 @@ public class FileSelectFragment extends TabFragment{
             if (file.isDirectory()) {
                 final ListView fileListView = (ListView) findViewById(R.id.fileList);
                 final FileListAdapter adapter = new FileListAdapter(getActivity(), file.getPath());
+
 
                 fileListView.setAdapter(adapter);
                 ((TextView)findViewById(R.id.pathView)).setText(file.getPath());
@@ -302,7 +310,7 @@ public class FileSelectFragment extends TabFragment{
                                 inReader.close();
                                 in.close();
                             }else{
-                                Toast.makeText(getActivity(),"検索エラー"+connection.getResponseCode(),Toast.LENGTH_SHORT);
+                                Toast.makeText(getActivity(),"検索エラー"+connection.getResponseCode(),Toast.LENGTH_SHORT).show();
                             }
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
@@ -347,6 +355,24 @@ public class FileSelectFragment extends TabFragment{
         ArrayList<File> fileList=new ArrayList<>();
         LayoutInflater layoutInflater = null;
         Context context=null;
+        private int fileValue(File a){
+            if(a.isDirectory()){
+                return 10000;
+            }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")){
+                DBHelper db=null;
+                try {
+                    db = new DBHelper(getActivity());
+                    return db.fileOpenedNum(a.getPath());
+                }finally {
+                    if(db!=null){
+                        db.close();
+                    }
+                }
+            }else{
+                return -1;
+            }
+
+        }
         public FileListAdapter(Context context,String directoryPath) throws FilePermException {
             this.context = context;
             this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -354,7 +380,23 @@ public class FileSelectFragment extends TabFragment{
             try {
                 File[] files=directory.listFiles();
                 Arrays.sort(files);
-                fileList = new ArrayList<File>(Arrays.asList(files));
+                Map<File,Integer>fileMap=new HashMap<>();
+                for(File file:files){
+                    fileMap.put(file,fileValue(file));
+                }
+                List<Map.Entry<File,Integer>> entries =
+                        new ArrayList<>(fileMap.entrySet());
+                Collections.sort(entries, new Comparator<Map.Entry<File,Integer>>() {
+
+                    @Override
+                    public int compare(
+                            Map.Entry<File,Integer> entry1, Map.Entry<File,Integer> entry2) {
+                        return (entry2.getValue()).compareTo(entry1.getValue());
+                    }
+                });
+                for (Map.Entry<File,Integer> s : entries) {
+                    fileList.add(s.getKey());
+                }
             }catch (NullPointerException e){
 
                 throw new FilePermException();
@@ -522,4 +564,50 @@ public class FileSelectFragment extends TabFragment{
             return convertView;
         }
     }
+    class FileComparator implements Comparator<File> {
+
+        //比較メソッド（データクラスを比較して-1, 0, 1を返すように記述する）
+        public int compare(File a, File b) {
+            int valueA=0;
+            int valueB=0;
+            if(a.isDirectory()){
+                valueA=10000;
+            }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")){
+                long time=System.currentTimeMillis();
+                DBHelper db=new DBHelper(getActivity());
+                valueA=db.fileOpenedNum(a.getPath());
+                System.out.println(System.currentTimeMillis()-time);
+            }else{
+                valueA=-1;
+            }
+
+            if(b.isDirectory()){
+                valueB=10000;
+            }else if(b.getPath().endsWith(".oud")||b.getPath().endsWith(".oud2")||b.getPath().endsWith(".jpti")){
+                long time=System.currentTimeMillis();
+                DBHelper db=new DBHelper(getActivity());
+                valueB=db.fileOpenedNum(b.getPath());
+                System.out.println(System.currentTimeMillis()-time);
+            }else{
+                valueB=-1;
+
+            }
+
+            if(valueA==valueB){
+                return a.getPath().compareTo(b.getPath());
+            }else {
+                return  valueB-valueA;
+            }
+        }
+
+    }
+    @Override
+    public String fragmentName(){
+            return "ファイル選択";
+    }
+    @Override
+    public String fragmentHash(){
+            return "FileSelect";
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.kamelong.aodia.diagram;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -10,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
+
+import static android.content.Context.MODE_PRIVATE;
 /*
  *     This file is part of AOdia.
 AOdia is free software: you can redistribute it and/or modify
@@ -435,9 +438,14 @@ public class DiagramFragment extends AOdiaFragment {
     public void onStop(){
         try {
             setting.saveChange();
+            SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preference.edit();
+            editor.putString("RecentFilePath",diaFile.getFilePath());
+            editor.putInt("RecentDiaNum",diaNumber);
+            editor.putInt("RecentDirect",2);
+            editor.apply();
             DBHelper db = new DBHelper(getActivity());
             db.updateLineData(diaFile.getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
-            db.setRecentFile(diaFile.getFilePath(),diaNumber,2);
         }catch(Exception e){
             SdLog.log(e);
         }finally {
@@ -532,7 +540,17 @@ public class DiagramFragment extends AOdiaFragment {
         return null;
     }
     @Override
-    public String fragmentName(){
-        return "ダイヤグラム　"+diaFile.getDiaName(diaNumber)+"　"+diaFile.getLineName();
+    public String fragmentName() {
+        return "ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
     }
+    @Override
+    public String fragmentHash(){
+        try{
+            return "Diagram-"+diaFile.getFilePath()+"-"+diaNumber;
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
+            return "";
+        }
+    }
+
 }

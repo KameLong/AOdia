@@ -5,6 +5,9 @@ import com.kamelong.JPTIOuDia.OuDia.OuDiaFile;
 import com.kamelong.JPTIOuDia.OuDia.OuDiaTrain;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Route extends com.kamelong.JPTI.Route {
 
     public Route(JPTIdata jpti) {
@@ -30,13 +33,14 @@ public class Route extends com.kamelong.JPTI.Route {
         return new Trip(jpti,this,json);
     }
 
+    Map<OuDiaTrain,Integer>trainIDmap=new HashMap<>();
+
+
     /**
      * OuDiaファイルの路線の一部分から生成する。
      * @param oudia
-     * @param startStation 開始駅
-     * @param endStaton 終了駅
      */
-    public Route(JPTI jpti, OuDiaFile oudia, int startStation, int endStaton){
+    public Route(JPTI jpti, OuDiaFile oudia){
         this(jpti);
         int agencyIndex=-1;
         for(int i=0;i<jpti.agency.size();i++){
@@ -52,15 +56,16 @@ public class Route extends com.kamelong.JPTI.Route {
             agency.setName("oudia:"+oudia.getLineName());
             jpti.agency.add(agency);
         }
-        name=oudia.getStation(startStation).getName()+"~"+oudia.getStation(endStaton).getName();
+        name=oudia.getLineName();
         type=2;
-        for(int i=startStation;i<endStaton+1;i++){
+        for(int i=0;i<oudia.getStationNum();i++){
             RouteStation station=new RouteStation(jpti,this,oudia.getStation(i));
             stationList.add(station);
         }
         for(int i=0;i<oudia.getTypeNum();i++){
             classList.add(new TrainType(jpti,this,oudia.getTrainType(i)));
         }
+        int trainID=0;
         for(int diaNum=0;diaNum<oudia.getDiaNum();diaNum++) {
             String diaName=oudia.getDiaName(diaNum);
             int calendarID;
@@ -81,30 +86,17 @@ public class Route extends com.kamelong.JPTI.Route {
 
 
             for (int i = 0; i < oudia.getTrainNum(diaNum, 0); i++) {
-                int useStationNum = 0;
                 OuDiaTrain train = oudia.getTrain(diaNum, 0, i);
-                for (int j = startStation; j < endStaton + 1; j++) {
-                    if (train.getStopType(j) == 1 || train.getStopType(j) == 2) {
-                        useStationNum++;
-                    }
-                }
-                if (useStationNum < 2) {
-                    continue;
-                }
-                tripList.add(new Trip(train, startStation, endStaton, calendarID * 10000 + 0 + i + 1, 0,jpti.getCalendar(calendarID), oudia,jpti,this));
+                tripList.add(new Trip(train,trainID, 0,jpti.getCalendar(calendarID), oudia,jpti,this));
+                trainIDmap.put(train,trainID);
+                trainID++;
             }
             for (int i = 0; i < oudia.getTrainNum(diaNum, 1); i++) {
                 int useStationNum = 0;
                 OuDiaTrain train = oudia.getTrain(diaNum, 1, i);
-                for (int j = startStation; j < endStaton + 1; j++) {
-                    if (train.getStopType(j) == 1 || train.getStopType(j) == 2) {
-                        useStationNum++;
-                    }
-                }
-                if (useStationNum < 2) {
-                    continue;
-                }
-                tripList.add(new Trip(train, startStation, endStaton, calendarID * 10000 + 5000 + i + 1, 1, jpti.getCalendar(calendarID), oudia,jpti,this));
+                tripList.add(new Trip(train,trainID, 1, jpti.getCalendar(calendarID), oudia,jpti,this));
+                trainIDmap.put(train,trainID);
+                trainID++;
             }
         }
     }

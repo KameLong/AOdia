@@ -8,24 +8,89 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_main"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-<!--    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
--->
+        android:orientation="vertical"
+        tools:context="com.kamelong.aodia.AOdiaActivity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center_vertical">
+
+
+            <Button
+                android:id="@+id/Button2"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="12dp"
+
+                android:background="@drawable/humberger" />
+
+            <TextView
+                android:id="@+id/titleView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@+id/backFragment"
+                android:layout_toRightOf="@+id/Button2"
+                android:gravity="center_vertical"
+                android:text="wertwer"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/backFragment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentTop="false"
+
+                android:layout_marginTop="4dp"
+                android:layout_toLeftOf="@+id/proceedFragment"
+                android:background="@drawable/back" />
+
+            <Button
+                android:id="@+id/proceedFragment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
+                android:layout_toLeftOf="@+id/killFragment"
+                android:layout_marginTop="4dp"
+
+                android:background="@drawable/proceed" />
+
+            <Button
+                android:id="@+id/killFragment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="4dp"
+
+                android:background="@drawable/close" />
+
+        </RelativeLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/container"
+            android:visibility="visible"
+            android:background="#FFF">
+        </FrameLayout>
+
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/menu"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-/>
+        android:layout_gravity="start" />
+
+
 </android.support.v4.widget.DrawerLayout>

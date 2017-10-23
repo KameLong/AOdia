@@ -1,8 +1,11 @@
 package com.kamelong.aodia;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 /*
  *     This file is part of AOdia.
 
@@ -28,7 +31,7 @@ AOdia is free software: you can redistribute it and/or modify
  * PreferenceFragmentを継承したクラス
  * 個々で定義したPreferenceのリソースを設定します
  */
-public class SettingFragment extends android.preference.PreferenceFragment {
+public class SettingFragment extends android.preference.PreferenceFragment implements AOdiaFragmentInterface{
     Payment payment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,5 +115,23 @@ public class SettingFragment extends android.preference.PreferenceFragment {
             SdLog.log(e);
         }
         super.onStop();
+    }
+
+    @Override
+    public String fragmentName() {
+        return "設定";
+    }
+
+    @Override
+    public String fragmentHash() {
+        return "setting";
+    }
+    @Override
+    public Fragment getFragment(){
+        return this;
+    }
+    @Override
+    public AOdiaDiaFile getDiaFile(){
+        return null;
     }
 }

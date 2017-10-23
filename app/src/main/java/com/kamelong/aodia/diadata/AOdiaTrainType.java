@@ -2,6 +2,7 @@ package com.kamelong.aodia.diadata;
 
 import android.graphics.Color;
 
+import com.kamelong.JPTIOuDia.JPTI.TrainType;
 import com.kamelong.JPTIOuDia.OuDia.OuDiaTrainType;
 
 
@@ -40,6 +41,9 @@ public class AOdiaTrainType extends OuDiaTrainType{
      * 各色はすべて黒
      */
     public AOdiaTrainType(){
+    }
+    public AOdiaTrainType(TrainType type){
+        super(type);
     }
 
     /**

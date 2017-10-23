@@ -134,6 +134,9 @@ public class Payment {
         }
     }
     public boolean buyCheck(String id){
+        if(true){
+            return true;
+        }
         try {
             if(BuildConfig.BUILD_TYPE.equals("beta")){
                 return true;
