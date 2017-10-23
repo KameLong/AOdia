@@ -96,10 +96,10 @@
         android:enabled="true"
         >
         <CheckBoxPreference
-            android:key="item001"
-            android:title="（100円）複数ファイルのオープンを解禁する"
             android:defaultValue="false"
             android:enabled="true"
-            android:summary="有料オプションです" />
+            android:key="001"
+            android:summary="有料オプションです"
+            android:title="（200円）ファイル保存機能を解禁する" />
     </PreferenceCategory>
 </PreferenceScreen>

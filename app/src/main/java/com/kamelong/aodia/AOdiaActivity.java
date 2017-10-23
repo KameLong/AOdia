@@ -84,6 +84,9 @@ AOdia is free software: you can redistribute it and/or modify
 public class AOdiaActivity extends AppCompatActivity
         implements FileSelectionDialog.OnFileSelectListener {
     private Payment payment;
+    public Payment getPayment(){
+        return payment;
+    }
     /**
      * ダイヤデータを保持する。
      * ダイヤファイルをクローズするとArrayListの順番を詰めずに空白にする
@@ -135,7 +138,6 @@ public class AOdiaActivity extends AppCompatActivity
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.menu,menuFragment);
-        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,7 +274,7 @@ public class AOdiaActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            findViewById(R.id.backFragment).callOnClick();
         }
     }
 
@@ -399,16 +401,8 @@ public class AOdiaActivity extends AppCompatActivity
             DBHelper db=new DBHelper(this);
             db.addHistory(filePath);
             db.addNewFileToLineData(filePath,diaFile.getDiaNum());
-            if(payment.buyCheck("item001")) {
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }else{
-                if(diaFiles.size()>0){
-                    killDiaFile(0,0);
-                }
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }
+            diaFiles.add(diaFile);
+            diaFilesIndex.add(0, diaFiles.size() - 1);
             menuFragment.createMenu();
             openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
         } catch (Exception e) {
@@ -825,6 +819,12 @@ public class AOdiaActivity extends AppCompatActivity
 
     }
     public void saveFile(){
+        if(!payment.buyCheck("001")){
+            payment.buy("001");
+
+            return;
+        }
+
         try {
             AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
             System.out.println(fragments.get(fragments.size() - 1));

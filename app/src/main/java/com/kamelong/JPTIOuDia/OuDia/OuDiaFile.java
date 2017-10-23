@@ -78,6 +78,7 @@ public class OuDiaFile extends com.kamelong.OuDia.OuDiaFile{
                             newTrain.setType(trip.getType());
                             newTrain.setName(trip.getName());
                             newTrain.setNumber(trip.getNumber());
+                            newTrain.setDirect(direct);
 
                             trains.add(newTrain);
                             useBlockID.add(trip.getBlockID());

@@ -21,7 +21,7 @@ public class OuDiaTrain {
     /**
      * 列車の進行方向
      */
-    protected int direct=0;
+    public int direct=-1;
 
     /**
      * 列車種別

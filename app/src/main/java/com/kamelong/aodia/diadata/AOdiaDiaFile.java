@@ -31,7 +31,7 @@ import java.util.Map;
  */
 
 public class AOdiaDiaFile extends OuDiaFile{
-    AOdiaActivity activity;//このアプリのアクティビティー
+    private AOdiaActivity activity;//このアプリのアクティビティー
     /**
      * メニューを開いているかどうか
      */
@@ -39,7 +39,7 @@ public class AOdiaDiaFile extends OuDiaFile{
     /**
      * 最小所要時間
      */
-    protected ArrayList<Integer>stationTime=new ArrayList<Integer>();
+    protected ArrayList<Integer>stationTime=new ArrayList<>();
 
     /**
      * 運用のリストダイヤの数だけ、リストを用意する
@@ -128,6 +128,7 @@ public class AOdiaDiaFile extends OuDiaFile{
                             newTrain.setType(trip.getType());
                             newTrain.setName(trip.getName());
                             newTrain.setNumber(trip.getNumber());
+                            newTrain.setDirect(direct);
 
                             trains.add(newTrain);
                             useBlockID.add(trip.getBlockID());

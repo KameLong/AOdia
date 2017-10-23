@@ -1,6 +1,5 @@
 package com.kamelong.aodia;
 
-import android.app.DownloadManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +12,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.web.UrlOpenDialog;
 
 /**
- * Created by kame on 2016/12/20.
+ * ヘルプを表示するためのFragment
  */
 /*
  *     This file is part of AOdia.
@@ -55,9 +53,7 @@ public class HelpFragment extends AOdiaFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        WebView.setWebContentsDebuggingEnabled(true);
         handler=new Handler();
         helpView = new WebView(getActivity());
         helpView.setWebViewClient(new WebViewClient(){
@@ -85,7 +81,7 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.0b.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -107,7 +103,7 @@ public class HelpFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-        return "AOdiaヘルプv2.0.0b";
+        return "AOdiaヘルプv2.0b";
     }
     @Override
     public String fragmentHash() {

@@ -180,8 +180,15 @@ public class TrainTimeView extends KLView {
     }
     private void drawRemark(Canvas  canvas){
         try {
-            int startY = (int) (this.getHeight() - 9.3f * textSize);
+            int startY = (int) (this.getHeight() - 10.5f * textSize);
+
             canvas.drawLine(0, startY, getWidth(), startY, blackBPaint);
+            if(train.getOperation()!=null){
+                drawText(canvas,train.getOperation().getNumber()+"", 1, (int)(this.getHeight() - 9.4f * textSize),textPaint,true);
+
+            }
+            canvas.drawLine(0, startY+1.2f*textSize, getWidth(), startY+1.2f*textSize, blackPaint);
+
             int heightSpace = 18;
 
             String value= train.getRemark();
@@ -350,7 +357,7 @@ public class TrainTimeView extends KLView {
         }
         result=result-(int)(textSize*5/6);
         if(remarkFrag){
-            result=result+(int)(textSize*9.4f);
+            result=result+(int)(textSize*10.6f);
         }
         return result;
     }

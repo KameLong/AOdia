@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.kamelong.aodia.AOdiaActivity;
@@ -44,6 +45,10 @@ public class OperationFragment extends AOdiaFragment{
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
         ArrayList<Operation>operationList=diaFile.operationList.get(diaNum);
         if(operationList.size()==0) {
             Operation operation=new Operation();
@@ -54,15 +59,17 @@ public class OperationFragment extends AOdiaFragment{
             for(int i=0;i<operationList.size();i++){
                 OperationView v=new OperationView(getActivity(),this,operationList.get(i),diaFile,fileNum,diaNum);
                 ((LinearLayout)findViewById(R.id.opeListView)).addView(v);
-
             }
         }
+        System.out.println(((EditText)((LinearLayout)findViewById(R.id.opeListView)).getChildAt(0).findViewById(R.id.opeNameEdit)).getEditableText().toString());
+
         findViewById(R.id.addNewOpe).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addNewOpeView();
             }
         });
+
     }
     @Override
     public String fragmentName(){

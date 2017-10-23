@@ -77,8 +77,11 @@ public class StationNameView extends KLView {
         }
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(spf.getBoolean("remark",false)){
-            int startY = (int) (this.getHeight() - 9.3f * textSize);
+            int startY = (int) (this.getHeight() - 10.5f * textSize);
             canvas.drawLine(0, startY, getWidth(), startY, blackBPaint);
+            canvas.drawText("運用番号",0,startY+1.0f*textSize,blackPaint);
+            startY+=1.2f*textSize;
+            canvas.drawLine(0, startY, getWidth(), startY, blackPaint);
             int startX=(getWidth()-textSize)/2;
             startY=startY+(int)(textSize*1.5f);
             canvas.drawText("備",startX,startY,blackPaint);
@@ -120,7 +123,7 @@ public class StationNameView extends KLView {
         result=result-(int)(textSize*5/6);
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(spf.getBoolean("remark",false)){
-            result=result+(int)(textSize*9.4f);
+            result=result+(int)(textSize*10.6f);
         }
         return result;
     }

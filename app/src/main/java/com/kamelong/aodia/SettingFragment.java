@@ -36,54 +36,25 @@ public class SettingFragment extends android.preference.PreferenceFragment imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        payment=new Payment(getActivity());
+        payment=((AOdiaActivity)getActivity()).getPayment();
 
         addPreferencesFromResource(R.xml.activity_settings);
 
         try {
-            findPreference("item001").setOnPreferenceChangeListener(
+            findPreference("001").setOnPreferenceChangeListener(
                     new Preference.OnPreferenceChangeListener() {
                         @Override
                         public boolean onPreferenceChange(Preference preference, Object o) {
 
-                            if(payment.buyCheck("item001")){
+                            if(payment.buyCheck("001")){
                                 ((CheckBoxPreference) preference).setChecked(true);
                                 ((CheckBoxPreference) preference).setEnabled(false);
                             }else{
-                                payment.buy("item001");
-                                if(payment.buyCheck("item001")){
+                                payment.buy("001");
+                                if(payment.buyCheck("001")){
                                     ((CheckBoxPreference) preference).setChecked(true);
                                     ((CheckBoxPreference) preference).setEnabled(false);
                                 }
-                            }
-                            return false;
-                        }
-
-                    });
-            findPreference("paymentClear").setOnPreferenceChangeListener(
-                    new Preference.OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(Preference preference, Object o) {
-                            payment.use();
-                            ((CheckBoxPreference) findPreference("item001")).setChecked(false);
-                            ((CheckBoxPreference) findPreference("item001")).setEnabled(true);
-                            return false;
-                        }
-
-                    });
-
-            findPreference("paymentPass").setOnPreferenceChangeListener(
-                    new Preference.OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(Preference preference, Object o) {
-                            if (((CheckBoxPreference) preference).isChecked()) {
-                                ((CheckBoxPreference) preference).setChecked(false);
-                                ((CheckBoxPreference) findPreference("paymentClear")).setEnabled(true);
-                            } else {
-                                ((CheckBoxPreference) preference).setChecked(true);
-                                ((CheckBoxPreference) findPreference("item001")).setChecked(true);
-                                ((CheckBoxPreference) findPreference("item001")).setEnabled(false);
-                                ((CheckBoxPreference) findPreference("paymentClear")).setEnabled(false);
                             }
                             return false;
                         }
@@ -98,11 +69,8 @@ public class SettingFragment extends android.preference.PreferenceFragment imple
     @Override
     public void onResume() {
         super.onResume();
-        /*
-        ((CheckBoxPreference)findPreference("item001")).setChecked(false);
-        ((CheckBoxPreference)findPreference("item001")).setEnabled(true);
-        */
-        (findPreference("item001")).setEnabled(!((CheckBoxPreference) findPreference("item001")).isChecked());
+        (findPreference("001")).setEnabled(!payment.buyCheck("001"));
+        ((CheckBoxPreference) findPreference("001")).setChecked(payment.buyCheck("001"));
     }
     @Override
     public void onStop(){

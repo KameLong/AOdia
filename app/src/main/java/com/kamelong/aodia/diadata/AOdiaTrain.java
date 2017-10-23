@@ -40,6 +40,13 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class AOdiaTrain extends OuDiaTrain {
 
+    protected Operation operation=null;
+    public Operation getOperation(){
+        return operation;
+    }
+    public void setOperation(Operation operation){
+        this.operation=operation;
+    }
     /**
      * 列車の生成には所属するDiaFileが必要となります。
      * @param dia　呼び出し元のDiaFile
@@ -252,6 +259,9 @@ public class AOdiaTrain extends OuDiaTrain {
         }
         return direct*(time.length-1);
     }
+    public int getEndStation(){
+        return getEndStation(direct);
+    }
 
     /**
      * 始発駅を返します
@@ -266,6 +276,9 @@ public class AOdiaTrain extends OuDiaTrain {
             }
         }
         return (1-direct)*(time.length-1);
+    }
+    public int getStartStation(){
+        return getStartStation(direct);
     }
 
     /**

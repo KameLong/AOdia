@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
@@ -22,21 +23,23 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by kame on 2017/03/20.
+ * 支払情報を管理するクラス
  */
 
 public class Payment {
     private Activity activity;
-    IInAppBillingService mService;
-    ServiceConnection         mServiceConn = new ServiceConnection() {
+    private IInAppBillingService mService;
+    private ServiceConnection         mServiceConn = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            Log.d("mService","Destroy");
             mService = null;
         }
 
         @Override
         public void onServiceConnected(ComponentName name,
                                        IBinder service) {
+            Log.d("mService","Connected");
             mService = IInAppBillingService.Stub.asInterface(service);
         }
     };
@@ -66,9 +69,9 @@ public class Payment {
                         pendingIntent.getIntentSender(),
                         1001,
                         new Intent(),
-                        Integer.valueOf(0),
-                        Integer.valueOf(0),
-                        Integer.valueOf(0));
+                        0,
+                        0,
+                        0);
             }
             // BILLING_RESPONSE_RESULT_USER_CANCELED
             else if(response == 1) {
@@ -82,7 +85,7 @@ public class Payment {
             e.printStackTrace();
         }
     }
-    public void alert(String str){
+    private void alert(String str){
         Toast.makeText(activity,str,Toast.LENGTH_LONG).show();
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -134,6 +137,7 @@ public class Payment {
         }
     }
     public boolean buyCheck(String id){
+
         if(true){
             return true;
         }
@@ -142,6 +146,7 @@ public class Payment {
                 return true;
             }
             // 購入したものを確認する
+            System.out.println(mService);
             Bundle ownedItems = mService.getPurchases(3, activity.getPackageName(), "inapp", null);
 
             int response = ownedItems.getInt("RESPONSE_CODE");
@@ -164,7 +169,7 @@ public class Payment {
             }
         }catch(Exception e) {
             e.printStackTrace();
-//            alert("購入チェック時にエラーが発生しました");
+            alert("購入チェック時にエラーが発生しました");
         }
         return false;
     }
