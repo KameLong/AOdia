@@ -6,10 +6,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
 
+import com.kamelong.JPTI.JPTI;
+import com.kamelong.JPTI.Time;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadata.AOdiaStation;
@@ -18,51 +17,36 @@ import com.kamelong.aodia.diadata.AOdiaTrain;
 public class TrainTimeView extends KLView {
     private AOdiaDiaFile dia;
     private AOdiaTrain train;
+    private AOdiaStation station;
+    private JPTI jpti;
     private int direct;
     private boolean secondFrag=false;
     private boolean remarkFrag=false;
     private boolean showPassFrag=false;
     private TrainSelectListener trainSelectListener=null;
+    private static final String NOSERVICE_STRING ="∙ ∙";
+    private static final String NOVIA_STRING="| |";
+    private static final String PASS_STRING="レ";
+    private static final String NODATA_STRING="○";
 
-    TrainTimeView(Context context){
+    private TrainTimeView(Context context){
         super(context);
     }
     TrainTimeView(Context context, TimeTableFragment timeTableFragment,AOdiaDiaFile diaFile, AOdiaTrain t, int d){
         this(context);
         dia=diaFile;
+        station=dia.getStation();
+        jpti=dia.getJPTI();
         train=t;
         direct=d;
+
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
         secondFrag=spf.getBoolean("secondSystem",secondFrag);
         remarkFrag=spf.getBoolean("remark",remarkFrag);
         showPassFrag=spf.getBoolean("showPass",showPassFrag);
 
 
-        final GestureDetector gesture = new GestureDetector(getContext(),
-                new GestureDetector.SimpleOnGestureListener() {
-                    @Override
-                    public boolean onDown(MotionEvent event){
-                        return true;
-                    }
-                    @Override
-                    public boolean onDoubleTap(MotionEvent event){
-                        System.out.println("Double tap");
-                        if(TrainTimeView.this.trainSelectListener!=null){
-                            TrainTimeView.this.trainSelectListener.selectTrain(TrainTimeView.this.train);
-                        }
 
-                     return true;
-                    }
-                    @Override
-                    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float vx, float vy) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
-                        return false;
-                    }
-                });
 
     }
     public void onDraw(Canvas canvas){
@@ -75,123 +59,125 @@ public class TrainTimeView extends KLView {
     private void drawTime(Canvas canvas){
         try {
             int startLine = textSize;
-            for (int i = 0; i < dia.getStationNum(); i++) {
-                textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
-                int stationNumber = (dia.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
-                AOdiaStation station = dia.getStation(stationNumber);
-                switch (station.getTimeShow(direct)) {
-                    case 0:
-                        break;
-                    case 1:
-                        //発のみ
-                        if (station.getBigStation() && (train.getStopType(stationNumber) == 0)) {
-                            drawText(canvas,"- - - - - - -", 1, startLine, textPaint,true);
-                        } else {
-                            drawText( canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+            for (int i = 0; i < station.getStationNum(); i++) {
+                textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+                int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
+                Time time=train.getTime(stationNumber);
+                int border=station.border(stationNumber-direct);
+                int timeShow=station.getTimeShow(stationNumber,direct);
+                if(border==0&&timeShow==0) {
+                    //発のみ
+                    if (station.bigStation(stationNumber) && (train.getStopType(stationNumber) == 0&&(station.border(stationNumber-1+direct)==0)&&stationNumber!=0)) {
+                        drawText(canvas, "- - - - - - -", 1, startLine, textPaint, true);
+                    } else {
+                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                    }
+                    startLine = startLine + textSize;
+                }
+                if(timeShow==1) {
+                    //発着
+                    int backwordStation = stationNumber + (direct * 2 - 1);
+                    if (backwordStation < 0 || backwordStation >= station.getStationNum()) {
+                        if(train.getTime(stationNumber).getArrivalTime()>=0){
+                            drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        }else {
+                            drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
                         }
-                        startLine = startLine +textSize;
-                        break;
-                    case 2:
-                        //着のみ
-                        drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                        startLine = startLine + textSize;
-                        break;
-                    case 3:
-                        //発着
-                        int backwordStation = stationNumber + (direct * 2 - 1);
-                        if (backwordStation < 0 || backwordStation >= dia.getStationNum()) {
-                            if(train.arriveExist(stationNumber)){
+                    }else {
+                        switch (train.getStopType(backwordStation)) {
+                            case 0:
+                                if(train.getTime(backwordStation)!=null&&train.getTime(stationNumber).getArrivalTime()>=0){
+                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                }else {
+                                    drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                                }
+                                break;
+                            case 3:
+                                if(train.getTime(backwordStation)!=null&&train.getTime(stationNumber).getArrivalTime()>=0){
+                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                }else {
+                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                }
+                                break;
+                            default:
                                 drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                            }else {
-                                drawText(canvas, ": :", 1, startLine, textPaint, true);
-                            }
-                        }else {
-                            switch (train.getStopType(backwordStation)) {
-                                case 0:
-                                    if(train.arriveExist(stationNumber)){
-                                        drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                    }else {
-                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                    }
-                                    break;
-                                case 3:
-                                    if(train.arriveExist(stationNumber)){
-                                        drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                    }else {
-                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                    }
-                                    break;
-                                default:
-                                    drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                    break;
-                            }
+                                break;
                         }
-                        canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
-                        startLine = startLine + (int) (textSize * 7 / 6);
+                    }
+                    canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
+                    startLine = startLine + (int) (textSize * 7 / 6);
 
-                        textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
+                    textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
 
-                        int forwordStation = stationNumber + (1 - direct * 2);
-                        if (forwordStation < 0 || forwordStation >= dia.getStationNum()) {
-                            if(train.departExist(stationNumber)){
+                    int forwordStation = stationNumber + (1 - direct * 2);
+                    if (forwordStation < 0 || forwordStation >= station.getStationNum()) {
+                        if(train.getTime(stationNumber).getDepartureTime()>=0){
+                            drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        }else {
+                            drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                        }
+                    }else {
+                        switch (train.getStopType(forwordStation)) {
+                            case 0:
+                                if(train.getTime(forwordStation)!=null&&train.getTime(stationNumber).getDepartureTime()>=0){
+                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                }else {
+                                    drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                                }
+                                break;
+                            case 3:
+                                if(train.getTime(forwordStation)!=null&&train.getTime(stationNumber).getDepartureTime()>=0){
+                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                }else {
+                                    drawText(canvas,NOVIA_STRING, 1, startLine, textPaint, true);
+                                }
+                                break;
+                            default:
                                 drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                            }else {
-                                drawText(canvas, ": :", 1, startLine, textPaint, true);
-                            }
-                        }else {
-                            switch (train.getStopType(forwordStation)) {
-                                case 0:
-                                    if(train.departExist(stationNumber)){
-                                        drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                    }else {
-                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                    }
-                                    break;
-                                case 3:
-                                    if(train.departExist(stationNumber)){
-                                        drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                    }else {
-                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                    }
-                                    break;
-                                default:
-                                    drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                    break;
-                            }
+                                break;
                         }
-                        startLine = startLine +textSize;
-                        break;
+                    }
+                    startLine = startLine +textSize;
                 }
-                //もし境界線が存在する駅なら境界線を引く
-                //上り時刻表の時は次の駅が境界線ありなら境界線を引く
-                int checkStation = stationNumber - direct;
-                if (checkStation < 0) {
-                    checkStation = 0;
+                if(border!=0||timeShow==2){
+
+                    //着のみ
+                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                    startLine = startLine + textSize;
+                    if(border==2){
+                        canvas.drawLine(0, startLine  -(textSize*4 / 5), this.getWidth() - 1, startLine - (textSize*4/ 5), blackPaint);
+                        startLine = startLine + (textSize  / 6);
+                    }
+                    if(border==1){
+                        canvas.drawLine(0, startLine  -(textSize*2 / 3), this.getWidth() - 1, startLine - (textSize*2/ 3), blackBPaint);
+                        startLine = startLine + (textSize  / 3);
+                    }
+
                 }
-                if (dia.getStation(checkStation).border()) {
-                    canvas.drawLine(0, startLine - (int) (textSize * 4 / 5), this.getWidth() - 1, startLine - (int) (textSize* 4 / 5), blackPaint);
-                    startLine = startLine + (int) (textSize* 1 / 6);
-                }
-            }
-            canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
-        }catch(Exception e){
-            SdLog.log(e);
         }
+        canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
+    }catch(Exception e){
+        SdLog.log(e);
     }
+}
     private void drawRemark(Canvas  canvas){
         try {
             int startY = (int) (this.getHeight() - 10.5f * textSize);
 
-            canvas.drawLine(0, startY, getWidth(), startY, blackBPaint);
+            canvas.drawLine(0, startY, getWidth(), startY, blackBBPaint);
+
             if(train.getOperation()!=null){
-                drawText(canvas,train.getOperation().getNumber()+"", 1, (int)(this.getHeight() - 9.4f * textSize),textPaint,true);
+                if(train.getOperation().getNumber()>=0) {
+                    drawText(canvas, train.getOperation().getNumber() + "", 1, (int) (this.getHeight() - 9.4f * textSize), textPaint, true);
+                }
 
             }
+
             canvas.drawLine(0, startY+1.2f*textSize, getWidth(), startY+1.2f*textSize, blackPaint);
 
             int heightSpace = 18;
 
-            String value= train.getRemark();
+            String value= train.getText();
             value=value.replace('ー','｜');
             value=value.replace('（','(');
             value=value.replace('）',')');
@@ -236,89 +222,6 @@ public class TrainTimeView extends KLView {
             SdLog.log(e);
         }
 
-        /*
-        int namespace=18;
-
-
-
-        char[] name=train.getRemark().replace('ー','｜').toCharArray();
-        String[] text=new String[name.length];
-        int textIndex=0;
-        for(int i=0;i<name.length;i++){
-            if(charIsEng(name[i])){
-                if(charIsNumber(name[i])){
-                    text[textIndex]=String.valueOf(name[i]);
-                    while(i+1<name.length&&charIsNumber(name[i+1])){
-                        i++;
-                        text[textIndex]+=String.valueOf(name[i]);
-                    }
-                }else{
-                    text[textIndex]=String.valueOf(name[i]);
-                    while(i+1<name.length&&!charIsNumber(name[i+1])&&charIsEng(name[i+1])){
-                        i++;
-                        text[textIndex]+=String.valueOf(name[i]);
-                    }
-                }
-            }else{
-                text[textIndex]=String.valueOf(name[i]);
-            }
-            textIndex++;
-        }
-        int lineNum=1;
-        int space=namespace;
-        for(int i=0;i<textIndex&&i<text.length;i++){
-            if(space<=0){
-                space=namespace;
-                lineNum++;
-            }
-            if(text[i].length()>2){
-                if(space-text[i].length()<0){
-                    if(space==namespace){
-                        space=0;
-                    }else{
-                        lineNum++;
-                        space=0;
-                    }
-                }else {
-                    space = space - text[i].length();
-                }
-            }else{
-                space=space-2;
-            }
-        }
-
-        int startX=(int)((getWidth()-lineNum*textSize)/2+(lineNum-1)*textSize);
-        startY=startY+(int)(textSize*0.1f);
-        space=namespace;
-        System.out.println(startX);
-        for(int i=0;i<textIndex&&i<text.length;i++){
-            if(text[i].length()>2){
-                if(space-text[i].length()<0){
-                    if(space==namespace){
-                        space=0;
-                    }else{
-                        startX-=textSize;
-                        space=0;
-                    }
-                    canvas.rotate(90,0,0);
-                    canvas.drawText(text[i],startY+(namespace-space)*textSize/2,startX,textPaint);
-                    canvas.rotate(-90,0,0);
-                }else {
-                    canvas.rotate(90,0,0);
-                    canvas.drawText(text[i],startY+(namespace-space)*textSize/2,-startX,textPaint);
-                    canvas.rotate(-90,0,0);
-                    space = space - text[i].length();
-                }
-            }else{
-                space=space-2;
-                canvas.drawText(text[i],startX,startY+(namespace-space)*textSize/2,textPaint);
-            }
-            if(space<=0){
-                space=namespace;
-                startX-=textSize;
-            }
-        }
-        */
 
     }
     private boolean charIsEng(char c){
@@ -326,37 +229,45 @@ public class TrainTimeView extends KLView {
     }
     public int getYsize(){
         int result=textSize;
-        for(int i=0;i<dia.getStationNum();i++){
-            int stationNumber=(dia.getStationNum()-1)*direct+(1-2*direct)*i;
-            AOdiaStation station=dia.getStation(stationNumber);
-            switch (station.getTimeShow(direct)){
+        for(int i = 0; i< station.getStationNum(); i++){
+            int stationNumber=(station.getStationNum()-1)*direct+(1-2*direct)*i;
+            switch(station.border(stationNumber-direct)){
                 case 0:
+                    switch (station.getTimeShow(stationNumber,direct)){
+                        case 0:
+                            //発のみ
+                            result=result+textSize;
+                            break;
+                        case 1:
+                            //発着
+                            result=result+(textSize*7/6);
+                            result=result+textSize;
+                            break;
+                        case 2:
+                            //着のみ
+                            result=result+textSize;
+                            break;
+                    }
                     break;
                 case 1:
-                    //発のみ
-                    result=result+textSize;
-                    break;
-                case 2:
                     //着のみ
                     result=result+textSize;
+                    result=result+(textSize/3);
                     break;
-                case 3:
-                    //発着
-                    result=result+(textSize*7/6);
+                case 2:
+                    //
                     result=result+textSize;
+                    result=result+(textSize*7/6);
+                    i++;
                     break;
             }
-            //もし境界線が存在する駅なら境界線を考える
-            int checkStation=stationNumber-direct;
-            if(checkStation<0){
-                checkStation=0;
-            }
-            if(dia.getStation(checkStation).border()){
-                result=result+(textSize*1/6);
-            }
+
+
         }
-        result=result-(int)(textSize*5/6);
-        if(remarkFrag){
+        result=result-(textSize*4/6);
+
+        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(spf.getBoolean("remark",false)){
             result=result+(int)(textSize*10.6f);
         }
         return result;
@@ -368,79 +279,81 @@ public class TrainTimeView extends KLView {
         }
         return (int)(textSize*lineTextSize*0.5f);
     }
-    public String getDepartureTime(AOdiaTrain train, int station, int direct){
+    private String getDepartureTime(AOdiaTrain train, int station, int direct){
+        Time time=train.getTime(station);
         try {
             switch(train.getStopType(station)){
-                case AOdiaTrain.STOP_TYPE_NOSERVICE:
-                    return ": :";
-                case AOdiaTrain.STOP_TYPE_NOVIA:
-                    return "| |";
-                case AOdiaTrain.STOP_TYPE_PASS:
-                    if(showPassFrag&&train.timeExist(station)) {
+                case AOdiaTrain.NOSERVICE:
+                    return NOSERVICE_STRING;
+                case AOdiaTrain.NOVIA:
+                    return NOVIA_STRING;
+                case AOdiaTrain.PASS:
+                    if(showPassFrag&&(time.getArrivalTime()>=0||time.getDepartureTime()>=0)) {
                         textPaint.setColor(Color.GRAY);
                     }else{
-                        return "レ";
+                        return PASS_STRING;
                     }
             }
-            if (!train.departExist(station)) {
-                if (!train.arriveExist(station)) {
+            if (time.getDepartureTime()<0) {
+                if (time.getArrivalTime()<0) {
                     return "○";
                 }
                 return getArriveTime(train,station, direct);
             }
-            int second=train.getDepartureTime(station);
+            int second=time.getDepartureTime();
             int ss=second%60;
             second=(second-ss)/60;
             int mm=second%60;
             second=(second-mm)/60;
             int hh=second%60;
             hh=hh%24;
-            String time = "";
+            String result = "";
             if(secondFrag) {
-                time = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+                result = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
             }else{
-                time = String.format("%2d", hh) + String.format("%02d", mm);
+                result = String.format("%2d", hh) + String.format("%02d", mm);
             }
-            return time;
+            return result;
         }catch(Exception e){
             SdLog.log(e);
         }
         return "○";
     }
     private String getArriveTime(AOdiaTrain train, int station, int direct){
+        Time time=train.getTime(station);
         try {
             switch(train.getStopType(station)){
-                case AOdiaTrain.STOP_TYPE_NOSERVICE:
-                    return ": :";
-                case AOdiaTrain.STOP_TYPE_NOVIA:
-                    return "| |";
-                case AOdiaTrain.STOP_TYPE_PASS:
-                    if(showPassFrag&&train.timeExist(station)) {
+                case AOdiaTrain.NOSERVICE:
+                    return NOSERVICE_STRING;
+                case AOdiaTrain.NOVIA:
+                    return NOVIA_STRING;
+                case AOdiaTrain.PASS:
+                    if(showPassFrag&&(time.getArrivalTime()>=0||time.getDepartureTime()>=0)){
                         textPaint.setColor(Color.GRAY);
                     }else{
-                        return "レ";
+                        return PASS_STRING;
                     }
             }
-            if (!train.arriveExist(station)) {
-                if (!train.departExist(station)) {
-                    return "○";
+            if (time.getArrivalTime()<0) {
+                if (time.getDepartureTime()>=0) {
+                    return getDepartureTime(train,station, direct);
                 }
-                return getDepartureTime(train,station, direct);
+                return NODATA_STRING;
             }
-            int second=train.getArriveTime(station);
+            int second=time.getArrivalTime();
             int ss=second%60;
             second=(second-ss)/60;
             int mm=second%60;
             second=(second-mm)/60;
             int hh=second%60;
             hh=hh%24;
-            String time = "";
+            String result = "";
             if(secondFrag) {
-                time = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+                result = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
             }else{
-                time = String.format("%2d", hh) + String.format("%02d", mm);
+                result = String.format("%2d", hh) + String.format("%02d", mm);
             }
-            return time;
+            return result;
         }catch(Exception e){
             SdLog.log(e);
         }

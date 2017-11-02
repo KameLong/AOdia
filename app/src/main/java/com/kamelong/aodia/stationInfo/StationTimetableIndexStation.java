@@ -38,7 +38,7 @@ public class StationTimetableIndexStation extends LinearLayout {
         super(context);
         try{
             LayoutInflater.from(context).inflate(R.layout.station_timetable_index_onestation, this);
-            ((TextView)findViewById(R.id.stationName)).setText(diaFile.getStation(stationNum).getName());
+            ((TextView)findViewById(R.id.stationName)).setText(diaFile.getStation().getName(stationNum));
             LinearLayout diaList=(LinearLayout)findViewById(R.id.diaList);
             for(int i=0;i<diaFile.getDiaNum();i++){
                 StationTimetableIndexDia stationTimetableIndexDia=new StationTimetableIndexDia(context,diaFile,fileNum,stationNum,i);

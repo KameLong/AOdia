@@ -36,9 +36,9 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationInfoIndexFragment extends AOdiaFragment {
-    int fileNum = 0;
-    AOdiaActivity activity;
-    View contentView;
+    private int fileNum = 0;
+    private AOdiaActivity activity;
+    private View contentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             LinearLayout stationLayout = (LinearLayout)findViewById(R.id.stationList);
-            for (int station = 0; station < diaFile.getStationNum(); station++) {
+            for (int station = 0; station < diaFile.getStation().getStationNum(); station++) {
                 StationTimetableIndexStation stationView = new StationTimetableIndexStation(getActivity(),diaFile,fileNum,station);
                 stationLayout.addView(stationView);
 
@@ -83,7 +83,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         return "StationInfoIndex-"+diaFile.getFilePath();
     }
 
-    public View findViewById(int id){
+    protected View findViewById(int id){
         return contentView.findViewById(id);
     }
 }

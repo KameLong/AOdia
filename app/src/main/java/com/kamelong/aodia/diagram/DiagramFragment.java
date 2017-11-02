@@ -91,15 +91,15 @@ public class DiagramFragment extends AOdiaFragment {
      * このFragmentで開いているデータについての情報
      */
     private int fileNum=0;
-    public int diaNumber=0;
-    Handler handler = new Handler(); // (1)
+    private int diaNumber=0;
+    private Handler handler = new Handler(); // (1)
     private boolean autoScroll=false;
 
 
     /**
      * DiagramFragment内のタッチジェスチャー
      */
-    final GestureDetector gesture = new GestureDetector(getActivity(),
+    private final GestureDetector gesture = new GestureDetector(getActivity(),
             new GestureDetector.SimpleOnGestureListener() {
                 private boolean pinchFragX=false;
                 private boolean pinchFragY=false;
@@ -296,7 +296,7 @@ public class DiagramFragment extends AOdiaFragment {
 
 
             //デフォルトscaleはTrainNumに依存する
-            if (diaFile.getTrainNum(0, 0) < 100) {
+            if (diaFile.getTimeTable(0, 0).getTrainNum() < 100) {
                 scaleX = 10;
                 scaleY = 20;
             } else {
@@ -357,7 +357,7 @@ public class DiagramFragment extends AOdiaFragment {
                 FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
                 final int width = diagramFrame.getWidth();
                 int nowTime = (int) (System.currentTimeMillis() % (24 * 60 * 60 * 1000)) / 1000;//システムの時間
-                nowTime = nowTime - diaFile.getDiagramStartTime() + 9 * 60 * 60;//時差
+                nowTime = nowTime - diaFile.getService().getDiagramStartTime() + 9 * 60 * 60;//時差
                 if (nowTime < 0) {
                     nowTime = nowTime + 24 * 60 * 60;
                 }
@@ -525,7 +525,7 @@ public class DiagramFragment extends AOdiaFragment {
     public void fitVertical(){
         FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
         float frameSize=diagramFrame.getHeight()-40;
-        float nessTime=diaFile.getStationTime().get(diaFile.getStationNum()-1);
+        float nessTime=diaFile.getStation().getStationTime().get(diaFile.getStation().getStationNum()-1);
         scaleY=frameSize/nessTime*60;
         setScale();
         stationView.invalidate();

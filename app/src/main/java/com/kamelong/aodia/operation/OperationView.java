@@ -11,24 +11,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.diadata.AOdiaTrain;
-import com.kamelong.aodia.diadata.Operation;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 /**
  */
 
 public class OperationView extends RelativeLayout{
-    View layout;
-    boolean childOpen=true;
-    Operation operation=null;
-    AOdiaDiaFile diaFile=null;
-    OperationFragment fragment=null;
-    int fileID=0;
-    int diaNum=0;
-    LinearLayout opeList=null;
+    private View layout;
+    private boolean childOpen=true;
+    AOdiaOperation operation=null;
+    private AOdiaDiaFile diaFile=null;
+    private OperationFragment fragment=null;
+    private int fileID=0;
+    private int diaNum=0;
+    private LinearLayout opeList=null;
 
-    public OperationView(final Context context, final OperationFragment fragment,final Operation operation, final AOdiaDiaFile diaFile, final int fileID, final int diaNum){
+    public OperationView(final Context context, final OperationFragment fragment,final AOdiaOperation operation, final AOdiaDiaFile diaFile, final int fileID, final int diaNum){
         super(context);
         this.fragment=fragment;
         this.diaFile=diaFile;
@@ -126,7 +126,7 @@ public class OperationView extends RelativeLayout{
         });
         dialog.show();
     }
-    public void addNewTrip(){
+    private void addNewTrip(){
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
             @Override
             public void selectTrain(AOdiaTrain train) {

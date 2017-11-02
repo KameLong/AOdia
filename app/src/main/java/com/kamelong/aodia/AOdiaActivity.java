@@ -13,26 +13,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.kamelong.JPTIOuDia.JPTI.JPTI;
+import com.kamelong.JPTI.JPTI;
+import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.diadata.Operation;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.aodia.AOdiaIO.FileSelectionDialog;
@@ -102,21 +98,22 @@ public class AOdiaActivity extends AppCompatActivity
      * 開いているFragmentを保存する
      * fragmentsはFragmentを削除すると順番を詰める
      */
-    public ArrayList<AOdiaFragmentInterface> fragments=new ArrayList<>();
+    private ArrayList<AOdiaFragmentInterface> fragments=new ArrayList<>();
     /**
      * 現在開いているFragmentのインデックス
      */
-    public int fragmentIndex=-1;
+    private int fragmentIndex=-1;
 
     /**
      * 使用するMenuFragment
      */
-    MenuFragment menuFragment;
+    private MenuFragment menuFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //あらかじめ購入処理関係を起動
         payment=new Payment(this);
+        SdLog.setActivity(this);
         //MainActivityに用いるContentViewを設定
         setContentView(R.layout.activity_main);
         setting();
@@ -223,8 +220,8 @@ public class AOdiaActivity extends AppCompatActivity
             }
         }
         //もし前回のデータが無ければsample.oudを開く
-        diaFiles.add(new AOdiaDiaFile(this));
-        diaFilesIndex.add(0);
+//        diaFiles.add(new AOdiaDiaFile(this));
+// diaFilesIndex.add(0);
         //全開のデータがない場合はsampleを開いたうえでヘルプを開く
         openHelp();
     }
@@ -391,10 +388,14 @@ public class AOdiaActivity extends AppCompatActivity
         String filePath=file.getPath();
         try {
             if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
-                diaFile= new AOdiaDiaFile(this, file);
+                OuDiaFile oudia=new OuDiaFile(file);
+                JPTI jpti=new JPTI(oudia);
+                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
+                diaFile.setFilePath(filePath);
             }
             if(filePath.endsWith(".jpti")){
-                diaFile=new AOdiaDiaFile(new JPTI(new File(filePath)));
+                JPTI jpti=new JPTI(file);
+                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
                 diaFile.setFilePath(filePath);
             }
             if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
@@ -423,7 +424,7 @@ public class AOdiaActivity extends AppCompatActivity
      * 任意のFragmentをcontainerに開きます。
      * @param fragment
      */
-    public void openFragment(AOdiaFragmentInterface fragment){
+    private void openFragment(AOdiaFragmentInterface fragment){
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         FragmentManager fragmentManager = getFragmentManager();
@@ -478,7 +479,7 @@ public class AOdiaActivity extends AppCompatActivity
      * 指定されたIndexのFragmentをkillする
      * @param index
      */
-    public void killFragment(int index){
+    private void killFragment(int index){
         if(index<0){
             return;
         }
@@ -570,13 +571,15 @@ public class AOdiaActivity extends AppCompatActivity
     /**
      * ダイヤグラムを開く
      */
-    public void openDiagram(int fileNum,int diaNum){
+    private void openDiagram(int fileNum, int diaNum){
+
         AOdiaFragment fragment=new DiagramFragment();
         Bundle args=new Bundle();
         args.putInt("fileNum",fileNum);
         args.putInt("diaN", diaNum);
         fragment.setArguments(args);
         openFragment(fragment);
+
 
     }
 
@@ -594,7 +597,7 @@ public class AOdiaActivity extends AppCompatActivity
     /**
      * 路線時刻表を開く
      */
-    public void openLineTimeTable(int fileNum,int diaNum,int direct){
+    private void openLineTimeTable(int fileNum, int diaNum, int direct){
         openLineTimeTable(fileNum,diaNum,direct,-1);
     }
 
@@ -634,42 +637,6 @@ public class AOdiaActivity extends AppCompatActivity
             SdLog.log(e);
         }
 
-    }
-
-    /**
-     *
-     * @param file
-     */
-    private void onUrlSelect(File file) {
-        AOdiaDiaFile diaFile=null;
-        String filePath=file.getPath();
-        try {
-            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
-                diaFile= new AOdiaDiaFile(this, file);
-            }
-            if(file.isDirectory()){
-                //for netgram
-            }
-            if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
-            DBHelper db=new DBHelper(this);
-
-            db.addNewFileToLineData(filePath,diaFile.getDiaNum());
-
-            if(payment.buyCheck("item001")) {
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }else{
-                if(diaFiles.size()>0){
-                    killDiaFile(0,0);
-                }
-                diaFiles.add(diaFile);
-                diaFilesIndex.add(0, diaFiles.size() - 1);
-            }
-            openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
-        } catch (Exception e) {
-            SdLog.log(e);
-            Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
-        }
     }
 
 
@@ -788,7 +755,7 @@ public class AOdiaActivity extends AppCompatActivity
     /**
      * 設定を反映させる
      */
-    public void setting(){
+    private void setting(){
         try {
             final float scale=getResources().getDisplayMetrics().density;
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(this);
@@ -821,15 +788,15 @@ public class AOdiaActivity extends AppCompatActivity
     public void saveFile(){
         if(!payment.buyCheck("001")){
             payment.buy("001");
-
             return;
         }
 
         try {
             AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
+            saveFile.saveAOdia();
             System.out.println(fragments.get(fragments.size() - 1));
             File outFile = new File(saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti");
-            JPTI jpti = new JPTI(saveFile);
+            JPTI jpti = saveFile.getJPTI();
             jpti.makeJSONdata(outFile);
             Toast.makeText(this, saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti"+"\nにファイルを保存しました", Toast.LENGTH_LONG).show();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

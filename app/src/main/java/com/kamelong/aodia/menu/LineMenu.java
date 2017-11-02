@@ -52,8 +52,8 @@ AOdia is free software: you can redistribute it and/or modify
  * 全てのボタンは１つのLinearLayout内に含まれる
  */
 public class LineMenu  extends LinearLayout{
-    LinearLayout lineButtonLinear;
-    LinearLayout lineContLinear;
+    private LinearLayout lineButtonLinear;
+    private LinearLayout lineContLinear;
 
     private int fileNum;
     private int menuIndex;

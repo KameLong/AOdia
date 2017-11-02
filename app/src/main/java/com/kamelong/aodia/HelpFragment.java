@@ -47,8 +47,8 @@ public class HelpFragment extends AOdiaFragment {
         super();
     }
 
-    WebView helpView;
-    Handler handler;
+    private WebView helpView;
+    private Handler handler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.com/aodia/help-v2.0b.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.2.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -103,7 +103,7 @@ public class HelpFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-        return "AOdiaヘルプv2.0b";
+        return "AOdiaヘルプv2.2";
     }
     @Override
     public String fragmentHash() {

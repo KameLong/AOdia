@@ -35,8 +35,8 @@ AOdia is free software: you can redistribute it and/or modify
  * @author kamelong
  */
 public class LineNameView extends KLView {
-    AOdiaDiaFile dia;
-    int diaNum;
+    private AOdiaDiaFile dia;
+    private int diaNum;
 
     public LineNameView(Context context) {
         super(context);

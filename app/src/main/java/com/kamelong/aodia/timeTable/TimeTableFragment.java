@@ -18,6 +18,7 @@ import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.diadata.AOdiaTimeTable;
 import com.kamelong.aodia.diadata.AOdiaTrain;
 import com.kamelong.aodia.stationInfo.StationInfoDialog;
 
@@ -64,17 +65,21 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 	/**
 	*　この路線時刻表で表示すべきダイヤインデックス
 	*/
-    public int diaNumber=0;
+    int diaNumber=0;
 	/**
 	*　この路線時刻表で表示すべき方向
 	*/
-    public int direct=0;
+    int direct=0;
+    /**
+     *
+     */
+    AOdiaTimeTable timeTable=null;
 	/**
 	*フリングが行われているかのフラグ
 	*/
     private boolean fling = false;
 
-    Handler handler = new Handler();
+    private Handler handler = new Handler();
 
     public TimeTableFragment() {
         super();
@@ -108,7 +113,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
                         int x=(int)event.getX();
                         int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
                         int train=timeTablex/((LinearLayout)findViewById(R.id.trainNameLinear)).getChildAt(0).getWidth();
-                        selectTrain(diaFile.getTrain(diaNumber,direct,train));
+                        selectTrain(timeTable.getTrain(train));
 
                         System.out.println(train);
                         return false;
@@ -123,7 +128,6 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
                         if(station<0){
                             return;
                         }
-                        SdLog.log("timeTableLongPress", diaFile.getStation(station).getName());
                         StationInfoDialog dialog = new StationInfoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
                         dialog.show();
 
@@ -201,6 +205,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
                 onDestroy();
                 return;
             }
+            timeTable=diaFile.getTimeTable(diaNumber,direct);
             FrameLayout lineNameFrame = (FrameLayout) findViewById(R.id.lineNameFrame);
             LineNameView lineNameView = new LineNameView(getActivity(), diaFile, diaNumber);
             lineNameFrame.removeAllViews();
@@ -212,16 +217,16 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 
             LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
             trainNameLinea.removeAllViews();
-            TrainNameView[] trainNameViews = new TrainNameView[diaFile.getTrainNum(diaNumber, direct)];
-            for (int i = 0; i < diaFile.getTrainNum(diaNumber, direct); i++) {
-                trainNameViews[i] = new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNumber, direct, i));
+            TrainNameView[] trainNameViews = new TrainNameView[timeTable.getTrainNum()];
+            for (int i = 0; i < timeTable.getTrainNum(); i++) {
+                trainNameViews[i] = new TrainNameView(getActivity(), diaFile, timeTable.getTrain(i));
                 trainNameLinea.addView(trainNameViews[i]);
             }
             LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
             trainTimeLinear.removeAllViews();
-            TrainTimeView[] trainTimeViews = new TrainTimeView[diaFile.getTrainNum(diaNumber, direct)];
+            TrainTimeView[] trainTimeViews = new TrainTimeView[timeTable.getTrainNum()];
             for (int i = 0; i < trainNameViews.length; i++) {
-                trainTimeViews[i] = new TrainTimeView(getActivity(),this, diaFile, diaFile.getTrain(diaNumber, direct, i), direct);
+                trainTimeViews[i] = new TrainTimeView(getActivity(),this, diaFile, timeTable.getTrain(i), direct);
                 trainTimeViews[i].setOnTrainSelectListener(this);
                 trainTimeLinear.addView(trainTimeViews[i]);
             }
@@ -229,7 +234,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
             SdLog.log(e);
         }
     }
-    public void scrollBy(int dx, int dy) {
+    private void scrollBy(int dx, int dy) {
         final LinearLayout trainTimeLinear = (LinearLayout)findViewById(R.id.trainTimeLinear);
         int scrollX = trainTimeLinear.getScrollX() + dx;
         int scrollY = trainTimeLinear.getScrollY() + dy;
@@ -305,8 +310,8 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 
     }
     public void sortTrain(int station){
-        if(station>=0&&station< diaFile.getStationNum()){
-            diaFile.sortTrain(diaNumber,direct,station);
+        if(station>=0&&station< diaFile.getStation().getStationNum()){
+            timeTable.sortTrain(station);
             this.init();
         }
 
@@ -337,7 +342,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 
 
     }
-    public View findViewById(int id){
+    protected View findViewById(int id){
         try{
             return fragmentContainer.findViewById(id);
         }catch(Exception e){

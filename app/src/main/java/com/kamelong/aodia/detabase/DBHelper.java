@@ -46,37 +46,37 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DETABASE_NAME="aodia.db";
-    public static final int DETABASE_VERSION=2;
-    public static final String ID="_id";
+    private static final int DETABASE_VERSION=2;
+    private static final String ID="_id";
 
-    public static final String FILE_PATH="filePath";
-    public static final String DIA_NUM="diaNum";
-    public static final String DOWN_SCROLL_X="downScrollX";
-    public static final String DOWN_SCROLL_Y="downScrollY";
-    public static final String UP_SCROLL_X="upScrollX";
-    public static final String UP_SCROLL_Y="upScrollY";
-    public static final String DIA_SCROLL_X="diaScrollX";
-    public static final String DIA_SCROLL_Y="diaScrollY";
-    public static final String DIA_SCALE_X="diaScaleX";
-    public static final String DIA_SCALE_Y="diaScaleY";
+    private static final String FILE_PATH="filePath";
+    private static final String DIA_NUM="diaNum";
+    private static final String DOWN_SCROLL_X="downScrollX";
+    private static final String DOWN_SCROLL_Y="downScrollY";
+    private static final String UP_SCROLL_X="upScrollX";
+    private static final String UP_SCROLL_Y="upScrollY";
+    private static final String DIA_SCROLL_X="diaScrollX";
+    private static final String DIA_SCROLL_Y="diaScrollY";
+    private static final String DIA_SCALE_X="diaScaleX";
+    private static final String DIA_SCALE_Y="diaScaleY";
 
-    public static final String WINDOW_DATA="windowData";
+    private static final String WINDOW_DATA="windowData";
     public static final String WINDOW_TYPE="windowType";
-    public static final String STATION_ID="stationID";
-    public static final String STATION_NAME="stationName";
+    private static final String STATION_ID="stationID";
+    private static final String STATION_NAME="stationName";
 
-    public static final String OPEN_NUM="openNum";
+    private static final String OPEN_NUM="openNum";
 
-    public static final String TABLE_LINEDATA="lineData";
-    public static final String TABLE_APP_DATA="appData";
-    public static final String TABLE_HISTORY="history";
-    public static final String TABLE_PREVIEW="preview";
-    public static final String TABLE_WINDOW="window";
-    public static final String TABLE_WINDOW_TYPE="windowType";
-    public static final String TABLE_FILE_RANKING="fileRanking";
+    private static final String TABLE_LINEDATA="lineData";
+    private static final String TABLE_APP_DATA="appData";
+    private static final String TABLE_HISTORY="history";
+    private static final String TABLE_PREVIEW="preview";
+    private static final String TABLE_WINDOW="window";
+    private static final String TABLE_WINDOW_TYPE="windowType";
+    private static final String TABLE_FILE_RANKING="fileRanking";
 
-    public static final String TABLE_SAME_STATION="sameStation";
-    public static final String TABLE_STATION="stationList";
+    private static final String TABLE_SAME_STATION="sameStation";
+    private static final String TABLE_STATION="stationList";
     public DBHelper(Context context){
 
         super(context,DETABASE_NAME,null,DETABASE_VERSION);
@@ -629,7 +629,7 @@ public class DBHelper extends SQLiteOpenHelper {
          * @param stationName
          * @param filePath
          */
-    public void addStation(ArrayList<String> stationName, String filePath){
+        private void addStation(ArrayList<String> stationName, String filePath){
         try {
             getWritableDatabase().delete(TABLE_STATION, FILE_PATH + "=?", new String[]{filePath});
             for(int i=0;i<stationName.size();i++) {

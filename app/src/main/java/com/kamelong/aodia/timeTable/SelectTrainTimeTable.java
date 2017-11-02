@@ -8,7 +8,7 @@ import com.kamelong.aodia.diadata.AOdiaTrain;
  */
 
 public class SelectTrainTimeTable extends TimeTableFragment implements TrainSelectListener{
-    TrainSelectListener trainSelectListener=null;
+    private TrainSelectListener trainSelectListener=null;
     @Override
     public String fragmentName(){
         try {

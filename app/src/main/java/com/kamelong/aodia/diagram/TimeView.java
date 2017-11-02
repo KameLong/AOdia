@@ -38,14 +38,16 @@ AOdia is free software: you can redistribute it and/or modify
  * ダイヤ線が細かい時は分単位まで表示する
  */
 public class TimeView extends KLView {
-    public  float scaleX =15;
-    public  float scaleY =42;
+    private float scaleX =15;
+    private float scaleY =42;
     private DiagramSetting setting;
     private AOdiaDiaFile diaFile;
+    private int diagramStartTime=0;
     TimeView (Context context,DiagramSetting s,AOdiaDiaFile d) {
         super(context);
         setting=s;
         diaFile=d;
+        diagramStartTime=diaFile.getService().getDiagramStartTime();
     }
     @Override
     public void onDraw(Canvas canvas){
@@ -56,10 +58,10 @@ public class TimeView extends KLView {
         switch(setting.veriticalAxis()){
             case 0:
                 for(int i=0;i<24;i++){
-                    if(i*3600- diaFile.getDiagramStartTime()<0){
-                        canvas.drawText(String.valueOf(i), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                    if(i*3600- diagramStartTime<0){
+                        canvas.drawText(String.valueOf(i), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                     }else {
-                        canvas.drawText(String.valueOf(i), (i*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        canvas.drawText(String.valueOf(i), (i*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                     }
                 }
                 break;
@@ -67,22 +69,22 @@ public class TimeView extends KLView {
             case 2:
                 if(textPaint.getTextSize()*5<20*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":20"), ((i+24)*3600+1200- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":40"), ((i+24)*3600+2400- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":20"), ((i+24)*3600+1200- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":40"), ((i+24)*3600+2400- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":20"), ((i)*3600+1200- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":40"), ((i)*3600+2400- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":20"), ((i)*3600+1200- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":40"), ((i)*3600+2400- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }else{
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i), (i*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i), (i*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }
@@ -90,32 +92,32 @@ public class TimeView extends KLView {
             case 3:
                 if(textPaint.getTextSize()*5<15*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":15"), ((i+24)*3600+900- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":45"), ((i+24)*3600+2700- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":15"), ((i+24)*3600+900- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":45"), ((i+24)*3600+2700- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":15"), ((i)*3600+900- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":45"), ((i)*3600+2700- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":15"), ((i)*3600+900- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":45"), ((i)*3600+2700- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }
             case 1:
                 if(textPaint.getTextSize()*5<30*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":30"), ((i+24)*3600+1800- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":30"), ((i+24)*3600+1800- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":30"), ((i)*3600+1800- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":30"), ((i)*3600+1800- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }else{
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i), (i*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i), (i*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }
@@ -123,20 +125,20 @@ public class TimeView extends KLView {
             case 7:
                 if(textPaint.getTextSize()*5<5*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":05"), ((i+24)*3600+300- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":15"), ((i+24)*3600+900- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":25"), ((i+24)*3600+1500- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":35"), ((i+24)*3600+2100- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":45"), ((i+24)*3600+2700- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":55"), ((i+24)*3600+3300- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":05"), ((i+24)*3600+300- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":15"), ((i+24)*3600+900- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":25"), ((i+24)*3600+1500- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":35"), ((i+24)*3600+2100- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":45"), ((i+24)*3600+2700- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":55"), ((i+24)*3600+3300- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":05"), ((i)*3600+300- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":15"), ((i)*3600+900- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":25"), ((i)*3600+1500- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":35"), ((i)*3600+2100- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":45"), ((i)*3600+2700- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":55"), ((i)*3600+3300- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":05"), ((i)*3600+300- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":15"), ((i)*3600+900- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":25"), ((i)*3600+1500- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":35"), ((i)*3600+2100- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":45"), ((i)*3600+2700- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":55"), ((i)*3600+3300- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }
@@ -145,35 +147,35 @@ public class TimeView extends KLView {
             case 4:
                 if(textPaint.getTextSize()*5<10*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":10"), ((i+24)*3600+600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":20"), ((i+24)*3600+1200- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":40"), ((i+24)*3600+2400- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":50"), ((i+24)*3600+3000- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":10"), ((i+24)*3600+600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":20"), ((i+24)*3600+1200- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":40"), ((i+24)*3600+2400- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":50"), ((i+24)*3600+3000- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":10"), ((i)*3600+600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":20"), ((i)*3600+1200- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":40"), ((i)*3600+2400- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":50"), ((i)*3600+3000- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":10"), ((i)*3600+600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":20"), ((i)*3600+1200- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":40"), ((i)*3600+2400- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":50"), ((i)*3600+3000- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }
                 if(textPaint.getTextSize()*5<30*scaleX){
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":30"), ((i+24)*3600+1800- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i+":00"), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":30"), ((i+24)*3600+1800- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
-                            canvas.drawText(String.valueOf(i+":30"), ((i)*3600+1800- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":00"), ((i)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i+":30"), ((i)*3600+1800- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }else{
                     for(int i=0;i<24;i++){
-                        if(i*3600- diaFile.getDiagramStartTime()<0){
-                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                        if(i*3600- diagramStartTime<0){
+                            canvas.drawText(String.valueOf(i), ((i+24)*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }else {
-                            canvas.drawText(String.valueOf(i), (i*3600- diaFile.getDiagramStartTime())/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
+                            canvas.drawText(String.valueOf(i), (i*3600- diagramStartTime)/60* scaleX, (float) (textPaint.getTextSize() * 0.8), textPaint);
                         }
                     }
                 }

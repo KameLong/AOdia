@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
 
+import com.kamelong.JPTI.JPTI;
+import com.kamelong.JPTI.Train;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadata.AOdiaTrain;
@@ -36,16 +38,18 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class TrainNameView extends KLView {
     private AOdiaDiaFile dia;
+    private JPTI jpti;
     private AOdiaTrain train;
     private int direct;
     private boolean secondFrag=false;
     private boolean showTrainName=false;
-    TrainNameView(Context context){
+    private TrainNameView(Context context){
         super(context);
     }
     TrainNameView(Context context,AOdiaDiaFile diaFile,AOdiaTrain t){
         this(context);
         dia=diaFile;
+        jpti=dia.getJPTI();
         train=t;
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
         secondFrag=spf.getBoolean("secondSystem",secondFrag);
@@ -54,11 +58,11 @@ public class TrainNameView extends KLView {
     public void onDraw(Canvas canvas){
 
         int startLine=(int)textPaint.getTextSize();
-        textPaint.setColor(dia.getTrainType(train.getType()).getAOdiaTextColor());
+        textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
         if(secondFrag) {
-            drawText(canvas,dia.getTrainType(train.getType()).getName(), 1, startLine, textPaint,true);
+            drawText(canvas,train.getTrainType().getName(), 1, startLine, textPaint,true);
         }else{
-            drawText(canvas,dia.getTrainType(train.getType()).getShortName(), 1, startLine, textPaint,true);
+            drawText(canvas,train.getTrainType().getShortName(), 1, startLine, textPaint,true);
         }
         startLine=startLine+(int)textPaint.getTextSize();
         drawText(canvas,train.getNumber(), 1, startLine, textPaint,true);

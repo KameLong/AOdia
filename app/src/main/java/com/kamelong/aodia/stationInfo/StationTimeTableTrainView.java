@@ -36,10 +36,10 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimeTableTrainView extends LinearLayout implements View.OnClickListener {
-    int fileNum=0;
-    int diaNum=0;
-    int direct=0;
-    int trainNum=0;
+    private int fileNum=0;
+    private int diaNum=0;
+    private int direct=0;
+    private int trainNum=0;
     public StationTimeTableTrainView(Context context) {
         super(context);
         View layout = LayoutInflater.from(context).inflate(R.layout.station_timetable_train, this);

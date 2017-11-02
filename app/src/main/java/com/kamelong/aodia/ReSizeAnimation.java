@@ -12,15 +12,15 @@ public class ReSizeAnimation extends Animation {
     /**
      * アニメーション対象のView
      */
-    View view;
+    private View view;
     /**
      * アニメーション変化量
      */
-    int addHeight;
+    private int addHeight;
     /**
      * 初期の高さ
      */
-    int startHeight;
+    private int startHeight;
 
     public ReSizeAnimation(View view, int addHeight, int startHeight) {
         this.view = view;

@@ -1,7 +1,10 @@
 package com.kamelong.JPTI;
 
+
+import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,53 +18,56 @@ import java.util.Map;
  * 時刻表路線を記録するクラス
  * 時刻表路線はOuDiaファイル１つに対応する
  */
-public abstract class Service {
-    protected JPTIdata jpti;
+public class Service {
+    private JPTI jpti;
 
-    protected  String name="";
-    public Map<Route,Integer> route=new LinkedHashMap<>();
-    protected int stationWidth=-1;
-    protected int trainWidth=-1;
-    protected String startTime=null;
-    protected int defaulyStationSpace=-1;
-    protected String comment=null;
+    private String name="";
+    private Map<Route,Integer> route=new LinkedHashMap<>();
+    private int stationWidth=-1;
+    private int trainWidth=-1;
+    private String startTime=null;
+    private int defaulyStationSpace=-1;
+    private String comment=null;
 
-    protected Color diaTextColor=null;
-    protected Color diaBackColor=null;
-    protected Color diaTrainColor=null;
-    protected  Color diaAxisColor=null;
-    protected ArrayList<Font> timeTableFont=new ArrayList();
-    protected Font timeTableVFont=null;
-    protected Font diaStationFont=null;
-    protected Font diaTimeFont=null;
-    protected Font diaTrainFont=null;
-    protected Font commentFont=null;
+    private Color diaTextColor=null;
+    private Color diaBackColor=null;
+    private Color diaTrainColor=null;
+    private Color diaAxisColor=null;
+    private ArrayList<Font> timeTableFont=new ArrayList();
+    private Font timeTableVFont=null;
+    private Font diaStationFont=null;
+    private Font diaTimeFont=null;
+    private Font diaTrainFont=null;
+    private Font commentFont=null;
 
-    protected  static final String NAME="service_name";
-    protected  static final String ROUTE="route_array";
-    protected  static final String ROUTE_ID="route_id";
-    protected  static final String DIRECTION ="direction";
-    protected  static final String STATION_WIDTH="station_width";
-    protected static final String TRAIN_WIDTH="train_width";
-    protected static final String START_TIME="timetable_start_time";
-    protected static final String STATION_SPACING="station_spacing";
-    protected static final String COMMENT="comment_text";
+    protected ArrayList<Train>trainList=new ArrayList<>();
 
-    protected static final String DIA_TEXT_COLOR="dia_text_color";
-    protected static final String DIA_BACK_COLOR="dia_back_color";
-    protected static final String DIA_TRAIN_COLOR="dia_train_color";
-    protected static final String DIA_AXICS_COLOR="dia_axics_color";
-    protected static final String TIMETABLE_FONT="font_timetable";
-    protected static final String TIMETABLE_VFONT="font_vfont";
-    protected static final String DIA_STATION_FONT="font_dia_station";
-    protected static final String DIA_TIME_FONT="font_dia_time";
-    protected static final String DIA_TRAIN_FONT="font_dia_train";
-    protected static final String COMMENT_FONT="font_comment";
+    protected static final String NAME="service_name";
+    protected static final String ROUTE="route_array";
+    private static final String ROUTE_ID="route_id";
+    private static final String DIRECTION ="direction";
+    private static final String STATION_WIDTH="station_width";
+    private static final String TRAIN_WIDTH="train_width";
+    private static final String START_TIME="timetable_start_time";
+    private static final String STATION_SPACING="station_spacing";
+    private static final String COMMENT="comment_text";
+    private static final String TRAIN="train";
 
-    public Service(JPTIdata jpti){
+    private static final String DIA_TEXT_COLOR="dia_text_color";
+    private static final String DIA_BACK_COLOR="dia_back_color";
+    private static final String DIA_TRAIN_COLOR="dia_train_color";
+    private static final String DIA_AXICS_COLOR="dia_axics_color";
+    private static final String TIMETABLE_FONT="font_timetable";
+    private static final String TIMETABLE_VFONT="font_vfont";
+    private static final String DIA_STATION_FONT="font_dia_station";
+    private static final String DIA_TIME_FONT="font_dia_time";
+    private static final String DIA_TRAIN_FONT="font_dia_train";
+    private static final String COMMENT_FONT="font_comment";
+
+    public Service(JPTI jpti){
         this.jpti=jpti;
     }
-    public Service(JPTIdata jpti,JSONObject json){
+    public Service(JPTI jpti, JSONObject json){
         this(jpti);
         try{
 
@@ -73,7 +79,8 @@ public abstract class Service {
             stationWidth=json.optInt(STATION_WIDTH,7);
             trainWidth=json.optInt(TRAIN_WIDTH,5);
             startTime=json.optString(START_TIME);
-            defaulyStationSpace=json.optInt(START_TIME);
+
+            defaulyStationSpace=json.optInt(STATION_SPACING);
             comment=json.optString(COMMENT);
             diaTextColor=new Color(Long.decode(json.optString(DIA_TEXT_COLOR,"#000000")).intValue());
             diaBackColor=new Color(Long.decode(json.optString(DIA_BACK_COLOR,"#ffffff")).intValue());
@@ -88,6 +95,11 @@ public abstract class Service {
             diaTimeFont=new Font(json.getJSONObject(DIA_TIME_FONT));
             diaTrainFont=new Font(json.getJSONObject(DIA_TRAIN_FONT));
             commentFont=new Font(json.getJSONObject(COMMENT_FONT));
+
+            JSONArray trainArray=json.getJSONArray(TRAIN);
+            for(int i=0;i<trainArray.length();i++){
+                trainList.add(new Train(jpti,this,trainArray.getJSONObject(i)));
+            }
 
 
         }catch(Exception e){
@@ -155,6 +167,11 @@ public abstract class Service {
             if(commentFont!=null){
                 json.put(COMMENT_FONT,commentFont.makeJSONObject());
             }
+            JSONArray trainArray=new JSONArray();
+            for(Train train:trainList){
+                trainArray.put(train.makeJSONObject());
+            }
+            json.put(TRAIN,trainArray);
 
 
         }catch(Exception e){
@@ -162,6 +179,40 @@ public abstract class Service {
         }
         return json;
     }
+
+    public void loadOuDia(OuDiaFile diaFile){
+        name=diaFile.getLineName();
+        stationWidth=diaFile.getStationNameLength();
+        trainWidth=diaFile.getTrainWidth();
+        startTime=timeInt2String(diaFile.getStartTime());
+        defaulyStationSpace=diaFile.getStationDistanceDefault();
+        comment=diaFile.getComment();
+        diaTextColor=diaFile.getDiaTextColor();
+        diaBackColor=diaFile.getBackGroundColor();
+        diaTrainColor=diaFile.getTrainColor();
+        diaAxisColor=diaFile.getAxisColor();
+        timeTableFont=diaFile.getTableFont();
+        timeTableVFont=diaFile.getVfont();
+        diaStationFont=diaFile.getStationFont();
+        diaTimeFont=diaFile.getDiaTimeFont();
+        diaTrainFont=diaFile.getDiaTextFont();
+        commentFont=diaFile.getCommnetFont();
+    }
+    public void loadOuDia2(OuDiaFile diaFile){
+        int blockID=0;
+        for(int diaNum=0;diaNum<diaFile.getDiaNum();diaNum++){
+            for(int i=0;i<diaFile.getTrainNum(diaNum,0);i++){
+                trainList.add(new Train(jpti,this,jpti.getCalendar(diaNum),diaFile,diaFile.getTrain(diaNum,0,i),blockID));
+                blockID++;
+            }
+            for(int i=0;i<diaFile.getTrainNum(diaNum,1);i++){
+                trainList.add(new Train(jpti,this,jpti.getCalendar(diaNum),diaFile,diaFile.getTrain(diaNum,1,i),blockID));
+                blockID++;
+            }
+        }
+
+    }
+
 
     protected static int timeString2Int(String time){
         int hh=Integer.parseInt(time.split(":",-1)[0]);
@@ -191,12 +242,15 @@ public abstract class Service {
         }
         return result;
     }
+    public void addRoute(Route r, int direct){
+        route.put(r,direct);
+    }
 
     /**
      * routeIDからそのrouteがservice中の何番目に位置するかを返す
      * @return routeIDが存在しないときは-1を返す
      */
-    public int routeIndex(Route mRoute,int direction){
+    public int routeIndex(Route mRoute, int direction){
         int result=-1;
         int i=0;
         for(Route id:route.keySet()){
@@ -264,5 +318,14 @@ public abstract class Service {
         return diaAxisColor;
     }
 
+    public ArrayList<Train>getTrainList(){
+        return trainList;
+    }
+    public String getComment(){
+        return comment;
+    }
+    public int getDiagramStartTime(){
+        return timeString2Int(startTime);
+    }
 
 }

@@ -22,7 +22,7 @@ public abstract class AOdiaFragment extends Fragment implements AOdiaFragmentInt
 
     protected View fragmentContainer=null;
     public AOdiaDiaFile diaFile=null;
-    public AOdiaActivity activity=null;
+    protected AOdiaActivity activity=null;
 
 
         @Override
@@ -58,7 +58,7 @@ public abstract class AOdiaFragment extends Fragment implements AOdiaFragmentInt
     public AOdiaDiaFile getDiaFile(){
         return diaFile;
     }
-    public AOdiaActivity getAOdiaActivity(){
+    protected AOdiaActivity getAOdiaActivity(){
         return (AOdiaActivity) getActivity();
     }
 

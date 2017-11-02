@@ -25,50 +25,6 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ルートフォルダ選択"
-                            android:textColor="@android:color/black" />
-
-                        <Spinner
-                            android:id="@+id/spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.86" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/pathView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/small_margin"
-                        android:layout_marginRight="@dimen/small_margin"
-                        android:text="TextView"
-                        android:textColor="@android:color/black" />
-
-                    <ListView
-                        android:id="@+id/fileList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/small_margin" />
-
-                </LinearLayout>
-
-                <LinearLayout
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -239,11 +195,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text=" "
+                        android:autoLink="web"
+                        android:text="OuDiaデータベースでユーザーからの投稿を受け付けています\nkamelong.com/OuDiaDataBase"
                         android:textColor="@android:color/black"
                         android:textSize="16dp" />
-
-
 
 
                     <ListView
@@ -251,6 +206,50 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ルートフォルダ選択"
+                            android:textColor="@android:color/black" />
+
+                        <Spinner
+                            android:id="@+id/spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.86" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/pathView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:text="TextView"
+                        android:textColor="@android:color/black" />
+
+                    <ListView
+                        android:id="@+id/fileList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/small_margin" />
 
                 </LinearLayout>
 

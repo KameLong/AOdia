@@ -6,7 +6,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/addNewOpe">
 
         <LinearLayout
             android:id="@+id/opeListView"
@@ -38,7 +39,7 @@
         android:layout_alignParentRight="true"
         android:layout_margin="10dp"
         android:clickable="true"
-        android:visibility="visible"
+        android:visibility="gone"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_menu_view" />

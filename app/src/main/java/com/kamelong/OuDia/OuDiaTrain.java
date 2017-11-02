@@ -1,6 +1,14 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.JPTI.RouteStation;
+import com.kamelong.JPTI.Service;
+import com.kamelong.JPTI.Station;
+import com.kamelong.JPTI.Time;
+import com.kamelong.JPTI.TrainType;
+import com.kamelong.JPTI.Trip;
 import com.kamelong.tool.Color;
+
+import java.util.ArrayList;
 
 /**
  * 列車データを格納するクラス。
@@ -21,7 +29,7 @@ public class OuDiaTrain {
     /**
      * 列車の進行方向
      */
-    public int direct=-1;
+    protected int direct=-1;
 
     /**
      * 列車種別
@@ -211,7 +219,7 @@ public class OuDiaTrain {
      * @param station　指定駅番号　null禁止
      * @return　発時刻(秒)
      */
-    protected int getDepartureTime(int station){
+    public int getDepartureTime(int station){
         try {
             if ((time[station] & 0x1000000000000000L) == 0) {
                 if ((time[station] & 0x2000000000000000L) == 0) {
@@ -233,7 +241,7 @@ public class OuDiaTrain {
      * @param value　停車駅扱い番号
      */
 
-    public void setStopType(int station,int value){
+    protected void setStopType(int station, int value){
         if(value>16||value<0){
             //error
             return;
@@ -254,7 +262,7 @@ public class OuDiaTrain {
      * @param station　駅インデックス
      * @param str 着時刻を文字列にしたもの
      */
-    public void setArriveTime(int station,String str){
+    protected void setArriveTime(int station, String str){
         if(station<0||station>=time.length){
             return;
         }
@@ -365,7 +373,7 @@ public class OuDiaTrain {
      * @param str 発時刻を文字列にしたもの
      */
 
-    public void setDepartTime(int station,String str){
+    protected void setDepartTime(int station, String str){
         if(station<0||station>=time.length){
             return;
         }
@@ -516,7 +524,7 @@ public class OuDiaTrain {
      * @return　時刻存在フラグ
      */
 
-    public boolean timeExist(int station) {
+    protected boolean timeExist(int station) {
         if(station<0||station>=time.length){
             return false;
         }
@@ -563,7 +571,7 @@ public class OuDiaTrain {
      * @param str　oudiaファイル　EkiJikoku=の形式の文字列
      * @param direct　方向
      */
-    protected void setTime(String str,int direct){
+    void setTime(String str, int direct){
         try {
             String[] timeString = str.split(",");
             for (int i = 0; i < timeString.length; i++) {
@@ -596,7 +604,7 @@ public class OuDiaTrain {
             e.printStackTrace();
         }
     }
-    public int getStationNum(){
+    private int getStationNum(){
         return time.length;
     }
     public void setDirect(int direct){
@@ -604,6 +612,128 @@ public class OuDiaTrain {
     }
 
 
+    /**
+     * tripListはServiceのRouteの順にならべておくこと
+     * 間にnullが入ってもよい
+     * @param diaFile
+     * @param service
+     * @param tripList
+     */
+    public OuDiaTrain(OuDiaFile diaFile, Service service, ArrayList<Trip> tripList){
+        this(diaFile);
+        Station station=null;
+        int stationIndex=-1;
+        /*
+        for(int i=0;i<service.getRouteNum();i++){
+            for(int j=0;j<service.getRoute(i,0).getStationNum();j++){
+                RouteStation routeStation=service.getRoute(i,0).getRouteStation(j,service.getRouteDirect(service.getRoute(i,0)));
+                if(station!=null&&station==routeStation.getStation()){
+
+                }else{
+                    stationIndex++;
+                }
+                if(tripList.get(i)!=null) {
+                    Time time = tripList.get(i).getTime(routeStation.getStation());
+                    if (time != null) {
+                        if (time.isStop()) {
+                            setStopType(stationIndex, STOP_TYPE_STOP);
+                        } else {
+                            setStopType(stationIndex, STOP_TYPE_PASS);
+                        }
+                        setArrivalTime(stationIndex, time.getArrivelTime());
+                        setDepartureTime(stationIndex, time.getDepartureTime());
+
+
+                    }else{
+                        setStopType(stationIndex, STOP_TYPE_NOVIA);
+
+                    }
+                }else{
+                    if(getStopType(stationIndex)==STOP_TYPE_NOSERVICE) {
+                        setStopType(stationIndex, STOP_TYPE_NOVIA);
+                    }
+                }
+                station=routeStation.getStation();
+            }
+        }
+        for(int i=0;i<time.length;i++){
+            if(timeExist(i)){
+                break;
+            }
+            setStopType(i,STOP_TYPE_NOSERVICE);
+        }
+        for(int i=time.length-1;i>=0;i--){
+            if(timeExist(i)){
+                break;
+            }
+            setStopType(i,STOP_TYPE_NOSERVICE);
+        }
+        for(int i=0;i<tripList.size();i++){
+            if(tripList.get(i)!=null){
+
+            }
+        }
+*/
+
+
+
+    }
+    public String getNumber(){
+        return  number;
+    }
+    public int getType(){
+        return type;
+    }
+
+    /**
+     * valueは秒単位の時刻
+     * @param station
+     * @param value
+     */
+    private void setArrivalTime(int station, long value){
+        if(value>0&&value<0xFFFFFF) {
+            time[station] = time[station] & 0xDFFF000000FFFFFFL;
+            time[station] = time[station] | 0x2000000000000000L;
+            time[station] = time[station] | (value<<24);
+        }else{
+            if(value>0xFFFFFF){
+                System.out.println(value);
+            }
+        }
+
+    }
+    private void setDepartureTime(int station, long value){
+        if(value>0&&value<0xFFFFFF) {
+            time[station] = time[station] & 0xEFFFFFFFFF000000L;
+            time[station] = time[station] | 0x1000000000000000L;
+            time[station] = time[station] | (value);
+        }else{
+            if(value>0xFFFFFF){
+                System.out.println(value);
+            }
+        }
+    }
+
+    /**
+     * JPTIのTrainTypeから設定する
+     * @param value
+     */
+    public void setType(TrainType value){
+        for(int i=0;i<diaFile.getTypeNum();i++){
+            if(diaFile.getTrainType(i).getName().equals(value.getName())){
+                type=i;
+            }
+        }
+    }
+    public int getDirect(){
+        return direct;
+    }
+    public String getRemark(){
+        return remark;
+    }
+    public String getCount(){
+        return count;
+    }
 
 
 

@@ -16,7 +16,7 @@ import java.io.File;
  */
 
 public class UrlOpenDialog {
-    AlertDialog dialog=null;
+    private AlertDialog dialog=null;
     public UrlOpenDialog(final @NonNull Context context,final String url,final String originURL) {
         final AlertDialog.Builder builder = new AlertDialog.Builder( context);
 

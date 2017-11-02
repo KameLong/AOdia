@@ -32,7 +32,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 個々で定義したPreferenceのリソースを設定します
  */
 public class SettingFragment extends android.preference.PreferenceFragment implements AOdiaFragmentInterface{
-    Payment payment;
+    private Payment payment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,12 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
+import com.kamelong.JPTI.TrainType;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaStation;
 import com.kamelong.aodia.diadata.AOdiaTrain;
-import com.kamelong.aodia.diadata.AOdiaTrainType;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import static java.lang.String.valueOf;
 
 /*
    This file is part of AOdia.
@@ -54,20 +53,23 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class DiagramView extends KLView {
     private AOdiaDiaFile diaFile;
+    private AOdiaStation station;
     private DiagramSetting setting;
     private int diaNum=0;
+    private int diagramStartTime=0;
+
     /**
      * ダイヤグラム画面のスケールサイズ
      * １分当たりのピクセル数で定義しています
      */
-    public  float scaleX =15;
-    public  float scaleY =42;
+    private float scaleX =15;
+    private float scaleY =42;
 
     /**
      * ダイヤグラムに表示する列車のリスト
      * DiaFile内で順番が変更されることを考慮し、配列に取得しています。
      */
-    ArrayList<AOdiaTrain>[]trainList=new ArrayList[2];
+    private ArrayList<AOdiaTrain>[]trainList=new ArrayList[2];
     /**
      * ダイヤグラム描画に用いるパス
      * diagramPath[0]は下りダイヤ
@@ -77,12 +79,12 @@ public class DiagramView extends KLView {
      * １つの線当たり(startX,startY,endX,endY)の４つの値が入っている
      *
      */
-    ArrayList<ArrayList<Integer>>[] diagramPath=new ArrayList[2];
+    private ArrayList<ArrayList<Integer>>[] diagramPath=new ArrayList[2];
     /**
      * 停車マークを描画する点
      * １つのマーク当たり(xPoint,yPoint)の２つの値が追加される
      */
-    ArrayList<Integer>[] stopMark=new ArrayList[2];
+    private ArrayList<Integer>[] stopMark=new ArrayList[2];
 
 
     /**
@@ -98,7 +100,8 @@ public class DiagramView extends KLView {
     private boolean onlySolid=false;
     private float defaultLineSize=1;
     private final int yshift=30;
-    DiagramView(Context context){
+    private ArrayList<Integer>stationTime=new ArrayList<>();
+    private DiagramView(Context context){
         super(context);
     }
 
@@ -122,45 +125,51 @@ public class DiagramView extends KLView {
         stopMark[1]=new ArrayList<>();
 
         for(int direct=0;direct<2;direct++){
-            for (int i = 0; i < this.diaFile.getTrainNum(diaNum, direct); i++) {
-                AOdiaTrain train= diaFile.getTrain(diaNum, direct, i);
+            for (int i = 0; i < diaFile.getTimeTable(diaNum, direct).getTrainNum(); i++) {
+                AOdiaTrain train= diaFile.getTimeTable(diaNum, direct).getTrain(i);
+                if(train.getStartStation(0)<0){
+                    continue;
+                }
                 //この列車のdiagramPath
                 ArrayList<Integer> trainPath=new ArrayList<Integer>();
                 //始発部分のパスを追加
-                trainPath.add((train.getDepartureTime(train.getStartStation(direct)) - diaFile.getDiagramStartTime()));
-                trainPath.add(this.diaFile.getStationTime(train.getStartStation(direct)));
+                trainPath.add(convertTime(train.getTime(train.getStartStation(direct)).getDepartureTime()));
+                trainPath.add(stationTime.get(train.getStartStation(direct)));
                 boolean drawable=true;
                 //駅ループ
                 for (int j = train.getStartStation(direct) + (1-direct*2);(1-direct*2)* j <(1-direct*2)* (train.getEndStation(direct)+ (1-direct*2)); j=j+(1-direct*2)) {
-                    if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_NOSERVICE){
+                    if(drawable&&train.getStopType(j)== AOdiaTrain.NOSERVICE){
                         //描画打ち切り
                         drawable=false;
                         trainPath.add(trainPath.get(trainPath.size()-2));
                         trainPath.add(trainPath.get(trainPath.size()-2));
+                        continue;
                     }
-                    if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_NOVIA){
-                        //未処理
+                    if(drawable&&train.getStopType(j)== AOdiaTrain.NOVIA){
+                        //描画打ち切り
                         drawable=false;
                         trainPath.add(trainPath.get(trainPath.size()-2));
                         trainPath.add(trainPath.get(trainPath.size()-2));
+                        continue;
                     }
 
-                    if(train.timeExist(j)) {
-                        if (train.departExist(j - (1 - 2 * direct))) {
+                    if(train.getTime(j)!=null&&train.getTime(j).getADTime()>=0) {
+                        //時刻が存在するとき
+                        if (train.getTime(j - (1 - 2 * direct))!=null&&train.getTime(j - (1 - 2 * direct)).getDepartureTime()>=0) {
                             //一つ前の駅にも発時刻が存在する場合　最小所要時間を考慮
-                            if (!train.arriveExist(j)&&
-                                    Math.abs(diaFile.getStationTime(j) - diaFile.getStationTime(j - (1 - 2 * direct))) + 60 < train.getArriveTime(j) - train.getDepartureTime(j - (1 - 2 * direct))) {
+                            if (train.getTime(j).getArrivalTime()<0&&
+                                    Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 60 < train.getTime(j).getADTime() - train.getTime(j - (1 - 2 * direct)).getDATime()) {
                                 //最小所要時間以上かかっているので最小所要時間を適用
-                                trainPath.add(train.getDepartureTime(j - (1 - 2 * direct)) + Math.abs(this.diaFile.getStationTime().get(j) - this.diaFile.getStationTime().get(j - (1 - 2 * direct))) + 30 - diaFile.getDiagramStartTime());
+                                trainPath.add( convertTime(train.getTime(j - (1 - 2 * direct)).getDepartureTime() + Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct)) + 30)));
                             } else {
                                 //最小所要時間を採用しないとき
-                                trainPath.add(train.getArriveTime(j) - diaFile.getDiagramStartTime());
+                                trainPath.add(convertTime(train.getTime(j).getADTime()));
                             }
                         } else {
                             //一つ前が通過駅の時など
-                            trainPath.add(train.getArriveTime(j) - diaFile.getDiagramStartTime());
+                            trainPath.add(convertTime(train.getTime(j).getADTime()));
                         }
-                        trainPath.add(this.diaFile.getStationTime().get(j));
+                        trainPath.add(stationTime.get(j));
                         if (drawable) {
                             //現段階で線描画途中の時は、終端点を追加
                             trainPath.add(trainPath.get(trainPath.size() - 2));
@@ -180,28 +189,29 @@ public class DiagramView extends KLView {
                             //no problem
                         }
                     }else{
-                        if(drawable&&train.getStopType(j)== AOdiaTrain.STOP_TYPE_PASS&&train.getStopType(j + (1 - 2 * direct))== AOdiaTrain.STOP_TYPE_NOVIA&&!train.timeExist(j)){
+                        if(drawable&&train.getStopType(j)== AOdiaTrain.PASS&&train.getStopType(j + (1 - 2 * direct))== AOdiaTrain.NOVIA&&train.getTime(j).getADTime()<0){
 
                             if(train.getPredictionTime(j)>=0){
                                 //この次の駅から経由なしになるとき
-                                trainPath.add(train.getPredictionTime(j)-diaFile.getDiagramStartTime());
-                                trainPath.add(this.diaFile.getStationTime().get(j));
+                                trainPath.add(convertTime(train.getPredictionTime(j)));
+                                trainPath.add(stationTime.get(j));
                                 drawable=false;
                             }
                         }
-                        if(!drawable&&train.getStopType(j )== AOdiaTrain.STOP_TYPE_PASS&&train.getStopType(j - (1 - 2 * direct))== AOdiaTrain.STOP_TYPE_NOVIA&&!train.timeExist(j)){
+                        if(!drawable&&train.getStopType(j )== AOdiaTrain.PASS&&train.getStopType(j - (1 - 2 * direct))== AOdiaTrain.NOVIA&&train.getTime(j).getADTime()<0){
                             if(train.getPredictionTime(j)>=0){
                                 //この前の駅まで経由なしのとき
-                                trainPath.add(train.getPredictionTime(j)-diaFile.getDiagramStartTime());
-                                trainPath.add(this.diaFile.getStationTime().get(j));
+                                trainPath.add(convertTime(train.getPredictionTime(j)));
+                                trainPath.add(stationTime.get(j));
                                 drawable=true;
                             }
                         }
                     }
-                    if(train.departExist(j)){
+
+                    if(train.getTime(j)!=null&&train.getTime(j).getDepartureTime()>=0){
                         //停車時間を描画する
-                        trainPath.add((train.getDepartureTime(j)- diaFile.getDiagramStartTime()));
-                        trainPath.add( this.diaFile.getStationTime().get(j) );
+                        trainPath.add(convertTime(train.getTime(j).getDepartureTime()));
+                        trainPath.add( stationTime.get(j) );
                         if(drawable) {
                             trainPath.add(trainPath.get(trainPath.size()-2));
                             trainPath.add(trainPath.get(trainPath.size()-2));
@@ -220,7 +230,7 @@ public class DiagramView extends KLView {
                         }
                         try {
                             if (train.getStopType(j) == 1 &&
-                                    diaFile.getTrainType(train.getType()).getShowStop() &&
+                                    train.getTrainType().getShowStop() &&
                                     j!=train.getStartStation(0)&&
                                     j!=train.getEndStation(0)&&
                                     trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
@@ -249,10 +259,13 @@ public class DiagramView extends KLView {
         try {
             setting=s;
             diaFile=dia;
+            station=dia.getStation();
+            stationTime=station.getStationTime();
             diaNum=num;
 
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
             onlySolid=spf.getBoolean("onlySolid",false);
+            diagramStartTime=diaFile.getService().getDiagramStartTime();
 
 
             getDensity();
@@ -269,7 +282,7 @@ public class DiagramView extends KLView {
     /**
      * floatのArrayListをArrayに変換する
      */
-    public  float[] toArr(List<Integer> list){
+    private float[] toArr(List<Integer> list){
         // List<Integer> -> int[]
         int l = list.size();
         float[] arr = new float[l];
@@ -293,20 +306,20 @@ public class DiagramView extends KLView {
         paint.setColor(Color.rgb(200, 200, 200));
 
 
-        for (int i = 0; i < diaFile.getStationNum(); i++) {
-            if (diaFile.getStation(i).getBigStation()) {
+        for (int i = 0; i < station.getStationNum(); i++) {
+            if (station.getRouteStation(i).isBigStation()) {
                 paint.setStrokeWidth(defaultLineSize);
             } else {
                 paint.setStrokeWidth(defaultLineSize*0.5f);
             }
-            canvas.drawLine(0,diaFile.getStationTime().get(i) * scaleY / 60+yshift, 60*24* scaleX,diaFile.getStationTime().get(i) * scaleY / 60+yshift, paint);
+            canvas.drawLine(0,stationTime.get(i) * scaleY / 60+yshift, 60*24* scaleX,stationTime.get(i) * scaleY / 60+yshift, paint);
         }
     }
 
     /**
      * 列車を描画する
      */
-    public void drawTrain(Canvas canvas){
+    private void drawTrain(Canvas canvas){
         try {
             Paint paint = new Paint();
             paint.setAntiAlias(true);
@@ -316,13 +329,13 @@ public class DiagramView extends KLView {
                 if ((direct == 0 && setting.downFrag) || (direct == 1 && setting.upFrag)) {
                     for (int i = 0; i < trainList[direct].size(); i++) {
                         //ダイヤ線色を指定
-                        paint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
+                        paint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
                         if (focusTrain.size()>0) {
                             //強調表示の列車があるときは半透明化
                             paint.setAlpha(100);
                         }
                         //線の太さを指定
-                        if (diaFile.getTrainType(trainList[direct].get(i).getType()).getLineBold()) {
+                        if (trainList[direct].get(i).getTrainType().getDiaBold()) {
                             paint.setStrokeWidth(defaultLineSize * 2f);
                         } else {
                             paint.setStrokeWidth(defaultLineSize);
@@ -331,65 +344,66 @@ public class DiagramView extends KLView {
                         //強調ダイヤ線時刻描画
                         if (focusTrain.contains(trainList[direct].get(i))) {
                             AOdiaTrain train=trainList[direct].get(i);
-                                //強調表示の線は半透明ではない
-                                paint.setAlpha(255);
-                                //線の太さを太くする
-                                paint.setStrokeWidth(defaultLineSize * 3f);
-                                //文字色もダイヤ色に合わせて変更
-                                textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
-                                textPaint.setAlpha(255);
-                                for (int j = 0; j < diaFile.getStationNum(); j++) {
-                                    if (train.arriveExist(j)) {
-                                        canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getArriveTime(j) / 60) % 60), (train.getArriveTime(j) - 3 * 3600) * scaleX / 60, diaFile.getStationTime().get(j) * scaleY / 60 + textPaint.getTextSize() * (-0.2f + direct * 1.2f)+yshift, textPaint);
-                                    }
-                                    if (train.departExist(j)) {
-                                        canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getDepartureTime(j) / 60) % 60), (train.getDepartureTime(j) - 3 * 3600) * scaleX / 60 - textPaint.getTextSize(), diaFile.getStationTime().get(j) * scaleY / 60 + textPaint.getTextSize() * (1 - direct * 1.2f)+yshift, textPaint);
-
-                                    }
+                            //強調表示の線は半透明ではない
+                            paint.setAlpha(255);
+                            //線の太さを太くする
+                            paint.setStrokeWidth(defaultLineSize * 3f);
+                            //文字色もダイヤ色に合わせて変更
+                            textPaint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
+                            textPaint.setAlpha(255);
+                            for (int j = 0; j < station.getStationNum(); j++) {
+                                if (train.getTime(j)!=null&&train.getTime(j).getArrivalTime()>=0) {
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getArrivalTime() / 60) % 60), convertTime(train.getTime(j).getArrivalTime()) * scaleX / 60, stationTime.get(j) * scaleY / 60 + textPaint.getTextSize() * (-0.2f + direct * 1.2f)+yshift, textPaint);
                                 }
+                                if (train.getTime(j)!=null&&train.getTime(j).getDepartureTime()>=0) {
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getDepartureTime() / 60) % 60), convertTime(train.getTime(j).getDepartureTime()) * scaleX / 60 - textPaint.getTextSize(), stationTime.get(j) * scaleY / 60 + textPaint.getTextSize() * (1 - direct * 1.2f)+yshift, textPaint);
+
+                                }
+                            }
                         }
                         //指定線種に合わせてダイヤ線を描画
                         if(onlySolid){
                             canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                         }else {
-                            switch ((diaFile.getTrainType(trainList[direct].get(i).getType()).getLineStyle())) {
-                                case AOdiaTrainType.LINESTYLE_NORMAL:
+                            switch (trainList[direct].get(i).getTrainType().getDiaStyle()) {
+                                case TrainType.LINESTYLE_NORMAL:
                                     canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case AOdiaTrainType.LINESTYLE_DASH:
+                                case TrainType.LINESTYLE_DASH:
                                     drawDashLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
-                                case AOdiaTrainType.LINESTYLE_DOT:
+                                case TrainType.LINESTYLE_DOT:
                                     drawDotLines(canvas, toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case AOdiaTrainType.LINESTYLE_CHAIN:
+                                case TrainType.LINESTYLE_CHAIN:
                                     drawChainLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
                             }
                         }
+
                         Paint paint2=new Paint();
                         paint2.setAntiAlias(true);
                         paint2.setStyle(Paint.Style.STROKE);
                         paint2.setStrokeWidth(defaultLineSize);
                         if(trainList[direct].get(i).getOperation()!=null){
-                            if(trainList[direct].get(i).getOperation().getNext(trainList[direct].get(i))!=null){
+                            if(trainList[direct].get(i).getOperation().getNext(trainList[direct].get(i))!=null&&trainList[direct].get(i).getOperation().getNext(trainList[direct].get(i)).isUsed()){
                                 AOdiaTrain train1=trainList[direct].get(i);
                                 AOdiaTrain train2=train1.getOperation().getNext(trainList[direct].get(i));
                                 if(train1.getEndStation()==train2.getStartStation()){
                                     if(train1.getDirect()==0&&train2.getDirect()==1){
                                         canvas.drawArc(new RectF(
-                                                (train1.getArriveTime(train1.getEndStation())-diaFile.getStartTime())*scaleX/60,
-                                                diaFile.getStationTime(train1.getEndStation())*scaleY/60-25+yshift,
-                                                (train2.getDepartureTime(train1.getEndStation())-diaFile.getStartTime())*scaleX/60,
-                                                diaFile.getStationTime(train1.getEndStation())*scaleY/60+25+yshift)
+                                                convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
+                                                        stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
+                                                convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
+                                                        stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 0, 180, false, paint2);
                                     }
                                     if(train1.getDirect()==1&&train2.getDirect()==0){
                                         canvas.drawArc(new RectF(
-                                                        (train1.getArriveTime(train1.getEndStation())-diaFile.getStartTime())*scaleX/60,
-                                                        diaFile.getStationTime(train1.getEndStation())*scaleY/60-25+yshift,
-                                                        (train2.getDepartureTime(train1.getEndStation())-diaFile.getStartTime())*scaleX/60,
-                                                        diaFile.getStationTime(train1.getEndStation())*scaleY/60+25+yshift)
+                                                        convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
+                                                        stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
+                                                        convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
+                                                         stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 180, 180, false, paint2);
                                     }
                                 }
@@ -458,7 +472,7 @@ public class DiagramView extends KLView {
         dot2Paint.setStrokeWidth(defaultLineSize*0.25f);
 
         //縦線の高さ
-        final int axisHeight=diaFile.getStationTime(diaFile.getStationNum() - 1);
+        final int axisHeight=stationTime.get(station.getStationNum() - 1);
 
 
         //1時間ごとの目盛
@@ -485,7 +499,7 @@ public class DiagramView extends KLView {
             case 2:
                 //20分ごとの目盛
                 for (int i = 0; i < 24; i++) {
-                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
                     canvas.drawLine(scaleX * (40 + 60 * i), yshift, scaleX * (40 + 60 * i),axisHeight * scaleY / 60+yshift, paint);
                 }
                 break;
@@ -503,15 +517,15 @@ public class DiagramView extends KLView {
                     canvas.drawLine(scaleX * (30 + 60 * i), yshift, scaleX * (30 + 60 * i),axisHeight * scaleY / 60+yshift, paint);
                 }
                 for (int i = 0; i < 48; i++) {
-                    if(diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60>2048) {
-                        canvas.drawLine(scaleX * (10 + 30 * i), yshift, scaleX * (10 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60, dot2Paint);
-                        canvas.drawLine(scaleX * (20 + 30 * i), yshift, scaleX * (20 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60, dot2Paint);
+                    if(stationTime.get(station.getStationNum() - 1) * scaleY / 60>2048) {
+                        canvas.drawLine(scaleX * (10 + 30 * i), yshift, scaleX * (10 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60, dot2Paint);
+                        canvas.drawLine(scaleX * (20 + 30 * i), yshift, scaleX * (20 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60, dot2Paint);
                     }else{
                         Path dotLine = new Path();
                         dotLine.moveTo(scaleX * (10 + 30 * i), yshift);
-                        dotLine.lineTo(scaleX * (10 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift);
+                        dotLine.lineTo(scaleX * (10 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift);
                         dotLine.moveTo(scaleX * (20 + 30 * i), yshift);
-                        dotLine.lineTo(scaleX * (20 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift);
+                        dotLine.lineTo(scaleX * (20 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift);
                         canvas.drawPath(dotLine, dotPaint);
                     }
                 }
@@ -519,19 +533,19 @@ public class DiagramView extends KLView {
             case 5:
                 //5分ごとの目盛
                 for (int i = 0; i < 24; i++) {
-                    canvas.drawLine(scaleX * (10 + 60 * i), yshift, scaleX * (10 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (30 + 60 * i), yshift, scaleX * (30 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (40 + 60 * i), yshift, scaleX * (40 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (50 + 60 * i), yshift, scaleX * (50 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (10 + 60 * i), yshift, scaleX * (10 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (30 + 60 * i), yshift, scaleX * (30 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (40 + 60 * i), yshift, scaleX * (40 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (50 + 60 * i), yshift, scaleX * (50 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
                 }
                 for (int i = 0; i < 24*6; i++) {
-                    if(diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60>2048) {
-                        canvas.drawLine(scaleX * (5 + 10 * i), yshift, scaleX * (5 + 10 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, dot2Paint);
+                    if(stationTime.get(station.getStationNum() - 1) * scaleY / 60>2048) {
+                        canvas.drawLine(scaleX * (5 + 10 * i), yshift, scaleX * (5 + 10 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, dot2Paint);
                     }else{
                         Path dotLine = new Path();
                         dotLine.moveTo(scaleX * (5 + 10 * i), yshift);
-                        dotLine.lineTo(scaleX * (5 + 10 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift);
+                        dotLine.lineTo(scaleX * (5 + 10 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift);
                         canvas.drawPath(dotLine, dotPaint);
                     }
                 }
@@ -539,20 +553,20 @@ public class DiagramView extends KLView {
             case 6:
                 //2分ごとの目盛
                 for (int i = 0; i < 24; i++) {
-                    canvas.drawLine(scaleX * (10 + 60 * i), yshift, scaleX * (10 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (10 + 60 * i), yshift, scaleX * (10 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (20 + 60 * i), yshift, scaleX * (20 + 60 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
                     canvas.drawLine(scaleX * (30 + 60 * i), yshift, scaleX * (30 + 60 * i),axisHeight * scaleY / 60+yshift, paint);
                     canvas.drawLine(scaleX * (40 + 60 * i), yshift, scaleX * (40 + 60 * i),axisHeight * scaleY / 60+yshift, paint);
                     canvas.drawLine(scaleX * (50 + 60 * i), yshift, scaleX * (50 + 60 * i),axisHeight * scaleY / 60+yshift, paint);
                 }
                 for (int i = 0; i < 24*6; i++) {
                     for(int j=1;j<5;j++){
-                        if(diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60>2048) {
+                        if(stationTime.get(station.getStationNum() - 1) * scaleY / 60>2048) {
                             canvas.drawLine(scaleX * (2 * j + 10 * i), yshift, scaleX * (2 * j + 10 * i),axisHeight * scaleY / 60+yshift, dot2Paint);
                         }else {
                             Path dotLine = new Path();
                             dotLine.moveTo(scaleX * (2 * j + 10 * i), yshift);
-                            dotLine.lineTo(scaleX * (2 * j + 10 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift);
+                            dotLine.lineTo(scaleX * (2 * j + 10 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift);
                             canvas.drawPath(dotLine, dotPaint);
                         }
                     }
@@ -563,15 +577,15 @@ public class DiagramView extends KLView {
 
                 for (int i = 0; i < 24*2; i++) {
                     canvas.drawLine(scaleX * (5 + 30 * i), yshift, scaleX * (5 + 30 * i),axisHeight * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (10 + 30 * i), yshift, scaleX * (10 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (15 + 30 * i), yshift, scaleX * (15 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (20 + 30 * i), yshift, scaleX * (20 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
-                    canvas.drawLine(scaleX * (25 + 30 * i), yshift, scaleX * (25 + 30 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (10 + 30 * i), yshift, scaleX * (10 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (15 + 30 * i), yshift, scaleX * (15 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (20 + 30 * i), yshift, scaleX * (20 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
+                    canvas.drawLine(scaleX * (25 + 30 * i), yshift, scaleX * (25 + 30 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, paint);
                 }
                 for (int i = 0; i < 24*12; i++) {
                     for(int j=1;j<5;j++) {
-                        if(diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60>2048) {
-                            canvas.drawLine(scaleX * ( j + 5 * i), yshift, scaleX * (j + 5 * i),diaFile.getStationTime().get(diaFile.getStationNum() - 1) * scaleY / 60+yshift, dot2Paint);
+                        if(stationTime.get(station.getStationNum() - 1) * scaleY / 60>2048) {
+                            canvas.drawLine(scaleX * ( j + 5 * i), yshift, scaleX * (j + 5 * i),stationTime.get(station.getStationNum() - 1) * scaleY / 60+yshift, dot2Paint);
                         }else{
 
                             Path dotLine = new Path();
@@ -613,7 +627,7 @@ public class DiagramView extends KLView {
                     //canvasを回転して
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
                     //列車番号を描画
-                    textPaint.setColor(diaFile.getTrainType(trainList[direct].get(i).getType()).getAOdiaDiaColor());
+                    textPaint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
                     if(focusTrain.size()==0||focusTrain.contains(trainList[direct].get(i))){
                         textPaint.setAlpha(255);
                     }else{
@@ -636,9 +650,9 @@ public class DiagramView extends KLView {
                     }
                     //文字列を描画
                     if(rad>0) {
-                        canvas.drawText(text, x1 + (int) (textPaint.getTextSize() / Math.tan(rad)), y1 - textPaint.getTextSize() / 6+yshift, textPaint);
+                        canvas.drawText(text, x1 + (int) (textPaint.getTextSize() / Math.tan(rad)), y1 - textPaint.getTextSize() / 6, textPaint);
                     }else{
-                        canvas.drawText(text, x1+(int) (textPaint.getTextSize()), y1 - textPaint.getTextSize() / 6+yshift, textPaint);
+                        canvas.drawText(text, x1+(int) (textPaint.getTextSize()), y1 - textPaint.getTextSize() / 6, textPaint);
                     }
                     //canvasの回転をもとに戻す
                     canvas.restore();
@@ -658,7 +672,7 @@ public class DiagramView extends KLView {
         }
         int nowTime=(int)(System.currentTimeMillis()%(24*60*60*1000))/1000;
         //9*60*60 は時差
-        nowTime= nowTime-diaFile.getDiagramStartTime()+9*60*60;
+        nowTime= nowTime-diagramStartTime+9*60*60;
         if(nowTime<0){
             nowTime=nowTime+24*60*60;
         }
@@ -670,7 +684,7 @@ public class DiagramView extends KLView {
         paint.setColor(Color.argb(255,255,0,0));
         paint.setStrokeWidth(defaultLineSize*1.0f);
         paint.setAntiAlias(true);
-        canvas.drawLine(nowTime*scaleX/60,0,nowTime*scaleX/60, diaFile.getStationTime().get(diaFile.getStationNum() - 1)* scaleY / 60+yshift,paint);
+        canvas.drawLine(nowTime*scaleX/60,0,nowTime*scaleX/60, stationTime.get(station.getStationNum() - 1)* scaleY / 60+yshift,paint);
     }
     /**
      * フォーカスする列車を選択する。
@@ -684,7 +698,7 @@ public class DiagramView extends KLView {
             //まずタッチポイントから実際の秒単位のタッチ場所を検出します。
             x =(int)( x * 60 / scaleX);
             y = (int)(y * 60 / scaleY)-yshift;
-            if (y >diaFile.getStationTime().get(diaFile.getStationTime().size() - 1)) {
+            if (y >stationTime.get(stationTime.size() - 1)) {
                 return;
             }
             //描画しているダイヤ線のうちタッチポイントに最も近いものを検出します。
@@ -724,6 +738,7 @@ public class DiagramView extends KLView {
             if(focusTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
                 focusTrain=new ArrayList<>();
             }else {
+
                 if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
                     focusTrain=new ArrayList<>();
                     focusTrain.add(trainList[minTrainDirect].get(minTrainNum));
@@ -732,6 +747,7 @@ public class DiagramView extends KLView {
                     focusTrain = trainList[minTrainDirect].get(minTrainNum).getOperation().getTrain();
 
                 }
+
             }
             this.invalidate();
 
@@ -794,7 +810,7 @@ public class DiagramView extends KLView {
      */
 
     protected int getYsize(){
-        return (int)(diaFile.getStationTime().get(diaFile.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4+yshift*2);
+        return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4+yshift*2);
     }
 
 
@@ -915,6 +931,13 @@ public class DiagramView extends KLView {
         for(int i=0;i<list.length/4;i++){
             drawChainLine(canvas,list[4*i+0],list[4*i+1],list[4*i+2],list[4*i+3],chain,space,paint);
         }
+    }
+    private int convertTime(int time){
+        if(time<diagramStartTime){
+            return time+24*60*60-diagramStartTime;
+        }
+        return time-diagramStartTime;
+
     }
 
 }

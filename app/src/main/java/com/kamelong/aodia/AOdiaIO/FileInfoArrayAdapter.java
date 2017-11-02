@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class FileInfoArrayAdapter extends ArrayAdapter<FileInfo>
+class FileInfoArrayAdapter extends ArrayAdapter<FileInfo>
 {
     private List<FileInfo>	m_listFileInfo; // ファイル情報リスト
 

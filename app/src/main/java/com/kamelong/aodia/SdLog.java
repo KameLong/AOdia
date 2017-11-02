@@ -12,8 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.Activity;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
+
 /*
  *     This file is part of AOdia.
 
@@ -36,9 +39,19 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class SdLog {
-    static boolean able=false;
+    private static boolean able=false;
+    private static Activity activity;
 
-    static PrintWriter getLogFile(){
+
+    public static void setActivity(Activity a){
+        activity=a;
+    }
+    public static void toast(String string){
+        if(activity!=null){
+            Toast.makeText(activity, string,Toast.LENGTH_SHORT).show();
+        }
+    }
+    private static PrintWriter getLogFile(){
 
         //現在日時を取得する
         Calendar c = Calendar.getInstance();

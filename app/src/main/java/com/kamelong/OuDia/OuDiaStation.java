@@ -1,5 +1,7 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.JPTI.RouteStation;
+
 /**
  *
  */
@@ -19,20 +21,20 @@ public class OuDiaStation {
      */
     protected int timeShow = SHOW_HATU;
 
-    public static final int SHOW_HATU = 5;
-    public static final int SHOW_HATUTYAKU = 15;
-    public static final int SHOW_KUDARITYAKU = 6;
-    public static final int SHOW_NOBORITYAKU = 9;
-    public static final int SHOW_KUDARIHATUTYAKU = 7;
-    public static final int SHOW_NOBORIHATUTYAKU = 13;
+    protected static final int SHOW_HATU = 5;
+    protected static final int SHOW_HATUTYAKU = 15;
+    protected static final int SHOW_KUDARITYAKU = 6;
+    protected static final int SHOW_NOBORITYAKU = 9;
+    protected static final int SHOW_KUDARIHATUTYAKU = 7;
+    protected static final int SHOW_NOBORIHATUTYAKU = 13;
 
 
     /**
      * 駅規模。
      */
     protected int size = SIZE_NORMAL;
-    static final int SIZE_NORMAL = 0;
-    static final int SIZE_BIG = 1;
+    private static final int SIZE_NORMAL = 0;
+    private static final int SIZE_BIG = 1;
 
     /**
      * 境界駅を示す。
@@ -43,8 +45,8 @@ public class OuDiaStation {
     /**
      * 発着表示を取得する際に使う定数
      */
-    public static final int STOP_DEPART = 0;
-    public static final int STOP_ARRIVE = 1;
+    protected static final int STOP_DEPART = 0;
+    protected static final int STOP_ARRIVE = 1;
 
 
     public StringBuilder makeStationText(boolean oudiaSecond) {
@@ -140,7 +142,7 @@ public class OuDiaStation {
      *
      * @param value OuDiaファイル内のEkikiboの文字列
      */
-    protected void setSize(String value) {
+    void setSize(String value) {
         switch (value) {
             case "Ekikibo_Ippan":
                 setSize(OuDiaStation.SIZE_NORMAL);
@@ -156,7 +158,7 @@ public class OuDiaStation {
      *
      * @param value OuDiaファイル内のJikokukeisikiの文字列
      */
-    protected void setStationTimeShow(String value) {
+    void setStationTimeShow(String value) {
         switch (value) {
             case "Jikokukeisiki_Hatsu":
                 setTimeShow(SHOW_HATU);
@@ -181,4 +183,67 @@ public class OuDiaStation {
 
 
     }
+    public OuDiaStation(){
+        super();
+    }
+    public OuDiaStation(RouteStation routeStation){
+        this.name=routeStation.getStation().getName();
+        if(routeStation.isBigStation()){
+            this.size=1;
+        }
+        switch (routeStation.getViewStyle()){
+            case RouteStation.VIEWSTYLE_HATU:
+                timeShow=SHOW_HATU;
+                break;
+            case RouteStation.VIEWSTYLE_HATUTYAKU:
+                timeShow=SHOW_HATUTYAKU;
+                break;
+            case RouteStation.VIEWSTYLE_KUDARITYAKU:
+                timeShow=SHOW_KUDARITYAKU;
+                break;
+            case RouteStation.VIEWSTYLE_NOBORITYAKU:
+                timeShow=SHOW_NOBORITYAKU;
+                break;
+            case RouteStation.VIEWSTYLE_NOBORIHATUTYAKU:
+                timeShow=SHOW_NOBORIHATUTYAKU;
+                break;
+            case RouteStation.VIEWSTYLE_KUDARIHATUTYAKU:
+                timeShow=SHOW_KUDARIHATUTYAKU;
+                break;
+        }
+
+    }
+    public boolean border(){
+        return border==1;
+    }
+    public String getName(){
+        return name;
+    }
+    public boolean getBigStation(){
+        return size==1;
+    }
+    /**
+     * 発着表示を表す整数を返す。
+     * 方向のみ指定し、発着両方の情報を返す。
+     * @param direct 取得したい方向（上り(=1)か下り(=0)か）
+     * @return 着時刻を表示するとき+2,発時刻を表示するとき+1
+     */
+    public int getTimeShow(int direct){
+        switch(direct){
+            case 0:
+                return timeShow%4;
+            case 1:
+                return (timeShow/4)%4;
+            default:
+                return 0;
+        }
+    }
+    public void setBorder(boolean value){
+        if(value) {
+            this.border = 1;
+        }else{
+            this.border=0;
+        }
+    }
+
 }

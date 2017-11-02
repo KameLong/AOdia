@@ -25,11 +25,11 @@ import android.widget.Toast;
  * @since v1.1.1
  * @author KameLong
  */
-public class Windows {
+class Windows {
     public boolean chooseContainer=false;
     private boolean showMiniTitle=true;
     public boolean showContainer=true;
-    public boolean tabletStyle=false;
+    private boolean tabletStyle=false;
 
     private AOdiaActivity activity;
 

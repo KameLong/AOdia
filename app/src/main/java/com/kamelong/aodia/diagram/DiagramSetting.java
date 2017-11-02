@@ -70,7 +70,7 @@ public class DiagramSetting {
      * @see #nameFrag
      * @see #numberFrag
      */
-    public int numberState=0;
+    private int numberState=0;
     public boolean nameFrag;
     public  boolean numberFrag;
 
@@ -123,7 +123,7 @@ public class DiagramSetting {
      * 保存された詳細設定のデータを読み込む
      * @see #saveChange()
      */
-    public void loadChange(){
+    private void loadChange(){
         try {
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
             downFrag = spf.getBoolean("DiagramSetting.downFrag", downFrag);

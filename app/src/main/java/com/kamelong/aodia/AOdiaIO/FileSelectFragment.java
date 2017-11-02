@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
 
 import org.json.JSONArray;
@@ -57,7 +58,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class FileSelectFragment extends AOdiaFragment {
-    Handler handler=new Handler();
+    private Handler handler=new Handler();
     boolean tab2searchOpen=true;
 
     public FileSelectFragment() {
@@ -132,12 +133,15 @@ public class FileSelectFragment extends AOdiaFragment {
         final File[] rootFolderList=getActivity().getExternalFilesDirs(null);
         String[] rootFolderName=new String[rootFolderList.length];
         for(int i=0;i<rootFolderList.length;i++){
-            if (Environment.isExternalStorageRemovable(rootFolderList[i])) {
-                rootFolderName[i]=(i+1)+":SDカード";
-            }else{
-                rootFolderName[i]=(i+1)+":端末フォルダ";
-
+            if(rootFolderList[i]==null){
+                rootFolderName[i] = (i + 1) + ":使用不可";
+                continue;
             }
+                if (Environment.isExternalStorageRemovable(rootFolderList[i])) {
+                    rootFolderName[i] = (i + 1) + ":SDカード";
+                } else {
+                    rootFolderName[i] = (i + 1) + ":端末フォルダ";
+                }
         }
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item,rootFolderName);
 
@@ -146,7 +150,11 @@ public class FileSelectFragment extends AOdiaFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
-                tab1OpenFile(rootFolderList[position]);
+                if(rootFolderList[position]!=null) {
+                    tab1OpenFile(rootFolderList[position]);
+                }else{
+                    SdLog.toast("このフォルダは開けません");
+                }
             }
 
             @Override
@@ -564,7 +572,7 @@ public class FileSelectFragment extends AOdiaFragment {
             return convertView;
         }
     }
-    class FileComparator implements Comparator<File> {
+    private class FileComparator implements Comparator<File> {
 
         //比較メソッド（データクラスを比較して-1, 0, 1を返すように記述する）
         public int compare(File a, File b) {

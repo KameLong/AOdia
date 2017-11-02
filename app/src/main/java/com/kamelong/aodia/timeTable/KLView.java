@@ -34,12 +34,13 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class KLView extends View {
-    public static Paint textPaint;//時刻表など普通の文字列用　色を変えてもよい
-    public static Paint grayPaint;//灰色の線をひくためのペイント
-    public static Paint blackPaint;//駅名などの黒色指定部分　細い枠線に用いる
-    public static Paint blackBPaint;//太い枠線部分に用いる
-    public static Paint blackBig;//主要駅（２段使う）駅名の既出に使う
-    public static int textSize;
+    protected static Paint textPaint;//時刻表など普通の文字列用　色を変えてもよい
+    private static Paint grayPaint;//灰色の線をひくためのペイント
+    static Paint blackPaint;//駅名などの黒色指定部分　細い枠線に用いる
+    static Paint blackBPaint;//駅名などの黒色指定部分　細い枠線に用いる
+    static Paint blackBBPaint;//太い枠線部分に用いる
+    static Paint blackBig;//主要駅（２段使う）駅名の既出に使う
+    static int textSize;
 
     /**
      * staticなコンストラクタ。
@@ -48,7 +49,8 @@ public class KLView extends View {
      */
     static {
         blackBig = new Paint();
-        blackBPaint = new Paint();
+        blackBPaint=new Paint();
+        blackBBPaint = new Paint();
         blackPaint = new Paint();
         textPaint = new Paint();
         grayPaint=new Paint();
@@ -60,6 +62,7 @@ public class KLView extends View {
         blackBig.setAntiAlias(true);
         blackPaint.setAntiAlias(true);
         blackBPaint.setAntiAlias(true);
+        blackBBPaint.setAntiAlias(true);
         grayPaint.setAntiAlias(true);
         setTextSize(30);
 
@@ -82,8 +85,9 @@ public class KLView extends View {
         blackPaint.setTextSize(size);
         grayPaint.setTextSize(size);
         blackBig.setTextSize((int) (size * 1.2));
-        blackPaint.setStrokeWidth(size / 20);
-        blackBPaint.setStrokeWidth(size / 6);
+        blackPaint.setStrokeWidth(size / 20.0f);
+        blackBPaint.setStrokeWidth(size / 12.0f);
+        blackBBPaint.setStrokeWidth(size / 6.0f);
     }
     /**
      * onMeasureは結構いじっている。

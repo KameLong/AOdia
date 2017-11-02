@@ -1,75 +1,88 @@
 package com.kamelong.JPTI;
 
+
+
+import com.kamelong.OuDia.OuDiaTrain;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-public abstract class Time {
-    protected JPTIdata jpti;
-    protected Trip trip;
 
+public class Time {
+    //所属データ
+    private JPTI jpti=null;
+    private Trip trip=null;
+    private Stop stop=null;
+    //基本データ
+    private int pickupType=1;
+    private int dropoffType=1;
+    private int arrivalTime=-1;
+    private int departureTime=-1;
 
-    protected Station station=null;
-    protected Stop stop=null;
-    protected int pickupType=1;
-    protected int dropoffType=1;
-    protected int arrival_days=-1;
-    protected int arrivalTime=-1;
-    protected int departure_days=-1;
-    protected int departureTime=-1;
-
-
-    protected static final String STATION_ID="station_id";
-    protected static final String STOP_ID="stop_id";
-    protected static final String PICKUP="pickup_type";
-    protected static final String DROPOFF="dropoff_type";
+    private static final String STOP_ID="stop_id";
+    private static final String PICKUP="pickup_type";
+    private static final String DROPOFF="dropoff_type";
     protected static final String ARRIVAL_DAYS="arrival_days";
-    protected static final String ARRIVAL_TIME="arrivel_time";
+    private static final String ARRIVAL_TIME="arrivel_time";
     protected static final String DEPARTURE_DAYS="depature_days";
-    protected static final String DEPARTURE_TIME ="departure_time";
-    protected static final String STOP_TYPE ="stop_type";
-
-
-    public Time(JPTIdata jpti,Trip trip){
+    private static final String DEPARTURE_TIME ="departure_time";
+/*
+    private static final String STOP_ID="s";
+    private static final String PICKUP="p";
+    private static final String DROPOFF="o";
+    protected static final String ARRIVAL_DAYS="arrival_days";
+    private static final String ARRIVAL_TIME="a";
+    protected static final String DEPARTURE_DAYS="depature_days";
+    private static final String DEPARTURE_TIME ="d";
+    */
+protected  Time(){}
+    public Time(JPTI jpti, Trip trip, Stop stop){
         this.trip=trip;
         this.jpti=jpti;
+        this.stop=stop;
     }
-    public Time(JPTIdata jpti,Trip trip,JSONObject json){
-        this(jpti,trip);
+    public Time(JPTI jpti, Trip trip, JSONObject json){
+        this.trip=trip;
+        this.jpti=jpti;
         try {
             try {
-                station = jpti.stationList.get(json.getInt(STATION_ID));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
-                stop= station.stops.get(json.getInt(STOP_ID));
+                stop= jpti.stopList.get(json.getInt(STOP_ID));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             pickupType = json.optInt(PICKUP);
             dropoffType = json.optInt(DROPOFF);
-            arrival_days = json.optInt(ARRIVAL_DAYS);
             arrivalTime = timeString2Int(json.optString(ARRIVAL_TIME));
-            departure_days = json.optInt(DEPARTURE_DAYS);
             departureTime = timeString2Int(json.optString(DEPARTURE_TIME));
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+    public Time(JPTI jpti, Trip trip, Stop stop, OuDiaTrain train, int station){
+        this(jpti, trip, stop);
+        if(train.getStopType(station)== com.kamelong.OuDia.OuDiaTrain.STOP_TYPE_STOP){
+            pickupType=0;
+            dropoffType=0;
+        }else{
+            pickupType=1;
+            dropoffType=1;
+        }
+        if(train.arriveExist(station)){
+            arrivalTime=train.getArriveTime(station);
+        }
+        if(train.departExist(station)){
+            departureTime=train.getDepartureTime(station);
+        }
+
+
+    }
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
         try {
-            json.put(STATION_ID, station.index());
-            json.put(STOP_ID,stop.index());
+            json.put(STOP_ID,jpti.indexOf(stop));
             json.put(PICKUP,pickupType);
             json.put(DROPOFF,dropoffType);
-            if(arrival_days>0){
-                json.put(ARRIVAL_DAYS,arrival_days);
-            }
             if(arrivalTime!=-1){
                 json.put(ARRIVAL_TIME,timeInt2String(arrivalTime));
-            }
-            if(departure_days>0){
-                json.put(DEPARTURE_DAYS,departure_days);
             }
             if(departureTime!=-1){
                 json.put(DEPARTURE_TIME,timeInt2String(departureTime));
@@ -80,7 +93,7 @@ public abstract class Time {
         return json;
 
     }
-    static int timeString2Int(String time){
+    private static int timeString2Int(String time){
         if(time==null||time.length()==0){
             return -1;
         }
@@ -92,7 +105,7 @@ public abstract class Time {
         }
         return hh*3600+mm*60+ss;
     }
-    static String timeInt2String(int time){
+    private static String timeInt2String(int time){
         int ss=time%60;
         time=time/60;
         int mm=time%60;
@@ -112,6 +125,30 @@ public abstract class Time {
             return departureTime;
         }
         return arrivalTime;
+    }
+    public Station getStation(){
+        return stop.getStation();
+    }
+    public boolean isStop(){
+        return pickupType==0||dropoffType==0;
+    }
+    public int getArrivalTime(){
+        return arrivalTime;
+    }
+    public int getDepartureTime(){
+        return departureTime;
+    }
+    public int getADTime(){
+        if(arrivalTime<0){
+            return departureTime;
+        }
+        return arrivalTime;
+    }
+    public int getDATime(){
+        if(departureTime<0){
+            return arrivalTime;
+        }
+        return departureTime;
     }
 
 

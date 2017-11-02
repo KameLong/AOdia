@@ -1,6 +1,6 @@
 package com.kamelong.JPTI;
 
-import com.kamelong.JPTIOuDia.JPTI.JPTI;
+
 import com.kamelong.aodia.SdLog;
 
 import org.json.JSONArray;
@@ -14,83 +14,106 @@ import java.util.ArrayList;
  */
 
 public class Operation {
-    protected JPTIdata jpti=null;
-    protected int calenderID=-1;
-    protected int operationNumber=-1;
-    protected String operationName="";
-    protected ArrayList<Integer> routeID=new ArrayList<>();
-    protected ArrayList<Integer> tripID=new ArrayList<>();
+    private JPTI jpti = null;
+    private int calenderID = -1;
+    private int operationNumber = -1;
+    private String operationName = "";
+    private ArrayList<Trip> trip = new ArrayList<>();
 
-    public static final String OPERATION_NO="operation_No";
-    public static final String OPERATION_NAME="operation_Name";
-    public static final String TRIP_LIST="trip_list";
-    public static final String ROUTE_ID="route_id";
-    public static final String TRIP_ID="trip_id";
-    public static final String CALENDER_ID="calender_id";
+    private static final String OPERATION_NO = "operation_No";
+    private static final String OPERATION_NAME = "operation_Name";
+    private static final String TRIP_LIST = "trip_list";
+    private static final String TRIP_ID = "trip_id";
+    private static final String CALENDER_ID = "calender_id";
 
-    public Operation(){
+    public Operation() {
 
     }
-    public Operation(JPTI jpti, JSONObject json){
+    public Operation(JPTI jpti){
         this.jpti=jpti;
+
+    }
+
+    public Operation(JPTI jpti, JSONObject json) {
+        this.jpti = jpti;
         operationName = json.optString(OPERATION_NAME, "");
         operationNumber = json.optInt(OPERATION_NO, -1);
-        calenderID=json.optInt(CALENDER_ID,-1);
+        calenderID = json.optInt(CALENDER_ID, -1);
 
         JSONArray array = json.optJSONArray(TRIP_LIST);
         for (int i = 0; i < array.length(); i++) {
             JSONObject obj = array.optJSONObject(i);
-            routeID.add(obj.optInt(ROUTE_ID, -1));
-            tripID.add(obj.optInt(TRIP_ID, -1));
+            try {
+                trip.add(jpti.getTrip(obj.optInt(TRIP_ID, -1)));
+            }catch (Exception e){
+                SdLog.log(e);
+            }
         }
     }
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+
+    public JSONObject makeJSONObject() {
+        JSONObject json = new JSONObject();
         try {
             json.put(OPERATION_NAME, operationName);
-            json.put(OPERATION_NO,operationNumber);
-            json.put(CALENDER_ID,calenderID);
-            JSONArray array=new JSONArray();
-            for(int i=0;i<routeID.size();i++){
-                JSONObject obj=new JSONObject();
-                obj.put(ROUTE_ID,routeID.get(i));
-                obj.put(TRIP_ID,tripID.get(i));
+            json.put(OPERATION_NO, operationNumber);
+            json.put(CALENDER_ID, calenderID);
+            JSONArray array = new JSONArray();
+            for (int i = 0; i < trip.size(); i++) {
+                JSONObject obj = new JSONObject();
+                obj.put(TRIP_ID, jpti.indexOf(trip.get(i)));
                 array.put(obj);
             }
-            json.put(TRIP_LIST,array);
+            json.put(TRIP_LIST, array);
             return json;
-        }catch(JSONException e){
-            SdLog.log(e);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return new JSONObject();
     }
+
     /**
      * 運用名
      */
-    public String getName(){
+    public String getName() {
         return operationName;
+    }
+
+    public void setName(String value){
+        operationName=value;
     }
     /**
      * 運用番号変更
      */
-    public void setNumber(int number){
-        this.operationNumber=number;
+    public void setNumber(int number) {
+        this.operationNumber = number;
     }
 
     /**
      * 運用番号
+     *
      * @return
      */
-    public int getNumber(){
+    public int getNumber() {
         return operationNumber;
     }
 
 
-    public int getTripNum(){
-        return tripID.size();
+    public int getTripNum() {
+        return trip.size();
     }
-    public int getCalenderID(){
+
+    public int getCalenderID() {
         return calenderID;
+    }
+
+    public void setCalenderID(int value){
+        calenderID=value;
+    }
+    public void addTrip(Trip value){
+        trip.add(value);
+    }
+    public ArrayList<Trip>getTrip(){
+        return trip;
     }
 
 

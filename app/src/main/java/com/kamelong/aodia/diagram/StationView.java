@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaStation;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -41,16 +42,17 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationView extends KLView {
-    AOdiaDiaFile diaFile;
-    DiagramSetting setting;
+    private AOdiaDiaFile diaFile;
+    private AOdiaStation station;
+    private DiagramSetting setting;
     private final int yshift=30;
-    int diaNum;
-    public  float scaleX =15;
-    public  float scaleY =42;
-    Paint paint = new Paint();
+    private int diaNum;
+    private float scaleX =15;
+    private float scaleY =42;
+    private Paint paint = new Paint();
 
     private ArrayList<Integer>stationTime=new ArrayList<>();
-    StationView(Context context){
+    private StationView(Context context){
         super(context);
     }
     StationView(Context context, DiagramSetting s, AOdiaDiaFile dia, int num){
@@ -58,7 +60,8 @@ public class StationView extends KLView {
         setting=s;
         diaFile=dia;
         diaNum=num;
-        stationTime=dia.getStationTime();
+        station=dia.getStation();
+        stationTime=station.getStationTime();
     }
     @Override
     public void onDraw(Canvas canvas){
@@ -71,16 +74,16 @@ public class StationView extends KLView {
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200,200,200));
         paint.setStrokeWidth(defaultLineSize);
-        canvas.drawLine(getWidth()-2, yshift,getWidth()-2, stationTime.get(diaFile.getStationNum()-1) * scaleY / 60+(int)textPaint.getTextSize()+yshift, paint);
-        for(int i=0;i< diaFile.getStationNum();i++){
+        canvas.drawLine(getWidth()-2, yshift,getWidth()-2, stationTime.get(station.getStationNum()-1) * scaleY / 60+(int)textPaint.getTextSize()+yshift, paint);
+        for(int i=0;i< station.getStationNum();i++){
             //主要駅なら太字にする
-            if(diaFile.getStation(i).getBigStation()){
+            if(station.bigStation(i)){
                 paint.setStrokeWidth(defaultLineSize);
             }else{
                 paint.setStrokeWidth(defaultLineSize*0.5f);
             }
             canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()+yshift,1440* scaleX,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()+yshift,paint);
-            canvas.drawText(diaFile.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6+yshift,textPaint);
+            canvas.drawText(station.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6+yshift,textPaint);
         }
     }
     @Override
@@ -95,7 +98,7 @@ public class StationView extends KLView {
             return (int)(textPaint.getTextSize()*5)+2;
     }
     protected int getYsize(){
-            return (int)(stationTime.get(diaFile.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4)+yshift*2;
+            return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4)+yshift*2;
     }
     public void setScale(float x,float y){
         scaleX =x;

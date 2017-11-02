@@ -11,7 +11,8 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadata.Operation;
+import com.kamelong.aodia.diadata.AOdiaOperation;
+import com.kamelong.aodia.diadata.AOdiaTrain;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,9 @@ import java.util.ArrayList;
  */
 
 public class OperationFragment extends AOdiaFragment{
-    ArrayList<Operation>operationArrayList=new ArrayList<>();
-    int fileNum=0;
-    int diaNum=0;
+    ArrayList<AOdiaOperation>operationArrayList=new ArrayList<>();
+    private int fileNum=0;
+    private int diaNum=0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -30,6 +31,7 @@ public class OperationFragment extends AOdiaFragment{
 
             Bundle bundle = getArguments();
             fileNum=bundle.getInt("fileNum");
+            diaNum=bundle.getInt("diaNum");
         }catch(Exception e){
             SdLog.log(e);
         }
@@ -49,9 +51,10 @@ public class OperationFragment extends AOdiaFragment{
     @Override
     public void onStart(){
         super.onStart();
-        ArrayList<Operation>operationList=diaFile.operationList.get(diaNum);
+        ArrayList<AOdiaOperation>operationList=diaFile.operationList.get(diaNum);
+        ((LinearLayout)findViewById(R.id.opeListView)).removeAllViews();
         if(operationList.size()==0) {
-            Operation operation=new Operation();
+            AOdiaOperation operation=new AOdiaOperation(diaFile,diaNum);
             operationList.add(operation);
             OperationView v=new OperationView(getActivity(),this,operation,diaFile,fileNum,diaNum);
             ((LinearLayout)findViewById(R.id.opeListView)).addView(v);
@@ -79,16 +82,16 @@ public class OperationFragment extends AOdiaFragment{
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
         for(int i=0;i<listView.getChildCount();i++){
             if(listView.getChildAt(i)==opeView){
-                Operation ope=new Operation();
+                AOdiaOperation ope=new AOdiaOperation(diaFile,diaNum);
                 diaFile.operationList.get(diaNum).add(i,ope);
                 listView.addView(new OperationView(getActivity(),this,ope,diaFile,fileNum,diaNum),i);
                 break;
             }
         }
     }
-    public void addNewOpeView(){
+    private void addNewOpeView(){
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
-                Operation ope=new Operation();
+                AOdiaOperation ope=new AOdiaOperation(diaFile,diaNum);
                 diaFile.operationList.get(diaNum).add(ope);
                 listView.addView(new OperationView(getActivity(),this,ope,diaFile,fileNum,diaNum));
     }

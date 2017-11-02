@@ -1,5 +1,6 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.JPTI.TrainType;
 import com.kamelong.tool.Color;
 
 
@@ -237,7 +238,7 @@ public class OuDiaTrainType {
      *  oudiaファイルでの色表記は"aabbggrr"の8文字の文字列
      * @param color 色を表す文字列
      */
-    protected void setTextColor(String color){
+    void setTextColor(String color){
         textColor.setOuDiaColor(color);
     }
     /**
@@ -245,8 +246,44 @@ public class OuDiaTrainType {
      *  oudiaファイルでの色表記は"aabbggrr"の8文字の文字列
      * @param color 色を表す文字列
      */
-    protected void setDiaColor(String color) {
+    void setDiaColor(String color) {
         diaColor.setOuDiaColor(color);
+    }
+    public OuDiaTrainType(TrainType trainType){
+        super();
+        name=trainType.getName();
+        if(trainType.getShortName()!=null){
+            shortName=trainType.getShortName();
+
+        }
+        textColor=trainType.getTextColor();
+        if(trainType.getDiaColor()!=null){
+            diaColor=getDiaColor();
+        }else{
+            diaColor=new Color(textColor.getAndroidColor());
+        }
+        lineStyle=trainType.getDiaStyle();
+        boldLine=trainType.getDiaBold();
+        showStop=trainType.getShowStop();
+        fontNumber=trainType.getFontNumber();
+        if(fontNumber<0||fontNumber>6){
+            fontNumber=0;
+        }
+
+
+    }
+
+    public String getShortName(){
+        return shortName;
+    }
+    public Color getTextColor(){
+        return textColor;
+    }
+    public Color getDiaColor(){
+        return diaColor;
+    }
+    public boolean compare(TrainType another){
+        return name.equals(another.getName());
     }
 
 }

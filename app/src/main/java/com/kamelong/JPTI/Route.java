@@ -1,40 +1,42 @@
 package com.kamelong.JPTI;
 
+import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 路線情報を格納するクラス。
  * Routeは枝分かれを許容しない。
  */
-public abstract class Route extends Observable {
-    protected JPTIdata jpti;
+public class Route {
+    private JPTI jpti;
     /**
      * 所属する法人ID
      */
-    protected int agencyID=-1;
+    private int agencyID=-1;
     /**
      * 内部番号とか
      */
-    protected int number =-1;
+    private int number =-1;
     /**
      * 路線名称
      * ※何とか支線は分けて書く
      * 山陰本線仙崎支線とか
      */
-    public String name="";
+    private String name="";
     /**
      * 路線愛称
      */
-    protected String nickName=null;
+    private String nickName="";
     /**
      * 路線の説明
      */
-    protected String description=null;
+    private String description="";
     /**
      1：高速鉄道（新幹線）
      2：普通鉄道（JR、私鉄等）
@@ -50,41 +52,40 @@ public abstract class Route extends Observable {
      12：飛行機？
      13：その他
      */
-    protected int type=-1;
+    private int type=-1;
     /**
      * 路線のURL
      */
-    protected String url=null;
+    private String url="";
     /**
      * 路線カラー
      */
-    protected Color color=null;
+    private Color color=null;
     /**
      * 路線文字色
      */
-    protected Color textColor=null;
-    protected ArrayList<RouteStation>stationList=new ArrayList<>();
-    public ArrayList<TrainType> classList=new ArrayList<>();
-    public ArrayList<Trip> tripList=new ArrayList<>();
+    private Color textColor=null;
+    ArrayList<RouteStation>stationList=new ArrayList<>();
 
 
-    protected static final String AGENCY_ID="agency_id";
-    protected static final String NO="route_no";
-    protected static final String NAME="route_name";
-    protected static final String NICKNAME="route_nickname";
-    protected static final String DESCRIPTION="route_description";
-    protected static final String TYPE="route_type";
-    protected static final String URL="route_url";
-    protected static final String COLOR="route_color";
-    protected static final String TEXT_COLOR="route_text_color";
-    protected static final String STATION="route_station";
+    private static final String AGENCY_ID="agency_id";
+    private static final String NO="route_no";
+    private static final String NAME="route_name";
+    private static final String NICKNAME="route_nickname";
+    private static final String DESCRIPTION="route_description";
+    private static final String TYPE="route_type";
+    private static final String URL="route_url";
+    private static final String COLOR="route_color";
+    private static final String TEXT_COLOR="route_text_color";
+    private static final String STATION="route_station";
     protected static final String CLASS="class";
     protected static final String TRIP="trip";
 
-    public Route(JPTIdata jpti){
+
+    private Route(JPTI jpti){
         this.jpti=jpti;
     }
-    public Route(JPTIdata jpti,JSONObject json){
+    public Route(JPTI jpti,JSONObject json){
         this(jpti);
         try{
             try{
@@ -93,12 +94,12 @@ public abstract class Route extends Observable {
                 System.out.println("Routeに必須項目agency_IDが登録されていません");
                 e.printStackTrace();
             }
-            number=json.optInt(NO);
-            name=json.optString(NAME);
-            nickName=json.optString(NICKNAME);
-            description=json.optString(DESCRIPTION);
-            type=json.optInt(TYPE);
-            url=json.optString(URL);
+            number=json.optInt(NO,-1);
+            name=json.optString(NAME,"");
+            nickName=json.optString(NICKNAME,"");
+            description=json.optString(DESCRIPTION,"");
+            type=json.optInt(TYPE,2);
+            url=json.optString(URL,"");
             try{
                 color=new Color(json.getString(COLOR));
             }catch(Exception e){
@@ -108,25 +109,9 @@ public abstract class Route extends Observable {
             }catch(Exception e){
             }
             try{
-                JSONArray classArray=json.getJSONArray(CLASS);
-                for(int i=0;i<classArray.length();i++){
-                    classList.add(newTrainType(classArray.getJSONObject(i)));
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try{
                 JSONArray stationArray=json.getJSONArray(STATION);
                 for(int i=0;i<stationArray.length();i++){
                     stationList.add(newRouteStation(stationArray.getJSONObject(i)));
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            try{
-                JSONArray tripArray=json.getJSONArray(TRIP);
-                for(int i=0;i<tripArray.length();i++){
-                    tripList.add(newTrip(tripArray.getJSONObject(i)));
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -137,9 +122,38 @@ public abstract class Route extends Observable {
         }
     }
 
-    protected abstract TrainType newTrainType(JSONObject json);
-    protected abstract RouteStation newRouteStation(JSONObject json);
-    protected abstract Trip newTrip(JSONObject json);
+
+    private RouteStation newRouteStation(JSONObject json){
+        return new RouteStation(jpti,this,json);
+    }
+    /**
+     * OuDiaファイルの路線の一部分から生成する。
+     * @param oudia
+     * @param startStation 開始駅
+     * @param endStaton 終了駅
+     */
+    public Route(JPTI jpti, OuDiaFile oudia, int startStation, int endStaton){
+        this(jpti);
+        agencyID=jpti.getAgencyIDByName("oudia:"+oudia.getLineName());
+        if(agencyID==-1){
+            agencyID=jpti.getAgencySize();
+            Agency agency=jpti.addNewAgency();
+            agency.setName("oudia:"+oudia.getLineName());
+        }
+        name=oudia.getStation(startStation).getName()+"~"+oudia.getStation(endStaton).getName();
+        type=2;
+        for(int i=startStation;i<endStaton+1;i++){
+            RouteStation station=new RouteStation(jpti,this,oudia.getStation(i));
+            if(i==startStation){
+                station.setViewStyle(20);
+            }
+            if(i==endStaton){
+                station.setViewStyle(02);
+            }
+            stationList.add(station);
+        }
+    }
+
 
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
@@ -149,16 +163,16 @@ public abstract class Route extends Observable {
                 json.put(NO, number);
             }
             json.put(NAME,name);
-            if(nickName!=null){
+            if(nickName.length()>0){
                 json.put(NICKNAME,nickName);
             }
-            if(description!=null){
+            if(description.length()>0){
                 json.put(DESCRIPTION,description);
             }
             if(type>0&&type<13){
                 json.put(TYPE,type);
             }
-            if(url!=null){
+            if(url.length()>0){
                 json.put(URL,url);
             }
             if(color!=null){
@@ -172,16 +186,6 @@ public abstract class Route extends Observable {
                 stationArray.put(station.makeJSONObject());
             }
             json.put(STATION,stationArray);
-            JSONArray classArray=new JSONArray();
-            for(TrainType type:classList){
-                classArray.put(type.makeJSONObject());
-            }
-            json.put(CLASS,classArray);
-            JSONArray tripArray=new JSONArray();
-            for(Trip trip:tripList){
-                tripArray.put(trip.makeJSONObject());
-            }
-            json.put(TRIP,tripArray);
 
         }catch(Exception e){
             e.printStackTrace();
@@ -193,16 +197,19 @@ public abstract class Route extends Observable {
      * @param direction 方向
      * @return
      */
-    public ArrayList<Integer>getStationList(int direction){
-        ArrayList<Integer>result=new ArrayList<>();
-        for(RouteStation station:stationList){
-            result.add(station.index());
+
+    public ArrayList<RouteStation>getStationList(int direction){
+        if(direction==0){
+            return stationList;
+        }else{
+            ArrayList<RouteStation> result=new ArrayList<>();
+            for(RouteStation s:stationList){
+                result.add(0,s);
+            }
+            return result;
         }
-        if(direction==1){
-            Collections.reverse(result);
-        }
-        return result;
     }
+
     /**
      * このObjectはjpti中のリストの何番目に位置するのかを返す
      */

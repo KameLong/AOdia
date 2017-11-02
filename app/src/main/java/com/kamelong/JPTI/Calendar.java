@@ -1,19 +1,20 @@
 package com.kamelong.JPTI;
 
+
 import org.json.JSONObject;
 
 /**
  * 運転日付を決定するデータ
  */
-public abstract class Calendar {
-    protected JPTIdata jpti;
-    protected String name="";
+public class Calendar {
+    private JPTI jpti;
+    private String name="";
 
-    protected static final String NAME="calendar_name";
-    public Calendar(JPTIdata jpti){
+    private static final String NAME="calendar_name";
+    public Calendar(JPTI jpti){
         this.jpti=jpti;
     }
-    public Calendar(JPTIdata jpti,JSONObject json){
+    public Calendar(JPTI jpti, JSONObject json){
         this(jpti);
         try{
             name=json.optString(NAME,"");
@@ -46,6 +47,9 @@ public abstract class Calendar {
     }
     public String getName(){
         return name;
+    }
+    public void setName(String value){
+        name=value;
     }
 
 

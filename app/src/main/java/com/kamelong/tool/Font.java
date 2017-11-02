@@ -35,7 +35,7 @@ public class Font {
         bold=json.optInt(BOLD)==1;
         itaric=json.optInt(ITARIC)==1;
     }
-    public Font(String name,int height,boolean bold,boolean itaric){
+    private Font(String name, int height, boolean bold, boolean itaric){
         this.name=name;
         this.height=height;
         this.bold=bold;

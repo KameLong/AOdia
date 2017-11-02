@@ -1,74 +1,89 @@
 package com.kamelong.JPTI;
 
+
+
+import com.kamelong.OuDia.OuDiaFile;
+import com.kamelong.OuDia.OuDiaTrain;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 列車を記録するクラス
  */
-public abstract class Trip {
+public class Trip {
     /**
      * 所属JPTIdata
      */
-    protected JPTIdata jpti=null;
+    private JPTI jpti=null;
     /**
      * 所属Route
      */
-    protected Route route=null;
+    private Route route=null;
     /**
      * 列車番号
      */
-    protected String number=null;
+    private String number="";
     /**
      * 列車名、バス愛称、行先等の情報
      */
-    protected  String name=null;
+    private String name="";
     /**
      * 0：Route順方向
      * 1：Route逆方向
      */
-    protected int direction=0;
+    private int direction=0;
     /**
-     * 種別id
+     * 種別
      */
-    protected TrainType traihType=null;
+    private TrainType traihType=null;
     /**
-     * 系統id
+     * 所属列車
      */
-    protected int blockID=0;
+    protected Train train=null;
     /**
      * 運行する日id
      */
-    protected  Calendar calender=null;
+    private Calendar calender=null;
     /**
      * 臨時運行日id
      */
-    protected int extraCalendarID=-1;
+    private int extraCalendarID=-1;
+    /**
+     *
+     */
+    private int blockID=-1;
 
-    protected ArrayList<Time> timeList=new ArrayList<>();
+    /**
+     * 駅時刻
+     */
+    private Map<Station,Time> timeList=new HashMap<>();
 
 
-    protected static final String NAME="trip_name";
-    protected static final String NUMBER="trip_No";
-    protected static final String CLASS="trip_class";
-    protected static final String DIRECTION="trip_direction";
-    protected static final String BLOCK="block_id";
-    protected static final String CALENDER="calender_id";
-    protected static final String EXTRA_CALENDER="extra_calendar";
-    protected static final String TIME="time";
+    private static final String ROUTE="route_id";
+    private static final String NAME="trip_name";
+    private static final String NUMBER="trip_No";
+    private static final String CLASS="trip_class";
+    private static final String DIRECTION="trip_direction";
+    private static final String BLOCK="block_id";
+    private static final String CALENDER="calender_id";
+    private static final String EXTRA_CALENDER="extra_calendar";
+    private static final String TIME="time";
 
-    public Trip(JPTIdata jpti,Route route){
+    private Trip(JPTI jpti, Route route){
         this.jpti=jpti;
         this.route=route;
     }
-    public Trip(JPTIdata jptiData,Route route,JSONObject json){
-        this(jptiData,route);
+    public Trip(JPTI jpti, JSONObject json){
+        this.jpti=jpti;
         try{
+            route=jpti.getRoute(json.optInt(ROUTE,0));
             try{
-                this.traihType=route.classList.get(json.getInt(CLASS));
+                this.traihType=jpti.getTrainType(json.getInt(CLASS));
             }catch(JSONException e){
                 e.printStackTrace();
             }
@@ -82,13 +97,14 @@ public abstract class Trip {
             }catch(JSONException e){
                 e.printStackTrace();
             }
-            number=json.optString(NUMBER);
-            name=json.optString(NAME);
-            direction=json.optInt(DIRECTION);
-            extraCalendarID=json.optInt(EXTRA_CALENDER);
+            number=json.optString(NUMBER,"");
+            name=json.optString(NAME,"");
+            direction=json.optInt(DIRECTION,0);
+            extraCalendarID=json.optInt(EXTRA_CALENDER,-1);
             JSONArray timeArray=json.getJSONArray(TIME);
             for(int i=0;i<timeArray.length();i++){
-                timeList.add(newTime(timeArray.getJSONObject(i)));
+                Time time=newTime(timeArray.getJSONObject(i));
+                timeList.put(time.getStation(),time);
             }
 
 
@@ -98,24 +114,38 @@ public abstract class Trip {
             e.printStackTrace();
         }
     }
+    public Trip(JPTI jpti, Route route, Calendar calendar, OuDiaFile oudia, OuDiaTrain train, int startStation, int endStation, int blockID){
+        this(jpti,route);
+        this.calender=calendar;
+        this.traihType=jpti.getTrainType(train.getType());
+        this.blockID=blockID;
+        for(int i=startStation;i<endStation+1;i++){
+            if(train.getStopType(i)== com.kamelong.OuDia.OuDiaTrain.STOP_TYPE_PASS||train.getStopType(i)== com.kamelong.OuDia.OuDiaTrain.STOP_TYPE_STOP){
+                Time time=new Time(jpti,this,jpti.getStop(jpti.getStopIDByName(jpti.getStation(jpti.getStationIDByName(oudia.getStation(i).getName())),"FromOuDia")),train,i);
+                timeList.put(time.getStation(),time);
+            }
+        }
+
+    }
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
         try{
-            if(name!=null) {
+            if(name.length()>0) {
                 json.put(NAME, name);
             }
-            if(number!=null) {
+            if(number.length()>0) {
                 json.put(NUMBER, number);
             }
             json.put(DIRECTION,direction);
-            json.put(CLASS,traihType.index());
+            json.put(CLASS,jpti.indexOf(traihType));
             json.put(BLOCK,blockID);
             json.put(CALENDER,calender.index());
+            json.put(ROUTE,jpti.indexOf(route));
             if(extraCalendarID>-1){
                 json.put(EXTRA_CALENDER,extraCalendarID);
             }
             JSONArray timeArray=new JSONArray();
-            for(Time time:timeList){
+            for(Time time:timeList.values()){
                 timeArray.put(time.makeJSONObject());
             }
             json.put(TIME,timeArray);
@@ -132,12 +162,10 @@ public abstract class Trip {
      * @return
      */
     public Time searchTime(Station station){
-        for(Time time:timeList){
-            if(time.station==station){
-                return time;
-            }
-        }
-        return null;
+        return timeList.get(station);
+    }
+    public Route getRoute(){
+        return route;
     }
 
     /**
@@ -150,8 +178,8 @@ public abstract class Trip {
      */
     public int compareTo(Trip trip){
         int result=0;
-        for(Time time1:timeList){
-            Time time2=trip.searchTime(time1.station);
+        for(Time time1:timeList.values()){
+            Time time2=trip.searchTime(time1.getStation());
             if(time2!=null){
                 int timeInt1=time1.getTime();
                 int timeInt2=time2.getTime();
@@ -175,17 +203,10 @@ public abstract class Trip {
 
 
     }
-    /**
-     * このObjectはjpti中のリストの何番目に位置するのかを返す
-     */
-    public int index(){
-        if(route.tripList.contains(this)) {
-            return route.tripList.indexOf(this);
-        }else{
-            Exception e=new Exception();
-            e.printStackTrace();
-            return -1;
-        }
+    private Time newTime(JSONObject json){
+        return new Time(jpti,this,json);
+    };
+    public TrainType getTrainType(){
+        return traihType;
     }
-    public abstract Time newTime(JSONObject json);
 }

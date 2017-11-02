@@ -1,23 +1,22 @@
 package com.kamelong.JPTI;
 
-import org.json.JSONObject;
+import com.kamelong.OuDia.OuDiaStation;
 
-import java.util.ArrayList;
-import java.util.Observable;
+import org.json.JSONObject;
 
 /**
  * Route中に使用される、Routeに所属する駅リスト。
  * 時刻表表記に使用される情報はこのクラス内に記述する
  */
-public abstract class RouteStation extends Observable{
+public class RouteStation{
     /**
      * 親JPTIdata
      */
-    public JPTIdata jpti;
+    private JPTI jpti;
     /**
      * 親Route
      */
-    protected Route route;
+    private Route route;
     /**
      * 対応する駅
      */
@@ -25,15 +24,15 @@ public abstract class RouteStation extends Observable{
     /**
      * 路線キロ程
      */
-    protected double km=-1;
+    private double km=-1;
     /**
      * 駅ナンバリング
      */
-    protected int numbering=-1;
+    private int numbering=-1;
     /**
      * 主要駅かどうか
      */
-    protected boolean bigStation=false;
+    private boolean bigStation=false;
     /**
      2桁の数字文字列で表す
      10の位：上り
@@ -43,7 +42,7 @@ public abstract class RouteStation extends Observable{
      1：発着
      2：着のみ
      */
-    protected int viewStyle=0;
+    private int viewStyle=0;
     public static final int VIEWSTYLE_HATU=00;
     public static final int VIEWSTYLE_HATUTYAKU=11;
     public static final int VIEWSTYLE_KUDARITYAKU=02;
@@ -53,19 +52,19 @@ public abstract class RouteStation extends Observable{
     /**
      * 境界線を持つかどうか
      */
-    protected  boolean border=false;
+    private boolean border=false;
 
-    protected  static final String STATION_ID="station_id";
-    protected  static final String KM="km";
-    protected  static final String NUMBERING="station_numbering";
-    protected  static final String TYPE="station_type";
-    protected  static final String VIEWSTYLE="viewstyle";
-    protected  static final String BORDER="border";
+    private static final String STATION_ID="station_id";
+    private static final String KM="km";
+    private static final String NUMBERING="station_numbering";
+    private static final String TYPE="station_type";
+    private static final String VIEWSTYLE="viewstyle";
+    private static final String BORDER="border";
 
     /**
      * 新規作成
      */
-    public  RouteStation(JPTIdata jpti,Route route){
+    private RouteStation(JPTI jpti, Route route){
         this.jpti=jpti;
         this.route=route;
 
@@ -80,16 +79,16 @@ public abstract class RouteStation extends Observable{
         this.viewStyle=oldStation.viewStyle;
         this.border=oldStation.border;
     }
-    public RouteStation(JPTIdata jpti,Route route,JSONObject json){
+    public RouteStation(JPTI jpti, Route route, JSONObject json){
         this(jpti,route);
         try {
             try {
-                station = jpti.stationList.get(json.getInt(STATION_ID));
+                station = jpti.getStation(json.getInt(STATION_ID));
             }catch(Exception e){
                 e.printStackTrace();
             }
             km=json.optDouble(KM,-1);
-            numbering=json.optInt(NUMBERING);
+            numbering=json.optInt(NUMBERING,-1);
             bigStation=json.optInt(TYPE)==1;
             viewStyle=json.optInt(VIEWSTYLE);
             border=json.optInt(BORDER)==1;
@@ -104,9 +103,7 @@ public abstract class RouteStation extends Observable{
             return json;
         }
         try{
-            if(station.index()>-1){
-                json.put(STATION_ID,station.index());
-            }
+                json.put(STATION_ID,jpti.indexOf(station));
             if(km>-1){
                 json.put(KM,km);
             }
@@ -133,34 +130,71 @@ public abstract class RouteStation extends Observable{
     }
 
 
-    /**
-     * 駅リストから指定された駅名を持つ駅インデックスを返す。
-     * 駅が存在しないときは-1が返る
-     * @param stations 駅リスト
-     * @param stationName 指定駅名
-     * @return stationsの配列中の何番目が指定駅であるかのインデックス
-     */
-    protected int findStationID(ArrayList<Station> stations,String stationName){
-        for(int i=0;i<stations.size();i++){
-            if(stations.get(i).name.equals(stationName)){
-                return i;
-            }
-        }
-        return -1;
+
+    private Station newStation(Station oldStation){
+        return new Station(jpti);
     }
     /**
-     * このObjectはjpti中のリストの何番目に位置するのかを返す
+     * oudiaの駅とJPTIの駅リストからRouteStationを作成する。
+     * @param oudiaStation この駅を作るための情報を含んだOuDiaの駅
      */
-    public int index(){
-        if(route.stationList.contains(this)) {
-            return route.stationList.indexOf(this);
+    public RouteStation(JPTI jpti, Route route, OuDiaStation oudiaStation){
+        this(jpti,route);
+        //stationIDを指定。JPTIStationList内に同駅名の駅があればそれを使用。
+        //もしなければ、新しく駅を作り、JPTIStationListに追加し、そのインデックスを登録
+        int id=jpti.getStationIDByName(oudiaStation.getName());
+        if(id!=-1){
+            station=jpti.getStation(id);
         }else{
-            Exception e=new Exception();
-            e.printStackTrace();
-            return -1;
+            station=jpti.addNewStation(oudiaStation);
         }
+        bigStation=oudiaStation.getBigStation();
+        border=oudiaStation.border();
+
+        //viewstyleの指定
+        //上り
+        int viewStyleInt=0;
+        switch (oudiaStation.getTimeShow(1)){
+            case 1:
+                viewStyleInt+=0;
+                break;
+            case 2:
+                viewStyleInt+=2;
+                break;
+            case 3:
+                viewStyleInt+=1;
+                break;
+        }
+        viewStyleInt=viewStyleInt*10;
+        switch (oudiaStation.getTimeShow(0)){
+            case 1:
+                viewStyleInt+=0;
+                break;
+            case 2:
+                viewStyleInt+=2;
+                break;
+            case 3:
+                viewStyleInt+=1;
+                break;
+        }
+        viewStyle=viewStyleInt;
     }
-    protected abstract Station newStation(Station oldStation);
+    public Station getStation(){
+        return (Station)station;
+    }
+    public boolean isBigStation(){
+        return  bigStation;
+    }
+    public int getViewStyle(){
+        return viewStyle;
+    }
+    public String getName(){
+        return station.getName();
+    }
+    public void setViewStyle(int value){
+        viewStyle=value;
+    }
+
 
 
 }

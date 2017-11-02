@@ -38,13 +38,13 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationInfoDialog extends Dialog{
-    AOdiaDiaFile diaFile;
-    TimeTableFragment fragment;
-    int fileNum;
-    int station;
-    int direct;
-    int diaNum;
-    AOdiaActivity activity;
+    private AOdiaDiaFile diaFile;
+    private TimeTableFragment fragment;
+    private int fileNum;
+    private int station;
+    private int direct;
+    private int diaNum;
+    private AOdiaActivity activity;
 
     public StationInfoDialog(Context context, TimeTableFragment f, AOdiaDiaFile dia, int fileN, int diaN, int d, int s){
         super(context);
@@ -78,10 +78,10 @@ public class StationInfoDialog extends Dialog{
     private void init(){
         try {
             TextView stationNameView = (TextView) findViewById(R.id.stationNameView);
-            stationNameView.setText(diaFile.getStation(station).getName() + "駅");
+            stationNameView.setText(diaFile.getStation().getName(station) + "駅");
             Button beforeStationButton = (Button) findViewById(R.id.beforeStationButton);
-            if (station - (1 - 2 * direct) >= 0 && station - (1 - 2 * direct) < diaFile.getStationNum()) {
-                beforeStationButton.setText("⇦" + diaFile.getStation(station - (1 - 2 * direct)).getName() + "駅");
+            if (station - (1 - 2 * direct) >= 0 && station - (1 - 2 * direct) < diaFile.getStation().getStationNum()) {
+                beforeStationButton.setText("⇦" + diaFile.getStation().getName(station - (1 - 2 * direct)) + "駅");
                 beforeStationButton.setVisibility(View.VISIBLE);
             } else {
                 beforeStationButton.setVisibility(View.INVISIBLE);
@@ -94,8 +94,8 @@ public class StationInfoDialog extends Dialog{
                 }
             });
             Button afterStationButton = (Button) findViewById(R.id.afterStationButton);
-            if (station + (1 - 2 * direct) >= 0 && station + (1 - 2 * direct) < diaFile.getStationNum()) {
-                afterStationButton.setText(diaFile.getStation(station + (1 - 2 * direct)).getName() + "駅⇨");
+            if (station + (1 - 2 * direct) >= 0 && station + (1 - 2 * direct) < diaFile.getStation().getStationNum()) {
+                afterStationButton.setText(diaFile.getStation().getName(station + (1 - 2 * direct)) + "駅⇨");
                 afterStationButton.setVisibility(View.VISIBLE);
             } else {
                 afterStationButton.setVisibility(View.INVISIBLE);

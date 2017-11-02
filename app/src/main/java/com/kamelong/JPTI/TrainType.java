@@ -1,30 +1,33 @@
 package com.kamelong.JPTI;
 
+
+import com.kamelong.OuDia.OuDiaTrainType;
 import com.kamelong.tool.Color;
 
 import org.json.JSONObject;
+
 /**
  * 列車種別のクラス
  */
-public abstract class TrainType {
-    protected JPTIdata jpti;
-    protected  Route route;
+public class TrainType {
+    private JPTI jpti;
+    private Route route;
     /**
      * 種別名
      */
-    protected String name="";
+    private String name="";
     /**
      * 種別略称
      */
-    protected  String shortName=null;
+    private String shortName=null;
     /**
     種別文字色
      */
-    protected Color textColor=new Color();
+    private Color textColor=new Color();
     /**
      * 種別ダイヤ色
      */
-    protected Color diaColor=null;
+    private Color diaColor=null;
 
     /**
      * 種別ダイヤスタイル
@@ -33,36 +36,37 @@ public abstract class TrainType {
      * 2:点線
      * 3:一点鎖線
      */
-    protected int diaStyle=0;
+    private int diaStyle=0;
     /**
      * 種別ダイヤ太線
      */
-    protected boolean diaBold=false;
+    private boolean diaBold=false;
     /**
      * 種別ダイヤ停車駅明示
      */
-    protected boolean showStop=false;
+    private boolean showStop=false;
     /**
      * 種別フォント
      */
-    protected int font=-1;
+    private int font=-1;
 
-    protected static final String NAME="class_name";
-    protected static final String SHORT_NAME="class_short_name";
-    protected static final String TEXT_COLOR="class_text_color";
-    protected static final String DIA_COLOR="class_dia_color";
-    protected static final String STYLE="class_dia_style";
-    protected  static final String BOLD="class_dia_bold";
-    protected  static final String SHOWSTOP="class_dia_showstop";
-    protected static final String FONT="class_font";
+    private static final String NAME="class_name";
+    private static final String SHORT_NAME="class_short_name";
+    private static final String TEXT_COLOR="class_text_color";
+    private static final String DIA_COLOR="class_dia_color";
+    private static final String STYLE="class_dia_style";
+    private static final String BOLD="class_dia_bold";
+    private static final String SHOWSTOP="class_dia_showstop";
+    private static final String FONT="class_font";
+
+    public static final int LINESTYLE_NORMAL=0;
+    public static final int LINESTYLE_DASH=1;
+    public static final int LINESTYLE_DOT=2;
+    public static final int LINESTYLE_CHAIN=3;
 
 
-    public TrainType(JPTIdata jpti,Route route){
+    public TrainType(JPTI jpti, JSONObject json){
         this.jpti=jpti;
-        this.route=route;
-    }
-    public TrainType(JPTIdata jpti,Route route,JSONObject json){
-        this(jpti,route);
 
         try{
             try{
@@ -71,10 +75,14 @@ public abstract class TrainType {
                 e.printStackTrace();
             }
             try{
-                String color=json.optString(TEXT_COLOR,"#000000");
-                textColor = new Color(color);
+                textColor = new Color(json.optString(TEXT_COLOR,"#000000"));
             }catch(Exception e){
                 e.printStackTrace();
+            }
+            try{
+                diaColor = new Color(json.getString(DIA_COLOR));
+            }catch (Exception e){
+                diaColor=textColor;
             }
             shortName=json.optString(SHORT_NAME);
             try{
@@ -96,6 +104,18 @@ public abstract class TrainType {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+    public TrainType(JPTI jpti, OuDiaTrainType trainType){
+        this.jpti=jpti;
+        name=trainType.getName();
+        shortName=trainType.getShortName();
+        textColor=trainType.getTextColor();
+        diaColor=trainType.getDiaColor();
+
+        diaStyle=trainType.getLineStyle();
+        diaBold=trainType.getLineBold();
+        showStop=trainType.getShowStop();
+        font=trainType.fontNumber;
     }
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
@@ -130,17 +150,29 @@ public abstract class TrainType {
         }
         return json;
     }
-    /**
-     * このObjectはjpti中のリストの何番目に位置するのかを返す
-     */
-    public int index(){
-        if(route.classList.contains(this)) {
-            return route.classList.indexOf(this);
-        }else{
-            Exception e=new Exception();
-            e.printStackTrace();
-            return -1;
-        }
+    public String getName(){
+        return name;
+    }
+    public String getShortName(){
+        return shortName;
+    }
+    public Color getTextColor(){
+        return textColor;
+    }
+    public Color getDiaColor(){
+        return diaColor;
+    }
+    public int getDiaStyle(){
+        return diaStyle;
+    }
+    public boolean getShowStop(){
+        return showStop;
+    }
+    public boolean getDiaBold(){
+        return diaBold;
+    }
+    public int getFontNumber(){
+        return font;
     }
 
 

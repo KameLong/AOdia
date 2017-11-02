@@ -38,7 +38,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimetableIndexDia extends LinearLayout {
-    AOdiaActivity activity;
+    private AOdiaActivity activity;
     public StationTimetableIndexDia(Context context, AOdiaDiaFile diaFile, final int fileNum, final int stationNum, final int diaNum){
         super(context);
         activity=(AOdiaActivity)context;

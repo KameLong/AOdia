@@ -1,25 +1,30 @@
 package com.kamelong.JPTI;
 
+
+
+import com.kamelong.OuDia.OuDiaStation;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
 /**
  * JTPI形式の駅情報を格納するクラス
  */
-public abstract class Station {
+public class Station {
 
-    protected JPTIdata jpti;
+    private JPTI jpti;
     /**
      駅・停留所・港・空港名
      */
-    protected String name="";
+    String name="";
 
     /**
      * 副駅名
      */
-    protected String subName=null;
+    private String subName=null;
 
     /**
      1：駅
@@ -27,55 +32,55 @@ public abstract class Station {
      3：旅客船桟橋
      4：空港
      */
-    protected int type=0;
+    private int type=0;
 
     /**
      * 駅の説明
      */
-    public String description=null;
+    private String description=null;
 
     /**
      緯度
      */
-    protected String lat=null;
+    private String lat=null;
 
     /**
      経度
      */
-    protected String lon=null;
+    private String lon=null;
 
     /**
      * 停車場のURL
      * ※駅構内図など？
      */
-    protected String url=null;
+    private String url=null;
 
     /**
      * 車いすでの乗車が可能か？
      * ※stopにあるべき？
      */
-    protected String wheelcharBoarding=null;
+    private String wheelcharBoarding=null;
 
     /**
      * 駅に存在する停留所リスト
      */
-    protected ArrayList<Stop> stops=new ArrayList<>();
+    ArrayList<Stop> stops=new ArrayList<>();
 
-    protected static final String NAME="station_name";
-    protected static final String SUBNAME="station_subname";
-    protected static final String TYPE="station_type";
-    protected static final String DESCRIPTION="station_description";
-    protected static final String LAT="station_lat";
-    protected static final String LON="station_lon";
-    protected static final String URL="station_url";
-    protected static final String WHEELCHAIR="wheelchair_boarding";
-    protected static final String STOP="stop";
+    private static final String NAME="station_name";
+    private static final String SUBNAME="station_subname";
+    private static final String TYPE="station_type";
+    private static final String DESCRIPTION="station_description";
+    private static final String LAT="station_lat";
+    private static final String LON="station_lon";
+    private static final String URL="station_url";
+    private static final String WHEELCHAIR="wheelchair_boarding";
+    private static final String STOP="stop";
 
     /**
      * デフォルトコンストラクタ
      * 特にベースに何もない状態から駅を作成する場合はこれ
      */
-    public Station(JPTIdata jpti){
+    public Station(JPTI jpti){
         this.jpti=jpti;
 
     }
@@ -92,7 +97,7 @@ public abstract class Station {
         wheelcharBoarding=oldStation.wheelcharBoarding;
         stops=oldStation.stops;
     }
-    public Station(JPTIdata jpti,JSONObject json){
+    public Station(JPTI jpti, JSONObject json){
         this(jpti);
         try{
             try {
@@ -109,12 +114,31 @@ public abstract class Station {
             wheelcharBoarding=json.optString(WHEELCHAIR);
             JSONArray stopArray=json.getJSONArray(STOP);
             for(int i=0;i<stopArray.length();i++){
-                stops.add(newStop(stopArray.getJSONObject(i)));
+                stops.add(jpti.getStop(stopArray.optInt(i,0)));
+                jpti.getStop(stopArray.optInt(i,0)).setStation(this);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+    /**
+     * OuDia形式の駅から作成する場合
+     */
+    public Station(JPTI jpti, OuDiaStation oudiaStation){
+        this(jpti);
+        name=oudiaStation.getName();
+        int oudiaIndex=jpti.getStopIDByName(this,"FromOuDia");
+        if(oudiaIndex==-1) {
+            Stop stop=jpti.addNewStop(this);
+            stop.setName("FromOuDia");
+            stops.add(stop);
+        }else{
+            stops.add(jpti.getStop(oudiaIndex));
+
+        }
+
+    }
+
 
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
@@ -148,25 +172,15 @@ public abstract class Station {
         return json;
 
     }
-    public JSONArray makeStopsListJSON(){
+    private JSONArray makeStopsListJSON(){
         JSONArray array=new JSONArray();
         for(Stop stop:stops){
-            array.put(stop.makeJSONObject());
+            array.put(jpti.indexOf(stop));
         }
         return array;
     }
-    /**
-     * このObjectはjpti中のリストの何番目に位置するのかを返す
-     */
-    public int index(){
-        if(jpti.stationList.contains(this)) {
-            return jpti.stationList.indexOf(this);
-        }else{
-            Exception e=new Exception();
-            e.printStackTrace();
-            return -1;
-        }
+    public String getName(){
+        return name;
     }
-    protected abstract Stop newStop(JSONObject json);
 
 }

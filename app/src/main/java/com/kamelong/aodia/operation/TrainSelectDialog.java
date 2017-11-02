@@ -14,7 +14,6 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.stationInfo.StationInfoDialog;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
@@ -22,17 +21,17 @@ import com.kamelong.aodia.timeTable.TrainSelectListener;
  * Created by kame on 2017/10/14.
  */
 
-public class TrainSelectDialog extends Dialog{
-    AOdiaDiaFile diaFile;
-    TimeTableFragment fragment;
-    int fileNum;
+class TrainSelectDialog extends Dialog{
+    private AOdiaDiaFile diaFile;
+    private TimeTableFragment fragment;
+    private int fileNum;
     int station;
-    int diaNum;
-    AOdiaActivity activity;
+    private int diaNum;
+    private AOdiaActivity activity;
 
-    LinearLayout contentView;
+    private LinearLayout contentView;
 
-    TrainSelectListener trainSelectListener;
+    private TrainSelectListener trainSelectListener;
 
     public TrainSelectDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN, TrainSelectListener listener){
         super(context);
