@@ -15,6 +15,8 @@ import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.diadata.AOdiaTrain;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
+import java.util.ArrayList;
+
 /**
  */
 
@@ -80,7 +82,7 @@ public class OperationView extends RelativeLayout{
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                    operation.setName(nameEdit.getText().toString());
+                operation.setName(nameEdit.getText().toString());
             }
         });
         numberEdit.addTextChangedListener(new TextWatcher() {
@@ -123,19 +125,53 @@ public class OperationView extends RelativeLayout{
                 invalidate();
 
             }
-        });
+
+            @Override
+            public void selectTrain(ArrayList<AOdiaTrain> trains) {
+                System.out.println(trains);
+                operation.removeAllTrain();
+                try {
+                    opeList.removeAllViews();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                for(int i=0;i<trains.size();i++){
+                    operation.addTrain(trains.get(i));
+                }
+                invalidate();
+
+            }
+        },this.operation);
         dialog.show();
     }
     private void addNewTrip(){
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
             @Override
             public void selectTrain(AOdiaTrain train) {
-                        operation.addTrain(train);
-                        opeList.addView(new OperationSubView(getContext(),train));
+                operation.addTrain(train);
+                opeList.addView(new OperationSubView(getContext(),train));
                 invalidate();
 
             }
-        });
+
+            @Override
+            public void selectTrain(ArrayList<AOdiaTrain> trains) {
+                System.out.println(trains);
+                    operation.removeAllTrain();
+                try {
+                    opeList.removeAllViews();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                for(int i=0;i<trains.size();i++){
+                    operation.addTrain(trains.get(i));
+                }
+                invalidate();
+
+            }
+        },this.operation);
         dialog.show();
     }
 

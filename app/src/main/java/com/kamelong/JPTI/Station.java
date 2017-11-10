@@ -136,8 +136,8 @@ public class Station {
             stops.add(jpti.getStop(oudiaIndex));
 
         }
-
     }
+
 
 
     public JSONObject makeJSONObject(){
@@ -181,6 +181,14 @@ public class Station {
     }
     public String getName(){
         return name;
+    }
+    public void setName(String value){
+        name=value;
+    }
+    public void addStop(Stop stop){
+        if(!stops.contains(stop)){
+            stops.add(stop);
+        }
     }
 
 }

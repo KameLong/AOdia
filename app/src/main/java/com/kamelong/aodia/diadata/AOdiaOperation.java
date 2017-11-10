@@ -121,5 +121,11 @@ public class AOdiaOperation {
         }
         return result;
     }
+    public void removeAllTrain(){
+        while(trains.size()!=0){
+            removeTrain(trains.get(0));
+        }
+    }
+
 
 }

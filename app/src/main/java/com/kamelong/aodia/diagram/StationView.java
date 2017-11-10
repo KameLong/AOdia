@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadata.AOdiaStation;
@@ -70,6 +71,8 @@ public class StationView extends KLView {
 
 
         textPaint.setColor(Color.BLACK);
+        textPaint.setTextSkewX(0);
+        textPaint.setTypeface(Typeface.DEFAULT);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200,200,200));

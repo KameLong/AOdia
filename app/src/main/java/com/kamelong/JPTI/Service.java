@@ -107,6 +107,18 @@ public class Service {
 
         }
     }
+    public  Service(JPTI jpti,ArrayList<Route>routeList){
+        this.jpti=jpti;
+        for(Route r:routeList){
+            route.put(r,0);
+        }
+        name=((Route)route.keySet().toArray()[0]).getName();
+        for(int i=0;i<jpti.getTripSize();i++){
+            if(route.containsKey(jpti.getTrip(i).getRoute())){
+                trainList.add(new Train(jpti,this,jpti.getTrip(i)));
+            }
+        }
+    }
 
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
@@ -288,7 +300,11 @@ public class Service {
         return timeTableFont.size();
     }
     public Font getTimeTableFont(int index){
-        return timeTableFont.get(index);
+        try {
+            return timeTableFont.get(index);
+        }catch(ArrayIndexOutOfBoundsException e){
+            return new Font();
+        }
     }
     public Font getTimeTableVFont(){
         return timeTableVFont;
@@ -325,7 +341,12 @@ public class Service {
         return comment;
     }
     public int getDiagramStartTime(){
-        return timeString2Int(startTime);
+        if(startTime==null){
+            return 60*60*3;
+        }
+        return (timeString2Int(startTime))/3600*3600;
     }
+
+
 
 }

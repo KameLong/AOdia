@@ -59,6 +59,12 @@ public class TrainNameView extends KLView {
 
         int startLine=(int)textPaint.getTextSize();
         textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+        if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric){
+            textPaint.setTextSkewX(-0.3f);
+        }else{
+            textPaint.setTextSkewX(-0f);
+        }
+
         if(secondFrag) {
             drawText(canvas,train.getTrainType().getName(), 1, startLine, textPaint,true);
         }else{

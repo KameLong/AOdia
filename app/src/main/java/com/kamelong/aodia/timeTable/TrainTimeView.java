@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
 import com.kamelong.JPTI.JPTI;
@@ -25,7 +26,9 @@ public class TrainTimeView extends KLView {
     private boolean showPassFrag=false;
     private TrainSelectListener trainSelectListener=null;
     private static final String NOSERVICE_STRING ="∙ ∙";
-    private static final String NOVIA_STRING="| |";
+//    private static final String NOSERVICE_STRING =": :";
+    private static final String NOVIA_STRING="| |"
+            ;
     private static final String PASS_STRING="レ";
     private static final String NODATA_STRING="○";
 
@@ -51,18 +54,41 @@ public class TrainTimeView extends KLView {
     }
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
+        long time=System.currentTimeMillis();
         drawTime(canvas);
         if(remarkFrag){
             drawRemark(canvas);
         }
+        System.out.println(System.currentTimeMillis()-time);
     }
     private void drawTime(Canvas canvas){
+        /**
+        int startLine2 = textSize;
+        for (int i = 0; i < station.getStationNum(); i++) {
+            drawText(canvas,"aaaa", 1, startLine2, textPaint, true);
+            startLine2+=textSize;
+
+        }
+        if(true){
+            return;
+        }
+**/
         try {
+            SdLog.log("drawTime");
             int startLine = textSize;
+            textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+            if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric){
+                textPaint.setTextSkewX(-0.3f);
+            }else{
+                textPaint.setTextSkewX(0f);
+            }
+            if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).bold){
+                textPaint.setTypeface(Typeface.DEFAULT_BOLD);
+            }else{
+                textPaint.setTypeface(Typeface.DEFAULT);
+            }
             for (int i = 0; i < station.getStationNum(); i++) {
-                textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
                 int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
-                Time time=train.getTime(stationNumber);
                 int border=station.border(stationNumber-direct);
                 int timeShow=station.getTimeShow(stationNumber,direct);
                 if(border==0&&timeShow==0) {
@@ -105,7 +131,7 @@ public class TrainTimeView extends KLView {
                         }
                     }
                     canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
-                    startLine = startLine + (int) (textSize * 7 / 6);
+                    startLine = startLine +(textSize * 7 / 6);
 
                     textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
 
@@ -309,9 +335,9 @@ public class TrainTimeView extends KLView {
             hh=hh%24;
             String result = "";
             if(secondFrag) {
-                result = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+                result =hh + String.format("%02d", mm)+"-"+String.format("%02d", ss);
             }else{
-                result = String.format("%2d", hh) + String.format("%02d", mm);
+                result =hh+ String.format("%02d", mm);
             }
             return result;
         }catch(Exception e){
@@ -349,9 +375,9 @@ public class TrainTimeView extends KLView {
             hh=hh%24;
             String result = "";
             if(secondFrag) {
-                result = String.format("%2d", hh) + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+                result = hh + String.format("%02d", mm)+"-"+String.format("%02d", ss);
             }else{
-                result = String.format("%2d", hh) + String.format("%02d", mm);
+                result = hh + String.format("%02d", mm);
             }
             return result;
         }catch(Exception e){

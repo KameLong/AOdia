@@ -39,6 +39,16 @@
             android:background="@android:drawable/btn_default"
             android:text="上り時刻表" />
 
+        <Button
+            android:id="@+id/diagramButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/downTimeTableButton"
+            android:background="@android:drawable/btn_default"
+            android:text="上り時刻表" />
+
     </LinearLayout>
 
     <RelativeLayout

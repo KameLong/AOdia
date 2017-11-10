@@ -64,6 +64,11 @@ public class TrainType {
     public static final int LINESTYLE_DOT=2;
     public static final int LINESTYLE_CHAIN=3;
 
+    public TrainType(JPTI jpti) {
+        this.jpti = jpti;
+        textColor=new Color();
+        diaColor=new Color();
+    }
 
     public TrainType(JPTI jpti, JSONObject json){
         this.jpti=jpti;
@@ -154,6 +159,9 @@ public class TrainType {
         return name;
     }
     public String getShortName(){
+        if(shortName==null){
+            return "";
+        }
         return shortName;
     }
     public Color getTextColor(){

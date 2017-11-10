@@ -35,6 +35,11 @@ public class Time {
     private static final String DEPARTURE_TIME ="d";
     */
 protected  Time(){}
+    public Time(JPTI jpti, Trip trip){
+        this.trip=trip;
+        this.jpti=jpti;
+    }
+
     public Time(JPTI jpti, Trip trip, Stop stop){
         this.trip=trip;
         this.jpti=jpti;
@@ -75,6 +80,7 @@ protected  Time(){}
 
 
     }
+
     public JSONObject makeJSONObject(){
         JSONObject json=new JSONObject();
         try {
@@ -149,6 +155,21 @@ protected  Time(){}
             return arrivalTime;
         }
         return departureTime;
+    }
+    public void setArrivalTime(String value){
+        arrivalTime=timeString2Int(value);
+    }
+    public void setDepartureTime(String value){
+        departureTime=timeString2Int(value);
+    }
+    public void setStop(boolean frag){
+        if(frag){
+            dropoffType=0;
+            pickupType=0;
+        }else{
+            dropoffType=1;
+            pickupType=1;
+        }
     }
 
 

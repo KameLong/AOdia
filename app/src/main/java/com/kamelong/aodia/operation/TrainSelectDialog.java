@@ -14,6 +14,7 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
@@ -24,6 +25,7 @@ import com.kamelong.aodia.timeTable.TrainSelectListener;
 class TrainSelectDialog extends Dialog{
     private AOdiaDiaFile diaFile;
     private TimeTableFragment fragment;
+    private AOdiaOperation ope=null;
     private int fileNum;
     int station;
     private int diaNum;
@@ -33,7 +35,7 @@ class TrainSelectDialog extends Dialog{
 
     private TrainSelectListener trainSelectListener;
 
-    public TrainSelectDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN, TrainSelectListener listener){
+    public TrainSelectDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN, TrainSelectListener listener,AOdiaOperation ope){
         super(context);
         diaFile=dia;
         fragment=null;
@@ -41,6 +43,7 @@ class TrainSelectDialog extends Dialog{
         fileNum=fileN;
         activity=(AOdiaActivity)context;
         trainSelectListener=listener;
+        this.ope=ope;
     }
 
     protected void onCreate(Bundle savedInstanceState){
@@ -72,6 +75,16 @@ class TrainSelectDialog extends Dialog{
                     TrainSelectDialog.this.dismiss();
                 }
             });
+            Button diagram = findViewById(R.id.diagramButton);
+            diagram.setText("ダイヤグラム");
+            diagram.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.openSelectDiagram(fileNum, diaNum,trainSelectListener,ope);
+                    TrainSelectDialog.this.dismiss();
+                }
+            });
+
         }catch(Exception e){
             SdLog.log(e);
         }

@@ -79,6 +79,11 @@ public class RouteStation{
         this.viewStyle=oldStation.viewStyle;
         this.border=oldStation.border;
     }
+    public RouteStation(JPTI jpti,Route route,Station station){
+        this.jpti=jpti;
+        this.route=route;
+        this.station=station;
+    }
     public RouteStation(JPTI jpti, Route route, JSONObject json){
         this(jpti,route);
         try {

@@ -76,7 +76,12 @@ public class OperationFragment extends AOdiaFragment{
     }
     @Override
     public String fragmentName(){
-        return diaFile.getDiaName(diaNum)+":運用\n"+diaFile.getLineName();
+        try {
+            return diaFile.getDiaName(diaNum) + ":運用\n" + diaFile.getLineName();
+        }catch(Exception e){
+            e.printStackTrace();
+            return "運用";
+        }
     }
     public void addNewOpeView(OperationView opeView){
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
@@ -100,6 +105,7 @@ public class OperationFragment extends AOdiaFragment{
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
         for(int i=0;i<listView.getChildCount();i++){
             if(listView.getChildAt(i)==operationView){
+                operationView.operation.removeAllTrain();
                 diaFile.operationList.get(diaNum).remove(operationView.operation);
                 listView.removeView(operationView);
                 break;

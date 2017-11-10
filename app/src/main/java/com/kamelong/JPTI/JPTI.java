@@ -301,9 +301,15 @@ public class JPTI {
     private Route newRoute(JSONObject json) {
         return new Route(this, json);
     }
+    protected Route newRoute(){
+        return new Route(this);
+    }
 
     private Service newService(JSONObject json) {
         return new Service(this, json);
+    }
+    private Service newService() {
+        return new Service(this,routeList);
     }
 
     private Station newStation(JSONObject json) {
@@ -311,6 +317,9 @@ public class JPTI {
     }
     private Station newStation(OuDiaStation s) {
         return new Station(this, s);
+    }
+    private Station newStation() {
+        return new Station(this);
     }
 
     private Calendar newCalendar(JSONObject json) {
@@ -321,6 +330,9 @@ public class JPTI {
     }
     protected TrainType newTrainType(JSONObject json){
         return new TrainType(this,json);
+    }
+    protected TrainType newTrainType(){
+        return new TrainType(this);
     }
     protected TrainType newTrainType(OuDiaTrainType type){
         return new TrainType(this,type);
@@ -338,6 +350,9 @@ public class JPTI {
         return new Trip(this,route,calendar,oudia,train,startStation,endStation,blockID);
     }
 
+    protected Trip newTrip(Route route) {
+        return new Trip(this, route);
+    }
 
     protected Time newTime(Trip trip, JSONObject json) {
         return new Time(this, trip, json);
@@ -396,6 +411,14 @@ public class JPTI {
 
     public Station getStation(int index) {
         return stationList.get(index);
+    }
+    public Station getStation(String name){
+        for(Station s:stationList){
+            if(s.getName().equals(name)){
+                return s;
+            }
+        }
+        return null;
     }
 
     public Stop getStop(int index) {
@@ -475,8 +498,22 @@ public class JPTI {
         }
         return -1;
     }
+    public Route addNewRoute(){
+        routeList.add(newRoute());
+        return routeList.get(routeList.size()-1);
+    }
     public Station addNewStation(OuDiaStation s){
         Station station=newStation(s);
+        stationList.add(station);
+        return station;
+    }
+    public Station addNewStation(String name){
+        for(Station s:stationList){
+            if(s.getName().equals(name)){
+                return s;
+            }
+        }
+        Station station=newStation();
         stationList.add(station);
         return station;
     }
@@ -498,12 +535,31 @@ public class JPTI {
         tripList.add(trip);
         return trip;
     }
+    public Trip addNewTrip(Route route){
+        Trip trip=newTrip(route);
+        tripList.add(trip);
+        return trip;
+    }
 
     public void resetOperation(){
         operationList=new ArrayList<>();
     }
     public void addOperation(Operation ope){
         operationList.add(ope);
+    }
+    public Calendar addNewCalendar(){
+        Calendar calendar=newCalendar();
+        calendarList.add(calendar);
+        return calendar;
+    }
+    public void makeService(){
+        Service service=newService();
+        serviceList.add(service);
+    }
+    public TrainType addTrainType(){
+        TrainType type=newTrainType();
+        trainTypeList.add(type);
+        return type;
     }
 
 

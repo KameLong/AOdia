@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * 列車を記録するクラス
  */
-public class Trip {
+public class TripOld extends Trip{
     /**
      * 所属JPTIdata
      */
@@ -60,8 +60,6 @@ public class Trip {
 
     /**
      * 駅時刻
-     * 64bitLongにて記述
-     * 4bit存在Frag(0:存在しない:1:存在する
      */
     private Map<Station,Time> timeList=new HashMap<>();
 
@@ -75,12 +73,12 @@ public class Trip {
     private static final String CALENDER="calender_id";
     private static final String EXTRA_CALENDER="extra_calendar";
     private static final String TIME="time";
-    public Trip(){}
-    public Trip(JPTI jpti, Route route){
+
+    public TripOld(JPTI jpti, Route route){
         this.jpti=jpti;
         this.route=route;
     }
-    public Trip(JPTI jpti, JSONObject json){
+    public TripOld(JPTI jpti, JSONObject json){
         this.jpti=jpti;
         try{
             route=jpti.getRoute(json.optInt(ROUTE,0));
@@ -116,13 +114,13 @@ public class Trip {
             e.printStackTrace();
         }
     }
-    public Trip(JPTI jpti, Route route, Calendar calendar, OuDiaFile oudia, OuDiaTrain train, int startStation, int endStation, int blockID){
+    public TripOld(JPTI jpti, Route route, Calendar calendar, OuDiaFile oudia, OuDiaTrain train, int startStation, int endStation, int blockID){
         this(jpti,route);
         this.calender=calendar;
         this.traihType=jpti.getTrainType(train.getType());
         this.blockID=blockID;
         for(int i=startStation;i<endStation+1;i++){
-            if(train.getStopType(i)== com.kamelong.OuDia.OuDiaTrain.STOP_TYPE_PASS||train.getStopType(i)== com.kamelong.OuDia.OuDiaTrain.STOP_TYPE_STOP){
+            if(train.getStopType(i)== OuDiaTrain.STOP_TYPE_PASS||train.getStopType(i)== OuDiaTrain.STOP_TYPE_STOP){
                 Time time=new Time(jpti,this,jpti.getStop(jpti.getStopIDByName(jpti.getStation(jpti.getStationIDByName(oudia.getStation(i).getName())),"FromOuDia")),train,i);
                 timeList.put(time.getStation(),time);
             }
@@ -178,7 +176,7 @@ public class Trip {
      * @param trip
      * @return
      */
-    public int compareTo(Trip trip){
+    public int compareTo(TripOld trip){
         int result=0;
         for(Time time1:timeList.values()){
             Time time2=trip.searchTime(time1.getStation());

@@ -2,6 +2,8 @@ package com.kamelong.OuDia;
 
 import com.kamelong.JPTI.RouteStation;
 
+import java.util.ArrayList;
+
 /**
  *
  */
@@ -47,6 +49,18 @@ public class OuDiaStation {
      */
     protected static final int STOP_DEPART = 0;
     protected static final int STOP_ARRIVE = 1;
+
+    /**
+     * OuDiaSecond
+     */
+    public ArrayList<String>trackName=new ArrayList<>();
+    public ArrayList<String>TrackRyakusyou=new ArrayList<>();
+    public int downMain=0;
+    public int upMain=0;
+    public boolean timeTableTrackDisaplayDown=false;
+    public boolean timeTableTrackDisaplayUp=false;
+    public boolean diagramTrackDisaplay=false;
+    public int BrunchIndex=-1;
 
 
     public StringBuilder makeStationText(boolean oudiaSecond) {

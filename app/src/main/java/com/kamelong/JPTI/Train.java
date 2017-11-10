@@ -89,6 +89,13 @@ public class Train {
             }
         }
     }
+    public Train(JPTI jpti,Service service,Trip trip){
+        this.jpti=jpti;
+        this.service=service;
+        tripList.add(trip);
+        calendar=trip.getCalendar();
+        direct=trip.getDirect();
+    }
     public void setCalendar(Calendar calendar){
         this.calendar=calendar;
     }

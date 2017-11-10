@@ -93,7 +93,7 @@ public class DiagramView extends KLView {
      *
      * ダイヤグラム画面内を長押しすることで近くにあるダイヤ線の列車が強調表示に切り替わります
      */
-    private ArrayList<AOdiaTrain> focusTrain=new ArrayList<>();
+    public ArrayList<AOdiaTrain> focusTrain=new ArrayList<>();
     /**
      * これがtrueの時は実線表示のみとなり、点線などは使えなくなる
      */
@@ -392,9 +392,9 @@ public class DiagramView extends KLView {
                                 if(train1.getEndStation()==train2.getStartStation()){
                                     if(train1.getDirect()==0&&train2.getDirect()==1){
                                         canvas.drawArc(new RectF(
-                                                convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
+                                                        convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
-                                                convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
+                                                        convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 0, 180, false, paint2);
                                     }
@@ -403,7 +403,7 @@ public class DiagramView extends KLView {
                                                         convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
                                                         convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
-                                                         stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
+                                                        stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 180, 180, false, paint2);
                                     }
                                 }
@@ -939,5 +939,70 @@ public class DiagramView extends KLView {
         return time-diagramStartTime;
 
     }
+    /**
+     * フォーカスする列車を選択する。
+     * ダイヤグラム画面内を長押しすることで実行する。
+     * @see #focusTrain フォーカスする列車
+     *
+     * これらのパラメーターは、DiagramViewの左上を基準とした座標
+     */
+    public void setTrain(int x,int y) {
+        try {
+            //まずタッチポイントから実際の秒単位のタッチ場所を検出します。
+            x =(int)( x * 60 / scaleX);
+            y = (int)(y * 60 / scaleY)-yshift;
+            if (y >stationTime.get(stationTime.size() - 1)) {
+                return;
+            }
+            //描画しているダイヤ線のうちタッチポイントに最も近いものを検出します。
+            float minDistance = 4000;
+            int minTrainNum = -1;
+            int minTrainDirect = -1;
+            for(int direct=0;direct<2;direct++){
+                if((direct==0&&setting.downFrag)||(direct==1&&setting.upFrag)) {
+                    for (int i = 0; i < diagramPath[direct].size(); i++) {
+                        for (int j = 0; j < diagramPath[direct].get(i).size() / 4; j++) {
+                            if (diagramPath[direct].get(i).get(4 * j) < x && diagramPath[direct].get(i).get(4 * j + 2) > x) {
+                                float distance;
+                                if (true) {
+                                    //xの差のほうが大きい
+                                    distance = scaleY / 60f * Math.abs(((float) diagramPath[direct].get(i).get(4 * j + 3) - (float) diagramPath[direct].get(i).get(4 * j + 1)) /
+                                            ((float) diagramPath[direct].get(i).get(4 * j + 2) - (float) diagramPath[direct].get(i).get(4 * j)) * (x - diagramPath[direct].get(i).get(4 * j)) + diagramPath[direct].get(i).get(4 * j + 1) - y);
+                                } else {
+                                    //yの差のほうが大きい
+                                    distance = scaleX * Math.abs((diagramPath[direct].get(i).get(4 * j + 2) - diagramPath[direct].get(i).get(4 * j)) /
+                                            (diagramPath[direct].get(i).get(4 * j + 3) - diagramPath[direct].get(i).get(4 * j + 1)) * (y - diagramPath[direct].get(i).get(4 * j + 1)) + diagramPath[direct].get(i).get(4 * j) - x);
+                                }
+                                if (distance < minDistance) {
+                                    minDistance = distance;
+                                    minTrainNum = i;
+                                    minTrainDirect=direct;
+                                }
+                            }
+                        }
+                    }
+                }}
+
+            if(trainList[minTrainDirect].get(minTrainNum)==null){
+                return;
+            }
+            if(focusTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
+                focusTrain.remove(trainList[minTrainDirect].get(minTrainNum));
+            }else {
+                if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
+                    focusTrain.add(trainList[minTrainDirect].get(minTrainNum));
+                }else{
+                    SdLog.toast("この列車は既に運用が登録されています");
+                }
+            }
+            this.invalidate();
+
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+
+    }
+
+
 
 }

@@ -254,6 +254,12 @@ public class OuDiaTrain {
         time[station]=time[station]&0xF0FFFFFFFFFFFFFFL;
         time[station]=time[station]|type;
     }
+    /**
+     * 発着番線をセットする
+     */
+    protected void setForm(int station,int value){
+        
+    }
 
     /**
      * 着時刻をセットする。

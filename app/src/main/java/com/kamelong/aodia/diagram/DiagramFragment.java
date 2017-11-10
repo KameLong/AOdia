@@ -67,22 +67,22 @@ public class DiagramFragment extends AOdiaFragment {
     /**
      * このFragment全体のView
      */
-    private View fragmentContainer=null;
+    protected View fragmentContainer=null;
 
     /**
      * このFragment内に内包されるView
      */
-    private StationView stationView;
-    private TimeView timeView;
-    private DiagramView diagramView;
+    protected StationView stationView;
+    protected TimeView timeView;
+    protected DiagramView diagramView;
 
     /**
      * スクロール量、拡大サイズの保持に用いられる
      */
-    private float scrollX;
-    private float scrollY;
-    private float scaleX;
-    private float scaleY;
+    protected float scrollX;
+    protected float scrollY;
+    protected float scaleX;
+    protected float scaleY;
     /**
      * ダイヤ詳細設定のデータ
      */
@@ -90,9 +90,9 @@ public class DiagramFragment extends AOdiaFragment {
     /**
      * このFragmentで開いているデータについての情報
      */
-    private int fileNum=0;
-    private int diaNumber=0;
-    private Handler handler = new Handler(); // (1)
+    protected int fileNum=0;
+    protected int diaNumber=0;
+    protected Handler handler = new Handler(); // (1)
     private boolean autoScroll=false;
 
 
@@ -127,14 +127,9 @@ public class DiagramFragment extends AOdiaFragment {
                 }
                 @Override
                 public void onLongPress(MotionEvent motionEvent) {
+                    longPress(motionEvent);
 
-                    //長押ししたときはDiagramViewのfocusTrainを指定する
-                    int x=(int)motionEvent.getX();
-                    int y=(int)motionEvent.getY();
 
-                    if(x>stationView.getWidth()&&y>timeView.getHeight()){
-                        diagramView.showDetail((int )motionEvent.getX()+(int)scrollX-stationView.getWidth(),(int )motionEvent.getY()+(int)scrollY-timeView.getHeight());
-                    }
                 }
 
                 @Override
@@ -541,7 +536,12 @@ public class DiagramFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName() {
-        return "ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
+        try {
+            return "ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
+        }catch(Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
     @Override
     public String fragmentHash(){
@@ -551,6 +551,16 @@ public class DiagramFragment extends AOdiaFragment {
             Toast.makeText(getActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
             return "";
         }
+    }
+    protected void longPress(MotionEvent event){
+        //長押ししたときはDiagramViewのfocusTrainを指定する
+        int x=(int)event.getX();
+        int y=(int)event.getY();
+
+        if(x>stationView.getWidth()&&y>timeView.getHeight()){
+            diagramView.showDetail((int )event.getX()+(int)scrollX-stationView.getWidth(),(int )event.getY()+(int)scrollY-timeView.getHeight());
+        }
+
     }
 
 }

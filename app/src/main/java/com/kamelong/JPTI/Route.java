@@ -82,7 +82,7 @@ public class Route {
     protected static final String TRIP="trip";
 
 
-    private Route(JPTI jpti){
+    public Route(JPTI jpti){
         this.jpti=jpti;
     }
     public Route(JPTI jpti,JSONObject json){
@@ -236,7 +236,16 @@ public class Route {
         }
         return stationList.size()>0;
     }
+    public JPTI getJpti(){
+        return jpti;
+    }
 
+    public void addRouteStation(RouteStation station){
+        stationList.add(station);
+    }
+    public String getName(){
+        return name;
+    }
 
 
 

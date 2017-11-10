@@ -43,6 +43,7 @@ public class AOdiaStation{
     private JPTI jpti=null;
 
     ArrayList<RouteStation>stationList=new ArrayList<>();
+    ArrayList<Boolean>borderStationList=new ArrayList<>();
     ArrayList<RouteStation>borderStation=new ArrayList<>();
     SparseArray<Route> routeMap=new SparseArray<>();
     boolean connect[][];
@@ -65,10 +66,15 @@ public class AOdiaStation{
             for(RouteStation station:route.getStationList(0)){
                 stationList.add(station);
                 routeMap.put(stationList.size()-1,route);
+                borderStationList.add(false);
+
             }
             borderStation.add(stationList.get(stationList.size()-1));
+            borderStationList.set(borderStationList.size()-1,true);
+
         }
         borderStation.remove(borderStation.size()-1);
+        borderStationList.set(borderStationList.size()-1,false);
 
         connect=new boolean[service.getRouteList(0).size()][service.getRouteList(0).size()];
         for(int x=0;x<service.getRouteList(0).size();x++){
@@ -110,7 +116,7 @@ public class AOdiaStation{
         if(index>=stationList.size()||index<0){
             return 0;
         }
-        if(borderStation.contains(stationList.get(index))){
+        if(borderStationList.get(index)){
             if(stationList.get(index).getName().equals(stationList.get(index+1).getName())){
                 return 2;
             }else{

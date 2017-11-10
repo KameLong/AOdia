@@ -22,6 +22,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kamelong.GTFS.GTFS;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
@@ -192,14 +193,13 @@ public class FileSelectFragment extends AOdiaFragment {
                     }
                 });
             } else if (file.exists()) {
-                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")) {
+                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")||(file.getPath().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),file)).isGTFS())) {
                     try{
                         ((AOdiaActivity)getActivity()).onFileSelect(file);
                     }catch (Exception e){
                         System.out.println("AOdia専用の処理です");
                         e.printStackTrace();
                     }
-
                 } else {
                     Toast.makeText(getActivity(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
                 }
@@ -366,7 +366,7 @@ public class FileSelectFragment extends AOdiaFragment {
         private int fileValue(File a){
             if(a.isDirectory()){
                 return 10000;
-            }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")){
+            }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")||(a.getPath().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),a)).isGTFS())){
                 DBHelper db=null;
                 try {
                     db = new DBHelper(getActivity());
@@ -442,7 +442,8 @@ public class FileSelectFragment extends AOdiaFragment {
             }
             else if(fileList.get(position).getName().endsWith(".oud")
                     ||fileList.get(position).getName().endsWith(".oud2")
-                    ||fileList.get(position).getName().endsWith(".jpti"))
+                    ||fileList.get(position).getName().endsWith(".jpti")
+                    ||(fileList.get(position).getName().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),fileList.get(position))).isGTFS()))
             {
                 ImageView fileIcon=convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.dia_icon);

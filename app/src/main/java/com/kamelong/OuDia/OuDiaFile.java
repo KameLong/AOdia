@@ -312,6 +312,34 @@ public class OuDiaFile {
                         if (line.split("=", -1)[0].equals("Kyoukaisen")) {
                             mStation.setBorder(Integer.valueOf(line.split("=", -1)[1]));
                         }
+                        if (line.split("=", -1)[0].equals("DownMain")) {
+                            mStation.downMain=Integer.valueOf(line.split("=", -1)[1])-1;
+                        }
+                        if (line.split("=", -1)[0].equals("UpMain")) {
+                            mStation.upMain=Integer.valueOf(line.split("=", -1)[1])-1;
+                        }
+                        if (line.equals("EkiTrack2Cont.")) {
+                            while (!line.equals(".")){
+                                if (line.equals("EkiTrack2.")) {
+                                    while (!line.equals(".")) {
+                                        if (line.split("=", -1)[0].equals("TrackName")) {
+                                            mStation.trackName.add(line.split("=", -1)[1]);
+                                        }
+                                        if (line.split("=", -1)[0].equals("TrackRyakusyou")) {
+                                            mStation.TrackRyakusyou.add(line.split("=", -1)[1]);
+                                        }
+
+                                        line = br.readLine();
+                                    }
+                                }
+                                line = br.readLine();
+                            }
+
+                        }
+                        if (line.split("=", -1)[0].equals("Kyoukaisen")) {
+                            mStation.setBorder(Integer.valueOf(line.split("=", -1)[1]));
+                        }
+
                         line = br.readLine();
                     }
                     station.add(mStation);
@@ -753,7 +781,23 @@ public class OuDiaFile {
 
     public ArrayList<Integer> getBorders() {
         ArrayList<Integer> borderStation = new ArrayList<>();
+        ArrayList<String> routeStationNameList=new ArrayList<>();
         for (int i = 0; i < getStationNum(); i++) {
+            if(routeStationNameList.contains(getStation(i).getName())){
+                for(int j=i-1;j>=0;j--){
+                    if(borderStation.contains(j)||j==0){
+                        borderStation.add(i-1);
+                        routeStationNameList=new ArrayList<>();
+                        break;
+                    }
+                    if(getStation(j).getBigStation()){
+                        borderStation.add(j);
+                        routeStationNameList=new ArrayList<>();
+                        break;
+                    }
+                }
+            }
+            routeStationNameList.add(getStation(i).getName());
             if (getStation(i).border()) {
                 borderStation.add(i);
                 String borderName = getStation(i).getName();

@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -25,13 +24,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.kamelong.GTFS.GTFS;
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.detabase.DBHelper;
+import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.diagram.DiagramFragment;
+import com.kamelong.aodia.diagram.TrainSelectDiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
-import com.kamelong.aodia.AOdiaIO.FileSelectionDialog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.operation.OperationFragment;
 import com.kamelong.aodia.stationInfo.StationInfoFragment;
@@ -77,8 +78,7 @@ AOdia is free software: you can redistribute it and/or modify
  * 表示する各Fragmentページはアクティビティーが管理する。
  * アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
  */
-public class AOdiaActivity extends AppCompatActivity
-        implements FileSelectionDialog.OnFileSelectListener {
+public class AOdiaActivity extends AppCompatActivity {
     private Payment payment;
     public Payment getPayment(){
         return payment;
@@ -308,9 +308,7 @@ public class AOdiaActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (1 == requestCode) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                FileSelectionDialog dlg = new FileSelectionDialog(this, this);
-                dlg.show(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOWNLOADS));
+
             } else {
                 // 拒否された
                 Toast.makeText(this, "エラー：ファイルへのアクセスを許可してください", Toast.LENGTH_SHORT).show();
@@ -395,6 +393,13 @@ public class AOdiaActivity extends AppCompatActivity
             }
             if(filePath.endsWith(".jpti")){
                 JPTI jpti=new JPTI(file);
+                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
+                diaFile.setFilePath(filePath);
+            }
+            if(filePath.endsWith(".zip")){
+                GTFS gtfs=new GTFS(this,file);
+                gtfs.load();
+                JPTI jpti=gtfs.makeJPTI();
                 diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
                 diaFile.setFilePath(filePath);
             }
@@ -785,6 +790,21 @@ public class AOdiaActivity extends AppCompatActivity
         }
 
     }
+    public void openSelectDiagram(int fileNum, int diaNum, TrainSelectListener listener,AOdiaOperation operation){
+        try {
+            TrainSelectDiagramFragment fragment=new TrainSelectDiagramFragment();
+            Bundle args=new Bundle();
+            args.putInt("fileNum",fileNum);
+            args.putInt("diaN", diaNum);
+            fragment.setArguments(args);
+            openFragment(fragment);
+            fragment.setOnTrainSelectListener(listener,operation);
+        } catch (Exception e) {
+            SdLog.log(e);
+        }
+
+    }
+
     public void saveFile(){
         if(!payment.buyCheck("001")){
             payment.buy("001");
