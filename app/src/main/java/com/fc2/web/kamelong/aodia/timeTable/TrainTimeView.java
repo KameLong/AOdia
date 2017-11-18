@@ -39,10 +39,12 @@ public class TrainTimeView extends KLView {
     }
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
+        long time=System.currentTimeMillis();
         drawTime(canvas);
         if(remarkFrag){
             drawRemark(canvas);
         }
+        System.out.println(System.currentTimeMillis()-time);
     }
     private void drawTime(Canvas canvas){
         try {
