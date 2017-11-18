@@ -1,6 +1,10 @@
 package com.kamelong.JPTI;
 
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.bluelinelabs.logansquare.annotation.JsonField;
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.OuDia.OuDiaStation;
 import com.kamelong.OuDia.OuDiaTrain;
@@ -35,15 +39,15 @@ public class JPTI {
     private static final String TRAINTYPE = "traintype";
 
 
-    ArrayList<Agency> agency = new ArrayList<>();
-    ArrayList<Station> stationList = new ArrayList<>();
-    ArrayList<Stop> stopList = new ArrayList<>();
-    ArrayList<Route> routeList = new ArrayList<>();
-    ArrayList<Service> serviceList = new ArrayList<>();
-    private ArrayList<Trip> tripList = new ArrayList<>();
-    ArrayList<Calendar> calendarList = new ArrayList<>();
-    private ArrayList<Operation> operationList = new ArrayList<>();
-    private ArrayList<TrainType> trainTypeList = new ArrayList<>();
+    public ArrayList<Agency> agency = new ArrayList<>();
+    public ArrayList<Station> stationList = new ArrayList<>();
+    public ArrayList<Stop> stopList = new ArrayList<>();
+    public ArrayList<Route> routeList = new ArrayList<>();
+    public ArrayList<Service> serviceList = new ArrayList<>();
+    public ArrayList<Trip> tripList = new ArrayList<>();
+    public ArrayList<Calendar> calendarList = new ArrayList<>();
+    public ArrayList<Operation> operationList = new ArrayList<>();
+    public ArrayList<TrainType> trainTypeList = new ArrayList<>();
 
 
     /**
@@ -195,7 +199,7 @@ public class JPTI {
      *
      * @param outFile 出力ファイル
      */
-    private void makeJSONdata(OutputStreamWriter outFile) {
+    private void makeJSONdata(FileOutputStream outFile) {
 
         //まず、不要データを削除
             /*
@@ -276,7 +280,7 @@ public class JPTI {
                 operationArray.put(operation.makeJSONObject());
             }
             outJSON.put(OPERATION, operationArray);
-            outFile.write(outJSON.toString());
+           // outFile.write(outJSON.toString());
             outFile.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -285,7 +289,7 @@ public class JPTI {
 
     public void makeJSONdata(File file) {
         try {
-            this.makeJSONdata(new OutputStreamWriter(new FileOutputStream(file.getPath()), "UTF-8"));
+            this.makeJSONdata(new FileOutputStream(file.getPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -561,7 +565,5 @@ public class JPTI {
         trainTypeList.add(type);
         return type;
     }
-
-
 
 }

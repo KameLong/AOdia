@@ -57,10 +57,6 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class TimeTableFragment extends AOdiaFragment implements TrainSelectListener{
 	/**
-	* このFragmentのcontainer
-	*/
-    private View fragmentContainer;
-	/**
 	* MainActivity内には多数のdiaFileが格納されている、どのdiaFileなのかのインデックス
 	*/
     private int fileNum=0;

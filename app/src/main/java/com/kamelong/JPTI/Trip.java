@@ -2,6 +2,7 @@ package com.kamelong.JPTI;
 
 
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.OuDia.OuDiaTrain;
 
@@ -40,6 +41,7 @@ public class Trip {
     /**
      * 種別
      */
+
     private TrainType traihType=null;
     /**
      * 所属列車
@@ -63,7 +65,7 @@ public class Trip {
      * 64bitLongにて記述
      * 4bit存在Frag(0:存在しない:1:存在する
      */
-    private Map<Station,Time> timeList=new HashMap<>();
+    public Map<Station,Time> timeList=new HashMap<>();
 
 
     private static final String ROUTE="route_id";

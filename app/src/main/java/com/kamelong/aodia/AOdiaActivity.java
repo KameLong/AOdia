@@ -24,6 +24,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kamelong.GTFS.GTFS;
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.OuDia.OuDiaFile;
@@ -52,6 +54,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+
 /*
  *     This file is part of AOdia.
 
@@ -79,6 +82,7 @@ AOdia is free software: you can redistribute it and/or modify
  * アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
  */
 public class AOdiaActivity extends AppCompatActivity {
+    private static ObjectMapper objectMapper = new ObjectMapper();
     private Payment payment;
     public Payment getPayment(){
         return payment;
@@ -817,7 +821,10 @@ public class AOdiaActivity extends AppCompatActivity {
             System.out.println(fragments.get(fragments.size() - 1));
             File outFile = new File(saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti");
             JPTI jpti = saveFile.getJPTI();
-            jpti.makeJSONdata(outFile);
+
+                objectMapper.writeValue(outFile,jpti);
+
+ //           jpti.makeJSONdata(outFile);
             Toast.makeText(this, saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti"+"\nにファイルを保存しました", Toast.LENGTH_LONG).show();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);

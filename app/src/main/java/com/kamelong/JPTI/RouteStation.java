@@ -1,5 +1,6 @@
 package com.kamelong.JPTI;
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.kamelong.OuDia.OuDiaStation;
 
 import org.json.JSONObject;
@@ -192,6 +193,13 @@ public class RouteStation{
     }
     public int getViewStyle(){
         return viewStyle;
+    }
+    public int getViewStyle(int direct){
+        if(direct==0){
+            return viewStyle%10;
+        }else{
+            return viewStyle/10;
+        }
     }
     public String getName(){
         return station.getName();

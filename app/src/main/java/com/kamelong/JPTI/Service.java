@@ -1,6 +1,7 @@
 package com.kamelong.JPTI;
 
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;

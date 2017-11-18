@@ -1,6 +1,8 @@
 package com.kamelong.JPTI;
 
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+
 import org.json.JSONObject;
 
 /**

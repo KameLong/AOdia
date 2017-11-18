@@ -2,21 +2,28 @@ package com.kamelong.JPTI;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kamelong.OuDia.OuDiaTrain;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Time {
+public class Time{
     //所属データ
     private JPTI jpti=null;
     private Trip trip=null;
     private Stop stop=null;
     //基本データ
-    private int pickupType=1;
-    private int dropoffType=1;
+    public int pickupType=1;
+    public int dropoffType=1;
     private int arrivalTime=-1;
+    public String getSarrivalTime(){
+        return timeInt2String(arrivalTime);
+    }
     private int departureTime=-1;
+    public String getSdepartureTime(){
+        return timeInt2String(departureTime);
+    }
 
     private static final String STOP_ID="stop_id";
     private static final String PICKUP="pickup_type";
@@ -132,24 +139,30 @@ protected  Time(){}
         }
         return arrivalTime;
     }
+    @JsonIgnore
     public Station getStation(){
         return stop.getStation();
     }
+    @JsonIgnore
     public boolean isStop(){
         return pickupType==0||dropoffType==0;
     }
+    @JsonIgnore
     public int getArrivalTime(){
         return arrivalTime;
     }
+    @JsonIgnore
     public int getDepartureTime(){
         return departureTime;
     }
+    @JsonIgnore
     public int getADTime(){
         if(arrivalTime<0){
             return departureTime;
         }
         return arrivalTime;
     }
+    @JsonIgnore
     public int getDATime(){
         if(departureTime<0){
             return arrivalTime;

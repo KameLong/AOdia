@@ -1,5 +1,7 @@
 package com.kamelong.JPTI;
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 
@@ -236,6 +238,7 @@ public class Route {
         }
         return stationList.size()>0;
     }
+    @JsonIgnore
     public JPTI getJpti(){
         return jpti;
     }

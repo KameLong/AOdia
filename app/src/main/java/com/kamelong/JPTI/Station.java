@@ -2,6 +2,7 @@ package com.kamelong.JPTI;
 
 
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.kamelong.OuDia.OuDiaStation;
 
 import org.json.JSONArray;

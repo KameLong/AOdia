@@ -34,13 +34,13 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class KLView extends View {
-    protected static Paint textPaint;//時刻表など普通の文字列用　色を変えてもよい
-    private static Paint grayPaint;//灰色の線をひくためのペイント
-    static Paint blackPaint;//駅名などの黒色指定部分　細い枠線に用いる
-    static Paint blackBPaint;//駅名などの黒色指定部分　細い枠線に用いる
-    static Paint blackBBPaint;//太い枠線部分に用いる
-    static Paint blackBig;//主要駅（２段使う）駅名の既出に使う
-    static int textSize;
+    public static Paint textPaint;//時刻表など普通の文字列用　色を変えてもよい
+    public static Paint grayPaint;//灰色の線をひくためのペイント
+    public static Paint blackPaint;//駅名などの黒色指定部分　細い枠線に用いる
+    public static Paint blackBPaint;//駅名などの黒色指定部分　細い枠線に用いる
+    public static Paint blackBBPaint;//太い枠線部分に用いる
+    public static Paint blackBig;//主要駅（２段使う）駅名の既出に使う
+    public static int textSize;
 
     /**
      * staticなコンストラクタ。

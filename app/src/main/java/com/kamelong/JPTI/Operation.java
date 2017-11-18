@@ -1,6 +1,7 @@
 package com.kamelong.JPTI;
 
 
+import com.bluelinelabs.logansquare.annotation.JsonObject;
 import com.kamelong.aodia.SdLog;
 
 import org.json.JSONArray;
