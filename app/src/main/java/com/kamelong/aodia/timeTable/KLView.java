@@ -82,9 +82,12 @@ public class KLView extends View {
     public static void setTextSize(int size) {
         textSize=size;
         textPaint.setTextSize(size);
+
         blackPaint.setTextSize(size);
         grayPaint.setTextSize(size);
+
         blackBig.setTextSize((int) (size * 1.2));
+        textPaint.setStrokeWidth(size / 12.0f);
         blackPaint.setStrokeWidth(size / 20.0f);
         blackBPaint.setStrokeWidth(size / 12.0f);
         blackBBPaint.setStrokeWidth(size / 6.0f);

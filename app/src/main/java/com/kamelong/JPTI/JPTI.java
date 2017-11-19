@@ -1,23 +1,21 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.LoganSquare;
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import android.os.Handler;
+
+import com.eclipsesource.json.*;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.OuDia.OuDiaStation;
 import com.kamelong.OuDia.OuDiaTrain;
 import com.kamelong.OuDia.OuDiaTrainType;
+import com.kamelong.aodia.AOdiaIO.ProgressDialog;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -62,17 +60,38 @@ public class JPTI {
      *
      * @param file
      */
-    public JPTI(File file) {
+    public JPTI(File file,Handler handler,final  ProgressDialog dialog) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            long time=System.currentTimeMillis();
 
+            System.out.println(System.currentTimeMillis()-time);
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            System.out.println(System.currentTimeMillis()-time);
             String str = br.readLine();
-            StringBuilder builder = new StringBuilder();
-            while (str != null) {
-                builder.append(str);
-                str = br.readLine();
-            }
-            loadJson(new JSONObject(builder.toString()));
+            System.out.println(System.currentTimeMillis()-time);
+
+            JsonObject json = Json.parse(new FileReader(file)).asObject();
+            System.out.println(System.currentTimeMillis()-time);
+
+            /*
+            System.out.println(System.currentTimeMillis()-time);
+            FileInputStream input = new FileInputStream(file);
+            System.out.println(System.currentTimeMillis()-time);
+            int size = input.available();
+            byte[] buffer = new byte[size];
+            System.out.println(System.currentTimeMillis()-time);
+            input.read(buffer);
+            input.close();
+            System.out.println(System.currentTimeMillis()-time);
+
+            // Json読み込み
+            String str = new String(buffer);
+            */
+            System.out.println(System.currentTimeMillis()-time);
+
+
+            loadJson(json,handler,dialog);
+            System.out.println(System.currentTimeMillis()-time);
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -82,8 +101,8 @@ public class JPTI {
     /**
      * JPTIのJSONオブジェクトから生成するコンストラクタ
      */
-    public JPTI(JSONObject json) {
-        loadJson(json);
+    public JPTI(JsonObject json,Handler handler,final  ProgressDialog dialog) {
+        loadJson(json,handler,dialog);
     }
 
     /**
@@ -121,15 +140,13 @@ public class JPTI {
     }
 
 
-    private void loadJson(JSONObject json) {
+    private void loadJson(JsonObject json,Handler handler,final  ProgressDialog dialog) {
         try {
-            JSONArray agencyArray = json.getJSONArray(AGENCY);
-            for (int i = 0; i < agencyArray.length(); i++) {
-                agency.add(newAgency(agencyArray.getJSONObject(i)));
+            JsonArray agencyArray = json.get(AGENCY).asArray();
+            for (int i = 0; i < agencyArray.size(); i++) {
+                agency.add(newAgency(agencyArray.get(i)));
             }
-        } catch (JSONException e) {
-        }
-
+        }catch()
         try{
             JSONArray stopArray=json.getJSONArray(STOP);
             for(int i=0;i<stopArray.length();i++){
@@ -169,8 +186,18 @@ public class JPTI {
         }
         try {
             JSONArray tripArray = json.getJSONArray(TRIP);
+            final int size=tripArray.length();
             for (int i = 0; i < tripArray.length(); i++) {
                 tripList.add(newTrip(tripArray.getJSONObject(i)));
+                if(i%30!=0)continue;
+                final int t=i;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.setProgress(t,size+30);
+                    }
+                });
+
             }
         } catch (JSONException e) {
         }
@@ -199,7 +226,7 @@ public class JPTI {
      *
      * @param outFile 出力ファイル
      */
-    private void makeJSONdata(FileOutputStream outFile) {
+    private void makeJSONdata(OutputStreamWriter outFile, Handler handler, final ProgressDialog dialog) {
 
         //まず、不要データを削除
             /*
@@ -255,11 +282,6 @@ public class JPTI {
                 stopArray.put(stop.makeJSONObject());
             }
             outJSON.put(STOP,stopArray);
-            JSONArray tripArray=new JSONArray();
-            for(Trip trip:tripList){
-                tripArray.put(trip.makeJSONObject());
-            }
-            outJSON.put(TRIP,tripArray);
             JSONArray calendarArray = new JSONArray();
             for (Calendar calendar : calendarList) {
                 calendarArray.put(calendar.makeJSONObject());
@@ -280,16 +302,33 @@ public class JPTI {
                 operationArray.put(operation.makeJSONObject());
             }
             outJSON.put(OPERATION, operationArray);
-           // outFile.write(outJSON.toString());
+            JSONArray tripArray=new JSONArray();
+            int i=0;
+            for(Trip trip:tripList){
+                i++;
+                tripArray.put(trip.makeJSONObject());
+                if(i%30!=0)continue;
+
+                final int t=i;
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.setProgress(t,getTripSize()+30);
+                    }
+                });
+            }
+            outJSON.put(TRIP,tripArray);
+
+            outFile.write(outJSON.toString());
             outFile.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void makeJSONdata(File file) {
+    public void makeJSONdata(File file, Handler handler, ProgressDialog dialog) {
         try {
-            this.makeJSONdata(new FileOutputStream(file.getPath()));
+            this.makeJSONdata(new OutputStreamWriter(new FileOutputStream(file.getPath())),handler,dialog);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -438,7 +477,11 @@ public class JPTI {
     }
 
     public TrainType getTrainType(int index) {
-        return trainTypeList.get(index);
+        try {
+            return trainTypeList.get(index);
+        }catch(ArrayIndexOutOfBoundsException e){
+            return trainTypeList.get(0);
+        }
     }
 
     public Operation getOpetarion(int index) {

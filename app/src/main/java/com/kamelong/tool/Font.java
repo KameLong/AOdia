@@ -30,6 +30,9 @@ public class Font {
 
     }
     public Font(JSONObject json){
+        if(json==null){
+            return;
+        }
         name=json.optString(NAME);
         height=json.optInt(HEIGHT,-1);
         bold=json.optInt(BOLD)==1;

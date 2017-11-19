@@ -24,9 +24,8 @@ public class TrainTimeView extends KLView {
     private boolean secondFrag=false;
     private boolean remarkFrag=false;
     private boolean showPassFrag=false;
-    private TrainSelectListener trainSelectListener=null;
-    private static final String NOSERVICE_STRING ="∙ ∙";
-//    private static final String NOSERVICE_STRING =": :";
+    //private static final String NOSERVICE_STRING ="∙ ∙";
+    //    private static final String NOSERVICE_STRING =":  :";
     private static final String NOVIA_STRING="| |"
             ;
     private static final String PASS_STRING="レ";
@@ -59,22 +58,19 @@ public class TrainTimeView extends KLView {
         if(remarkFrag){
             drawRemark(canvas);
         }
-        System.out.println(System.currentTimeMillis()-time);
     }
     private void drawTime(Canvas canvas){
         /**
-        int startLine2 = textSize;
-        for (int i = 0; i < station.getStationNum(); i++) {
-            drawText(canvas,"aaaa", 1, startLine2, textPaint, true);
-            startLine2+=textSize;
-
-        }
-        if(true){
-            return;
-        }
-**/
+         int startLine2 = textSize;
+         for (int i = 0; i < station.getStationNum(); i++) {
+         drawText(canvas,"aaaa", 1, startLine2, textPaint, true);
+         startLine2+=textSize;
+         }
+         if(true){
+         return;
+         }
+         **/
         try {
-            SdLog.log("drawTime");
             int startLine = textSize;
             textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
             if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric){
@@ -96,7 +92,7 @@ public class TrainTimeView extends KLView {
                     if (station.bigStation(stationNumber) && (train.getStopType(stationNumber) == 0&&(station.border(stationNumber-1+direct)==0)&&stationNumber!=0)) {
                         drawText(canvas, "- - - - - - -", 1, startLine, textPaint, true);
                     } else {
-                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        drawDepartString(canvas,startLine,textPaint,train,stationNumber,direct);
                     }
                     startLine = startLine + textSize;
                 }
@@ -105,28 +101,29 @@ public class TrainTimeView extends KLView {
                     int backwordStation = stationNumber + (direct * 2 - 1);
                     if (backwordStation < 0 || backwordStation >= station.getStationNum()) {
                         if(train.getTime(stationNumber).getArrivalTime()>=0){
-                            drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                            drawArriveString(canvas,startLine,textPaint,train,stationNumber,direct);
                         }else {
-                            drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                            drawNoService(canvas,startLine,textPaint);
                         }
                     }else {
                         switch (train.getStopType(backwordStation)) {
                             case 0:
                                 if(train.getTime(backwordStation)!=null&&train.getTime(stationNumber).getArrivalTime()>=0){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                    drawArriveString(canvas,startLine,textPaint,train,stationNumber,direct);
                                 }else {
-                                    drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                                    drawNoService(canvas,startLine,textPaint);
                                 }
                                 break;
                             case 3:
                                 if(train.getTime(backwordStation)!=null&&train.getTime(stationNumber).getArrivalTime()>=0){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                    drawArriveString(canvas,startLine,textPaint,train,stationNumber,direct);
                                 }else {
-                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                    drawNoVia(canvas,startLine,textPaint);
                                 }
                                 break;
                             default:
-                                drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                drawArriveString(canvas,startLine,textPaint,train,stationNumber,direct);
+
                                 break;
                         }
                     }
@@ -138,28 +135,28 @@ public class TrainTimeView extends KLView {
                     int forwordStation = stationNumber + (1 - direct * 2);
                     if (forwordStation < 0 || forwordStation >= station.getStationNum()) {
                         if(train.getTime(stationNumber).getDepartureTime()>=0){
-                            drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                            drawDepartString(canvas,startLine,textPaint,train,stationNumber,direct);
                         }else {
-                            drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                            drawNoService(canvas,startLine,textPaint);
                         }
                     }else {
                         switch (train.getStopType(forwordStation)) {
                             case 0:
                                 if(train.getTime(forwordStation)!=null&&train.getTime(stationNumber).getDepartureTime()>=0){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                    drawDepartString(canvas,startLine,textPaint,train,stationNumber,direct);
                                 }else {
-                                    drawText(canvas, NOSERVICE_STRING, 1, startLine, textPaint, true);
+                                    drawNoService(canvas,startLine,textPaint);
                                 }
                                 break;
                             case 3:
                                 if(train.getTime(forwordStation)!=null&&train.getTime(stationNumber).getDepartureTime()>=0){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                                    drawDepartString(canvas,startLine,textPaint,train,stationNumber,direct);
                                 }else {
-                                    drawText(canvas,NOVIA_STRING, 1, startLine, textPaint, true);
+                                    drawNoVia(canvas,startLine,textPaint);
                                 }
                                 break;
                             default:
-                                drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                drawDepartString(canvas,startLine,textPaint,train,stationNumber,direct);
                                 break;
                         }
                     }
@@ -168,7 +165,7 @@ public class TrainTimeView extends KLView {
                 if(border!=0||timeShow==2){
 
                     //着のみ
-                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
+                    drawArriveString(canvas,startLine,textPaint,train,stationNumber,direct);
                     startLine = startLine + textSize;
                     if(border==2){
                         canvas.drawLine(0, startLine  -(textSize*4 / 5), this.getWidth() - 1, startLine - (textSize*4/ 5), blackPaint);
@@ -180,12 +177,12 @@ public class TrainTimeView extends KLView {
                     }
 
                 }
+            }
+            canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
+        }catch(Exception e){
+            SdLog.log(e);
         }
-        canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
-    }catch(Exception e){
-        SdLog.log(e);
     }
-}
     private void drawRemark(Canvas  canvas){
         try {
             int startY = (int) (this.getHeight() - 10.5f * textSize);
@@ -310,7 +307,7 @@ public class TrainTimeView extends KLView {
         try {
             switch(train.getStopType(station)){
                 case AOdiaTrain.NOSERVICE:
-                    return NOSERVICE_STRING;
+                    return "::";
                 case AOdiaTrain.NOVIA:
                     return NOVIA_STRING;
                 case AOdiaTrain.PASS:
@@ -350,7 +347,7 @@ public class TrainTimeView extends KLView {
         try {
             switch(train.getStopType(station)){
                 case AOdiaTrain.NOSERVICE:
-                    return NOSERVICE_STRING;
+                    return "・・";
                 case AOdiaTrain.NOVIA:
                     return NOVIA_STRING;
                 case AOdiaTrain.PASS:
@@ -392,8 +389,118 @@ public class TrainTimeView extends KLView {
             canvas.drawText(text,x,y,paint);
         }
     }
-    public void setOnTrainSelectListener(TrainSelectListener l){
-        this.trainSelectListener=l;
+    private void drawDepartString(Canvas canvas,int y,Paint paint,AOdiaTrain train, int station, int direct){
+        Time time=train.getTime(station);
+        try {
+            switch(train.getStopType(station)){
+                case AOdiaTrain.NOSERVICE:
+                    drawNoService(canvas, y, paint);
+                    return;
+                case AOdiaTrain.NOVIA:
+                    drawNoVia(canvas, y, paint);
+                    return;
+                case AOdiaTrain.PASS:
+                    if(showPassFrag&&(time.getArrivalTime()>=0||time.getDepartureTime()>=0)) {
+                        textPaint.setColor(Color.GRAY);
+                    }else{
+                        drawPass(canvas, y, paint);
+                        return;
+                    }
+            }
+            if (time.getDepartureTime()<0) {
+                if (time.getArrivalTime()<0) {
+                    drawText(canvas,"○",1,y,paint,true);
+                }
+                drawArriveString(canvas, y, paint, train, station, direct);
+                return;
+            }
+            int second=time.getDepartureTime();
+            int ss=second%60;
+            second=(second-ss)/60;
+            int mm=second%60;
+            second=(second-mm)/60;
+            int hh=second%60;
+            hh=hh%24;
+            String result = "";
+            if(secondFrag) {
+                result =hh + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+            }else{
+                result =hh+ String.format("%02d", mm);
+            }
+            drawText(canvas,result,1,y,textPaint,true);
+            return;
+
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+        drawText(canvas,"○",1,y,paint,true);
+
+
+    }
+    private void drawArriveString(Canvas canvas,int y,Paint paint,AOdiaTrain train, int station, int direct){
+        Time time=train.getTime(station);
+        try {
+            switch(train.getStopType(station)){
+                case AOdiaTrain.NOSERVICE:
+                    drawNoService(canvas, y, paint);
+                    return;
+                case AOdiaTrain.NOVIA:
+                    drawNoVia(canvas, y, paint);
+                    return;
+                case AOdiaTrain.PASS:
+                    if(showPassFrag&&(time.getArrivalTime()>=0||time.getDepartureTime()>=0)) {
+                        textPaint.setColor(Color.GRAY);
+                    }else{
+                        drawPass(canvas, y, paint);
+                        return;
+                    }
+            }
+            if (time.getArrivalTime()<0) {
+                if (time.getDepartureTime()<0) {
+                    drawText(canvas,"○",1,y,paint,true);
+                    return;
+                }
+                drawDepartString(canvas, y, paint, train, station, direct);
+                return;
+            }
+            int second=time.getArrivalTime();
+            int ss=second%60;
+            second=(second-ss)/60;
+            int mm=second%60;
+            second=(second-mm)/60;
+            int hh=second%60;
+            hh=hh%24;
+            String result = "";
+            if(secondFrag) {
+                result =hh + String.format("%02d", mm)+"-"+String.format("%02d", ss);
+            }else{
+                result =hh+ String.format("%02d", mm);
+            }
+            drawText(canvas,result,1,y,textPaint,true);
+            return;
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+        drawText(canvas,"○",1,y,paint,true);
+
+    }
+
+    private void drawPass(Canvas canvas,int y,Paint paint){
+        canvas.drawLine(getWidth()/2,y+textSize*0.1f,getWidth()/2,y-textSize*0.8f,paint);
+        canvas.drawLine(getWidth()/2,y+textSize*0.1f,getWidth()/2+textSize*0.6f,y-textSize*0.5f,paint);
+
+    }
+    private void drawNoVia(Canvas canvas,int y,Paint paint){
+        canvas.drawLine(getWidth()*0.4f,y+textSize*0.1f,getWidth()*0.4f,y-textSize*0.8f,paint);
+        canvas.drawLine(getWidth()*0.6f,y+textSize*0.1f,getWidth()*0.6f,y-textSize*0.8f,paint);
+
+    }
+
+    private void drawNoService(Canvas canvas,int y,Paint paint){
+        float dotSize=textSize*0.1f;
+        canvas.drawOval(getWidth()*0.4f-dotSize,y-textSize*0.35f-dotSize,getWidth()*0.4f+dotSize,y-textSize*0.35f+dotSize,paint);
+        canvas.drawOval(getWidth()*0.6f-dotSize,y-textSize*0.35f-dotSize,getWidth()*0.6f+dotSize,y-textSize*0.35f+dotSize,paint);
+
     }
 
 }

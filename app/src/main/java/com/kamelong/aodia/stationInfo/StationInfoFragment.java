@@ -340,13 +340,18 @@ public class StationInfoFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-        String directS="";
-        if(direct==0){
-            directS="下り";
-        }else{
-            directS="上り";
+        try {
+            String directS = "";
+            if (direct == 0) {
+                directS = "下り";
+            } else {
+                directS = "上り";
+            }
+            return "駅時刻表　" + diaFile.getStation().getName(station) + "　" + directS + "\n" + diaFile.getLineName();
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        return "駅時刻表　"+diaFile.getStation().getName(station)+"　"+directS+"\n"+diaFile.getLineName();
+        return "";
     }
     @Override
     public String fragmentHash(){

@@ -76,7 +76,7 @@ public class Train {
                         useStation++;
                     }
                 }
-                if(useStation>1){
+                if(useStation>0){
                     Trip trip=jpti.addNewTrip(jpti.getRoute(routeID),calendar,oudiaFile,train,startStation,border,blockID);
                     tripList.add(trip);
 

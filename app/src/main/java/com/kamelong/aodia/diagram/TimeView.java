@@ -7,6 +7,8 @@ import android.graphics.Color;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.KLView;
 
+import java.util.ArrayList;
+
 /**
  * Created by kame on 2016/12/01.
  */
@@ -47,7 +49,6 @@ public class TimeView extends KLView {
         super(context);
         setting=s;
         diaFile=d;
-        diagramStartTime=diaFile.getService().getDiagramStartTime();
     }
     @Override
     public void onDraw(Canvas canvas){

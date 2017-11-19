@@ -91,11 +91,11 @@ public class Service {
             for(int i=0;i<timeTableFontArray.length();i++){
                 timeTableFont.add(new Font(timeTableFontArray.getJSONObject(i)));
             }
-            timeTableVFont=new Font(json.getJSONObject(TIMETABLE_VFONT));
-            diaStationFont=new Font(json.getJSONObject(DIA_STATION_FONT));
-            diaTimeFont=new Font(json.getJSONObject(DIA_TIME_FONT));
-            diaTrainFont=new Font(json.getJSONObject(DIA_TRAIN_FONT));
-            commentFont=new Font(json.getJSONObject(COMMENT_FONT));
+            timeTableVFont=new Font(json.optJSONObject(TIMETABLE_VFONT));
+            diaStationFont=new Font(json.optJSONObject(DIA_STATION_FONT));
+            diaTimeFont=new Font(json.optJSONObject(DIA_TIME_FONT));
+            diaTrainFont=new Font(json.optJSONObject(DIA_TRAIN_FONT));
+            commentFont=new Font(json.optJSONObject(COMMENT_FONT));
 
             JSONArray trainArray=json.getJSONArray(TRAIN);
             for(int i=0;i<trainArray.length();i++){

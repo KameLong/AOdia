@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewCompat;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.OverScroller;
 import android.widget.Toast;
 
 import com.kamelong.aodia.AOdiaFragment;
@@ -76,18 +78,21 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 	*フリングが行われているかのフラグ
 	*/
     private boolean fling = false;
+    private OverScroller mScroller;
 
     private Handler handler = new Handler();
 
 
+    /*
     LinearLayout trainTimeLinear ;
     FrameLayout trainTimeFrame ;
     LinearLayout trainNameLinear ;
     LinearLayout stationNameLinear ;
-
+*/
 
     public TimeTableFragment() {
         super();
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -100,6 +105,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         }catch(Exception e){
             SdLog.log(e);
         }
+        mScroller = new OverScroller(getActivity());
 		//Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.time_table, container, false);
 		//このFragment上でのタッチジェスチャーの管理
@@ -156,10 +162,11 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+
                                 while (fling) {
                                     try {
+                                        Thread.sleep(16);
                                         TimeTableFragment.this.scrollBy((int)(flingV*16/1000f), 0);
-                                            Thread.sleep(16);
                                     } catch (Exception e) {
                                         fling=false;
                                         SdLog.log(e);
@@ -189,11 +196,12 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         // Set the gesture detector as the double tap
         // listener.
         init();
+        /*
         trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
         trainTimeFrame = (FrameLayout) findViewById(R.id.trainTimeFrame);
         trainNameLinear = (LinearLayout) findViewById(R.id.trainNameLinear);
         stationNameLinear = (LinearLayout) findViewById(R.id.stationNameLinear);
-
+*/
 
     }
 
@@ -244,7 +252,6 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
             TrainTimeView[] trainTimeViews = new TrainTimeView[timeTable.getTrainNum()];
             for (int i = 0; i < trainNameViews.length; i++) {
                 trainTimeViews[i] = new TrainTimeView(getActivity(),this, diaFile, timeTable.getTrain(i), direct);
-                trainTimeViews[i].setOnTrainSelectListener(this);
                 trainTimeLinear.addView(trainTimeViews[i]);
             }
         }catch(Exception e){
@@ -252,12 +259,15 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         }
     }
     private void scrollBy(int dx, int dy) {
+        final LinearLayout trainTimeLinear = (LinearLayout)findViewById(R.id.trainTimeLinear);
         int scrollX = trainTimeLinear.getScrollX() + dx;
         int scrollY = trainTimeLinear.getScrollY() + dy;
         scrollTo(scrollX,scrollY);
     }
     private void scrollTo(int scrollX, int scrollY) {
         try {
+            final LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
+            FrameLayout trainTimeFrame = (FrameLayout) findViewById(R.id.trainTimeFrame);
             if (scrollX > 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize() * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth()) {
                 scrollX = 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize()  * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth();
             }
@@ -270,6 +280,8 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
             if (scrollY < 0) {
                 scrollY = 0;
             }
+            final LinearLayout trainNameLinear = (LinearLayout) findViewById(R.id.trainNameLinear);
+            final LinearLayout stationNameLinear = (LinearLayout) findViewById(R.id.stationNameLinear);
             final int mscrollX=scrollX;
             final int mscrollY=scrollY;
             handler.post(new Runnable() {

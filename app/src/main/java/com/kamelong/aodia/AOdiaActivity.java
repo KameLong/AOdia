@@ -12,6 +12,7 @@ import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -30,6 +31,7 @@ import com.kamelong.GTFS.GTFS;
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
+import com.kamelong.aodia.AOdiaIO.ProgressDialog;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.diagram.DiagramFragment;
@@ -385,40 +387,66 @@ public class AOdiaActivity extends AppCompatActivity {
      *
      * @param file
      */
-    public void onFileSelect(File file) {
-        AOdiaDiaFile diaFile=null;
-        String filePath=file.getPath();
-        try {
-            if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
-                OuDiaFile oudia=new OuDiaFile(file);
-                JPTI jpti=new JPTI(oudia);
-                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
-                diaFile.setFilePath(filePath);
+    public void onFileSelect(final File file) {
+        final ProgressDialog dialog=new ProgressDialog();
+        dialog.show(getFragmentManager(), "test");
+        final Handler handler=new Handler();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AOdiaDiaFile diaFile=null;
+                final String filePath=file.getPath();
+                try {
+                    if(filePath.endsWith(".oud")||filePath.endsWith(".oud2")){
+                        OuDiaFile oudia=new OuDiaFile(file);
+                        JPTI jpti=new JPTI(oudia);
+                        diaFile=new AOdiaDiaFile(AOdiaActivity.this,jpti,jpti.getService(0),filePath);
+                        diaFile.setFilePath(filePath);
+                    }
+                    if(filePath.endsWith(".jpti")){
+                        JPTI jpti=new JPTI(file,handler,dialog);
+                        dialog.dismiss();
+                        diaFile=new AOdiaDiaFile(AOdiaActivity.this,jpti,jpti.getService(0),filePath);
+                        diaFile.setFilePath(filePath);
+                    }
+                    if(filePath.endsWith(".zip")){
+                        GTFS gtfs=new GTFS(AOdiaActivity.this,file);
+                        gtfs.load();
+                        JPTI jpti=gtfs.makeJPTI();
+                        diaFile=new AOdiaDiaFile(AOdiaActivity.this,jpti,jpti.getService(0),filePath);
+                        diaFile.setFilePath(filePath);
+                    }
+                    dialog.dismiss();
+                    if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
+                    final AOdiaDiaFile finalDiaFile=diaFile;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            DBHelper db=new DBHelper(AOdiaActivity.this);
+                            db.addHistory(filePath);
+                            db.addNewFileToLineData(filePath,finalDiaFile.getDiaNum());
+                            diaFiles.add(finalDiaFile);
+                            diaFilesIndex.add(0, diaFiles.size() - 1);
+                            menuFragment.createMenu();
+                            openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
+
+                        }
+                    });
+                } catch (final Exception e) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            SdLog.log(e);
+
+                            Toast.makeText(AOdiaActivity.this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
             }
-            if(filePath.endsWith(".jpti")){
-                JPTI jpti=new JPTI(file);
-                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
-                diaFile.setFilePath(filePath);
-            }
-            if(filePath.endsWith(".zip")){
-                GTFS gtfs=new GTFS(this,file);
-                gtfs.load();
-                JPTI jpti=gtfs.makeJPTI();
-                diaFile=new AOdiaDiaFile(this,jpti,jpti.getService(0),filePath);
-                diaFile.setFilePath(filePath);
-            }
-            if(diaFile==null)return;//diaFileが生成されなければ処理を終了する。
-            DBHelper db=new DBHelper(this);
-            db.addHistory(filePath);
-            db.addNewFileToLineData(filePath,diaFile.getDiaNum());
-            diaFiles.add(diaFile);
-            diaFilesIndex.add(0, diaFiles.size() - 1);
-            menuFragment.createMenu();
-            openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
-        } catch (Exception e) {
-            SdLog.log(e);
-            Toast.makeText(this, "ファイルの読み込みに失敗しました", Toast.LENGTH_LONG).show();
-        }
+        }).start();
+
     }
     /**
      * 複数ファイルが選択されたときの処理
@@ -816,16 +844,25 @@ public class AOdiaActivity extends AppCompatActivity {
         }
 
         try {
-            AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
+            final AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
+            final Handler handler=new Handler();
             saveFile.saveAOdia();
             System.out.println(fragments.get(fragments.size() - 1));
-            File outFile = new File(saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti");
-            JPTI jpti = saveFile.getJPTI();
-
-                objectMapper.writeValue(outFile,jpti);
-
- //           jpti.makeJSONdata(outFile);
-            Toast.makeText(this, saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti"+"\nにファイルを保存しました", Toast.LENGTH_LONG).show();
+            final File outFile = new File(saveFile.getFilePath().substring(0, saveFile.getFilePath().lastIndexOf(".")) + ".jpti");
+            final ProgressDialog dialog=new ProgressDialog();
+            dialog.show(getFragmentManager(), "test");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    saveFile.getJPTI().makeJSONdata(outFile,handler,dialog);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            }).start();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
 
