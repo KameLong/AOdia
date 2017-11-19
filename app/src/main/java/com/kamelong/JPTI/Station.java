@@ -2,7 +2,8 @@ package com.kamelong.JPTI;
 
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaStation;
 
 import org.json.JSONArray;
@@ -98,25 +99,21 @@ public class Station {
         wheelcharBoarding=oldStation.wheelcharBoarding;
         stops=oldStation.stops;
     }
-    public Station(JPTI jpti, JSONObject json){
+    public Station(JPTI jpti, JsonObject json){
         this(jpti);
         try{
-            try {
-                name =json.getString(NAME);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            subName=json.optString(SUBNAME);
-            type=json.optInt(TYPE);
-            description=json.optString(description);
-            lat=json.optString(LAT);
-            lon=json.optString(LON);
-            url=json.optString(URL);
-            wheelcharBoarding=json.optString(WHEELCHAIR);
-            JSONArray stopArray=json.getJSONArray(STOP);
-            for(int i=0;i<stopArray.length();i++){
-                stops.add(jpti.getStop(stopArray.optInt(i,0)));
-                jpti.getStop(stopArray.optInt(i,0)).setStation(this);
+                name =json.getString(NAME,"駅名不明");
+            subName=json.getString(SUBNAME,"");
+            type=json.getInt(TYPE,0);
+                description = json.getString(DESCRIPTION, "");
+            lat=json.getString(LAT,"");
+            lon=json.getString(LON,"");
+            url=json.getString(URL,"");
+            wheelcharBoarding=json.getString(WHEELCHAIR,"");
+            JsonArray stopArray=json.get(STOP).asArray();
+            for(int i=0;i<stopArray.size();i++){
+                stops.add(jpti.getStop(stopArray.get(i).asInt()));
+                jpti.getStop(stopArray.get(i).asInt()).setStation(this);
             }
         }catch (Exception e){
             e.printStackTrace();

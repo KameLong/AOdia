@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.aodia.SdLog;
 
 import org.json.JSONArray;
@@ -35,17 +36,17 @@ public class Operation {
 
     }
 
-    public Operation(JPTI jpti, JSONObject json) {
+    public Operation(JPTI jpti, JsonObject json) {
         this.jpti = jpti;
-        operationName = json.optString(OPERATION_NAME, "");
-        operationNumber = json.optInt(OPERATION_NO, -1);
-        calenderID = json.optInt(CALENDER_ID, -1);
+        operationName = json.getString(OPERATION_NAME, "");
+        operationNumber = json.getInt(OPERATION_NO, -1);
+        calenderID = json.getInt(CALENDER_ID, -1);
 
-        JSONArray array = json.optJSONArray(TRIP_LIST);
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject obj = array.optJSONObject(i);
+        JsonArray array = json.get(TRIP_LIST).asArray();
+        for (int i = 0; i < array.size(); i++) {
+            JsonObject obj = array.get(i).asObject();
             try {
-                trip.add(jpti.getTrip(obj.optInt(TRIP_ID, -1)));
+                trip.add(jpti.getTrip(obj.getInt(TRIP_ID, -1)));
             }catch (Exception e){
                 SdLog.log(e);
             }

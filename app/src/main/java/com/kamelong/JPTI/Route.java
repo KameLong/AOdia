@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 
@@ -87,37 +88,22 @@ public class Route {
     public Route(JPTI jpti){
         this.jpti=jpti;
     }
-    public Route(JPTI jpti,JSONObject json){
+    public Route(JPTI jpti,JsonObject json){
         this(jpti);
         try{
-            try{
-                agencyID=json.getInt(AGENCY_ID);
-            }catch (Exception e){
-                System.out.println("Routeに必須項目agency_IDが登録されていません");
-                e.printStackTrace();
-            }
-            number=json.optInt(NO,-1);
-            name=json.optString(NAME,"");
-            nickName=json.optString(NICKNAME,"");
-            description=json.optString(DESCRIPTION,"");
-            type=json.optInt(TYPE,2);
-            url=json.optString(URL,"");
-            try{
-                color=new Color(json.getString(COLOR));
-            }catch(Exception e){
-            }
-            try{
-                textColor=new Color(json.getString(TEXT_COLOR));
-            }catch(Exception e){
-            }
-            try{
-                JSONArray stationArray=json.getJSONArray(STATION);
-                for(int i=0;i<stationArray.length();i++){
-                    stationList.add(newRouteStation(stationArray.getJSONObject(i)));
+            agencyID=json.getInt(AGENCY_ID,-1);
+            number=json.getInt(NO,-1);
+            name=json.getString(NAME,"");
+            nickName=json.getString(NICKNAME,"");
+            description=json.getString(DESCRIPTION,"");
+            type=json.getInt(TYPE,2);
+            url=json.getString(URL,"");
+                color=new Color(json.getString(COLOR,"#000000"));
+                textColor=new Color(json.getString(TEXT_COLOR,""));
+                JsonArray stationArray=json.get(STATION).asArray();
+                for(int i=0;i<stationArray.size();i++){
+                    stationList.add(newRouteStation(stationArray.get(i).asObject()));
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
         }catch (Exception e){
 
@@ -125,7 +111,7 @@ public class Route {
     }
 
 
-    private RouteStation newRouteStation(JSONObject json){
+    private RouteStation newRouteStation(JsonObject json){
         return new RouteStation(jpti,this,json);
     }
     /**
@@ -238,7 +224,6 @@ public class Route {
         }
         return stationList.size()>0;
     }
-    @JsonIgnore
     public JPTI getJpti(){
         return jpti;
     }

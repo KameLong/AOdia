@@ -1,6 +1,8 @@
 package com.kamelong.JPTI;
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import android.app.IntentService;
+
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaStation;
 
 import org.json.JSONObject;
@@ -85,21 +87,18 @@ public class RouteStation{
         this.route=route;
         this.station=station;
     }
-    public RouteStation(JPTI jpti, Route route, JSONObject json){
+    public RouteStation(JPTI jpti, Route route, JsonObject json){
         this(jpti,route);
         try {
-            try {
-                station = jpti.getStation(json.getInt(STATION_ID));
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            km=json.optDouble(KM,-1);
-            numbering=json.optInt(NUMBERING,-1);
-            bigStation=json.optInt(TYPE)==1;
-            viewStyle=json.optInt(VIEWSTYLE);
-            border=json.optInt(BORDER)==1;
+                station = jpti.getStation(json.getInt(STATION_ID,0));
+            km=json.getDouble(KM,-1);
+            numbering=json.getInt(NUMBERING,-1);
+            bigStation=json.getInt(TYPE,0)==1;
+            viewStyle= Integer.parseInt(json.getString(VIEWSTYLE,"0"));
+            border=json.getInt(BORDER,0)==1;
 
         }catch(Exception e){
+            e.printStackTrace();
 
         }
     }

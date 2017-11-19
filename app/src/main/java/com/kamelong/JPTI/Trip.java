@@ -2,7 +2,8 @@ package com.kamelong.JPTI;
 
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.OuDia.OuDiaTrain;
 
@@ -82,32 +83,20 @@ public class Trip {
         this.jpti=jpti;
         this.route=route;
     }
-    public Trip(JPTI jpti, JSONObject json){
+    public Trip(JPTI jpti, JsonObject json){
         this.jpti=jpti;
         try{
-            route=jpti.getRoute(json.optInt(ROUTE,0));
-            try{
-                this.traihType=jpti.getTrainType(json.getInt(CLASS));
-            }catch(JSONException e){
-                e.printStackTrace();
-            }
-            try{
-                blockID=json.getInt(BLOCK);
-            }catch(JSONException e){
-                e.printStackTrace();
-            }
-            try{
-                calender=jpti.calendarList.get(json.getInt(CALENDER));
-            }catch(JSONException e){
-                e.printStackTrace();
-            }
-            number=json.optString(NUMBER,"");
-            name=json.optString(NAME,"");
-            direction=json.optInt(DIRECTION,0);
-            extraCalendarID=json.optInt(EXTRA_CALENDER,-1);
-            JSONArray timeArray=json.getJSONArray(TIME);
-            for(int i=0;i<timeArray.length();i++){
-                Time time=newTime(timeArray.getJSONObject(i));
+            route=jpti.getRoute(json.getInt(ROUTE,0));
+                this.traihType=jpti.getTrainType(json.getInt(CLASS,0));
+                blockID=json.getInt(BLOCK,0);
+                calender=jpti.calendarList.get(json.getInt(CALENDER,0));
+            number=json.getString(NUMBER,"");
+            name=json.getString(NAME,"");
+            direction=json.getInt(DIRECTION,0);
+            extraCalendarID=json.getInt(EXTRA_CALENDER,-1);
+            JsonArray timeArray=json.get(TIME).asArray();
+            for(int i=0;i<timeArray.size();i++){
+                Time time=newTime(timeArray.get(i).asObject());
                 timeList.put(time.getStation(),time);
             }
 
@@ -207,7 +196,7 @@ public class Trip {
 
 
     }
-    private Time newTime(JSONObject json){
+    private Time newTime(JsonObject json){
         return new Time(jpti,this,json);
     };
     public TrainType getTrainType(){

@@ -2,7 +2,7 @@ package com.kamelong.JPTI;
 
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaTrain;
 
 import org.json.JSONException;
@@ -52,19 +52,15 @@ protected  Time(){}
         this.jpti=jpti;
         this.stop=stop;
     }
-    public Time(JPTI jpti, Trip trip, JSONObject json){
+    public Time(JPTI jpti, Trip trip, JsonObject json){
         this.trip=trip;
         this.jpti=jpti;
         try {
-            try {
-                stop= jpti.stopList.get(json.getInt(STOP_ID));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            pickupType = json.optInt(PICKUP);
-            dropoffType = json.optInt(DROPOFF);
-            arrivalTime = timeString2Int(json.optString(ARRIVAL_TIME));
-            departureTime = timeString2Int(json.optString(DEPARTURE_TIME));
+                stop= jpti.stopList.get(json.getInt(STOP_ID,0));
+            pickupType = json.getInt(PICKUP,1);
+            dropoffType = json.getInt(DROPOFF,1);
+            arrivalTime = timeString2Int(json.getString(ARRIVAL_TIME,null));
+            departureTime = timeString2Int(json.getString(DEPARTURE_TIME,null));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -139,30 +135,24 @@ protected  Time(){}
         }
         return arrivalTime;
     }
-    @JsonIgnore
     public Station getStation(){
         return stop.getStation();
     }
-    @JsonIgnore
     public boolean isStop(){
         return pickupType==0||dropoffType==0;
     }
-    @JsonIgnore
     public int getArrivalTime(){
         return arrivalTime;
     }
-    @JsonIgnore
     public int getDepartureTime(){
         return departureTime;
     }
-    @JsonIgnore
     public int getADTime(){
         if(arrivalTime<0){
             return departureTime;
         }
         return arrivalTime;
     }
-    @JsonIgnore
     public int getDATime(){
         if(departureTime<0){
             return arrivalTime;

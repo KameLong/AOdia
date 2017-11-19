@@ -1,7 +1,7 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaTrainType;
 import com.kamelong.tool.Color;
 
@@ -71,40 +71,40 @@ public class TrainType {
         diaColor=new Color();
     }
 
-    public TrainType(JPTI jpti, JSONObject json){
+    public TrainType(JPTI jpti, JsonObject json){
         this.jpti=jpti;
 
         try{
             try{
-                name=json.getString(NAME);
+                name=json.getString(NAME,"");
             }catch(Exception e){
                 e.printStackTrace();
             }
             try{
-                textColor = new Color(json.optString(TEXT_COLOR,"#000000"));
+                textColor = new Color(json.getString(TEXT_COLOR,"#000000"));
             }catch(Exception e){
                 e.printStackTrace();
             }
             try{
-                diaColor = new Color(json.getString(DIA_COLOR));
+                diaColor = new Color(json.getString(DIA_COLOR,null));
             }catch (Exception e){
                 diaColor=textColor;
             }
-            shortName=json.optString(SHORT_NAME);
+            shortName=json.getString(SHORT_NAME,"");
             try{
-                String color=json.optString(TEXT_COLOR,"#000000");
+                String color=json.getString(TEXT_COLOR,"#000000");
                 textColor = new Color(color);
             }catch(Exception e) {
                 e.printStackTrace();
             }
-            diaStyle=json.optInt(STYLE);
-            if(json.optInt(BOLD)==1){
+            diaStyle=json.getInt(STYLE,0);
+            if(json.getInt(BOLD,0)==1){
                 diaBold=true;
             }
-            if(json.optInt(SHOWSTOP)==1){
+            if(json.getInt(SHOWSTOP,0)==1){
                 showStop=true;
             }
-            font=json.optInt(FONT,-1);
+            font=json.getInt(FONT,-1);
 
 
         }catch(Exception e){

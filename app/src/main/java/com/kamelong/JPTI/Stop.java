@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import com.eclipsesource.json.JsonObject;
 
 import org.json.JSONObject;
 
@@ -51,15 +52,15 @@ public class Stop {
         this.jpti=jpti;
         this.station=station;
     }
-    public Stop(JPTI jpti, JSONObject json){
+    public Stop(JPTI jpti, JsonObject json){
         this.jpti=jpti;
         try{
-            name=json.optString(NAME);
-            description=json.optString(DESCRIPTION);
-            lat=json.optString(LAT);
-            lon=json.optString(LON);
-            zoneID=json.optInt(ZONE_ID,-1);
-            number=json.optInt(NUMBER);
+            name=json.getString(NAME,"");
+            description=json.getString(DESCRIPTION,"");
+            lat=json.getString(LAT,"");
+            lon=json.getString(LON,"");
+            zoneID=json.getInt(ZONE_ID,-1);
+            number=json.getInt(NUMBER,-1);
         }catch (Exception e){
             e.printStackTrace();
         }

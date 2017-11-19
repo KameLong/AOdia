@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.OuDia.OuDiaTrain;
 import com.kamelong.aodia.SdLog;
@@ -40,18 +41,18 @@ public class Train {
 
 
 
-    public Train(JPTI jpti, Service service, JSONObject json){
+    public Train(JPTI jpti, Service service, JsonObject json){
         this.jpti=jpti;
         this.service=service;
-        direct=json.optInt(DIRECT,0);
-        name=json.optString(NAME,"");
-        number=json.optString(NUMBER,"");
-        count=json.optString(COUNT,"");
-        text=json.optString(TEXT,"");
-        calendar=jpti.getCalendar(json.optInt(CALENDER,0));
-        JSONArray tripArray=json.optJSONArray(TRIP);
-        for(int i=0;i<tripArray.length();i++){
-            tripList.add(jpti.getTrip(tripArray.optInt(i,0)));
+        direct=json.getInt(DIRECT,0);
+        name=json.getString(NAME,"");
+        number=json.getString(NUMBER,"");
+        count=json.getString(COUNT,"");
+        text=json.getString(TEXT,"");
+        calendar=jpti.getCalendar(json.getInt(CALENDER,0));
+        JsonArray tripArray=json.get(TRIP).asArray();
+        for(int i=0;i<tripArray.size();i++){
+            tripList.add(jpti.getTrip(tripArray.get(i).asInt()));
         }
     }
     public Train(JPTI jpti, Service service, Calendar calendar, OuDiaFile oudiaFile, OuDiaTrain train, int blockID){

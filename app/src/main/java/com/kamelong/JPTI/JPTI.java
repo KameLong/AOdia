@@ -11,6 +11,9 @@ import com.kamelong.OuDia.OuDiaTrainType;
 import com.kamelong.aodia.AOdiaIO.ProgressDialog;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 /**
  * JPTI-jsonの1ファイルを扱うためのクラス
@@ -92,6 +96,7 @@ public class JPTI {
 
             loadJson(json,handler,dialog);
             System.out.println(System.currentTimeMillis()-time);
+
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -144,51 +149,53 @@ public class JPTI {
         try {
             JsonArray agencyArray = json.get(AGENCY).asArray();
             for (int i = 0; i < agencyArray.size(); i++) {
-                agency.add(newAgency(agencyArray.get(i)));
+                agency.add(newAgency(agencyArray.get(i).asObject()));
             }
-        }catch()
+        }catch(Exception e){
+
+        }
         try{
-            JSONArray stopArray=json.getJSONArray(STOP);
-            for(int i=0;i<stopArray.length();i++){
-                stopList.add(newStop(stopArray.getJSONObject(i)));
+            JsonArray stopArray=json.get(STOP).asArray();
+            for(int i=0;i<stopArray.size();i++){
+                stopList.add(newStop(stopArray.get(i).asObject()));
             }
         }catch (Exception e){
             e.printStackTrace();
         }
         try {
-            JSONArray stationArray = json.getJSONArray(STATION);
-            for (int i = 0; i < stationArray.length(); i++) {
-                stationList.add(newStation(stationArray.getJSONObject(i)));
+            JsonArray stationArray = json.get(STATION).asArray();
+            for (int i = 0; i < stationArray.size(); i++) {
+                stationList.add(newStation(stationArray.get(i).asObject()));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         try {
-            JSONArray routeArray = json.getJSONArray(ROUTE);
-            for (int i = 0; i < routeArray.length(); i++) {
-                routeList.add(newRoute(routeArray.getJSONObject(i)));
+            JsonArray routeArray = json.get(ROUTE).asArray();
+            for (int i = 0; i < routeArray.size(); i++) {
+                routeList.add(newRoute(routeArray.get(i).asObject()));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
 
         try {
-            JSONArray calendarArray = json.getJSONArray(CALENDAR);
-            for (int i = 0; i < calendarArray.length(); i++) {
-                calendarList.add(newCalendar(calendarArray.getJSONObject(i)));
+            JsonArray calendarArray = json.get(CALENDAR).asArray();
+            for (int i = 0; i < calendarArray.size(); i++) {
+                calendarList.add(newCalendar(calendarArray.get(i).asObject()));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         try {
-            JSONArray trainTypeArray = json.getJSONArray(TRAINTYPE);
-            for (int i = 0; i < trainTypeArray.length(); i++) {
-                trainTypeList.add(newTrainType(trainTypeArray.getJSONObject(i)));
+            JsonArray trainTypeArray = json.get(TRAINTYPE).asArray();
+            for (int i = 0; i < trainTypeArray.size(); i++) {
+                trainTypeList.add(newTrainType(trainTypeArray.get(i).asObject()));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         try {
-            JSONArray tripArray = json.getJSONArray(TRIP);
-            final int size=tripArray.length();
-            for (int i = 0; i < tripArray.length(); i++) {
-                tripList.add(newTrip(tripArray.getJSONObject(i)));
+            JsonArray tripArray = json.get(TRIP).asArray();
+            final int size=tripArray.size();
+            for (int i = 0; i < tripArray.size(); i++) {
+                tripList.add(newTrip(tripArray.get(i).asObject()));
                 if(i%30!=0)continue;
                 final int t=i;
                 handler.post(new Runnable() {
@@ -199,20 +206,20 @@ public class JPTI {
                 });
 
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
 
         try {
-            JSONArray serviceArray = json.getJSONArray(SERVICE);
-            for (int i = 0; i < serviceArray.length(); i++) {
-                serviceList.add(newService(serviceArray.getJSONObject(i)));
+            JsonArray serviceArray = json.get(SERVICE).asArray();
+            for (int i = 0; i < serviceArray.size(); i++) {
+                serviceList.add(newService(serviceArray.get(i).asObject()));
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
         }
         try {
-            JSONArray operation = json.getJSONArray(OPERATION);
-            for (int i = 0; i < operation.length(); i++) {
-                operationList.add(newOperation(operation.getJSONObject(i)));
+            JsonArray operation = json.get(OPERATION).asArray();
+            for (int i = 0; i < operation.size(); i++) {
+                operationList.add(newOperation(operation.get(i).asObject()));
             }
         } catch (Exception e) {
 
@@ -334,28 +341,28 @@ public class JPTI {
         }
     }
 
-    private Agency newAgency(JSONObject json) {
+    private Agency newAgency(JsonObject json) {
         return new Agency(this, json);
     }
     private Agency newAgency() {
         return new Agency(this);
     }
 
-    private Route newRoute(JSONObject json) {
+    private Route newRoute(JsonObject json) {
         return new Route(this, json);
     }
     protected Route newRoute(){
         return new Route(this);
     }
 
-    private Service newService(JSONObject json) {
+    private Service newService(JsonObject json) {
         return new Service(this, json);
     }
     private Service newService() {
         return new Service(this,routeList);
     }
 
-    private Station newStation(JSONObject json) {
+    private Station newStation(JsonObject json) {
         return new Station(this, json);
     }
     private Station newStation(OuDiaStation s) {
@@ -365,13 +372,13 @@ public class JPTI {
         return new Station(this);
     }
 
-    private Calendar newCalendar(JSONObject json) {
+    private Calendar newCalendar(JsonObject json) {
         return new Calendar(this, json);
     }
     protected Calendar newCalendar(){
         return new Calendar(this);
     }
-    protected TrainType newTrainType(JSONObject json){
+    protected TrainType newTrainType(JsonObject json){
         return new TrainType(this,json);
     }
     protected TrainType newTrainType(){
@@ -382,11 +389,11 @@ public class JPTI {
     }
 
 
-    private Operation newOperation(JSONObject json) {
+    private Operation newOperation(JsonObject json) {
         return new Operation(this, json);
     }
 
-    protected Trip newTrip(JSONObject json) {
+    protected Trip newTrip(JsonObject json) {
         return new Trip(this,  json);
     }
     protected Trip newTrip(Route route, Calendar calendar, OuDiaFile oudia, OuDiaTrain train, int startStation, int endStation, int blockID){
@@ -397,11 +404,11 @@ public class JPTI {
         return new Trip(this, route);
     }
 
-    protected Time newTime(Trip trip, JSONObject json) {
+    protected Time newTime(Trip trip, JsonObject json) {
         return new Time(this, trip, json);
     }
 
-    protected Stop newStop(JSONObject json) {
+    protected Stop newStop(JsonObject json) {
         return new Stop(this,json);
     }
     protected Stop newStop(Station station) {

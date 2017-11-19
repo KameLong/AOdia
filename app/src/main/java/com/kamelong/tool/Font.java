@@ -1,5 +1,7 @@
 package com.kamelong.tool;
 
+import com.eclipsesource.json.JsonObject;
+
 import org.json.JSONObject;
 
 public class Font {
@@ -37,6 +39,15 @@ public class Font {
         height=json.optInt(HEIGHT,-1);
         bold=json.optInt(BOLD)==1;
         itaric=json.optInt(ITARIC)==1;
+    }
+    public Font(JsonObject json){
+        if(json==null){
+            return;
+        }
+        name=json.getString(NAME,null);
+        height=json.getInt(HEIGHT,9);
+        bold=json.getInt(BOLD,0)==1;
+        itaric=json.getInt(ITARIC,0)==1;
     }
     private Font(String name, int height, boolean bold, boolean itaric){
         this.name=name;

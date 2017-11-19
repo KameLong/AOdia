@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+import com.eclipsesource.json.JsonArray;
+import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
@@ -68,38 +69,38 @@ public class Service {
     public Service(JPTI jpti){
         this.jpti=jpti;
     }
-    public Service(JPTI jpti, JSONObject json){
+    public Service(JPTI jpti, JsonObject json){
         this(jpti);
         try{
 
-            name=json.optString(NAME,"");
-            JSONArray routeArray=json.optJSONArray(ROUTE);
-            for(int i=0;i<routeArray.length();i++){
-                route.put(jpti.routeList.get(routeArray.getJSONObject(i).optInt(ROUTE_ID,0)),routeArray.getJSONObject(i).optInt(DIRECTION,0));
+            name=json.getString(NAME,"");
+            JsonArray routeArray=json.get(ROUTE).asArray();
+            for(int i=0;i<routeArray.size();i++){
+                route.put(jpti.routeList.get(routeArray.get(i).asObject().getInt(ROUTE_ID,0)),routeArray.get(i).asObject().getInt(DIRECTION,0));
             }
-            stationWidth=json.optInt(STATION_WIDTH,7);
-            trainWidth=json.optInt(TRAIN_WIDTH,5);
-            startTime=json.optString(START_TIME);
+            stationWidth=json.getInt(STATION_WIDTH,7);
+            trainWidth=json.getInt(TRAIN_WIDTH,5);
+            startTime=json.getString(START_TIME,"300");
 
-            defaulyStationSpace=json.optInt(STATION_SPACING);
-            comment=json.optString(COMMENT);
-            diaTextColor=new Color(Long.decode(json.optString(DIA_TEXT_COLOR,"#000000")).intValue());
-            diaBackColor=new Color(Long.decode(json.optString(DIA_BACK_COLOR,"#ffffff")).intValue());
-            diaTrainColor=new Color(Long.decode(json.optString(DIA_TRAIN_COLOR,"#000000")).intValue());
-            diaAxisColor=new Color(Long.decode(json.optString(DIA_AXICS_COLOR,"#000000")).intValue());
-            JSONArray timeTableFontArray=json.optJSONArray(TIMETABLE_FONT);
-            for(int i=0;i<timeTableFontArray.length();i++){
-                timeTableFont.add(new Font(timeTableFontArray.getJSONObject(i)));
+            defaulyStationSpace=json.getInt(STATION_SPACING,60);
+            comment=json.getString(COMMENT,"");
+            diaTextColor=new Color(Long.decode(json.getString(DIA_TEXT_COLOR,"#000000")).intValue());
+            diaBackColor=new Color(Long.decode(json.getString(DIA_BACK_COLOR,"#ffffff")).intValue());
+            diaTrainColor=new Color(Long.decode(json.getString(DIA_TRAIN_COLOR,"#000000")).intValue());
+            diaAxisColor=new Color(Long.decode(json.getString(DIA_AXICS_COLOR,"#000000")).intValue());
+            JsonArray timeTableFontArray=json.get(TIMETABLE_FONT).asArray();
+            for(int i=0;i<timeTableFontArray.size();i++){
+                timeTableFont.add(new Font(timeTableFontArray.get(i).asObject()));
             }
-            timeTableVFont=new Font(json.optJSONObject(TIMETABLE_VFONT));
-            diaStationFont=new Font(json.optJSONObject(DIA_STATION_FONT));
-            diaTimeFont=new Font(json.optJSONObject(DIA_TIME_FONT));
-            diaTrainFont=new Font(json.optJSONObject(DIA_TRAIN_FONT));
-            commentFont=new Font(json.optJSONObject(COMMENT_FONT));
+            timeTableVFont=new Font(json.get(TIMETABLE_VFONT).asObject());
+            diaStationFont=new Font(json.get(DIA_STATION_FONT).asObject());
+            diaTimeFont=new Font(json.get(DIA_TIME_FONT).asObject());
+            diaTrainFont=new Font(json.get(DIA_TRAIN_FONT).asObject());
+            commentFont=new Font(json.get(COMMENT_FONT).asObject());
 
-            JSONArray trainArray=json.getJSONArray(TRAIN);
-            for(int i=0;i<trainArray.length();i++){
-                trainList.add(new Train(jpti,this,trainArray.getJSONObject(i)));
+            JsonArray trainArray=json.get(TRAIN).asArray();
+            for(int i=0;i<trainArray.size();i++){
+                trainList.add(new Train(jpti,this,trainArray.get(i).asObject()));
             }
 
 

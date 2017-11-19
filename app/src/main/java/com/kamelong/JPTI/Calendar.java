@@ -1,7 +1,8 @@
 package com.kamelong.JPTI;
 
 
-import com.bluelinelabs.logansquare.annotation.JsonObject;
+
+import com.eclipsesource.json.JsonObject;
 
 import org.json.JSONObject;
 
@@ -16,10 +17,10 @@ public class Calendar {
     public Calendar(JPTI jpti){
         this.jpti=jpti;
     }
-    public Calendar(JPTI jpti, JSONObject json){
+    public Calendar(JPTI jpti, JsonObject json){
         this(jpti);
         try{
-            name=json.optString(NAME,"");
+            name=json.getString(NAME,"");
         }catch(Exception e){
 
         }

@@ -1,6 +1,9 @@
 package com.kamelong.JPTI;
 
 
+import com.eclipsesource.json.Json;
+import com.eclipsesource.json.JsonObject;
+
 import org.json.JSONObject;
 
 /**
@@ -67,22 +70,22 @@ public class Agency {
         this.jpti=jpti;
     }
 
-    public Agency(JPTI jpti, JSONObject json){
+    public Agency(JPTI jpti, JsonObject json){
         this(jpti);
         try{
             try {
-                name = json.getString(NAME);
-                number = json.getInt(NO);
+                name = json.getString(NAME,"");
+                number = json.getInt(NO,1);
             }catch(Exception e){
                 System.out.println("会社情報において必要な情報が不足しています。");
                 System.out.println("agency_name,agency_noの項目が存在するか確認してください");
             }
-            parentNo=json.optInt(PARENT_ID);
-            shortName=json.optString(SHORT_NAME);
-            type=json.optInt(TYPE);
-            url=json.optString(URL);
-            phone=json.optString(PHONE);
-            fareUrl=json.optString(FARE_URL);
+            parentNo=json.getInt(PARENT_ID,0);
+            shortName=json.getString(SHORT_NAME,"");
+            type=json.getInt(TYPE,1);
+            url=json.getString(URL,"");
+            phone=json.getString(PHONE,"");
+            fareUrl=json.getString(FARE_URL,"");
 
         }catch(Exception e){
             e.printStackTrace();
