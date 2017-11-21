@@ -193,7 +193,7 @@ public class FileSelectFragment extends AOdiaFragment {
                     }
                 });
             } else if (file.exists()) {
-                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")||(file.getPath().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),file)).isGTFS())) {
+                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")||file.getName().endsWith("db")||(file.getPath().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),file)).isGTFS())) {
                     try{
                         ((AOdiaActivity)getActivity()).onFileSelect(file);
                     }catch (Exception e){

@@ -46,6 +46,12 @@ public class RouteStation{
      2：着のみ
      */
     private int viewStyle=0;
+    /**
+     * 発着番線の表示を行うかどうか？
+     * 10進数表記10の位：上り、1の位：下り
+     * 1は表示、0は非表示
+     */
+    private int showStopNum=0;
     public static final int VIEWSTYLE_HATU=00;
     public static final int VIEWSTYLE_HATUTYAKU=11;
     public static final int VIEWSTYLE_KUDARITYAKU=02;
@@ -62,6 +68,7 @@ public class RouteStation{
     private static final String NUMBERING="station_numbering";
     private static final String TYPE="station_type";
     private static final String VIEWSTYLE="viewstyle";
+    private static final String SHOW_STOPNUM="show_stop_num";
     private static final String BORDER="border";
 
     /**
@@ -95,6 +102,7 @@ public class RouteStation{
             numbering=json.getInt(NUMBERING,-1);
             bigStation=json.getInt(TYPE,0)==1;
             viewStyle= Integer.parseInt(json.getString(VIEWSTYLE,"0"));
+            showStopNum= Integer.parseInt(json.getString(SHOW_STOPNUM,"0"));
             border=json.getInt(BORDER,0)==1;
 
         }catch(Exception e){
@@ -102,31 +110,34 @@ public class RouteStation{
 
         }
     }
-    public JSONObject makeJSONObject (){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject (){
+        JsonObject json=new JsonObject();
         if(station==null){
             return json;
         }
         try{
-                json.put(STATION_ID,jpti.indexOf(station));
+                json.add(STATION_ID,jpti.indexOf(station));
             if(km>-1){
-                json.put(KM,km);
+                json.add(KM,km);
             }
             if(numbering>-1){
-                json.put(NUMBERING,numbering);
+                json.add(NUMBERING,numbering);
             }
             if(bigStation){
-                json.put(TYPE,1);
+                json.add(TYPE,1);
             }else{
-                json.put(TYPE,0);
+                json.add(TYPE,0);
             }
             if(viewStyle>-1){
-                json.put(VIEWSTYLE,String.format("%02d",viewStyle));
+                json.add(VIEWSTYLE,String.format("%02d",viewStyle));
+            }
+            if(showStopNum>-1){
+                json.add(SHOW_STOPNUM,String.format("%02d",viewStyle));
             }
             if(border){
-                json.put(BORDER,1);
+                json.add(BORDER,1);
             }else{
-                json.put(BORDER,0);
+                json.add(BORDER,0);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -205,6 +216,13 @@ public class RouteStation{
     }
     public void setViewStyle(int value){
         viewStyle=value;
+    }
+    public boolean getShowStopNum(int direct){
+        if(direct==1){
+            return showStopNum/10==1;
+        }else{
+            return showStopNum%10==1;
+        }
     }
 
 

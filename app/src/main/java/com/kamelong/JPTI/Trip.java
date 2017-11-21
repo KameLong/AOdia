@@ -120,28 +120,28 @@ public class Trip {
         }
     }
 
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
             if(name.length()>0) {
-                json.put(NAME, name);
+                json.add(NAME, name);
             }
             if(number.length()>0) {
-                json.put(NUMBER, number);
+                json.add(NUMBER, number);
             }
-            json.put(DIRECTION,direction);
-            json.put(CLASS,jpti.indexOf(traihType));
-            json.put(BLOCK,blockID);
-            json.put(CALENDER,calender.index());
-            json.put(ROUTE,jpti.indexOf(route));
+            json.add(DIRECTION,direction);
+            json.add(CLASS,jpti.indexOf(traihType));
+            json.add(BLOCK,blockID);
+            json.add(CALENDER,calender.index());
+            json.add(ROUTE,jpti.indexOf(route));
             if(extraCalendarID>-1){
-                json.put(EXTRA_CALENDER,extraCalendarID);
+                json.add(EXTRA_CALENDER,extraCalendarID);
             }
-            JSONArray timeArray=new JSONArray();
+            JsonArray timeArray=new JsonArray();
             for(Time time:timeList.values()){
-                timeArray.put(time.makeJSONObject());
+                timeArray.add(time.makeJSONObject());
             }
-            json.put(TIME,timeArray);
+            json.add(TIME,timeArray);
 
 
         }catch(Exception e){

@@ -122,70 +122,70 @@ public class Service {
         }
     }
 
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
-            json.put(NAME,name);
-            JSONArray routeArray=new JSONArray();
+            json.add(NAME,name);
+            JsonArray routeArray=new JsonArray();
             for (Map.Entry<Route, Integer> bar : route.entrySet()) {
-                JSONObject routeObject=new JSONObject();
-                routeObject.put(ROUTE_ID,bar.getKey().index());
-                routeObject.put(DIRECTION,bar.getValue());
-                routeArray.put(routeObject);
+                JsonObject routeObject=new JsonObject();
+                routeObject.add(ROUTE_ID,bar.getKey().index());
+                routeObject.add(DIRECTION,bar.getValue());
+                routeArray.add(routeObject);
             }
-            json.put(ROUTE,routeArray);
+            json.add(ROUTE,routeArray);
             if(stationWidth>-1){
-                json.put(STATION_WIDTH,stationWidth);
+                json.add(STATION_WIDTH,stationWidth);
             }
             if(trainWidth>-1){
-                json.put(TRAIN_WIDTH,trainWidth);
+                json.add(TRAIN_WIDTH,trainWidth);
             }
             if(startTime!=null){
-                json.put(START_TIME,startTime);
+                json.add(START_TIME,startTime);
             }
             if(defaulyStationSpace>-1){
-                json.put(STATION_SPACING,defaulyStationSpace);
+                json.add(STATION_SPACING,defaulyStationSpace);
             }
             if(comment!=null){
-                json.put(COMMENT,comment);
+                json.add(COMMENT,comment);
             }
             if(diaTextColor!=null){
-                json.put(DIA_TEXT_COLOR,diaTextColor.getHTMLColor());
+                json.add(DIA_TEXT_COLOR,diaTextColor.getHTMLColor());
             }
             if(diaBackColor!=null){
-                json.put(DIA_BACK_COLOR,diaBackColor.getHTMLColor());
+                json.add(DIA_BACK_COLOR,diaBackColor.getHTMLColor());
             }
             if(diaTrainColor!=null){
-                json.put(DIA_TRAIN_COLOR,diaTrainColor.getHTMLColor());
+                json.add(DIA_TRAIN_COLOR,diaTrainColor.getHTMLColor());
             }
             if(diaAxisColor!=null){
-                json.put(DIA_AXICS_COLOR,diaAxisColor.getHTMLColor());
+                json.add(DIA_AXICS_COLOR,diaAxisColor.getHTMLColor());
             }
-            JSONArray timetableFontArray=new JSONArray();
+            JsonArray timetableFontArray=new JsonArray();
             for(Font font:timeTableFont){
-                timetableFontArray.put(font.makeJSONObject());
+                timetableFontArray.add(font.makeJsonObject());
             }
-            json.put(TIMETABLE_FONT,timetableFontArray);
+            json.add(TIMETABLE_FONT,timetableFontArray);
             if(timeTableVFont!=null){
-                json.put(TIMETABLE_VFONT,timeTableVFont.makeJSONObject());
+                json.add(TIMETABLE_VFONT,timeTableVFont.makeJsonObject());
             }
             if(diaStationFont!=null){
-                json.put(DIA_STATION_FONT,diaStationFont.makeJSONObject());
+                json.add(DIA_STATION_FONT,diaStationFont.makeJsonObject());
             }
             if(diaTimeFont!=null){
-                json.put(DIA_TIME_FONT,diaTimeFont.makeJSONObject());
+                json.add(DIA_TIME_FONT,diaTimeFont.makeJsonObject());
             }
             if(diaTrainFont!=null){
-                json.put(DIA_TRAIN_FONT,diaTrainFont.makeJSONObject());
+                json.add(DIA_TRAIN_FONT,diaTrainFont.makeJsonObject());
             }
             if(commentFont!=null){
-                json.put(COMMENT_FONT,commentFont.makeJSONObject());
+                json.add(COMMENT_FONT,commentFont.makeJsonObject());
             }
-            JSONArray trainArray=new JSONArray();
+            JsonArray trainArray=new JsonArray();
             for(Train train:trainList){
-                trainArray.put(train.makeJSONObject());
+                trainArray.add(train.makeJSONObject());
             }
-            json.put(TRAIN,trainArray);
+            json.add(TRAIN,trainArray);
 
 
         }catch(Exception e){

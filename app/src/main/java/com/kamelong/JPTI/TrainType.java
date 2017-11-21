@@ -123,32 +123,32 @@ public class TrainType {
         showStop=trainType.getShowStop();
         font=trainType.fontNumber;
     }
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
-            json.put(NAME,name);
+            json.add(NAME,name);
             if(shortName!=null){
-                json.put(SHORT_NAME,shortName);
+                json.add(SHORT_NAME,shortName);
             }
             if(textColor!=null){
-                json.put(TEXT_COLOR,textColor.getHTMLColor());
+                json.add(TEXT_COLOR,textColor.getHTMLColor());
             }
             if(diaColor!=null){
-                json.put(DIA_COLOR,diaColor.getHTMLColor());
+                json.add(DIA_COLOR,diaColor.getHTMLColor());
             }
-            json.put(STYLE,diaStyle);
+            json.add(STYLE,diaStyle);
             if(diaBold){
-                json.put(BOLD,1);
+                json.add(BOLD,1);
             }else{
-                json.put(BOLD,0);
+                json.add(BOLD,0);
             }
             if(showStop){
-                json.put(SHOWSTOP,1);
+                json.add(SHOWSTOP,1);
             }else{
-                json.put(SHOWSTOP,0);
+                json.add(SHOWSTOP,0);
             }
             if(font>-1){
-                json.put(FONT,font);
+                json.add(FONT,font);
             }
 
         }catch(Exception e){

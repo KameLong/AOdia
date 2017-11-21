@@ -69,14 +69,6 @@ public class LineNameView extends KLView {
         canvas.drawText(dia.getLineName(), 5,startLine, textPaint);
         startLine=startLine+(int)textPaint.getTextSize();
         canvas.drawText(dia.getDiaName(diaNum), 5,startLine, textPaint);
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("trainName",false)){
-            canvas.drawLine(0,textPaint.getTextSize()*2.1f,getWidth(),textPaint.getTextSize()*2.1f,blackPaint);
-            int startX=(int)((getWidth()-textPaint.getTextSize())/2);
-            canvas.drawText("列",startX,textPaint.getTextSize()*3.2f,textPaint);
-            canvas.drawText("車",startX,textPaint.getTextSize()*4.5f,textPaint);
-            canvas.drawText("名",startX,textPaint.getTextSize()*5.8f,textPaint);
-        }
     }
 
     /**
@@ -84,12 +76,7 @@ public class LineNameView extends KLView {
      * @return　縦サイズ
      */
     protected int getYsize(){
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("trainName",false)){
-            return (int)(textPaint.getTextSize()*10.2f);
-        }else{
             return (int)(textPaint.getTextSize()*2.2f);
-        }
     }
 
     /**

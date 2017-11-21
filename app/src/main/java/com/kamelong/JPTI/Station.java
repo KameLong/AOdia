@@ -6,9 +6,7 @@ import com.eclipsesource.json.JsonArray;
 import com.eclipsesource.json.JsonObject;
 import com.kamelong.OuDia.OuDiaStation;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 
 import java.util.ArrayList;
 
@@ -138,42 +136,42 @@ public class Station {
 
 
 
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try {
-            json.put(NAME, name);
+            json.add(NAME, name);
             if(subName!=null){
-                json.put(SUBNAME,subName);
+                json.add(SUBNAME,subName);
             }
             if(type>0){
-                json.put(TYPE,type);
+                json.add(TYPE,type);
             }
             if(description!=null) {
-                json.put(DESCRIPTION, description);
+                json.add(DESCRIPTION, description);
             }
             if(lat!=null) {
-                json.put(LAT,lat);
+                json.add(LAT,lat);
             }
             if(lon!=null) {
-                json.put(LON,lon);
+                json.add(LON,lon);
             }
             if(url!=null) {
-                json.put(URL,url);
+                json.add(URL,url);
             }
             if(wheelcharBoarding!=null) {
-                json.put(WHEELCHAIR,wheelcharBoarding);
+                json.add(WHEELCHAIR,wheelcharBoarding);
             }
-            json.put(STOP,makeStopsListJSON());
+            json.add(STOP,makeStopsListJSON());
         }catch(Exception e){
             e.printStackTrace();
         }
         return json;
 
     }
-    private JSONArray makeStopsListJSON(){
-        JSONArray array=new JSONArray();
+    private JsonArray makeStopsListJSON(){
+        JsonArray array=new JsonArray();
         for(Stop stop:stops){
-            array.put(jpti.indexOf(stop));
+            array.add(jpti.indexOf(stop));
         }
         return array;
     }

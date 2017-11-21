@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.database.sqlite.SQLiteCursor;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -33,6 +34,7 @@ import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.ProgressDialog;
 import com.kamelong.aodia.detabase.DBHelper;
+import com.kamelong.aodia.detabase.SQLData;
 import com.kamelong.aodia.diadata.AOdiaOperation;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.diagram.TrainSelectDiagramFragment;
@@ -45,6 +47,7 @@ import com.kamelong.aodia.timeTable.KLView;
 import com.kamelong.aodia.timeTable.SelectTrainTimeTable;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
+import com.kamelong.aodia.timeTable.TrainTimeEditFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,7 +220,7 @@ public class AOdiaActivity extends AppCompatActivity {
                 if(filePath.length()>0&&new File(filePath).exists()){
                     if(getStoragePermission()){
                         onFileSelect(new File(filePath));
-                        openDiaOrTimeFragment(0,diaNum,direct);
+//                        openDiaOrTimeFragment(0,diaNum,direct);
                         return;
                     }
                 }
@@ -391,6 +394,12 @@ public class AOdiaActivity extends AppCompatActivity {
         final ProgressDialog dialog=new ProgressDialog();
         dialog.show(getFragmentManager(), "test");
         final Handler handler=new Handler();
+        if(file.getPath().endsWith(".db")){
+            SQLData sq=new SQLData(this,file);
+            return;
+
+
+        }
 
         new Thread(new Runnable() {
             @Override
@@ -874,6 +883,11 @@ public class AOdiaActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public void openTrainEdit(){
+        AOdiaFragment fragment=new TrainTimeEditFragment();
+        openFragment(fragment);
     }
 
 

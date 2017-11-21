@@ -76,6 +76,27 @@ public class Font {
         }
         return json;
     }
+    public JsonObject makeJsonObject(){
+        JsonObject json=new JsonObject();
+        try{
+            if(height>-1){
+                json.add(HEIGHT,height);
+            }
+            if(name!=null){
+                json.add(NAME,name);
+            }
+            if(bold){
+                json.add(BOLD,1);
+            }
+            if(itaric){
+                json.add(ITARIC,1);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return json;
+    }
 
     /**
      * フォントをOuDia形式のテキストとして出力する

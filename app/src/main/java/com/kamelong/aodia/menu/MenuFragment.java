@@ -115,6 +115,19 @@ public class MenuFragment extends Fragment {
             });
 
             layout.addView(saveFile);
+            Button openEdit = new Button(activity);
+            openEdit.setText("　編集");
+            openEdit.setBackgroundColor(Color.TRANSPARENT);
+            openEdit.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            openEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.openTrainEdit();
+                }
+            });
+
+            layout.addView(openEdit);
             SearchView stationSearch=new SearchView(activity);
             stationSearch.setQueryHint("駅検索");
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

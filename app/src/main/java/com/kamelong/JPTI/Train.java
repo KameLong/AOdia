@@ -101,30 +101,30 @@ public class Train {
     public void setCalendar(Calendar calendar){
         this.calendar=calendar;
     }
-    public JSONObject makeJSONObject(){
+    public JsonObject makeJSONObject(){
         try{
-            JSONObject json=new JSONObject();
-            json.put(DIRECT,direct);
+            JsonObject json=new JsonObject();
+            json.add(DIRECT,direct);
             if(name.length()>0){
-                json.put(NAME,name);
+                json.add(NAME,name);
             }
             if(number.length()>0){
-                json.put(NUMBER,number);
+                json.add(NUMBER,number);
             }
             if(count.length()>0){
-                json.put(COUNT,count);
+                json.add(COUNT,count);
             }
             if(text.length()>0){
-                json.put(TEXT,text);
+                json.add(TEXT,text);
             }
             if(calendar!=null){
-                json.put(CALENDER,jpti.indexOf(calendar));
+                json.add(CALENDER,jpti.indexOf(calendar));
             }
-            JSONArray tripArray=new JSONArray();
+            JsonArray tripArray=new JsonArray();
             for(Trip trip:tripList){
-                tripArray.put(jpti.indexOf(trip));
+                tripArray.add(jpti.indexOf(trip));
             }
-            json.put(TRIP,tripArray);
+            json.add(TRIP,tripArray);
             return json;
         }catch (Exception e){
             e.printStackTrace();

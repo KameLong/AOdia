@@ -61,7 +61,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 	/**
 	* MainActivity内には多数のdiaFileが格納されている、どのdiaFileなのかのインデックス
 	*/
-    private int fileNum=0;
+    int fileNum=0;
 	/**
 	*　この路線時刻表で表示すべきダイヤインデックス
 	*/
@@ -78,7 +78,6 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 	*フリングが行われているかのフラグ
 	*/
     private boolean fling = false;
-    private OverScroller mScroller;
 
     private Handler handler = new Handler();
 
@@ -94,6 +93,75 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         super();
 
     }
+    final GestureDetector gesture = new GestureDetector(getActivity(),
+            new GestureDetector.SimpleOnGestureListener() {
+
+                private float flingV = 0;
+
+                @Override
+                public boolean onDown(MotionEvent motionEvent) {
+                    fling = false;
+                    return true;
+                }
+                @Override
+                public boolean onDoubleTap(MotionEvent event){
+                    int x=(int)event.getX();
+                    int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
+                    int train=timeTablex/((LinearLayout)findViewById(R.id.trainNameLinear)).getChildAt(0).getWidth();
+                    if(train<0){
+                        train=0;
+                    }
+                    if(train>=timeTable.getTrainNum()){
+                        train=timeTable.getTrainNum()-1;
+                    }
+                    selectTrain(timeTable.getTrain(train));
+
+                    System.out.println(train);
+                    return false;
+                }
+
+                @Override
+                public void onLongPress(MotionEvent motionEvent) {
+
+                    int y=(int)motionEvent.getY();
+                    int timeTabley=y+findViewById(R.id.trainTimeLinear).getScrollY()-findViewById(R.id.trainNameLinear).getHeight();
+                    int station=((StationNameView)((LinearLayout)findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
+                    if(station<0){
+                        return;
+                    }
+                    StationInfoDialog dialog = new StationInfoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
+                    dialog.show();
+
+                }
+                @Override
+                public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float vx, float vy) {
+                    TimeTableFragment.this.scrollBy((int) vx, (int) vy);
+                    return false;
+                }
+
+                @Override
+                public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
+                    final float flingV = -v1;
+                    fling = true;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            while (fling) {
+                                try {
+                                    Thread.sleep(16);
+                                    TimeTableFragment.this.scrollBy((int)(flingV*16/1000f), 0);
+                                } catch (Exception e) {
+                                    fling=false;
+                                    SdLog.log(e);
+                                }
+                            }
+                        }
+                    }).start();
+                    return false;
+                }
+            });
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -105,78 +173,9 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         }catch(Exception e){
             SdLog.log(e);
         }
-        mScroller = new OverScroller(getActivity());
 		//Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.time_table, container, false);
 		//このFragment上でのタッチジェスチャーの管理
-        final GestureDetector gesture = new GestureDetector(getActivity(),
-                new GestureDetector.SimpleOnGestureListener() {
-
-                    private float flingV = 0;
-
-                    @Override
-                    public boolean onDown(MotionEvent motionEvent) {
-                        fling = false;
-                        return true;
-                    }
-                    @Override
-                    public boolean onDoubleTap(MotionEvent event){
-                        int x=(int)event.getX();
-                        int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
-                        int train=timeTablex/((LinearLayout)findViewById(R.id.trainNameLinear)).getChildAt(0).getWidth();
-                        if(train<0){
-                            train=0;
-                        }
-                        if(train>=timeTable.getTrainNum()){
-                            train=timeTable.getTrainNum()-1;
-                        }
-                        selectTrain(timeTable.getTrain(train));
-
-                        System.out.println(train);
-                        return false;
-                    }
-
-                    @Override
-                    public void onLongPress(MotionEvent motionEvent) {
-
-                        int y=(int)motionEvent.getY();
-                        int timeTabley=y+findViewById(R.id.trainTimeLinear).getScrollY()-findViewById(R.id.trainNameLinear).getHeight();
-                        int station=((StationNameView)((LinearLayout)findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
-                        if(station<0){
-                            return;
-                        }
-                        StationInfoDialog dialog = new StationInfoDialog(getActivity(),TimeTableFragment.this, diaFile,fileNum,diaNumber,direct,station);
-                        dialog.show();
-
-                    }
-                    @Override
-                    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float vx, float vy) {
-                        TimeTableFragment.this.scrollBy((int) vx, (int) vy);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
-                        final float flingV = -v1;
-                        fling = true;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                while (fling) {
-                                    try {
-                                        Thread.sleep(16);
-                                        TimeTableFragment.this.scrollBy((int)(flingV*16/1000f), 0);
-                                    } catch (Exception e) {
-                                        fling=false;
-                                        SdLog.log(e);
-                                    }
-                                }
-                            }
-                        }).start();
-                        return false;
-                    }
-                });
 
 
         fragmentContainer.setOnTouchListener(new View.OnTouchListener() {

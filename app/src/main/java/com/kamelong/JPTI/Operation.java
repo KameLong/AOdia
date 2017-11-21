@@ -53,24 +53,24 @@ public class Operation {
         }
     }
 
-    public JSONObject makeJSONObject() {
-        JSONObject json = new JSONObject();
+    public JsonObject makeJSONObject() {
+        JsonObject json = new JsonObject();
         try {
-            json.put(OPERATION_NAME, operationName);
-            json.put(OPERATION_NO, operationNumber);
-            json.put(CALENDER_ID, calenderID);
-            JSONArray array = new JSONArray();
+            json.add(OPERATION_NAME, operationName);
+            json.add(OPERATION_NO, operationNumber);
+            json.add(CALENDER_ID, calenderID);
+            JsonArray array = new JsonArray();
             for (int i = 0; i < trip.size(); i++) {
-                JSONObject obj = new JSONObject();
-                obj.put(TRIP_ID, jpti.indexOf(trip.get(i)));
-                array.put(obj);
+                JsonObject obj = new JsonObject();
+                obj.add(TRIP_ID, jpti.indexOf(trip.get(i)));
+                array.add(obj);
             }
-            json.put(TRIP_LIST, array);
+            json.add(TRIP_LIST, array);
             return json;
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return new JSONObject();
+        return new JsonObject();
     }
 
     /**

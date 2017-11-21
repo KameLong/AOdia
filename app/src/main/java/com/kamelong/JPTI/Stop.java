@@ -65,24 +65,24 @@ public class Stop {
             e.printStackTrace();
         }
     }
-    JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
-            json.put(NAME,name);
+            json.add(NAME,name);
             if(number>-1){
-                json.put(NUMBER,number);
+                json.add(NUMBER,number);
             }
             if(description.length()>0){
-                json.put(DESCRIPTION,description);
+                json.add(DESCRIPTION,description);
             }
             if(lat.length()>0){
-                json.put(LAT,lat);
+                json.add(LAT,lat);
             }
             if(lon.length()>0){
-                json.put(LON,lon);
+                json.add(LON,lon);
             }
             if(zoneID>0){
-                json.put(ZONE_ID,zoneID);
+                json.add(ZONE_ID,zoneID);
             }
 
         }catch(Exception e){

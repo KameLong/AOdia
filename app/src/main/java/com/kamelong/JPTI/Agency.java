@@ -93,28 +93,28 @@ public class Agency {
         }
     }
 
-    public JSONObject makeJSONObject(){
-        JSONObject json = new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json = new JsonObject();
         try {
-            json.put(NAME, name);
-            json.put(NO,number);
+            json.add(NAME, name);
+            json.add(NO,number);
             if(parentNo>0){
-                json.put(PARENT_ID,parentNo);
+                json.add(PARENT_ID,parentNo);
             }
             if(shortName.length()>0){
-                json.put(SHORT_NAME,shortName);
+                json.add(SHORT_NAME,shortName);
             }
             if(type>0){
-                json.put(TYPE,type);
+                json.add(TYPE,type);
             }
             if(url.length()>0){
-                json.put(URL,url);
+                json.add(URL,url);
             }
             if(phone.length()>0){
-                json.put(PHONE,phone);
+                json.add(PHONE,phone);
             }
             if(fareUrl.length()>0){
-                json.put(FARE_URL,fareUrl);
+                json.add(FARE_URL,fareUrl);
             }
             return json;
 

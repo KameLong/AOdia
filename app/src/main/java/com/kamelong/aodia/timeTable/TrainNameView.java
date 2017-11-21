@@ -74,10 +74,6 @@ public class TrainNameView extends KLView {
         drawText(canvas,train.getNumber(), 1, startLine, textPaint,true);
 
         canvas.drawLine(this.getWidth()-1, 0,this.getWidth()-1,this.getHeight(),blackPaint);
-        if(showTrainName) {
-            canvas.drawLine(0,textPaint.getTextSize()*2.1f,getWidth(),textPaint.getTextSize()*2.1f,blackPaint);
-            drawTrainName(canvas);
-        }
     }
     private void drawTrainName(Canvas canvas){
         try {
@@ -141,11 +137,7 @@ public class TrainNameView extends KLView {
         return c<256;
     }
     protected int getYsize(){
-        if(showTrainName){
-            return (int)(textPaint.getTextSize()*10.2f);
-        }else{
             return (int)(textPaint.getTextSize()*2.2f);
-        }
     }
     public int getXsize(){
         int lineTextSize=Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("lineTimetableWidth","4"))+1;

@@ -143,37 +143,37 @@ public class Route {
     }
 
 
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
-            json.put(AGENCY_ID,agencyID);
+            json.add(AGENCY_ID,agencyID);
             if(number >-1){
-                json.put(NO, number);
+                json.add(NO, number);
             }
-            json.put(NAME,name);
+            json.add(NAME,name);
             if(nickName.length()>0){
-                json.put(NICKNAME,nickName);
+                json.add(NICKNAME,nickName);
             }
             if(description.length()>0){
-                json.put(DESCRIPTION,description);
+                json.add(DESCRIPTION,description);
             }
             if(type>0&&type<13){
-                json.put(TYPE,type);
+                json.add(TYPE,type);
             }
             if(url.length()>0){
-                json.put(URL,url);
+                json.add(URL,url);
             }
             if(color!=null){
-                json.put(COLOR,color.getHTMLColor());
+                json.add(COLOR,color.getHTMLColor());
             }
             if(textColor!=null){
-                json.put(TEXT_COLOR,color.getHTMLColor());
+                json.add(TEXT_COLOR,textColor.getHTMLColor());
             }
-            JSONArray stationArray=new JSONArray();
+            JsonArray stationArray=new JsonArray();
             for(RouteStation station:stationList){
-                stationArray.put(station.makeJSONObject());
+                stationArray.add(station.makeJSONObject());
             }
-            json.put(STATION,stationArray);
+            json.add(STATION,stationArray);
 
         }catch(Exception e){
             e.printStackTrace();

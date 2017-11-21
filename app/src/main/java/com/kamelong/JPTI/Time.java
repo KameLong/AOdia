@@ -84,17 +84,17 @@ protected  Time(){}
 
     }
 
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try {
-            json.put(STOP_ID,jpti.indexOf(stop));
-            json.put(PICKUP,pickupType);
-            json.put(DROPOFF,dropoffType);
+            json.add(STOP_ID,jpti.indexOf(stop));
+            json.add(PICKUP,pickupType);
+            json.add(DROPOFF,dropoffType);
             if(arrivalTime!=-1){
-                json.put(ARRIVAL_TIME,timeInt2String(arrivalTime));
+                json.add(ARRIVAL_TIME,timeInt2String(arrivalTime));
             }
             if(departureTime!=-1){
-                json.put(DEPARTURE_TIME,timeInt2String(departureTime));
+                json.add(DEPARTURE_TIME,timeInt2String(departureTime));
             }
         }catch(Exception e){
             e.printStackTrace();

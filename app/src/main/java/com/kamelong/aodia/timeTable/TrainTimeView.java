@@ -24,6 +24,7 @@ public class TrainTimeView extends KLView {
     private boolean secondFrag=false;
     private boolean remarkFrag=false;
     private boolean showPassFrag=false;
+    private boolean showTrainName=false;
     //private static final String NOSERVICE_STRING ="∙ ∙";
     //    private static final String NOSERVICE_STRING =":  :";
     private static final String NOVIA_STRING="| |"
@@ -46,6 +47,7 @@ public class TrainTimeView extends KLView {
         secondFrag=spf.getBoolean("secondSystem",secondFrag);
         remarkFrag=spf.getBoolean("remark",remarkFrag);
         showPassFrag=spf.getBoolean("showPass",showPassFrag);
+        showTrainName=spf.getBoolean("trainName",showTrainName);
 
 
 
@@ -60,6 +62,14 @@ public class TrainTimeView extends KLView {
         }
     }
     private void drawTime(Canvas canvas){
+        int startLine = textSize;
+        if(showTrainName) {
+            canvas.drawLine(0,textPaint.getTextSize()*7.9f,getWidth(),textPaint.getTextSize()*7.9f,blackPaint);
+            drawTrainName(canvas);
+            startLine+=8*textSize;
+        }
+
+
         /**
          int startLine2 = textSize;
          for (int i = 0; i < station.getStationNum(); i++) {
@@ -71,8 +81,8 @@ public class TrainTimeView extends KLView {
          }
          **/
         try {
-            int startLine = textSize;
             textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+
             if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric){
                 textPaint.setTextSkewX(-0.3f);
             }else{
@@ -83,6 +93,13 @@ public class TrainTimeView extends KLView {
             }else{
                 textPaint.setTypeface(Typeface.DEFAULT);
             }
+            drawNoService(canvas,startLine,textPaint);
+            startLine+=textSize;
+            drawNoService(canvas,startLine,textPaint);
+            startLine+=textSize*0.2f;
+            canvas.drawLine(0,startLine,getWidth(),startLine,blackPaint);
+            startLine+=textSize*1f;
+
             for (int i = 0; i < station.getStationNum(); i++) {
                 int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
                 int border=station.border(stationNumber-direct);
@@ -127,6 +144,9 @@ public class TrainTimeView extends KLView {
                                 break;
                         }
                     }
+                    canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
+                    startLine = startLine +(textSize * 7 / 6);
+                    drawStopNum(canvas,startLine,textPaint,88);
                     canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize/ 5.0f), blackPaint);
                     startLine = startLine +(textSize * 7 / 6);
 
@@ -178,15 +198,79 @@ public class TrainTimeView extends KLView {
 
                 }
             }
+            canvas.drawLine(0,startLine-textSize*0.8f,getWidth(),startLine-textSize*0.8f,blackPaint);
+            startLine+=textSize*0.2f;
+            drawNoService(canvas,startLine,textPaint);
+            startLine+=textSize;
+            drawNoService(canvas,startLine,textPaint);
             canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
+
         }catch(Exception e){
             SdLog.log(e);
         }
     }
+    private void drawTrainName(Canvas canvas){
+        try {
+            int heightSpace = 12;
+            String value= train.getName();
+            value=value.replace('ー','｜');
+            value=value.replace('（','(');
+            value=value.replace('）',')');
+            value=value.replace('「','┐');
+            value=value.replace('」','└');
+
+            char[] str =value.toCharArray();
+            int lineNum = 1;
+            int space = heightSpace;
+            for (int i = 0; i < str.length; i++) {
+                if (space <= 0) {
+                    space = heightSpace;
+                    lineNum++;
+                }
+                if (!charIsEng(str[i])) {
+                    space--;
+                }
+                space--;
+            }
+            space = heightSpace;
+            int startX = (int) ((getWidth() - lineNum * textSize*1.2f) / 2 + (lineNum-1) * textSize*1.2f);
+            int startY = 0;
+            for (int i = 0; i < str.length; i++) {
+                if (space <= 0) {
+                    space = heightSpace;
+                    startX = startX - (int)(textSize*1.2f);
+                    startY = 0;
+                }
+                if (charIsEng(str[i])) {
+                    space--;
+                    canvas.save();
+                    canvas.rotate(90,0,0);
+                    drawText(canvas,String.valueOf(str[i]), startY+2,(int)( -startX-(textSize*0.2f)), textPaint,false);
+                    canvas.restore();
+                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                } else {
+                    space = space - 2;
+                    startY = startY +textSize;
+                    drawText(canvas,String.valueOf(str[i]), startX, startY, textPaint,false);
+                }
+
+            }
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+
+
+        float textSize=textPaint.getTextSize();
+        if(train.getCount().length()>0){
+            String gousuu=train.getCount().substring(0,train.getCount().length()-1);
+            drawText(canvas,gousuu,0,(int)(textSize*7.0f),textPaint,true);
+            drawText(canvas,"号",0,(int)(textSize*8.0f),textPaint,true);
+        }
+    }
+
     private void drawRemark(Canvas  canvas){
         try {
             int startY = (int) (this.getHeight() - 10.5f * textSize);
-
             canvas.drawLine(0, startY, getWidth(), startY, blackBBPaint);
 
             if(train.getOperation()!=null){
@@ -251,7 +335,7 @@ public class TrainTimeView extends KLView {
         return c<256;
     }
     public int getYsize(){
-        int result=textSize;
+        int result=(int)(textSize*3.2f);
         for(int i = 0; i< station.getStationNum(); i++){
             int stationNumber=(station.getStationNum()-1)*direct+(1-2*direct)*i;
             switch(station.border(stationNumber-direct)){
@@ -264,6 +348,8 @@ public class TrainTimeView extends KLView {
                         case 1:
                             //発着
                             result=result+(textSize*7/6);
+                            result=result+(textSize*7/6);
+
                             result=result+textSize;
                             break;
                         case 2:
@@ -290,8 +376,12 @@ public class TrainTimeView extends KLView {
         result=result-(textSize*4/6);
 
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+        result+=textSize*2.2f;
         if(spf.getBoolean("remark",false)){
             result=result+(int)(textSize*10.6f);
+        }
+        if(showTrainName){
+            result=result+(int)(textSize*8f);
         }
         return result;
     }
@@ -500,6 +590,13 @@ public class TrainTimeView extends KLView {
         float dotSize=textSize*0.1f;
         canvas.drawOval(getWidth()*0.4f-dotSize,y-textSize*0.35f-dotSize,getWidth()*0.4f+dotSize,y-textSize*0.35f+dotSize,paint);
         canvas.drawOval(getWidth()*0.6f-dotSize,y-textSize*0.35f-dotSize,getWidth()*0.6f+dotSize,y-textSize*0.35f+dotSize,paint);
+
+    }
+    private void drawStopNum(Canvas canvas,int y,Paint paint,int stopNum){
+        drawText(canvas,stopNum+"",1,y,paint,true);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawOval(getWidth()*0.5f-textSize*1.1f,y-textSize*0.8f,getWidth()*0.5f+textSize*1.1f,y+textSize*0.1f,paint);
+        paint.setStyle(Paint.Style.FILL);
 
     }
 

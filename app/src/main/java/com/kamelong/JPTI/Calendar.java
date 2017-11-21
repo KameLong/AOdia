@@ -4,8 +4,6 @@ package com.kamelong.JPTI;
 
 import com.eclipsesource.json.JsonObject;
 
-import org.json.JSONObject;
-
 /**
  * 運転日付を決定するデータ
  */
@@ -25,10 +23,10 @@ public class Calendar {
 
         }
     }
-    public JSONObject makeJSONObject(){
-        JSONObject json=new JSONObject();
+    public JsonObject makeJSONObject(){
+        JsonObject json=new JsonObject();
         try{
-            json.put(NAME,name);
+            json.add(NAME,name);
         }
         catch(Exception e){
             e.printStackTrace();

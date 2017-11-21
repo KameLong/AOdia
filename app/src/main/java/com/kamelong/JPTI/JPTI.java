@@ -2,6 +2,7 @@ package com.kamelong.JPTI;
 
 
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.eclipsesource.json.*;
 import com.kamelong.OuDia.OuDiaFile;
@@ -9,6 +10,7 @@ import com.kamelong.OuDia.OuDiaStation;
 import com.kamelong.OuDia.OuDiaTrain;
 import com.kamelong.OuDia.OuDiaTrainType;
 import com.kamelong.aodia.AOdiaIO.ProgressDialog;
+import com.kamelong.aodia.SdLog;
 
 
 import org.json.JSONArray;
@@ -267,53 +269,53 @@ public class JPTI {
         }
         */
         try {
-            JSONObject outJSON = new JSONObject();
-            outJSON.put(JPTI_VERSION, "1.0");
-            JSONArray agencyArray = new JSONArray();
+            JsonObject outJSON = new JsonObject();
+            outJSON.add(JPTI_VERSION, "1.0");
+            JsonArray agencyArray = new JsonArray();
             for (int i = 0; i < agency.size(); i++) {
-                agencyArray.put(agency.get(i).makeJSONObject());
+                agencyArray.add(agency.get(i).makeJSONObject());
             }
-            outJSON.put(AGENCY, agencyArray);
-            JSONArray stationArray = new JSONArray();
+            outJSON.add(AGENCY, agencyArray);
+            JsonArray stationArray = new JsonArray();
             for (Station station : stationList) {
-                stationArray.put(station.makeJSONObject());
+                stationArray.add(station.makeJSONObject());
             }
-            outJSON.put(STATION, stationArray);
-            JSONArray routeArray = new JSONArray();
+            outJSON.add(STATION, stationArray);
+            JsonArray routeArray = new JsonArray();
             for (Route route : routeList) {
-                routeArray.put(route.makeJSONObject());
+                routeArray.add(route.makeJSONObject());
             }
-            outJSON.put(ROUTE, routeArray);
-            JSONArray stopArray = new JSONArray();
+            outJSON.add(ROUTE, routeArray);
+            JsonArray stopArray = new JsonArray();
             for (Stop stop : stopList) {
-                stopArray.put(stop.makeJSONObject());
+                stopArray.add(stop.makeJSONObject());
             }
-            outJSON.put(STOP,stopArray);
-            JSONArray calendarArray = new JSONArray();
+            outJSON.add(STOP,stopArray);
+            JsonArray calendarArray = new JsonArray();
             for (Calendar calendar : calendarList) {
-                calendarArray.put(calendar.makeJSONObject());
+                calendarArray.add(calendar.makeJSONObject());
             }
-            outJSON.put(CALENDAR, calendarArray);
-            JSONArray trainTypeArray=new JSONArray();
+            outJSON.add(CALENDAR, calendarArray);
+            JsonArray trainTypeArray=new JsonArray();
             for(TrainType trainType:trainTypeList){
-                trainTypeArray.put(trainType.makeJSONObject());
+                trainTypeArray.add(trainType.makeJSONObject());
             }
-            outJSON.put(TRAINTYPE,trainTypeArray);
-            JSONArray serviceArray = new JSONArray();
+            outJSON.add(TRAINTYPE,trainTypeArray);
+            JsonArray serviceArray = new JsonArray();
             for (Service service : serviceList) {
-                serviceArray.put(service.makeJSONObject());
+                serviceArray.add(service.makeJSONObject());
             }
-            outJSON.put(SERVICE, serviceArray);
-            JSONArray operationArray = new JSONArray();
+            outJSON.add(SERVICE, serviceArray);
+            JsonArray operationArray = new JsonArray();
             for (Operation operation : operationList) {
-                operationArray.put(operation.makeJSONObject());
+                operationArray.add(operation.makeJSONObject());
             }
-            outJSON.put(OPERATION, operationArray);
-            JSONArray tripArray=new JSONArray();
+            outJSON.add(OPERATION, operationArray);
+            JsonArray tripArray=new JsonArray();
             int i=0;
             for(Trip trip:tripList){
                 i++;
-                tripArray.put(trip.makeJSONObject());
+                tripArray.add(trip.makeJSONObject());
                 if(i%30!=0)continue;
 
                 final int t=i;
@@ -324,9 +326,9 @@ public class JPTI {
                     }
                 });
             }
-            outJSON.put(TRIP,tripArray);
+            outJSON.add(TRIP,tripArray);
 
-            outFile.write(outJSON.toString());
+            outJSON.writeTo(outFile);
             outFile.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,6 +340,8 @@ public class JPTI {
             this.makeJSONdata(new OutputStreamWriter(new FileOutputStream(file.getPath())),handler,dialog);
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(OutOfMemoryError e){
+            SdLog.toast("メモリ不足エラー");
         }
     }
 

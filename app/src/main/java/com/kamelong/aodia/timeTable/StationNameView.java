@@ -44,6 +44,21 @@ public class StationNameView extends KLView {
     }
     public void onDraw(Canvas canvas){
         int startLine=(int)blackPaint.getTextSize();
+        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if(spf.getBoolean("trainName",false)){
+            int startX=(int)((getWidth()-textPaint.getTextSize())/2);
+            canvas.drawText("列",startX,textPaint.getTextSize()*1.2f,textPaint);
+            canvas.drawText("車",startX,textPaint.getTextSize()*2.5f,textPaint);
+            canvas.drawText("名",startX,textPaint.getTextSize()*3.8f,textPaint);
+            canvas.drawLine(0,textSize*7.9f,getWidth(),textSize*7.9f,blackPaint);
+            startLine=(int)blackPaint.getTextSize()*9;
+        }
+
+        startLine+=1.2*textSize;
+        canvas.drawText("始発", 1,startLine-0.8f*textSize, blackPaint);
+
+        canvas.drawLine(0,startLine,getWidth(),startLine,blackPaint);
+        startLine+=1*textSize;
         for(int i = 0; i< station.getStationNum(); i++){
             int stationNumber=(station.getStationNum()-1)*direct+(1-2*direct)*i;
 
@@ -57,8 +72,19 @@ public class StationNameView extends KLView {
                             break;
                         case 1:
                             //発着
-                            canvas.drawText(station.getName(stationNumber), 1,startLine+(int)(textPaint.getTextSize()*4/6), blackBig);
-                            startLine=startLine+(int)(textPaint.getTextSize()*13/6);
+//                            canvas.drawText(station.getName(stationNumber), 1,startLine+(int)(textPaint.getTextSize()*4/6), blackBig);
+//                            startLine=startLine+(int)(textPaint.getTextSize()*13/6);
+                            canvas.drawText(station.getName(stationNumber), 1,startLine, blackPaint);
+                            startLine=startLine+(int)blackPaint.getTextSize();
+                            canvas.drawLine(0, startLine-(int)(textPaint.getTextSize()*5/6),this.getWidth()-1,startLine-(int)(textPaint.getTextSize()*5/6),blackPaint);
+                            startLine=startLine+(int)(textPaint.getTextSize()*1/6);
+                            canvas.drawText("発着番線", 1,startLine, blackPaint);
+
+                            startLine=startLine+(int)blackPaint.getTextSize();
+                            canvas.drawLine(0, startLine-(int)(textPaint.getTextSize()*5/6),this.getWidth()-1,startLine-(int)(textPaint.getTextSize()*5/6),blackPaint);
+                            startLine=startLine+(int)(textPaint.getTextSize()*1/6);
+                            canvas.drawText(station.getName(stationNumber), 1,startLine, blackPaint);
+                            startLine=startLine+(int)blackPaint.getTextSize();
                             break;
                         case 2:
                             //着のみ
@@ -82,7 +108,12 @@ public class StationNameView extends KLView {
                     break;
             }
         }
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+        canvas.drawLine(0,startLine-textSize*0.8f,getWidth(),startLine-textSize*0.8f,blackPaint);
+        startLine+=1.2*textSize;
+        canvas.drawText("終着", 1,startLine-0.6f*textSize, blackPaint);
+
+        startLine+=1*textSize;
+
         if(spf.getBoolean("remark",false)){
             int startY = (int) (this.getHeight() - 10.5f * textSize);
             canvas.drawLine(0, startY, getWidth(), startY, blackBBPaint);
@@ -110,6 +141,7 @@ public class StationNameView extends KLView {
                         case 1:
                             //発着
                             result=result+(textSize*7/6);
+                            result=result+(textSize*7/6);
                             result=result+textSize;
                             break;
                         case 2:
@@ -134,11 +166,17 @@ public class StationNameView extends KLView {
 
         }
         result=result-(textSize*4/6);
+        result+=textSize*4.4f;
 
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
         if(spf.getBoolean("remark",false)){
             result=result+(int)(textSize*10.6f);
         }
+        if(spf.getBoolean("trainName",false)){
+            result=result+(int)(textSize*8f);
+
+        }
+
         return result;
     }
     public int getStationFromY(int posY){

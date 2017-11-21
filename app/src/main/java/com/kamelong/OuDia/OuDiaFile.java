@@ -318,6 +318,14 @@ public class OuDiaFile {
                         if (line.split("=", -1)[0].equals("UpMain")) {
                             mStation.upMain=Integer.valueOf(line.split("=", -1)[1])-1;
                         }
+                        if (line.split("=", -1)[0].equals("BrunchCoreEkiIndex")) {
+                            if(station.size()>Integer.valueOf(line.split("=", -1)[1])){
+                                station.get(station.size()-1).setBorder(true);
+                            }else{
+                                mStation.setBorder(true);
+                            }
+
+                        }
                         if (line.equals("EkiTrack2Cont.")) {
                             while (!line.equals(".")){
                                 if (line.equals("EkiTrack2.")) {
