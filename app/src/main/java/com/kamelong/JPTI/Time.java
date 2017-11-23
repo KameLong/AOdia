@@ -112,6 +112,10 @@ protected  Time(){}
         if(time.split(":",-1).length>2){
         ss=Integer.parseInt(time.split(":",-1)[2]);
         }
+        hh=hh%24;
+        if(hh<3){
+            hh+=24;
+        }
         return hh*3600+mm*60+ss;
     }
     private static String timeInt2String(int time){

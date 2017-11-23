@@ -115,6 +115,7 @@ public class MenuFragment extends Fragment {
             });
 
             layout.addView(saveFile);
+            /*
             Button openEdit = new Button(activity);
             openEdit.setText("　編集");
             openEdit.setBackgroundColor(Color.TRANSPARENT);
@@ -128,6 +129,7 @@ public class MenuFragment extends Fragment {
             });
 
             layout.addView(openEdit);
+            */
             SearchView stationSearch=new SearchView(activity);
             stationSearch.setQueryHint("駅検索");
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -177,7 +179,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v2.2.4のヘルプを開く");
+            openHelp.setText("　v2.2.8のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {
