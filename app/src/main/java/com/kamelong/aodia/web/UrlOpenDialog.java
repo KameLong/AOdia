@@ -26,7 +26,6 @@ public class UrlOpenDialog {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
                 dialog=null;
-                //((AOdiaActivity)context).onUrlSelect(new File(url));
             }
         });
         builder.setNeutralButton("chromeからダウンロードする", new DialogInterface.OnClickListener() {
