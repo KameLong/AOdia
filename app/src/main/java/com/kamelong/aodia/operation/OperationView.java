@@ -39,11 +39,6 @@ public class OperationView extends RelativeLayout{
         this.operation=operation;
         layout = LayoutInflater.from(context).inflate(R.layout.operation_view, this);
         opeList=layout.findViewById(R.id.opeList);
-        if(opeList.getChildCount()==0) {
-            for (int i = 0; i < operation.getTrainNum(); i++) {
-                opeList.addView(new OperationSubView(context, operation.getTrain(i)));
-            }
-        }
 
         layout.findViewById(R.id.edit).setOnClickListener(new OnClickListener() {
             @Override
@@ -69,6 +64,31 @@ public class OperationView extends RelativeLayout{
             @Override
             public void onClick(View view) {
                 fragment.deleteOpeView(OperationView.this);
+            }
+        });
+        layout.findViewById(R.id.openButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layout.findViewById(R.id.opeList).setVisibility(VISIBLE);
+                layout.findViewById(R.id.addButtonLayout).setVisibility(VISIBLE);
+                layout.findViewById(R.id.closeButton).setVisibility(VISIBLE);
+                layout.findViewById(R.id.openButton).setVisibility(GONE);
+                if(opeList.getChildCount()==0) {
+                    for (int i = 0; i < operation.getTrainNum(); i++) {
+                        opeList.addView(new OperationSubView(context, operation.getTrain(i)));
+                    }
+                }
+
+            }
+        });
+        layout.findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layout.findViewById(R.id.opeList).setVisibility(GONE);
+                layout.findViewById(R.id.addButtonLayout).setVisibility(GONE);
+                layout.findViewById(R.id.closeButton).setVisibility(GONE);
+                layout.findViewById(R.id.openButton).setVisibility(VISIBLE);
+
             }
         });
 
