@@ -2,7 +2,6 @@ package com.kamelong.JPTI;
 
 
 import android.os.Handler;
-import android.widget.Toast;
 
 import com.eclipsesource.json.*;
 import com.kamelong.OuDia.OuDiaFile;
@@ -13,9 +12,6 @@ import com.kamelong.aodia.AOdiaIO.ProgressDialog;
 import com.kamelong.aodia.SdLog;
 
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 
 /**
  * JPTI-jsonの1ファイルを扱うためのクラス
@@ -41,6 +36,9 @@ public class JPTI {
     private static final String STOP = "stop";
     private static final String TRIP = "trip";
     private static final String TRAINTYPE = "traintype";
+
+
+    public int diagramStartHour =3;
 
 
     public ArrayList<Agency> agency = new ArrayList<>();
@@ -193,6 +191,11 @@ public class JPTI {
             }
         } catch (Exception e) {
         }
+        JsonArray serviceArra = json.get(SERVICE).asArray();
+        if(serviceArra.size()>0){
+            diagramStartHour =Service.timeString2Int(serviceArra.get(0).asObject().getString("timetable_start_time","300"))/3600;
+        }
+
         try {
             JsonArray tripArray = json.get(TRIP).asArray();
             final int size=tripArray.size();
@@ -210,7 +213,6 @@ public class JPTI {
             }
         } catch (Exception e) {
         }
-
         try {
             JsonArray serviceArray = json.get(SERVICE).asArray();
             for (int i = 0; i < serviceArray.size(); i++) {
@@ -218,6 +220,7 @@ public class JPTI {
             }
         } catch (Exception e) {
         }
+
         try {
             JsonArray operation = json.get(OPERATION).asArray();
             for (int i = 0; i < operation.size(); i++) {
