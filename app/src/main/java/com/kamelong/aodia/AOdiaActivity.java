@@ -26,14 +26,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kamelong.GTFS.GTFS;
 import com.kamelong.JPTI.JPTI;
-import com.kamelong.JPTI.Service;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.ProgressDialog;
+import com.kamelong.aodia.databaseNewService.EditServiceFragment;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.detabase.SQLData;
 import com.kamelong.aodia.diadata.AOdiaOperation;
@@ -202,7 +200,7 @@ public class AOdiaActivity extends AppCompatActivity {
         createSample();//sample.oudを作成する
 
         serviceList.add(new AOdiaService());
-        AOdiaFragment fragment=new com.kamelong.aodia.databaseTimeTable.TimeTableFragment();
+        AOdiaFragment fragment=new EditServiceFragment();
         Bundle args=new Bundle();
         args.putInt("serviceID",0);
         args.putInt("calendarID",1);
