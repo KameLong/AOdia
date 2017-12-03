@@ -3,13 +3,10 @@ package com.kamelong.aodia.stationInfo;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
+
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 
@@ -76,69 +73,6 @@ public class StationInfoDialog extends Dialog{
 
     }
     private void init(){
-        try {
-            TextView stationNameView = (TextView) findViewById(R.id.stationNameView);
-            stationNameView.setText(diaFile.getStation().getName(station) + "駅");
-            Button beforeStationButton = (Button) findViewById(R.id.beforeStationButton);
-            if (station - (1 - 2 * direct) >= 0 && station - (1 - 2 * direct) < diaFile.getStation().getStationNum()) {
-                beforeStationButton.setText("⇦" + diaFile.getStation().getName(station - (1 - 2 * direct)) + "駅");
-                beforeStationButton.setVisibility(View.VISIBLE);
-            } else {
-                beforeStationButton.setVisibility(View.INVISIBLE);
-            }
-            beforeStationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    station = station - (1 - 2 * direct);
-                    StationInfoDialog.this.init();
-                }
-            });
-            Button afterStationButton = (Button) findViewById(R.id.afterStationButton);
-            if (station + (1 - 2 * direct) >= 0 && station + (1 - 2 * direct) < diaFile.getStation().getStationNum()) {
-                afterStationButton.setText(diaFile.getStation().getName(station + (1 - 2 * direct)) + "駅⇨");
-                afterStationButton.setVisibility(View.VISIBLE);
-            } else {
-                afterStationButton.setVisibility(View.INVISIBLE);
-            }
-            afterStationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    station = station + (1 - 2 * direct);
-                    StationInfoDialog.this.init();
-                }
-            });
-            Button sortButton = (Button) findViewById(R.id.sortButton);
-            if(fragment!=null) {
-                sortButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        fragment.sortTrain(station);
-                        StationInfoDialog.this.dismiss();
-                    }
-                });
-            }else{
-                sortButton.setVisibility(View.INVISIBLE);
-            }
-            Button downTimetable = (Button) findViewById(R.id.downTimeTableButton);
-            downTimetable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.openStationTimeTable(fileNum, diaNum, 0, station);
-                    StationInfoDialog.this.dismiss();
-                }
-            });
-            Button upTimetable = (Button) findViewById(R.id.upTimeTableButton);
-            upTimetable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.openStationTimeTable(fileNum, diaNum, 1, station);
-                    StationInfoDialog.this.dismiss();
-                }
-            });
-        }catch(Exception e){
-            SdLog.log(e);
-        }
-
     }
 
 }

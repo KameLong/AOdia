@@ -1,15 +1,10 @@
 package com.kamelong.aodia.menu;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,8 +14,6 @@ import com.kamelong.aodia.R;
 import com.kamelong.aodia.ReSizeAnimation;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-
-import java.util.ArrayList;
 
 /**
  * Created by kame on 2017/01/24.
@@ -89,14 +82,14 @@ public class LineMenu  extends LinearLayout{
             findViewById(R.id.hidden).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    diaFile.menuOpen=false;
+                    diaFile.setMenuOpen(false);
                     closeMenu();
                 }
             });
             findViewById(R.id.expand).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    diaFile.menuOpen=true;
+                    diaFile.setMenuOpen(true);
                     openMenu();
 
                 }
@@ -106,6 +99,32 @@ public class LineMenu  extends LinearLayout{
             titleButton.setBackgroundColor(Color.TRANSPARENT);
             titleButton.setGravity(Gravity.LEFT);
             titleButton.setGravity(Gravity.CENTER_VERTICAL);
+            Button station = new Button(context);
+            station.setText("　駅編集");
+            station.setGravity(Gravity.LEFT);
+            station.setBackgroundColor(Color.TRANSPARENT);
+            station.setTextColor(Color.BLACK);
+            station.setClickable(true);
+            station.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((AOdiaActivity) context).openEditStation(fileNum);
+                }
+            });
+            lineContLinear.addView(station);
+            Button trainType = new Button(context);
+            trainType.setText("　種別編集");
+            trainType.setGravity(Gravity.LEFT);
+            trainType.setBackgroundColor(Color.TRANSPARENT);
+            trainType.setTextColor(Color.BLACK);
+            trainType.setClickable(true);
+            trainType.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
+                }
+            });
+            lineContLinear.addView(trainType);
             Button timetable = new Button(context);
             timetable.setText("　駅時刻表一覧");
             timetable.setGravity(Gravity.LEFT);
@@ -176,7 +195,7 @@ public class LineMenu  extends LinearLayout{
             });
             lineContLinear.addView(comment);
             addView(lineContLinear);
-            if(diaFile.menuOpen){
+            if(diaFile.getMenuOpen()){
                 openMenu();
             }else{
                 closeMenu();

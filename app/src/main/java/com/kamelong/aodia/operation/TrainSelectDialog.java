@@ -3,18 +3,15 @@ package com.kamelong.aodia.operation;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaOperation;
+import com.kamelong.aodia.diadataOld.AOdiaOperation;
 import com.kamelong.aodia.timeTable.TimeTableFragment;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 

@@ -1,7 +1,6 @@
 package com.kamelong.aodia.timeTable;
 
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 
 /**
  * Created by kame on 2017/10/18.
@@ -13,10 +12,10 @@ public class SelectTrainTimeTable extends TimeTableFragment implements TrainSele
     public String fragmentName(){
         try {
             if (direct == 0) {
-                return "運用列車選択　下り時刻表　" + "\n"+ diaFile.getDiaName(diaNumber)  + diaFile.getLineName();
+                return "運用列車選択　下り時刻表　" + "\n";
 
             } else {
-                return "運用列車選択　上り時刻表　" + "\n"+ diaFile.getDiaName(diaNumber)  + diaFile.getLineName();
+                return "運用列車選択　上り時刻表　" + "\n";
 
             }
         }catch(Exception e){

@@ -14,7 +14,7 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
@@ -76,24 +76,14 @@ public class StationInfoFragment extends AOdiaFragment {
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         try {
-            diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
+            setDiaFile(((AOdiaActivity) getActivity()).getDiaFiles().get(fileNum));
         }catch(Exception e){
             SdLog.log(e);
             Toast.makeText(getActivity(),"Error-StationInfoFragment-onCreateView-E1",Toast.LENGTH_SHORT).show();
         }
-        if(diaFile==null){
+        if(getDiaFile() ==null){
             onDestroy();
             return contentView;
-        }
-        subName=new String[diaFile.getStation().getStationNum()];
-        subNameCount=new int[diaFile.getStation().getStationNum()];
-        usedTrainType=new boolean[diaFile.getJPTI().getTrainTypeSize()];
-        for(int i=0;i<subName.length;i++){
-            subName[i]="";
-            subNameCount[i]=0;
-        }
-        for(int i=0;i<diaFile.getJPTI().getTrainTypeSize();i++){
-            usedTrainType[i]=false;
         }
         return contentView;
     }
@@ -111,13 +101,12 @@ public class StationInfoFragment extends AOdiaFragment {
                 directS="上り";
             }
             String title="";
-            title=title+diaFile.getStation().getName(station)+"駅　時刻表("+diaFile.getDiaName(diaNumber)+")\n"+directS+"　"+diaFile.getStation().getName((1-direct)*(diaFile.getStation().getStationNum()-1))+"方面";
             TextView titleView=(TextView)findViewById(R.id.titleView);
             titleView.setText(title);
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    StationInfoDialog dialog = new StationInfoDialog(getActivity(),diaFile,fileNum,diaNumber,direct,station);
+                    StationInfoDialog dialog = new StationInfoDialog(getActivity(), getDiaFile(),fileNum,diaNumber,direct,station);
                     dialog.show();
 
                 }
@@ -126,99 +115,10 @@ public class StationInfoFragment extends AOdiaFragment {
                     R.id.hour15, R.id.hour16, R.id.hour17, R.id.hour18, R.id.hour19, R.id.hour20, R.id.hour21, R.id.hour22, R.id.hour23, R.id.hour24, R.id.hour1, R.id.hour2};
 
 
-            makeTimeTable();
 
         }catch(Exception e){
             SdLog.log(e);
         }
-
-    }
-    private void makeTimeTable(){
-        boolean existStartStation=false;
-        boolean existEndStation=true;
-        boolean existGoOther=false;
-
-        ArrayList<Integer> trainList=makeTrainArray();
-        for(int i=0;i<24;i++){
-            ((FlexboxLayout)findViewById(flexBoxIds[i])).addView(new StationTimeTableTrainView(getActivity(),"","","", Color.WHITE,-1,0,0,0));
-        }
-        addStationLegend();
-        for(int i=trainList.size()-1;i>=0;i--){
-            AOdiaTrain train=diaFile.getTimeTable(diaNumber, direct).getTrain(trainList.get(i));
-            int hour=train.getPredictionTime(station)/3600;
-            if(hour<3||hour>26){
-                hour=hour+21;
-                hour=hour%24;
-                hour=hour+3;
-            }
-            String min=""+(train.getPredictionTime(station)/60)%60;
-            int color=train.getTrainType().getTextColor().getAndroidColor();
-            if(train.getStopType(station)!= AOdiaTrain.STOP){
-               color=Color.rgb(150,150,150);
-            }
-            if(train.getTime(station)==null||train.getTime(station).getDATime()<0){
-                min=min+"?";
-            }
-            String destination=diaFile.getStation().getName(train.getEndStation(direct));
-            String addInfo="";
-
-            if(train.getStartStation(direct)==station){
-                addInfo+="●";
-                existStartStation=true;
-            }
-            if(train.getEndStation(direct)==station){
-                addInfo+="▽";
-                existEndStation=true;
-            }
-            if(train.getEndStation(direct)+(1-2*direct)>=0&&train.getEndStation(direct)+(1-2*direct)<diaFile.getStation().getStationNum()){
-                if(train.getStopType(train.getEndStation(direct)+(1-2*direct))== AOdiaTrain.PASS||train.getStopType(train.getEndStation(direct)+(1-2*direct))== AOdiaTrain.NOVIA){
-                    addInfo+="||";
-                    existGoOther=true;
-                }
-            }
-
-            StationTimeTableTrainView trainView=new StationTimeTableTrainView(getActivity(),""+min,subName[train.getEndStation(direct)],addInfo,color,fileNum,diaNumber,direct,trainList.get(i));
-            ((FlexboxLayout)findViewById(flexBoxIds[hour-3])).addView(trainView);
-
-        }
-        String str="凡例：";
-        if(existStartStation){
-            str+="●は当駅始発、";
-        }
-        if(existEndStation){
-            str+="▽は当駅終着、";
-        }
-        if(existGoOther){
-            str+="||は他線直通";
-        }
-        TextView textView=(TextView)findViewById(R.id.textView);
-        textView.setText(str+textView.getText());
-
-        TextView textView2=new TextView(getActivity());
-        textView2.setText("種別：");
-        textView2.setTextColor(Color.BLACK);
-        ((FlexboxLayout)findViewById(R.id.example)).addView(textView2);
-
-
-        for(int i=0;i<usedTrainType.length;i++){
-
-            if(usedTrainType[i]){
-                TextView typeView=new TextView(getActivity());
-                typeView.setText(diaFile.getJPTI().getTrainType(i).getName()+"　");
-                typeView.setTextColor(diaFile.getJPTI().getTrainType(i).getTextColor().getAndroidColor());
-//                StationTimeTableTrainView exampleView=new StationTimeTableTrainView(getActivity(),"00:"+diaFile.getTrainType(i).getName(),"","",diaFile.getTrainType(i).getTextColor(),fileNum,diaNumber,direct,-1);
-//                ((FlexboxLayout)findViewById(R.id.example)).addView(exampleView);
-                ((FlexboxLayout)findViewById(R.id.example)).addView(typeView);
-            }
-        }
-        if(PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("STTpass",false)){
-            TextView typeView=new TextView(getActivity());
-            typeView.setText("通過列車　");
-            typeView.setTextColor(Color.rgb(150,150,150));
-//            StationTimeTableTrainView exampleView=new StationTimeTableTrainView(getActivity(),"00:通過列車","","",Color.rgb(150,150,150),fileNum,diaNumber,direct,-1);
-            ((FlexboxLayout)findViewById(R.id.example)).addView(typeView);
-        }
-
 
     }
 
@@ -250,94 +150,10 @@ public class StationInfoFragment extends AOdiaFragment {
         }
         subName[station]=name.substring(0,1);*/
     }
-    private ArrayList<Integer> makeTrainArray(){
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        ArrayList<Integer> trainList = new ArrayList<Integer>();
-        for (int i = 0; i < diaFile.getTimeTable(diaNumber, direct).getTrainNum(); i++) {
-            if (diaFile.getTimeTable(diaNumber, direct).getTrain(i).getPredictionTime(station)>0){
-                if(diaFile.getTimeTable(diaNumber, direct).getTrain(i).getStopType(station)!= AOdiaTrain.STOP&&!spf.getBoolean("STTpass",false)){
-                    continue;
-                }
-                if(diaFile.getTimeTable(diaNumber, direct).getTrain(i).getEndStation(direct)==station&&!spf.getBoolean("endTrain",false)){
-                    continue;
-                }
-                addStationSubName(diaFile.getTimeTable(diaNumber, direct).getTrain(i).getEndStation(direct));
-                if(diaFile.getTimeTable(diaNumber, direct).getTrain(i).getStopType(station)== AOdiaTrain.STOP){
-                    usedTrainType[diaFile.getJPTI().indexOf(diaFile.getTimeTable(diaNumber, direct).getTrain(i).getTrainType())]=true;
-                }
-                int j = 0;
-                for (j = trainList.size(); j > 0; j--) {
-                    if (diaFile.getTimeTable(diaNumber, direct).getTrain(i).getPredictionTime(station) < diaFile.getTimeTable(diaNumber, direct).getTrain(trainList.get(j - 1)).getPredictionTime(station)) {
-                        break;
-                    }
-                }
-                trainList.add(j,i);
-            }
-        }
-        return trainList;
-    }
 
     /**
      * 凡例部分に駅名一覧を追加します。
      */
-    private void addStationLegend(){
-        String result="\n行先：";
-        int max=0;
-        int maxIndex=-1;
-        for(int i=0;i<subNameCount.length;i++){
-            if(subNameCount[i]>max){
-                maxIndex=i;
-                max=subNameCount[i];
-            }
-        }
-
-            String directS="";
-            if(direct==0){
-                directS="下り";
-            }else{
-                directS="上り";
-            }
-
-            String title="";
-        if(maxIndex>=0) {
-            title = title + diaFile.getStation().getName(station) + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　" + diaFile.getStation().getName(maxIndex) + "方面";
-        }else{
-            title = title + diaFile.getStation().getName(station) + "駅　時刻表(" + diaFile.getDiaName(diaNumber) + ")\n" + directS + "　列車なし";
-        }
-        TextView titleView = (TextView) findViewById(R.id.titleView);
-        titleView.setText(title);
-
-
-            if(maxIndex>=0){
-
-            result=result+"無印:"+diaFile.getStation().getName(maxIndex);
-            subName[maxIndex]="";
-            subNameCount[maxIndex]=0;
-            for(int station=0;station<diaFile.getStation().getStationNum();station++){
-                if(subNameCount[station]==0)continue;
-                subName[station]=diaFile.getStation().getName(station).substring(0,1);
-                for(int i=0;i<diaFile.getStation().getName(station).length();i++){
-                    boolean sameFrag=false;//同じものがあるかどうか
-                    for(int j=0;j<station;j++){
-                        if(subName[j].equals(diaFile.getStation().getName(station).substring(i,i+1))){
-                            sameFrag=true;
-                        }
-                    }
-                    if(!sameFrag){
-                        subName[station]=diaFile.getStation().getName(station).substring(i,i+1);
-                        break;
-                    }
-                }
-
-            }
-            for(int i=0;i<subName.length;i++){
-                if(!subName[i].equals("")){
-                    result=result+"　"+subName[i]+":"+diaFile.getStation().getName(i);
-                }
-            }}
-        TextView textView=(TextView)findViewById(R.id.textView);
-        textView.setText(result);
-    }
     @Override
     public String fragmentName(){
         try {
@@ -347,7 +163,7 @@ public class StationInfoFragment extends AOdiaFragment {
             } else {
                 directS = "上り";
             }
-            return "駅時刻表　" + diaFile.getStation().getName(station) + "　" + directS + "\n" + diaFile.getLineName();
+            return "駅時刻表　";
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -355,7 +171,7 @@ public class StationInfoFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentHash(){
-        return "StationInfo-"+diaFile.getFilePath()+"-"+diaNumber+"-"+direct;
+        return "StationInfo-"+ getDiaFile().getFilePath()+"-"+diaNumber+"-"+direct;
     }
     protected View findViewById(int id){
         return contentView.findViewById(id);

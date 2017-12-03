@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 
 /**
  * Created by kamelong on 2016/11/21.
@@ -48,7 +48,6 @@ class TrainNameView extends KLView {
     TrainNameView(Context context, AOdiaDiaFile diaFile, AOdiaTrain t){
         this(context);
         dia=diaFile;
-        jpti=dia.getJPTI();
         train=t;
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
         secondFrag=spf.getBoolean("secondSystem",secondFrag);
@@ -58,11 +57,6 @@ class TrainNameView extends KLView {
 
         int startLine=(int)textPaint.getTextSize();
         textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
-        if(dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric){
-            textPaint.setTextSkewX(-0.3f);
-        }else{
-            textPaint.setTextSkewX(-0f);
-        }
 
         if(secondFrag) {
             drawText(canvas,train.getTrainType().getName(), 1, startLine, textPaint,true);

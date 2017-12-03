@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaOperation;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaOperation;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 import java.util.ArrayList;

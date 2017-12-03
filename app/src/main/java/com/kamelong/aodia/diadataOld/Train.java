@@ -1,4 +1,4 @@
-package com.kamelong.aodia.diadata;
+package com.kamelong.aodia.diadataOld;
 
 
 import com.eclipsesource.json.JsonArray;

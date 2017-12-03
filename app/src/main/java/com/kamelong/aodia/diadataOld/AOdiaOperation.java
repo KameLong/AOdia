@@ -1,8 +1,8 @@
-package com.kamelong.aodia.diadata;
+package com.kamelong.aodia.diadataOld;
 
 import com.kamelong.JPTI.Operation;
-import com.kamelong.JPTI.Trip;
 import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
 import java.util.ArrayList;
 
@@ -21,37 +21,6 @@ public class AOdiaOperation {
         this.diaNum=diaNum;
     }
     public AOdiaOperation(AOdiaDiaFile diaFile,Operation ope){
-        this.diaFile=diaFile;
-        diaNum=ope.getCalenderID();
-        name=ope.getName();
-        number=ope.getNumber();
-        AOdiaTrain train=null;
-        for(Trip trip:ope.getTrip()){
-            if(train!=null&&train.isUsed()&&train.containTrip(trip)){
-                //no action
-            }else{
-                if(diaFile.getTimeTable(diaNum,0).getTrainByTrip(trip)!=null){
-                   train=diaFile.getTimeTable(diaNum,0).getTrainByTrip(trip);
-                    trains.add(train);
-                    train.addOperation(this);
-                    continue;
-                }
-                if(diaFile.getTimeTable(diaNum,1).getTrainByTrip(trip)!=null){
-                    train=diaFile.getTimeTable(diaNum,1).getTrainByTrip(trip);
-                    trains.add(train);
-                    train.addOperation(this);
-                    continue;
-                }
-                if(train==null||train.isused){
-                    train=new AOdiaTrain();
-                    train.addTrip(trip);
-                    trains.add(train);
-                    train.addOperation(this);
-                }else{
-                    train.addTrip(trip);
-                }
-            }
-        }
 
     }
     public int getTrainNum(){
@@ -108,18 +77,6 @@ public class AOdiaOperation {
             return trains.get(index+1);
         }
         return null;
-    }
-    public Operation getJPTIoperation(){
-        Operation result=new Operation(diaFile.getJPTI());
-        result.setName(name);
-        result.setNumber(number);
-        result.setCalenderID(diaNum);
-        for(AOdiaTrain train:trains){
-            for(Trip trip:train.getTrips()){
-                result.addTrip(trip);
-            }
-        }
-        return result;
     }
     public void removeAllTrain(){
         while(trains.size()!=0){

@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.preference.PreferenceManager;
 
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
+import com.kamelong.aodia.diadataOld.AOdiaStation;
 /*
  *     This file is part of AOdia.
 
@@ -41,7 +41,6 @@ AOdia is free software: you can redistribute it and/or modify
         StationNameView(Context context, AOdiaDiaFile diaFile, int d) {
             super(context);
             dia = diaFile;
-            this.station = diaFile.getStation();
             direct = d;
         }
 

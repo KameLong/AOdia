@@ -8,8 +8,6 @@ import android.graphics.Color;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.timeTable.KLView;
 
-import java.util.ArrayList;
-
 /**
  * Created by kame on 2016/12/01.
  */
@@ -54,7 +52,7 @@ public class TimeView extends KLView {
     @Override
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
-        int diagramStartTime=diaFile.getService().getDiagramStartTime();
+        int diagramStartTime=0;
         textPaint.setColor(Color.BLACK);
         //時間軸表示に合わせて描画する内容を切り替える
         //隣の文字との間隔が狭くなる時は一部の表示を無くすことで文字がかぶらないようにする

@@ -1,4 +1,4 @@
-package com.kamelong.aodia.diadata;
+package com.kamelong.aodia.diadataOld;
 
 /*
  *     This file is part of AOdia.
@@ -29,6 +29,7 @@ import com.kamelong.JPTI.Route;
 import com.kamelong.JPTI.RouteStation;
 import com.kamelong.JPTI.Service;
 import com.kamelong.JPTI.Station;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
 import java.util.ArrayList;
 
@@ -58,8 +59,6 @@ public class AOdiaStation{
 
     public AOdiaStation(AOdiaDiaFile diaFile){
         this.diaFile=diaFile;
-        this.service=diaFile.getService();
-        this.jpti=diaFile.getJPTI();
 
         for(int i=0;i<service.getRouteList(0).size();i++){
             Route route=service.getRouteList(0).get(i);
@@ -210,44 +209,6 @@ public class AOdiaStation{
      */
     private int getMinReqiredTime(int startStation, int endStation){
         int result=360000;
-        for(int i=0;i<diaFile.getDiaNum();i++){
-            if(diaFile.getDiaName(i).equals("基準運転時分")){
-                for(int train=0;train<diaFile.getTimeTable(i,0).trainList.size();train++){
-                    int value=diaFile.getTimeTable(i,0).getTrain(train).getRequiredTime(startStation,endStation);
-                    if (value > 0 && result > value) {
-                        result = value;
-                    }
-                }
-                for(int train=0;train<diaFile.getTimeTable(i,1).trainList.size();train++){
-                    int value=diaFile.getTimeTable(i,1).getTrain(train).getRequiredTime(startStation,endStation);
-                    if (value > 0 && result > value) {
-                        result = value;
-                    }
-                }
-                if(result==360000){
-                    result=120;
-                }
-                if(result<60){
-                    result=60;
-                }
-
-                return result;
-            }
-        }
-        for(int i=0;i<diaFile.getDiaNum();i++){
-            for(int train=0;train<diaFile.getTimeTable(i,0).trainList.size();train++){
-                int value=diaFile.getTimeTable(i,0).getTrain(train).getRequiredTime(startStation,endStation);
-                if (value > 0 && result > value) {
-                    result = value;
-                }
-            }
-            for(int train=0;train<diaFile.getTimeTable(i,1).trainList.size();train++){
-                int value=diaFile.getTimeTable(i,1).getTrain(train).getRequiredTime(startStation,endStation);
-                if (value > 0 && result > value) {
-                    result = value;
-                }
-            }
-        }
         if(result==360000){
             result=120;
         }

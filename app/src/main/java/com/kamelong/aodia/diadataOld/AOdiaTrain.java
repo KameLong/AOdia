@@ -1,4 +1,4 @@
-package com.kamelong.aodia.diadata;
+package com.kamelong.aodia.diadataOld;
 
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.JPTI.Route;
@@ -8,6 +8,7 @@ import com.kamelong.JPTI.Time;
 import com.kamelong.JPTI.Train;
 import com.kamelong.JPTI.TrainType;
 import com.kamelong.JPTI.Trip;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
 import java.util.ArrayList;
 
@@ -48,9 +49,6 @@ public class AOdiaTrain {
         this.diaFile=diaFile;
         this.train=train;
         isused=true;
-        jpti=diaFile.getJPTI();
-        service=diaFile.getService();
-        station=diaFile.getStation();
         timeList=new Time[station.getStationNum()];
         stopTypeList=new int[station.getStationNum()];
         for(int i=0;i<station.getStationNum();i++){

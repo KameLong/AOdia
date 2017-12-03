@@ -69,8 +69,8 @@ public class FileSelectFragment extends AOdiaFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
-        fragmentContainer = inflater.inflate(R.layout.file_select_fragment, container, false);
-        return fragmentContainer;
+        setFragmentContainer(inflater.inflate(R.layout.file_select_fragment, container, false));
+        return getFragmentContainer();
     }
 
     /**

@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 
 /**
  * Created by kame on 2017/10/12.
@@ -27,17 +27,7 @@ public class OperationSubView extends LinearLayout {
             ((TextView) layout.findViewById(R.id.trainNumber)).setText(train.getNumber());
             ((TextView) layout.findViewById(R.id.trainType)).setText(train.getTrainType().getName());
             if (direct == 0) {
-                ((TextView) layout.findViewById(R.id.startName)).setText(train.getDiaFile().getStation().getName(train.getStartStation(direct)));
-                ((TextView) layout.findViewById(R.id.startTime)).setText(timeString(train.getTime(train.getStartStation(direct)).getDepartureTime()));
-                ((TextView) layout.findViewById(R.id.endName)).setText(train.getDiaFile().getStation().getName(train.getEndStation(direct)));
-                ((TextView) layout.findViewById(R.id.endTime)).setText(timeString(train.getTime(train.getEndStation(direct)).getArrivalTime()));
-                ((TextView) layout.findViewById(R.id.directString)).setText("→");
             } else {
-                ((TextView) layout.findViewById(R.id.endName)).setText(train.getDiaFile().getStation().getName(train.getStartStation(direct)));
-                ((TextView) layout.findViewById(R.id.endTime)).setText(timeString(train.getTime(train.getStartStation(direct)).getDepartureTime()));
-                ((TextView) layout.findViewById(R.id.startName)).setText(train.getDiaFile().getStation().getName(train.getEndStation(direct)));
-                ((TextView) layout.findViewById(R.id.startTime)).setText(timeString(train.getTime(train.getEndStation(direct)).getArrivalTime()));
-                ((TextView) layout.findViewById(R.id.directString)).setText("←");
             }
             ((Button) layout.findViewById(R.id.addButton)).setOnClickListener(new OnClickListener() {
                 @Override

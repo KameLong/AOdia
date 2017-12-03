@@ -61,8 +61,8 @@ public class MenuFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
         activity=(AOdiaActivity) getActivity();
-        diaFiles=activity.diaFiles;
-            diaFilesIndex=activity.diaFilesIndex;
+        diaFiles= activity.getDiaFiles();
+            diaFilesIndex= activity.getDiaFilesIndex();
             return inflater.inflate(R.layout.menu, container, false);
         }catch(Exception e){
             SdLog.log(e);

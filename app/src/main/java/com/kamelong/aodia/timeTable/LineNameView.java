@@ -1,11 +1,9 @@
 package com.kamelong.aodia.timeTable;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 
@@ -66,7 +64,6 @@ class LineNameView extends KLView {
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSkewX(0);
         textPaint.setTypeface(Typeface.DEFAULT);
-        canvas.drawText(dia.getLineName(), 5,startLine, textPaint);
         startLine=startLine+(int)textPaint.getTextSize();
         canvas.drawText(dia.getDiaName(diaNum), 5,startLine, textPaint);
     }

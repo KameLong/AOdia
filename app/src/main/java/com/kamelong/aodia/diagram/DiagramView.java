@@ -13,8 +13,8 @@ import android.preference.PreferenceManager;
 import com.kamelong.JPTI.TrainType;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaStation;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -116,156 +116,18 @@ public class DiagramView extends KLView {
      * diagramPathを作成する
      */
     private void makeDiagramPath(){
-        //makeDiagramData
-        diagramPath[0]=new  ArrayList<>();
-        diagramPath[1]=new  ArrayList<>();
-        trainList[0]=new ArrayList<>();
-        trainList[1]=new ArrayList<>();
-        stopMark[0]=new ArrayList<>();
-        stopMark[1]=new ArrayList<>();
 
-        for(int direct=0;direct<2;direct++){
-            for (int i = 0; i < diaFile.getTimeTable(diaNum, direct).getTrainNum(); i++) {
-                AOdiaTrain train= diaFile.getTimeTable(diaNum, direct).getTrain(i);
-                if(train.getStartStation(0)<0){
-                    continue;
-                }
-                //この列車のdiagramPath
-                ArrayList<Integer> trainPath=new ArrayList<Integer>();
-                //始発部分のパスを追加
-                trainPath.add(convertTime(train.getTime(train.getStartStation(direct)).getDepartureTime()));
-                trainPath.add(stationTime.get(train.getStartStation(direct)));
-                boolean drawable=true;
-                //駅ループ
-                for (int j = train.getStartStation(direct) + (1-direct*2);(1-direct*2)* j <(1-direct*2)* (train.getEndStation(direct)+ (1-direct*2)); j=j+(1-direct*2)) {
-                    if(drawable&&train.getStopType(j)== AOdiaTrain.NOSERVICE){
-                        //描画打ち切り
-                        drawable=false;
-                        trainPath.add(trainPath.get(trainPath.size()-2));
-                        trainPath.add(trainPath.get(trainPath.size()-2));
-                        continue;
-                    }
-                    if(drawable&&train.getStopType(j)== AOdiaTrain.NOVIA){
-                        //描画打ち切り
-                        drawable=false;
-                        trainPath.add(trainPath.get(trainPath.size()-2));
-                        trainPath.add(trainPath.get(trainPath.size()-2));
-                        continue;
-                    }
-
-                    if(train.getTime(j)!=null&&train.getTime(j).getADTime()>=0) {
-                        //時刻が存在するとき
-                        if (train.getTime(j - (1 - 2 * direct))!=null&&train.getTime(j - (1 - 2 * direct)).getDepartureTime()>=0) {
-                            //一つ前の駅にも発時刻が存在する場合　最小所要時間を考慮
-                            if (train.getTime(j).getArrivalTime()<0&&
-                                    Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 60 < train.getTime(j).getADTime() - train.getTime(j - (1 - 2 * direct)).getDATime()) {
-                                //最小所要時間以上かかっているので最小所要時間を適用
-                                trainPath.add( convertTime(train.getTime(j - (1 - 2 * direct)).getDepartureTime() + Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct)) + 30)));
-                            } else {
-                                //最小所要時間を採用しないとき
-                                trainPath.add(convertTime(train.getTime(j).getADTime()));
-                            }
-                        } else {
-                            //一つ前が通過駅の時など
-                            trainPath.add(convertTime(train.getTime(j).getADTime()));
-                        }
-                        trainPath.add(stationTime.get(j));
-                        if (drawable) {
-                            //現段階で線描画途中の時は、終端点を追加
-                            trainPath.add(trainPath.get(trainPath.size() - 2));
-                            trainPath.add(trainPath.get(trainPath.size() - 2));
-                        }
-                        drawable=true;
-                        try {
-                            //もしパスが12時間以上遡るのなら、日付をまたいでいると判断する
-                            if (trainPath.get(trainPath.size() - 4) - trainPath.get(trainPath.size() - 6) < -60 * 60 * 12) {
-                                trainPath.set(trainPath.size() - 4, trainPath.get(trainPath.size() - 4) + 60 * 60 * 24);
-                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6) - 60 * 60 * 24);//x
-                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6));//y
-                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 2));//x
-                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6));//y
-                            }
-                        } catch (Exception e) {
-                            //no problem
-                        }
-                    }else{
-                        if(drawable&&train.getStopType(j)== AOdiaTrain.PASS&&train.getStopType(j + (1 - 2 * direct))== AOdiaTrain.NOVIA&&train.getTime(j).getADTime()<0){
-
-                            if(train.getPredictionTime(j)>=0){
-                                //この次の駅から経由なしになるとき
-                                trainPath.add(convertTime(train.getPredictionTime(j)));
-                                trainPath.add(stationTime.get(j));
-                                drawable=false;
-                            }
-                        }
-                        if(!drawable&&train.getStopType(j )== AOdiaTrain.PASS&&train.getStopType(j - (1 - 2 * direct))== AOdiaTrain.NOVIA&&train.getTime(j).getADTime()<0){
-                            if(train.getPredictionTime(j)>=0){
-                                //この前の駅まで経由なしのとき
-                                trainPath.add(convertTime(train.getPredictionTime(j)));
-                                trainPath.add(stationTime.get(j));
-                                drawable=true;
-                            }
-                        }
-                    }
-
-                    if(train.getTime(j)!=null&&train.getTime(j).getDepartureTime()>=0){
-                        //停車時間を描画する
-                        trainPath.add(convertTime(train.getTime(j).getDepartureTime()));
-                        trainPath.add( stationTime.get(j) );
-                        if(drawable) {
-                            trainPath.add(trainPath.get(trainPath.size()-2));
-                            trainPath.add(trainPath.get(trainPath.size()-2));
-                            try {
-                                //もしパスが12時間以上遡るのなら、日付をまたいでいると判断する
-                                if (trainPath.get(trainPath.size() - 4) - trainPath.get(trainPath.size() - 6) < -60 * 60 * 12) {
-                                    trainPath.set(trainPath.size() - 4, trainPath.get(trainPath.size() - 4) + 60 * 60 * 24);
-                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 6)- 60 * 60 * 24);//x
-                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 4));//y
-                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 2));//x
-                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 4));//y
-                                }
-                            }catch(Exception e){
-                                //no probrem
-                            }
-                        }
-                        try {
-                            if (train.getStopType(j) == 1 &&
-                                    train.getTrainType().getShowStop() &&
-                                    j!=train.getStartStation(0)&&
-                                    j!=train.getEndStation(0)&&
-                                    trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
-                                //始発終着駅を除き　停車マークを用意する
-                                stopMark[direct].add(trainPath.get(trainPath.size() - 4));
-                                stopMark[direct].add(trainPath.get(trainPath.size() - 3));
-                            }
-                        }catch(Exception e){
-                            SdLog.log(e);
-                        }
-                    }
-                }
-                if(drawable) {
-                    trainPath.add(trainPath.get(trainPath.size() - 2));
-                    trainPath.add(trainPath.get(trainPath.size() - 2));
-
-                }
-                diagramPath[direct].add(trainPath);
-                trainList[direct].add(train);
-
-            }
-        }
     }
     DiagramView(Context context,DiagramSetting s, AOdiaDiaFile dia,int num){
         this(context);
         try {
             setting=s;
             diaFile=dia;
-            station=dia.getStation();
             stationTime=station.getStationTime();
             diaNum=num;
 
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
             onlySolid=spf.getBoolean("onlySolid",false);
-            diagramStartTime=diaFile.getService().getDiagramStartTime();
 
 
             getDensity();

@@ -27,15 +27,15 @@ public class TrainTimeEditFragment extends TimeTableFragment {
         }catch(Exception e){
             SdLog.log(e);
         }
-        fragmentContainer = inflater.inflate(R.layout.train_time_edit_fragment, container, false);
-        fragmentContainer.setOnTouchListener(new View.OnTouchListener() {
+        setFragmentContainer(inflater.inflate(R.layout.train_time_edit_fragment, container, false));
+        getFragmentContainer().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gesture.onTouchEvent(event);
             }
         });
 
-        return fragmentContainer;
+        return getFragmentContainer();
     }
     @Override
     public String fragmentName(){

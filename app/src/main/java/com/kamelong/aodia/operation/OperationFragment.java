@@ -11,8 +11,7 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadata.AOdiaOperation;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaOperation;
 
 import java.util.ArrayList;
 
@@ -35,14 +34,14 @@ public class OperationFragment extends AOdiaFragment{
         }catch(Exception e){
             SdLog.log(e);
         }
-        activity=(AOdiaActivity)getActivity();
-        fragmentContainer=inflater.inflate(R.layout.operation_fragment, container, false);
-        diaFile=activity.diaFiles.get(fileNum);
-        if(diaFile==null){
+        setActivity((AOdiaActivity) getActivity());
+        setFragmentContainer(inflater.inflate(R.layout.operation_fragment, container, false));
+        setDiaFile(getActivity().getDiaFiles().get(fileNum));
+        if(getDiaFile() ==null){
             onDestroy();
-            return fragmentContainer;
+            return getFragmentContainer();
         }
-        return fragmentContainer;
+        return getFragmentContainer();
     }
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState){
@@ -51,33 +50,12 @@ public class OperationFragment extends AOdiaFragment{
     @Override
     public void onStart(){
         super.onStart();
-        ArrayList<AOdiaOperation>operationList=diaFile.operationList.get(diaNum);
-        ((LinearLayout)findViewById(R.id.opeListView)).removeAllViews();
-        if(operationList.size()==0) {
-            AOdiaOperation operation=new AOdiaOperation(diaFile,diaNum);
-            operationList.add(operation);
-            OperationView v=new OperationView(getActivity(),this,operation,diaFile,fileNum,diaNum);
-            ((LinearLayout)findViewById(R.id.opeListView)).addView(v);
-        }else{
-            for(int i=0;i<operationList.size();i++){
-                OperationView v=new OperationView(getActivity(),this,operationList.get(i),diaFile,fileNum,diaNum);
-                ((LinearLayout)findViewById(R.id.opeListView)).addView(v);
-            }
-        }
-        System.out.println(((EditText)((LinearLayout)findViewById(R.id.opeListView)).getChildAt(0).findViewById(R.id.opeNameEdit)).getEditableText().toString());
-
-        findViewById(R.id.addNewOpe).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addNewOpeView();
-            }
-        });
 
     }
     @Override
     public String fragmentName(){
         try {
-            return diaFile.getDiaName(diaNum) + ":運用\n" + diaFile.getLineName();
+            return "";
         }catch(Exception e){
             e.printStackTrace();
             return "運用";
@@ -87,18 +65,16 @@ public class OperationFragment extends AOdiaFragment{
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
         for(int i=0;i<listView.getChildCount();i++){
             if(listView.getChildAt(i)==opeView){
-                AOdiaOperation ope=new AOdiaOperation(diaFile,diaNum);
-                diaFile.operationList.get(diaNum).add(i,ope);
-                listView.addView(new OperationView(getActivity(),this,ope,diaFile,fileNum,diaNum),i);
+                AOdiaOperation ope=new AOdiaOperation(getDiaFile(),diaNum);
+                listView.addView(new OperationView(getActivity(),this,ope, getDiaFile(),fileNum,diaNum),i);
                 break;
             }
         }
     }
     private void addNewOpeView(){
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
-                AOdiaOperation ope=new AOdiaOperation(diaFile,diaNum);
-                diaFile.operationList.get(diaNum).add(ope);
-                listView.addView(new OperationView(getActivity(),this,ope,diaFile,fileNum,diaNum));
+                AOdiaOperation ope=new AOdiaOperation(getDiaFile(),diaNum);
+                listView.addView(new OperationView(getActivity(),this,ope, getDiaFile(),fileNum,diaNum));
     }
 
     public void deleteOpeView(OperationView operationView){
@@ -106,7 +82,6 @@ public class OperationFragment extends AOdiaFragment{
         for(int i=0;i<listView.getChildCount();i++){
             if(listView.getChildAt(i)==operationView){
                 operationView.operation.removeAllTrain();
-                diaFile.operationList.get(diaNum).remove(operationView.operation);
                 listView.removeView(operationView);
                 break;
             }

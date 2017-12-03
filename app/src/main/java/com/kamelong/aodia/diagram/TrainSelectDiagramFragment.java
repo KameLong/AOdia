@@ -1,18 +1,15 @@
 package com.kamelong.aodia.diagram;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.kamelong.JPTI.Operation;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaOperation;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaOperation;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 import java.util.ArrayList;
@@ -74,14 +71,7 @@ public class TrainSelectDiagramFragment extends DiagramFragment{
                         @Override
                         public int compare(AOdiaTrain a, AOdiaTrain b){
                             int aTime=a.getTime(a.getStartStation()).getDATime();
-                            if(aTime<diaFile.getService().getDiagramStartTime()){
-                                aTime+=24*60*60;
-                            }
-                            int bTime=b.getTime(b.getStartStation()).getDATime();
-                            if(bTime<diaFile.getService().getDiagramStartTime()){
-                                bTime+=24*60*60;
-                            }
-                            return aTime-bTime;
+                            return 0;
                         }
                     });
                     trainSelectListener.selectTrain(diagramView.focusTrain);
@@ -122,7 +112,7 @@ public class TrainSelectDiagramFragment extends DiagramFragment{
     }
     @Override
     public String fragmentName() {
-        return "運用選択：ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
+        return "";
     }
 
 

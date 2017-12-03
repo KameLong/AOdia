@@ -52,8 +52,8 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         }
         activity=(AOdiaActivity)getActivity();
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
-        diaFile=activity.diaFiles.get(fileNum);
-        if(diaFile==null){
+        setDiaFile(activity.getDiaFiles().get(fileNum));
+        if(getDiaFile() ==null){
             onDestroy();
             return contentView;
         }
@@ -65,22 +65,17 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             LinearLayout stationLayout = (LinearLayout)findViewById(R.id.stationList);
-            for (int station = 0; station < diaFile.getStation().getStationNum(); station++) {
-                StationTimetableIndexStation stationView = new StationTimetableIndexStation(getActivity(),diaFile,fileNum,station);
-                stationLayout.addView(stationView);
-
-            }
         }catch(Exception e){
             SdLog.log(e);
         }
     }
     @Override
     public String fragmentName(){
-        return "駅時刻表一覧\n"+diaFile.getLineName();
+        return "駅時刻表一覧\n";
     }
     @Override
     public String fragmentHash(){
-        return "StationInfoIndex-"+diaFile.getFilePath();
+        return "StationInfoIndex-"+ getDiaFile().getFilePath();
     }
 
     protected View findViewById(int id){

@@ -5,15 +5,14 @@ import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.JPTI.Time;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaStation;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 public class TrainTimeView extends KLView {
     private AOdiaDiaFile dia;
     private AOdiaTrain train;
@@ -37,8 +36,6 @@ public class TrainTimeView extends KLView {
     TrainTimeView(Context context, TimeTableFragment timeTableFragment, AOdiaDiaFile diaFile, AOdiaTrain t, int d) {
         this(context);
         dia = diaFile;
-        station = dia.getStation();
-        jpti = dia.getJPTI();
         train = t;
         direct = d;
 
@@ -82,16 +79,6 @@ public class TrainTimeView extends KLView {
         try {
             textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
 
-            if (dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).itaric) {
-                textPaint.setTextSkewX(-0.3f);
-            } else {
-                textPaint.setTextSkewX(0f);
-            }
-            if (dia.getService().getTimeTableFont(train.getTrainType().getFontNumber()).bold) {
-                textPaint.setTypeface(Typeface.DEFAULT_BOLD);
-            } else {
-                textPaint.setTypeface(Typeface.DEFAULT);
-            }
             drawNoService(canvas, startLine, textPaint);
             startLine += textSize;
             drawNoService(canvas, startLine, textPaint);

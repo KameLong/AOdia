@@ -1,6 +1,6 @@
 package com.kamelong.aodia.timeTable;
 
-import com.kamelong.aodia.diadata.AOdiaTrain;
+import com.kamelong.aodia.diadataOld.AOdiaTrain;
 
 import java.util.ArrayList;
 

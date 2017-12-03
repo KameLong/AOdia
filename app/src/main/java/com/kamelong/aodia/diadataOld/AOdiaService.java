@@ -1,4 +1,4 @@
-package com.kamelong.aodia.diadata;
+package com.kamelong.aodia.diadataOld;
 
 
 import com.eclipsesource.json.JsonArray;
@@ -9,12 +9,9 @@ import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 
 /**

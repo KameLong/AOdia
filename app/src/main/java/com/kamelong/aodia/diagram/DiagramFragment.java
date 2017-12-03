@@ -257,13 +257,13 @@ public class DiagramFragment extends AOdiaFragment {
         super.onViewCreated(view, savedInstanceState);
         try{
             try {
-                diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
+                setDiaFile(((AOdiaActivity) getActivity()).getDiaFiles().get(fileNum));
             }catch(Exception e){
                 SdLog.log(e);
                 Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
 
             }
-            if(diaFile==null){
+            if(getDiaFile() ==null){
                 Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
                 onDestroy();
                 return;
@@ -282,22 +282,23 @@ public class DiagramFragment extends AOdiaFragment {
             FrameLayout stationFrame = (FrameLayout) view.findViewById(R.id.station);
             FrameLayout timeFrame = (FrameLayout) view.findViewById(R.id.time);
             FrameLayout diaFrame = (FrameLayout) view.findViewById(R.id.diagramFrame);
-            diagramView = new DiagramView(getActivity(), setting,diaFile, diaNumber);
-            stationView = new StationView(getActivity(),setting,diaFile,diaNumber);
+            diagramView = new DiagramView(getActivity(), setting, getDiaFile(), diaNumber);
+            stationView = new StationView(getActivity(),setting, getDiaFile(),diaNumber);
             stationFrame.addView(stationView);
-            timeView = new TimeView(getActivity(),setting,diaFile);
+            timeView = new TimeView(getActivity(),setting, getDiaFile());
             timeFrame.addView(timeView);
             diaFrame.addView(diagramView);
 
 
             //デフォルトscaleはTrainNumに依存する
+            /*
             if (diaFile.getTimeTable(0, 0).getTrainNum() < 100) {
                 scaleX = 10;
                 scaleY = 20;
             } else {
                 scaleX = 15;
                 scaleY = 30;
-            }
+            }*/
             setScale();
         }
         catch(Exception e){
@@ -352,7 +353,6 @@ public class DiagramFragment extends AOdiaFragment {
                 FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
                 final int width = diagramFrame.getWidth();
                 int nowTime = (int) (System.currentTimeMillis() % (24 * 60 * 60 * 1000)) / 1000;//システムの時間
-                nowTime = nowTime - diaFile.getService().getDiagramStartTime() + 9 * 60 * 60;//時差
                 if (nowTime < 0) {
                     nowTime = nowTime + 24 * 60 * 60;
                 }
@@ -435,12 +435,12 @@ public class DiagramFragment extends AOdiaFragment {
             setting.saveChange();
             SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
             SharedPreferences.Editor editor = preference.edit();
-            editor.putString("RecentFilePath",diaFile.getFilePath());
+            editor.putString("RecentFilePath", getDiaFile().getFilePath());
             editor.putInt("RecentDiaNum",diaNumber);
             editor.putInt("RecentDirect",2);
             editor.apply();
             DBHelper db = new DBHelper(getActivity());
-            db.updateLineData(diaFile.getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
+            db.updateLineData(getDiaFile().getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
         }catch(Exception e){
             SdLog.log(e);
         }finally {
@@ -458,7 +458,7 @@ public class DiagramFragment extends AOdiaFragment {
         super.onStart();
         try {
             DBHelper db = new DBHelper(getActivity());
-            int[] scroll = db.getPositionData(db.getReadableDatabase(),  diaFile.getFilePath(), diaNumber, 2);
+            int[] scroll = db.getPositionData(db.getReadableDatabase(),  getDiaFile().getFilePath(), diaNumber, 2);
             scaleX=scroll[2]/100f;
             scaleY=scroll[3]/100f;
             if(scaleX<0.5f){
@@ -520,7 +520,7 @@ public class DiagramFragment extends AOdiaFragment {
     public void fitVertical(){
         FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
         float frameSize=diagramFrame.getHeight()-40;
-        float nessTime=diaFile.getStation().getStationTime().get(diaFile.getStation().getStationNum()-1);
+        float nessTime=0;
         scaleY=frameSize/nessTime*60;
         setScale();
         stationView.invalidate();
@@ -537,7 +537,7 @@ public class DiagramFragment extends AOdiaFragment {
     @Override
     public String fragmentName() {
         try {
-            return "ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
+            return "ダイヤグラム　";
         }catch(Exception e){
             e.printStackTrace();
             return "";
@@ -546,7 +546,7 @@ public class DiagramFragment extends AOdiaFragment {
     @Override
     public String fragmentHash(){
         try{
-            return "Diagram-"+diaFile.getFilePath()+"-"+diaNumber;
+            return "Diagram-"+ getDiaFile().getFilePath()+"-"+diaNumber;
         }catch (Exception e){
             Toast.makeText(getActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
             return "";

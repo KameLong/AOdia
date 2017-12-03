@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:paddingLeft="5dp"
+        android:text="番号"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/stationName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:paddingLeft="5dp"
+        android:text="駅名"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textStopType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:paddingLeft="5dp"
+        android:text="駅時刻形式"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textBranch"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:paddingLeft="5dp"
+        android:text="分岐駅"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textLoop"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:paddingLeft="5dp"
+        android:text="環状線"
+        android:textColor="@android:color/black" />
+
+</LinearLayout>

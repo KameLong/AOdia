@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
+import com.kamelong.aodia.diadataOld.AOdiaStation;
 import com.kamelong.aodia.timeTable.KLView;
 
 import java.util.ArrayList;
@@ -61,7 +61,6 @@ public class StationView extends KLView {
         setting=s;
         diaFile=dia;
         diaNum=num;
-        station=dia.getStation();
         stationTime=station.getStationTime();
     }
     @Override
