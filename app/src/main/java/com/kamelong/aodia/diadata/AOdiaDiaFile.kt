@@ -19,10 +19,11 @@ interface AOdiaDiaFile {
     var filePath:String
     var menuOpen:Boolean
     fun getDiaNum():Int
+    fun getDiaName(index:Int):String
+
     fun getStation(index:Int):AOdiaStation
     fun getStationList():ArrayList<AOdiaStation>
-    fun getDiaName(index:Int):String{
-        return ""
-    }
+
+
 
 }

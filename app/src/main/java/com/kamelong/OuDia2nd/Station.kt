@@ -8,6 +8,15 @@ import java.util.ArrayList
  *
  */
 class Station :AOdiaStation{
+
+    override fun getStopDiaStyle(): Boolean {
+        return showStopDiagram
+    }
+
+    override fun setStopDiaStyle(value: Boolean) {
+        showStopDiagram=value
+    }
+
     /**
      * 駅名。
      */
@@ -29,22 +38,41 @@ class Station :AOdiaStation{
      */
     var showType = SHOW_HATU
     private set
+    override fun getTimeViewStyle(): Int {
+        return showType and 0b00110011
+    }
+
+    override fun setTimeViewStyle(value: Int) {
+        val m_value=value and 0b00110011
+        showType = showType and 0b11001100
+        showType = showType or m_value
+    }
+
+    override fun getStopStyle(): Int {
+        return showType and 0b01000100
+    }
+
+    override fun setStopStyle(value: Int) {
+        val m_value=value and 0b01000100
+        showType = showType and 0b10111011
+        showType = showType or m_value
+    }
 
 
     /**
      * 駅規模。
      */
-    var bigStation=false
+    override var bigStation=false
 
 
     /**
      * 分岐起点駅を示す。
      */
-    var branchStation=-1
+    override var branchStation=-1
     /**
      * 環状線起点駅を示す
      */
-    var loopStation=-1
+    override var loopStation=-1
 
 
 
@@ -147,12 +175,12 @@ class Station :AOdiaStation{
 
     companion object {
 
-        protected val SHOW_HATU = 0x11
-        protected val SHOW_HATUTYAKU = 0x33
-        protected val SHOW_KUDARITYAKU = 0x12
-        protected val SHOW_NOBORITYAKU = 0x21
-        protected val SHOW_KUDARIHATUTYAKU = 0x13
-        protected val SHOW_NOBORIHATUTYAKU = 0x31
+        val SHOW_HATU = 0x11
+        val SHOW_HATUTYAKU = 0x33
+        val SHOW_KUDARITYAKU = 0x12
+        val SHOW_NOBORITYAKU = 0x21
+        val SHOW_KUDARIHATUTYAKU = 0x13
+        val SHOW_NOBORIHATUTYAKU = 0x31
         /**
          * 発着表示を取得する際に使う定数
          */

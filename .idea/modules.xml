@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AOdia.iml" filepath="$PROJECT_DIR$/AOdia.iml" />
+      <module fileurl="file://C:\Users\user2017\AndroidStudioProjects\AOdia\AOdia.iml" filepath="C:\Users\user2017\AndroidStudioProjects\AOdia\AOdia.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\user2017\AndroidStudioProjects\AOdia\app\app.iml" filepath="C:\Users\user2017\AndroidStudioProjects\AOdia\app\app.iml" />
     </modules>
   </component>
 </project>
