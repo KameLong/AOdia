@@ -14,22 +14,23 @@ import com.kamelong.aodia.diadata.AOdiaDiaFile
 abstract class AOdiaFragment : Fragment(), AOdiaFragmentInterface {
 
     protected var fragmentContainer: View? = null
-    override lateinit var diaFile: AOdiaDiaFile;
-    override  lateinit var activity: AOdiaActivity
-    protected val aOdiaActivity: AOdiaActivity
-        get() = getActivity() as AOdiaActivity
+    override lateinit var diaFile: AOdiaDiaFile
+    override var aodiaActivity: AOdiaActivity
+        get() =getActivity() as AOdiaActivity
+        set(value) {}
     override var fragment: Fragment
         get() = this
         set(fragment) {
 
         }
-
-
     override fun onStart() {
         super.onStart()
         (getActivity().findViewById<View>(R.id.titleView) as TextView).text = fragmentName()
 
 
+    }
+    fun getAOdiaActivity():AOdiaActivity{
+        return aodiaActivity
     }
 
     override fun onStop() {

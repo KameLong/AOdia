@@ -22,9 +22,8 @@ interface AOdiaDiaFile {
     fun getDiaName(index:Int):String
 
     fun getStation(index:Int):AOdiaStation
+    val stationNum:Int
     fun getStationList():ArrayList<AOdiaStation>
-    fun addStation(index:Int)
-    fun deleteStation(index:Int):Boolean
 
 
 

@@ -39,7 +39,7 @@ public class CommentFragment extends AOdiaFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        LinearLayout main=new LinearLayout(getActivity());
+        LinearLayout main=new LinearLayout(getAodiaActivity());
 
         try {
 
@@ -47,21 +47,21 @@ public class CommentFragment extends AOdiaFragment {
             fileNum=bundle.getInt("fileNum");
             setDiaFile(getAOdiaActivity().getDiaFiles().get(fileNum));
         }catch(Exception e){
-            Toast.makeText(getActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
             SdLog.log(e);
         }
         try {
 
             main.setOrientation(LinearLayout.VERTICAL);
-            ScrollView scrollView=new ScrollView(getActivity());
-            TextView text = new TextView(getActivity());
+            ScrollView scrollView=new ScrollView(getAodiaActivity());
+            TextView text = new TextView(getAodiaActivity());
             text.setTextColor(Color.BLACK);
             scrollView.addView(text);
             LinearLayout.LayoutParams mlp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
            mlp.setMargins(10, 10, 10, 10);
             main.addView(scrollView,mlp);
         }catch(Exception e){
-            Toast.makeText(getActivity(), "Error(CommentFragment-onCreateView-E2)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(), "Error(CommentFragment-onCreateView-E2)", Toast.LENGTH_SHORT).show();
             SdLog.log(e);
         }
         return main;
@@ -77,7 +77,7 @@ public class CommentFragment extends AOdiaFragment {
             return "";
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }
     }
@@ -87,7 +87,7 @@ public class CommentFragment extends AOdiaFragment {
             return "comment-" + getDiaFile().getFilePath();
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(), "Error(CommentFragment-fragmentHash-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(), "Error(CommentFragment-fragmentHash-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }
     }

@@ -50,7 +50,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         }catch(Exception e){
             SdLog.log(e);
         }
-        activity=(AOdiaActivity)getActivity();
+        activity=(AOdiaActivity) getAodiaActivity();
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
         setDiaFile(activity.getDiaFiles().get(fileNum));
         if(getDiaFile() ==null){

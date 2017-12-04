@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/stopID"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingLeft="5dp"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/textStopName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/textStopShort"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <Spinner
+        android:id="@+id/mainSropSpnner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="5" />
+
+</LinearLayout>

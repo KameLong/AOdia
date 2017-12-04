@@ -24,10 +24,10 @@
             android:inputType="textPersonName" />
 
         <Button
-            android:id="@+id/CancelButton"
+            android:id="@+id/SubmitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="中止" />
+            android:text="決定" />
     </LinearLayout>
 
     <ScrollView
@@ -53,73 +53,75 @@
                     android:text="駅時刻形式"
                     android:textColor="@android:color/black" />
 
-                <LinearLayout
+                <com.kamelong.tool.downloadView.TableRadioGroup
+                    android:id="@+id/showTimeRadio"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent">
 
-                    <RadioButton
-                        android:id="@+id/showStop5"
+                    <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="発時刻" />
+                        android:layout_height="match_parent">
 
-                    <RadioButton
-                        android:id="@+id/showStop15"
+                        <RadioButton
+                            android:id="@+id/showStop5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="発時刻" />
+
+                        <RadioButton
+                            android:id="@+id/showStop15"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="発着" />
+                    </TableRow>
+
+                    <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="発着" />
+                        android:layout_height="match_parent">
 
-                </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/showStop6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="下り着時刻" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                        <RadioButton
+                            android:id="@+id/showStop9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="上り着時刻" />
+                    </TableRow>
 
-                    <RadioButton
-                        android:id="@+id/shoeStop6"
+                    <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="下り着時刻" />
+                        android:layout_height="match_parent">
 
-                    <RadioButton
-                        android:id="@+id/showStop9"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="上り着時刻" />
+                        <RadioButton
+                            android:id="@+id/showStop7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="下り発着" />
 
-                </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/showStop13"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="1"
+                            android:text="上り発着" />
+                    </TableRow>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <RadioButton
-                        android:id="@+id/showStop7"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="下り発着" />
-
-                    <RadioButton
-                        android:id="@+id/showStop13"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="上り発着" />
-                </LinearLayout>
+                </com.kamelong.tool.downloadView.TableRadioGroup>
 
             </LinearLayout>
 
@@ -137,27 +139,28 @@
                     android:text="駅規模"
                     android:textColor="@android:color/black" />
 
-                <LinearLayout
+                <RadioGroup
+                    android:id="@+id/bigRadio"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/radioButton2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:text="主要駅" />
-
-                    <RadioButton
-                        android:id="@+id/radioButton"
-                        android:layout_width="match_parent"
+                        android:id="@+id/normalStation"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:text="一般駅" />
-                </LinearLayout>
+
+                    <RadioButton
+                        android:id="@+id/bigStation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:text="主要駅" />
+                </RadioGroup>
 
             </LinearLayout>
 
@@ -201,7 +204,7 @@
                         android:id="@+id/textView15"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:paddingLeft="5dp"
                         android:text="略称"
                         android:textColor="@android:color/black" />
@@ -217,6 +220,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/stopList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"></LinearLayout>
@@ -230,7 +234,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
@@ -254,7 +257,7 @@
                         android:textSize="12dp" />
 
                     <Spinner
-                        android:id="@+id/spinner3"
+                        android:id="@+id/branchSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
@@ -279,7 +282,7 @@
                         android:textSize="12dp" />
 
                     <Spinner
-                        android:id="@+id/spinner3"
+                        android:id="@+id/loopSpinner"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />

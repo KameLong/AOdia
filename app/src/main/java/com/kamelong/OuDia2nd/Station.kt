@@ -8,6 +8,35 @@ import java.util.ArrayList
  *
  */
 class Station :AOdiaStation{
+    override val stopNum: Int
+        get() =trackName.size
+
+    override fun getStopName(index: Int):String {
+        return trackName[index]
+    }
+
+    override fun setStopName(index: Int, value: String) {
+        trackName[index]=value
+    }
+
+    override fun getShortName(index: Int):String {
+        return trackRyakusyou[index]
+    }
+
+    override fun setShortName(index: Int, value: String) {
+        trackRyakusyou[index]=value
+    }
+
+    override fun addStop(index: Int) {
+        trackName.add(index,"")
+        trackRyakusyou.add(index,"")
+    }
+
+    override fun deleteStop(index: Int): Boolean {
+        trackName.removeAt(index)
+        trackRyakusyou.removeAt(index)
+        return true
+    }
 
 
     /**
@@ -73,9 +102,9 @@ class Station :AOdiaStation{
      * OuDiaSecond
      */
     var trackName = ArrayList<String>()
-    var TrackRyakusyou = ArrayList<String>()
-    var downMain = 0
-    var upMain = 0
+    var trackRyakusyou = ArrayList<String>()
+    override var downMain = 0
+    override var upMain = 0
     var showStopDiagram=false
     override fun getStopDiaStyle(): Boolean {
         return showStopDiagram
@@ -172,10 +201,18 @@ class Station :AOdiaStation{
         }
     }
 
-    override fun copy(origin: AOdiaStation): AOdiaStation {
+    override fun clone(): AOdiaStation {
         val station=Station()
-        station.name=origin.name
-        station.showType=origin.getTimeViewStyle() or origin.getStopStyle()
+        station.name=name
+        station.showType=showType
+        station.bigStation=bigStation
+        station.branchStation=branchStation
+        station.loopStation=loopStation
+        station.trackName=ArrayList(trackName)
+        station.trackRyakusyou =ArrayList(trackRyakusyou)
+        station.downMain=downMain
+        station.upMain=upMain
+        station.showStopDiagram=showStopDiagram
         
         return station
     }

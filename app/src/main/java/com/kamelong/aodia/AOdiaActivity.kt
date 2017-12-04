@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 
 import com.kamelong.OuDia2nd.DiaFile
@@ -139,8 +140,8 @@ class AOdiaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setting()
         //Drawer初期化
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        val openDrawer = findViewById(R.id.Button2) as Button
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
+        val openDrawer = findViewById<Button>(R.id.Button2) as Button
         openDrawer.setOnClickListener {
             if (!drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.openDrawer(GravityCompat.START)
@@ -154,27 +155,27 @@ class AOdiaActivity : AppCompatActivity() {
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.menu, menuFragment)
         fragmentTransaction.commit()
-        findViewById(R.id.backFragment).setOnClickListener {
+        findViewById<View>(R.id.backFragment).setOnClickListener {
             fragmentIndex--
             println("fragment=" + fragmentIndex + ",max=" + fragments.size)
             if (fragmentIndex <= 0) {
                 fragmentIndex = 0
             }
             selectFragment(fragments[fragmentIndex])
-            findViewById(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
-            findViewById(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
+            findViewById<View>(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
+            findViewById<View>(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
         }
-        findViewById(R.id.proceedFragment).setOnClickListener {
+        findViewById<View>(R.id.proceedFragment).setOnClickListener {
             fragmentIndex++
             println("fragment=" + fragmentIndex + ",max=" + fragments.size)
             if (fragmentIndex >= fragments.size) {
                 fragmentIndex = fragments.size - 1
             }
             selectFragment(fragments[fragmentIndex])
-            findViewById(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
-            findViewById(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
+            findViewById<View>(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
+            findViewById<View>(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
         }
-        findViewById(R.id.killFragment).setOnClickListener { killFragment(fragmentIndex) }
+        findViewById<View>(R.id.killFragment).setOnClickListener { killFragment(fragmentIndex) }
 
         createSample()//sample.oudを作成する
 
@@ -269,11 +270,11 @@ class AOdiaActivity : AppCompatActivity() {
      * 理想としては戻るボタンを押すと操作が一つ戻るようにしたいが現状そこまではできていない
      */
     override fun onBackPressed() {
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
         } else {
-            findViewById(R.id.backFragment).callOnClick()
+            findViewById<View>(R.id.backFragment).callOnClick()
         }
     }
 
@@ -364,8 +365,6 @@ class AOdiaActivity : AppCompatActivity() {
      * @param file
      */
     fun onFileSelect(file: File) {
-        val dialog = ProgressDialog()
-        dialog.show(fragmentManager, "test")
         val filePath = file.path
         if (filePath.endsWith(".oud") || filePath.endsWith(".oud2")) {
             val diaFile = DiaFile(this, file)
@@ -375,8 +374,8 @@ class AOdiaActivity : AppCompatActivity() {
             diaFiles.add(diaFile)
             diaFilesIndex.add(0, diaFiles.size - 1)
             menuFragment!!.createMenu()
+            openEditStation(0)
             //openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
-
         }
     }
 
@@ -395,7 +394,7 @@ class AOdiaActivity : AppCompatActivity() {
      * @param fragment
      */
     private fun openFragment(fragment: AOdiaFragmentInterface) {
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         val fragmentManager = fragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -403,8 +402,8 @@ class AOdiaActivity : AppCompatActivity() {
         fragmentTransaction.commit()
         fragmentIndex++
         fragments.add(fragmentIndex, fragment)
-        findViewById(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
-        findViewById(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
+        findViewById<View>(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
+        findViewById<View>(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
 
 
     }
@@ -415,7 +414,7 @@ class AOdiaActivity : AppCompatActivity() {
      */
     private fun selectFragment(fragment: AOdiaFragmentInterface) {
         //もしメニューが開いていたら閉じる
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)
         val fragmentManager = fragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -462,8 +461,8 @@ class AOdiaActivity : AppCompatActivity() {
             if (fragmentIndex >= index) {
                 fragmentIndex--
             }
-            findViewById(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
-            findViewById(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
+            findViewById<View>(R.id.backFragment).visibility = if (fragmentIndex == 0) View.INVISIBLE else View.VISIBLE
+            findViewById<View>(R.id.proceedFragment).visibility = if (fragmentIndex < fragments.size - 1) View.VISIBLE else View.INVISIBLE
             if (fragmentIndex == -1) {
                 if (fragments.size > 0) {
                     fragmentIndex++
@@ -789,7 +788,7 @@ class AOdiaActivity : AppCompatActivity() {
             val outFile = File(saveFile.filePath.substring(0, saveFile.filePath.lastIndexOf(".")) + ".jpti")
             val dialog = ProgressDialog()
             dialog.show(fragmentManager, "test")
-            val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+            val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
             drawer.closeDrawer(GravityCompat.START)
 
         } catch (e: Exception) {

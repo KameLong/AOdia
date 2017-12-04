@@ -1,9 +1,7 @@
 package com.kamelong.aodia.stationInfo;
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +12,6 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadataOld.AOdiaTrain;
-import com.google.android.flexbox.FlexboxLayout;
-
-import java.util.ArrayList;
 
 /**
  * Created by kame on 2017/01/28.
@@ -76,10 +70,10 @@ public class StationInfoFragment extends AOdiaFragment {
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         try {
-            setDiaFile(((AOdiaActivity) getActivity()).getDiaFiles().get(fileNum));
+            setDiaFile(((AOdiaActivity) getAodiaActivity()).getDiaFiles().get(fileNum));
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(),"Error-StationInfoFragment-onCreateView-E1",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(),"Error-StationInfoFragment-onCreateView-E1",Toast.LENGTH_SHORT).show();
         }
         if(getDiaFile() ==null){
             onDestroy();
@@ -106,7 +100,7 @@ public class StationInfoFragment extends AOdiaFragment {
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    StationInfoDialog dialog = new StationInfoDialog(getActivity(), getDiaFile(),fileNum,diaNumber,direct,station);
+                    StationInfoDialog dialog = new StationInfoDialog(getAodiaActivity(), getDiaFile(),fileNum,diaNumber,direct,station);
                     dialog.show();
 
                 }

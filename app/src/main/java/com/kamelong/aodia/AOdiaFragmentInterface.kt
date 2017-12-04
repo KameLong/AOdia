@@ -26,7 +26,7 @@ internal interface AOdiaFragmentInterface {
     /**
      * このinterfaceが所属するactivity
      */
-    var activity:AOdiaActivity
+    var aodiaActivity:AOdiaActivity
 
     /**
      * この画面のタイトルを出力する

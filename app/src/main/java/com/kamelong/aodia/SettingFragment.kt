@@ -46,7 +46,7 @@ class SettingFragment : android.preference.PreferenceFragment(), AOdiaFragmentIn
 
         }
 
-    override var activity: AOdiaActivity
+    override var aodiaActivity: AOdiaActivity
         get() = super.getActivity() as AOdiaActivity
         set(aOdiaActivity) {
 

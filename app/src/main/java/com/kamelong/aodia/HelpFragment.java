@@ -1,6 +1,5 @@
 package com.kamelong.aodia;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -55,7 +54,7 @@ public class HelpFragment extends AOdiaFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         WebView.setWebContentsDebuggingEnabled(true);
         handler=new Handler();
-        helpView = new WebView(getActivity());
+        helpView = new WebView(getAodiaActivity());
         helpView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -97,7 +96,7 @@ public class HelpFragment extends AOdiaFragment {
             return;
         }
         if(url.endsWith("oud")||url.endsWith("oud2")) {
-            UrlOpenDialog dialog=new UrlOpenDialog(getActivity(),url,helpView.getUrl());
+            UrlOpenDialog dialog=new UrlOpenDialog(getAodiaActivity(),url,helpView.getUrl());
         }
 
     }

@@ -44,9 +44,38 @@ interface AOdiaStation {
     fun setStopDiaStyle(value:Boolean)
 
     /**
+     * 所属番線数
+     */
+    val stopNum:Int
+    /**
+     * 番線名
+     */
+    fun getStopName(index:Int):String
+    fun setStopName(index:Int,value:String)
+    /**
+     * 番線略称
+     */
+    fun getShortName(index:Int):String
+    fun setShortName(index:Int,value:String)
+    /**
+     * 番線追加
+     */
+    fun addStop(index:Int)
+    /**
+     * 番線削除
+     */
+    fun deleteStop(index:Int):Boolean
+
+
+    /**
+     * 本線
+     */
+    var downMain :Int
+    var upMain :Int
+    /**
      * このオブジェクトのコピーを作成する
      */
-    fun copy(origin:AOdiaStation):AOdiaStation
+    fun clone():AOdiaStation
 
 
 

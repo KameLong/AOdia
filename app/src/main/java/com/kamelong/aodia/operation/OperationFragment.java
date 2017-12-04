@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.kamelong.aodia.AOdiaActivity;
@@ -34,9 +33,9 @@ public class OperationFragment extends AOdiaFragment{
         }catch(Exception e){
             SdLog.log(e);
         }
-        setActivity((AOdiaActivity) getActivity());
+        setAodiaActivity((AOdiaActivity) getAodiaActivity());
         setFragmentContainer(inflater.inflate(R.layout.operation_fragment, container, false));
-        setDiaFile(getActivity().getDiaFiles().get(fileNum));
+        setDiaFile(getAodiaActivity().getDiaFiles().get(fileNum));
         if(getDiaFile() ==null){
             onDestroy();
             return getFragmentContainer();
@@ -66,7 +65,7 @@ public class OperationFragment extends AOdiaFragment{
         for(int i=0;i<listView.getChildCount();i++){
             if(listView.getChildAt(i)==opeView){
                 AOdiaOperation ope=new AOdiaOperation(getDiaFile(),diaNum);
-                listView.addView(new OperationView(getActivity(),this,ope, getDiaFile(),fileNum,diaNum),i);
+                listView.addView(new OperationView(getAodiaActivity(),this,ope, getDiaFile(),fileNum,diaNum),i);
                 break;
             }
         }
@@ -74,7 +73,7 @@ public class OperationFragment extends AOdiaFragment{
     private void addNewOpeView(){
         final LinearLayout listView=(LinearLayout) findViewById(R.id.opeListView);
                 AOdiaOperation ope=new AOdiaOperation(getDiaFile(),diaNum);
-                listView.addView(new OperationView(getActivity(),this,ope, getDiaFile(),fileNum,diaNum));
+                listView.addView(new OperationView(getAodiaActivity(),this,ope, getDiaFile(),fileNum,diaNum));
     }
 
     public void deleteOpeView(OperationView operationView){

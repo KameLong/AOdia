@@ -91,7 +91,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         super();
 
     }
-    final GestureDetector gesture = new GestureDetector(getActivity(),
+    final GestureDetector gesture = new GestureDetector(getAodiaActivity(),
             new GestureDetector.SimpleOnGestureListener() {
 
                 private float flingV = 0;
@@ -127,7 +127,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
                     if(station<0){
                         return;
                     }
-                    StationInfoDialog dialog = new StationInfoDialog(getActivity(),TimeTableFragment.this, getDiaFile(),fileNum,diaNumber,direct,station);
+                    StationInfoDialog dialog = new StationInfoDialog(getAodiaActivity(),TimeTableFragment.this, getDiaFile(),fileNum,diaNumber,direct,station);
                     dialog.show();
 
                 }
@@ -206,7 +206,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
     public void onStart() {
         super.onStart();
         try {
-            DBHelper db = new DBHelper(getActivity());
+            DBHelper db = new DBHelper(getAodiaActivity());
             int[] scroll = db.getPositionData(db.getReadableDatabase(), getDiaFile().getFilePath(), diaNumber, direct);
             db.close();
             scrollTo(scroll[0], scroll[1]);
@@ -219,20 +219,20 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
     private void init() {
         try {
             try {
-                setDiaFile(((AOdiaActivity) getActivity()).getDiaFiles().get(fileNum));
+                setDiaFile(((AOdiaActivity) getAodiaActivity()).getDiaFiles().get(fileNum));
             }catch(Exception e){
-                Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+                Toast.makeText(getAodiaActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
             }
             if(getDiaFile() ==null){
                 onDestroy();
                 return;
             }
             FrameLayout lineNameFrame = (FrameLayout) findViewById(R.id.lineNameFrame);
-            LineNameView lineNameView = new LineNameView(getActivity(), getDiaFile(), diaNumber);
+            LineNameView lineNameView = new LineNameView(getAodiaActivity(), getDiaFile(), diaNumber);
             lineNameFrame.removeAllViews();
             lineNameFrame.addView(lineNameView);
             LinearLayout stationNameLinea = (LinearLayout) findViewById(R.id.stationNameLinear);
-            StationNameView stationNameView = new StationNameView(getActivity(), getDiaFile(), direct);
+            StationNameView stationNameView = new StationNameView(getAodiaActivity(), getDiaFile(), direct);
             stationNameLinea.removeAllViews();
             stationNameLinea.addView(stationNameView);
 
@@ -240,14 +240,14 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
             trainNameLinea.removeAllViews();
             TrainNameView[] trainNameViews = new TrainNameView[timeTable.getTrainNum()];
             for (int i = 0; i < timeTable.getTrainNum(); i++) {
-                trainNameViews[i] = new TrainNameView(getActivity(), getDiaFile(), timeTable.getTrain(i));
+                trainNameViews[i] = new TrainNameView(getAodiaActivity(), getDiaFile(), timeTable.getTrain(i));
                 trainNameLinea.addView(trainNameViews[i]);
             }
             LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
             trainTimeLinear.removeAllViews();
             TrainTimeView[] trainTimeViews = new TrainTimeView[timeTable.getTrainNum()];
             for (int i = 0; i < trainNameViews.length; i++) {
-                trainTimeViews[i] = new TrainTimeView(getActivity(),this, getDiaFile(), timeTable.getTrain(i), direct);
+                trainTimeViews[i] = new TrainTimeView(getAodiaActivity(),this, getDiaFile(), timeTable.getTrain(i), direct);
                 trainTimeLinear.addView(trainTimeViews[i]);
             }
         }catch(Exception e){
@@ -301,7 +301,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
     @Override
     public void onStop(){
         try {
-                SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+                SharedPreferences preference= getAodiaActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
                 SharedPreferences.Editor editor = preference.edit();
                 editor.putString("RecentFilePath", getDiaFile().getFilePath());
                 editor.putInt("RecentDiaNum",diaNumber);
@@ -310,7 +310,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 
                 super.onStop();
 
-            DBHelper db = new DBHelper(getActivity());
+            DBHelper db = new DBHelper(getAodiaActivity());
             ContentValues cont = new ContentValues();
             String d;
             if (direct == 0) {
@@ -386,7 +386,7 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
         try{
             return "LineTime-"+ getDiaFile().getFilePath()+"-"+diaNumber+"-"+direct;
         }catch (Exception e){
-            Toast.makeText(getActivity(),"error-TimeTableFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(),"error-TimeTableFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
             return "";
         }
     }

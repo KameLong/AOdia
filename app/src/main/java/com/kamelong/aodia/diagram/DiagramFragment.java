@@ -99,7 +99,7 @@ public class DiagramFragment extends AOdiaFragment {
     /**
      * DiagramFragment内のタッチジェスチャー
      */
-    private final GestureDetector gesture = new GestureDetector(getActivity(),
+    private final GestureDetector gesture = new GestureDetector(getAodiaActivity(),
             new GestureDetector.SimpleOnGestureListener() {
                 private boolean pinchFragX=false;
                 private boolean pinchFragY=false;
@@ -257,35 +257,35 @@ public class DiagramFragment extends AOdiaFragment {
         super.onViewCreated(view, savedInstanceState);
         try{
             try {
-                setDiaFile(((AOdiaActivity) getActivity()).getDiaFiles().get(fileNum));
+                setDiaFile(((AOdiaActivity) getAodiaActivity()).getDiaFiles().get(fileNum));
             }catch(Exception e){
                 SdLog.log(e);
-                Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+                Toast.makeText(getAodiaActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
 
             }
             if(getDiaFile() ==null){
-                Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
+                Toast.makeText(getAodiaActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
                 onDestroy();
                 return;
             }
         }catch(Exception e){
-            Toast.makeText(getActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
+            Toast.makeText(getAodiaActivity(),"ファイルが閉じられています",Toast.LENGTH_SHORT);
             onDestroy();
             return;
 
         }
 
         //新しくDiagramSettingを作成する
-        setting=new DiagramSetting(getActivity());
+        setting=new DiagramSetting(getAodiaActivity());
         setting.create(this);
         try {
             FrameLayout stationFrame = (FrameLayout) view.findViewById(R.id.station);
             FrameLayout timeFrame = (FrameLayout) view.findViewById(R.id.time);
             FrameLayout diaFrame = (FrameLayout) view.findViewById(R.id.diagramFrame);
-            diagramView = new DiagramView(getActivity(), setting, getDiaFile(), diaNumber);
-            stationView = new StationView(getActivity(),setting, getDiaFile(),diaNumber);
+            diagramView = new DiagramView(getAodiaActivity(), setting, getDiaFile(), diaNumber);
+            stationView = new StationView(getAodiaActivity(),setting, getDiaFile(),diaNumber);
             stationFrame.addView(stationView);
-            timeView = new TimeView(getActivity(),setting, getDiaFile());
+            timeView = new TimeView(getAodiaActivity(),setting, getDiaFile());
             timeFrame.addView(timeView);
             diaFrame.addView(diagramView);
 
@@ -433,13 +433,13 @@ public class DiagramFragment extends AOdiaFragment {
     public void onStop(){
         try {
             setting.saveChange();
-            SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+            SharedPreferences preference= getAodiaActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
             SharedPreferences.Editor editor = preference.edit();
             editor.putString("RecentFilePath", getDiaFile().getFilePath());
             editor.putInt("RecentDiaNum",diaNumber);
             editor.putInt("RecentDirect",2);
             editor.apply();
-            DBHelper db = new DBHelper(getActivity());
+            DBHelper db = new DBHelper(getAodiaActivity());
             db.updateLineData(getDiaFile().getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
         }catch(Exception e){
             SdLog.log(e);
@@ -457,7 +457,7 @@ public class DiagramFragment extends AOdiaFragment {
     public void onStart() {
         super.onStart();
         try {
-            DBHelper db = new DBHelper(getActivity());
+            DBHelper db = new DBHelper(getAodiaActivity());
             int[] scroll = db.getPositionData(db.getReadableDatabase(),  getDiaFile().getFilePath(), diaNumber, 2);
             scaleX=scroll[2]/100f;
             scaleY=scroll[3]/100f;
@@ -548,7 +548,7 @@ public class DiagramFragment extends AOdiaFragment {
         try{
             return "Diagram-"+ getDiaFile().getFilePath()+"-"+diaNumber;
         }catch (Exception e){
-            Toast.makeText(getActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAodiaActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
             return "";
         }
     }

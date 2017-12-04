@@ -25,6 +25,10 @@ import java.util.ArrayList
  * @author KameLong
  */
 class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
+    override fun getDiaName(index: Int): String {
+        return diaName[index]
+    }
+
 
     /**
      * 路線名.
@@ -40,6 +44,8 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
      * 複数の駅を保持することができるためArrayListを用いる。
      */
     var station = ArrayList<Station>()
+    override val stationNum: Int
+        get() = station.size
     /**
      * 種別.
      * 複数の種別を保持することができるためArrayListを用いる。
@@ -87,11 +93,6 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
 
     override var filePath = ""
 
-    /**
-     * 駅数を返す。
-     */
-    val stationNum: Int
-        get() = station.size
     /**
      * 種別の数を返す。
      */
@@ -273,7 +274,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                                             mStation.trackName.add(oudiaSplit(line,1))
                                         }
                                         if (oudiaSplit(line,0) == "TrackRyakusyou") {
-                                            mStation.TrackRyakusyou.add(oudiaSplit(line,1))
+                                            mStation.trackRyakusyou.add(oudiaSplit(line,1))
                                         }
 
                                         line = br.readLine()
@@ -409,7 +410,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             a.append("\r\nRosen.\r\nRosenmei=")
             a.append(lineName)
             a.append("\r\n")
-            for (i in 0 until stationNum) {
+            for (i in 0 until this.stationNum) {
                 a.append(station[i].makeStationText(oudiaSecond))
             }
             for (i in 0 until trainTypeNum) {
