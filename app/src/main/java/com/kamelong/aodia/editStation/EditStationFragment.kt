@@ -12,6 +12,8 @@ import com.kamelong.aodia.AOdiaFragment
 import com.kamelong.aodia.AOdiaFragmentInterface
 import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
+import com.kamelong.aodia.diadata.AOdiaStationHistory
+import java.util.*
 
 /**
  * Created by kame on 2017/12/03.
@@ -24,6 +26,10 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface {
     var fileIndex=0
     lateinit var fragmentContainer:View
     lateinit var stationLinear:LinearLayout
+
+    val stationSelected= ArrayList<Boolean>()
+
+    val backStack=ArrayDeque<AOdiaStationHistory>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -44,8 +50,22 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         for(station in diaFile.getStationList()){
-            stationLinear.addView()
+            stationLinear.addView(EditStaiton(getActivity(),this,station))
+            stationSelected.add(false)
         }
     }
+
+    fun stationSelect(view:View,value:Boolean){
+        val index=stationLinear.indexOfChild(view)
+        stationSelected[index]=value
+    }
+    fun addStation(index:Int){
+        diaFile.addStation(index)
+        stationSelected.add(index,false)
+        val history=AOdiaStationHistory()
+        history.addIndex=index
+        backStack.addLast(history)
+    }
+
 
 }

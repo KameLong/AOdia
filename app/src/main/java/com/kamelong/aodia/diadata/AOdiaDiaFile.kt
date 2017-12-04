@@ -23,6 +23,10 @@ interface AOdiaDiaFile {
 
     fun getStation(index:Int):AOdiaStation
     fun getStationList():ArrayList<AOdiaStation>
+    fun addStation(index:Int)
+    fun deleteStation(index:Int):Boolean
+
+
 
 
 

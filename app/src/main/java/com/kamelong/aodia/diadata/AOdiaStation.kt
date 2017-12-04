@@ -43,6 +43,11 @@ interface AOdiaStation {
      */
     fun setStopDiaStyle(value:Boolean)
 
+    /**
+     * このオブジェクトのコピーを作成する
+     */
+    fun copy(origin:AOdiaStation):AOdiaStation
+
 
 
 

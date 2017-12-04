@@ -9,13 +9,6 @@ import java.util.ArrayList
  */
 class Station :AOdiaStation{
 
-    override fun getStopDiaStyle(): Boolean {
-        return showStopDiagram
-    }
-
-    override fun setStopDiaStyle(value: Boolean) {
-        showStopDiagram=value
-    }
 
     /**
      * 駅名。
@@ -84,6 +77,13 @@ class Station :AOdiaStation{
     var downMain = 0
     var upMain = 0
     var showStopDiagram=false
+    override fun getStopDiaStyle(): Boolean {
+        return showStopDiagram
+    }
+
+    override fun setStopDiaStyle(value: Boolean) {
+        showStopDiagram=value
+    }
 
     fun makeStationText(oudiaSecond: Boolean): StringBuilder {
         val result = StringBuilder("Eki.")
@@ -170,6 +170,14 @@ class Station :AOdiaStation{
             1 -> return showType / 16 % 16
             else -> return 0
         }
+    }
+
+    override fun copy(origin: AOdiaStation): AOdiaStation {
+        val station=Station()
+        station.name=origin.name
+        station.showType=origin.getTimeViewStyle() or origin.getStopStyle()
+        
+        return station
     }
 
 
