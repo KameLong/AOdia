@@ -15,6 +15,8 @@ import com.kamelong.tool.downloadView.TableRadioGroup
 class StationEditor( fragment:EditStationFragment, index:Int) : FrameLayout(fragment.aodiaActivity) {
     val station=fragment.stationList[index].clone()
     val layout = LayoutInflater.from(fragment.activity).inflate(R.layout.edit_station_dialog, this)
+
+    lateinit var stopLinear:LinearLayout
     init{
         layout.findViewById<EditText>(R.id.stationNameEditText).setText(station.name)
         layout.findViewById<Button>(R.id.SubmitButton).setOnClickListener { fragment.closeStationEdit(index,true) }
@@ -36,13 +38,27 @@ class StationEditor( fragment:EditStationFragment, index:Int) : FrameLayout(frag
                     R.id.normalStation
                 }
         )
-        val stopLinear=layout.findViewById<LinearLayout>(R.id.stopList)
+        stopLinear=layout.findViewById<LinearLayout>(R.id.stopList)
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))
         }
         layout.findViewById<CheckBox>(R.id.checkBox6).isChecked=(station.getStopStyle() and 0x8) !=0
         layout.findViewById<CheckBox>(R.id.checkBox4).isChecked=(station.getStopStyle() and 0x80) !=0
         layout.findViewById<CheckBox>(R.id.checkBox5).isChecked=station.getStopDiaStyle()
+    }
+    fun setStopSpinnerValue(stopIndex:Int,spinnerIndex:Int){
+        when(spinnerIndex){
+            0->for(i in 0 until stopLinear.childCount){
+                if(i!=stopIndex){
+                    (stopLinear.getChildAt(i)as EditStop).removeSpinnerValue(0)
+                }
+            }
+            1->for(i in 0 until stopLinear.childCount){
+                if(i!=stopIndex){
+                    (stopLinear.getChildAt(i)as EditStop).removeSpinnerValue(1)
+                }
+            }
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -15,6 +16,7 @@ import com.kamelong.aodia.diadata.AOdiaStation
 class EditStaiton(context: Context,fragment:EditStationFragment,station:AOdiaStation,index:Int) : FrameLayout(context) {
     val layout = LayoutInflater.from(context).inflate(R.layout.edit_station_view, this)
     init{
+        layout.findViewById<CheckBox>(R.id.checkBox).setOnCheckedChangeListener { button, boolean -> fragment.stationSelected[index]=boolean }
         layout.findViewById<TextView>(R.id.textNumber).text=index.toString()
         layout.findViewById<TextView>(R.id.stationName).text=station.name
         layout.findViewById<TextView>(R.id.textStopType).text=when(station.getTimeViewStyle()){
@@ -31,6 +33,8 @@ class EditStaiton(context: Context,fragment:EditStationFragment,station:AOdiaSta
 
         layout.setOnClickListener { fragment.openStationEdit(index) }
     }
+
+
 
 
 

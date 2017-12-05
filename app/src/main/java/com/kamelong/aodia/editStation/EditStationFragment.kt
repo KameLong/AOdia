@@ -20,7 +20,32 @@ import kotlin.collections.ArrayList
 /**
  * Created by kame on 2017/12/03.
  */
-class EditStationFragment : Fragment(), AOdiaFragmentInterface {
+class EditStationFragment : Fragment(), AOdiaFragmentInterface,CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
+    override fun onClickCopyButton() {
+        stationCopyList=ArrayList<Int>()
+        for(i in 0 until stationSelected.size){
+            if(stationSelected[i]){
+                stationCopyList.add(i)
+            }
+        }
+    }
+
+    override fun onClickPasteButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickInsertButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickAddButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickDeleteButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override var fragment=this as Fragment
     override lateinit var diaFile: AOdiaDiaFile
     override lateinit var aodiaActivity: AOdiaActivity
@@ -30,6 +55,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface {
     lateinit var stationLinear:LinearLayout
 
     val stationSelected= ArrayList<Boolean>()
+    var stationCopyList= ArrayList<Int>()
 
     lateinit var stationList:ArrayList<AOdiaStation>
 
@@ -60,12 +86,18 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface {
             stationLinear.addView(EditStaiton(getActivity(),this,diaFile.getStation(i),i))
             stationSelected.add(false)
         }
+        fragmentContainer.setOnLongClickListener {
+            var copyValue=false
+            for(boolean in stationSelected){
+                if(boolean){
+                    copyValue=true
+                }
+            }
+            val dialog=CopyPasteInsertAddDeleteDialog(aodiaActivity,this,copyValue && (stationCopyList.size!=0))
+            true
+        }
     }
 
-    fun stationSelect(view:View,value:Boolean){
-        val index=stationLinear.indexOfChild(view)
-        stationSelected[index]=value
-    }
     fun addStation(index:Int){
         val history=AOdiaStationHistory()
         history.addIndex=index

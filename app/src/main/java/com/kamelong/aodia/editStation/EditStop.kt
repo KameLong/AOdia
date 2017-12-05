@@ -8,13 +8,34 @@ import org.w3c.dom.Text
 
 /**
  */
-class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEditor.context) {
+class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEditor.context), CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
+    override fun onClickCopyButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickPasteButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickInsertButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickAddButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickDeleteButton() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     val layout= LayoutInflater.from(stationEditor.context).inflate(R.layout.edit_station_stop_view, this)
+    lateinit var spinner:Spinner
     init{
         layout.findViewById<EditText>(R.id.textStopName).setText(stationEditor.station.getStopName(index))
         layout.findViewById<EditText>(R.id.textStopShort).setText(stationEditor.station.getShortName(index))
 
-        val spinner=layout.findViewById<Spinner>(R.id.mainSropSpnner)
+      spinner =layout.findViewById<Spinner>(R.id.mainSropSpnner)
         val spinnerList=ArrayList<String>()
         spinnerList.add("下り主本線")
         spinnerList.add("上り主本線")
@@ -32,12 +53,17 @@ class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEdit
                     2
                 }
         )
+        spinner.setOnItemClickListener { adapterView, view, i, l -> stationEditor.setStopSpinnerValue(index,i) }
         this.setOnLongClickListener {
             SdLog.toast("longtap")
             false
         }
+    }
 
-
+    fun removeSpinnerValue(value:Int){
+        if(spinner.selectedItemPosition==value){
+            spinner.setSelection(2)
+        }
     }
 
 }
