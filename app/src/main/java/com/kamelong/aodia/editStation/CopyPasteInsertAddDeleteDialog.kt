@@ -17,13 +17,32 @@ class CopyPasteInsertAddDeleteDialog(context: Context,listener:CopyPasteInsertAd
     constructor(context: Context,listener:CopyPasteInsertAddDeleteInterface,enable:Boolean):this(context,listener){
         view.findViewById<Button>(R.id.pasteButton).isEnabled=enable
     }
+    constructor(context: Context,listener:CopyPasteInsertAddDeleteInterface,copyEnable:Boolean,pasteEnable:Boolean):this(context,listener,pasteEnable){
+        view.findViewById<Button>(R.id.copyButton).isEnabled=copyEnable
+    }
+
     init{
         setView(view)
-        view.findViewById<Button>(R.id.copyButton).setOnClickListener { listener.onClickCopyButton() }
-        view.findViewById<Button>(R.id.pasteButton).setOnClickListener {listener.onClickPasteButton()  }
-        view.findViewById<Button>(R.id.insertButton).setOnClickListener { listener.onClickInsertButton() }
-        view.findViewById<Button>(R.id.addButton).setOnClickListener {listener.onClickAddButton()  }
-        view.findViewById<Button>(R.id.deleteButton).setOnClickListener { listener.onClickDeleteButton() }
+        view.findViewById<Button>(R.id.copyButton).setOnClickListener {
+            listener.onClickCopyButton()
+            dismiss()
+        }
+        view.findViewById<Button>(R.id.pasteButton).setOnClickListener {
+            listener.onClickPasteButton()
+            dismiss()
+        }
+        view.findViewById<Button>(R.id.insertButton).setOnClickListener {
+            listener.onClickInsertButton()
+            dismiss()
+        }
+        view.findViewById<Button>(R.id.addButton).setOnClickListener {
+            listener.onClickAddButton()
+            dismiss()
+        }
+        view.findViewById<Button>(R.id.deleteButton).setOnClickListener {
+            listener.onClickDeleteButton()
+            dismiss()
+        }
     }
 
 

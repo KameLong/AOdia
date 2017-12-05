@@ -171,7 +171,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/stopLinear"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
@@ -234,10 +234,11 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/textView10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-                    android:text="番線表示設定"
+                    android:text="路線形状設定"
                     android:textColor="@android:color/black" />
 
                 <LinearLayout
@@ -288,6 +289,13 @@
                         android:layout_weight="1" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:text="番線表示設定"
+                    android:textColor="@android:color/black" />
 
                 <CheckBox
                     android:id="@+id/checkBox6"

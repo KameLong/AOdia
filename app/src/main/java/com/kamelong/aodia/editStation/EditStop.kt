@@ -1,36 +1,37 @@
 package com.kamelong.aodia.editStation
 
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.*
 import com.kamelong.aodia.R
 import com.kamelong.aodia.SdLog
-import org.w3c.dom.Text
+import com.kamelong.aodia.diadata.AOdiaStationHistory
 
 /**
  */
-class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEditor.context), CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
+class EditStop(val stationEditor: StationEditor,index:Int) : FrameLayout(stationEditor.context), CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
+    val index=index
     override fun onClickCopyButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onClickPasteButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onClickInsertButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        stationEditor.addStop(index)
     }
 
     override fun onClickAddButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        stationEditor.addStop(index+1)
     }
 
     override fun onClickDeleteButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        stationEditor.deleteStop(index)
     }
 
     val layout= LayoutInflater.from(stationEditor.context).inflate(R.layout.edit_station_stop_view, this)
     lateinit var spinner:Spinner
+
     init{
         layout.findViewById<EditText>(R.id.textStopName).setText(stationEditor.station.getStopName(index))
         layout.findViewById<EditText>(R.id.textStopShort).setText(stationEditor.station.getShortName(index))
@@ -53,9 +54,18 @@ class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEdit
                     2
                 }
         )
-        spinner.setOnItemClickListener { adapterView, view, i, l -> stationEditor.setStopSpinnerValue(index,i) }
+        spinner.onItemSelectedListener=object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+                stationEditor.setStopSpinnerValue(index,pos)
+            }
+           override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
+            }
+        }
+
         this.setOnLongClickListener {
-            SdLog.toast("longtap")
+            val cpiadDialog=com.kamelong.aodia.editStation.CopyPasteInsertAddDeleteDialog(context,this,false,false)
+            cpiadDialog.show()
             false
         }
     }
