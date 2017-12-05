@@ -40,8 +40,9 @@ class StationEditor( fragment:EditStationFragment, index:Int) : FrameLayout(frag
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))
         }
-
-
+        layout.findViewById<CheckBox>(R.id.checkBox6).isChecked=(station.getStopStyle() and 0x8) !=0
+        layout.findViewById<CheckBox>(R.id.checkBox4).isChecked=(station.getStopStyle() and 0x80) !=0
+        layout.findViewById<CheckBox>(R.id.checkBox5).isChecked=station.getStopDiaStyle()
     }
 
 }

@@ -3,6 +3,7 @@ package com.kamelong.aodia.editStation
 import android.view.LayoutInflater
 import android.widget.*
 import com.kamelong.aodia.R
+import com.kamelong.aodia.SdLog
 import org.w3c.dom.Text
 
 /**
@@ -31,6 +32,10 @@ class EditStop(stationEditor: StationEditor,index:Int) : FrameLayout(stationEdit
                     2
                 }
         )
+        this.setOnLongClickListener {
+            SdLog.toast("longtap")
+            false
+        }
 
 
     }
