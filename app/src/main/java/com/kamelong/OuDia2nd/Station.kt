@@ -28,13 +28,29 @@ class Station :AOdiaStation{
     }
 
     override fun addStop(index: Int) {
-        trackName.add(index,"")
-        trackRyakusyou.add(index,"")
+        trackName.add(index,"new")
+        trackRyakusyou.add(index,"new")
+        if(index<=upMain){
+            upMain++
+        }
+        if(index<=downMain){
+            downMain++
+        }
+
     }
 
     override fun deleteStop(index: Int): Boolean {
+        if(upMain==index||downMain==index){
+            return false
+        }
         trackName.removeAt(index)
         trackRyakusyou.removeAt(index)
+        if(index<=upMain){
+            upMain--
+        }
+        if(index<=downMain){
+            downMain--
+        }
         return true
     }
 

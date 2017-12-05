@@ -127,7 +127,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface,CopyPasteInsertAd
         history.station=stationList[index]
         backStack.addFirst(history)
     }
-    fun closeStationEdit(index:Int,renewFrag:Boolean){
+    fun closeStationEdit(history: AOdiaStationHistory,renewFrag:Boolean){
         val frameLayout=fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
         if(!renewFrag){
             val history=backStack.first as AOdiaStationHistory

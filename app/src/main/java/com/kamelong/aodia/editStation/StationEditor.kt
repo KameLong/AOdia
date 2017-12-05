@@ -84,7 +84,7 @@ class StationEditor( f:EditStationFragment, i:Int) : FrameLayout(f.aodiaActivity
                 override fun onClickPasteButton() {
                 }
 
-            },false,false)
+            },false,false).show()
             true
         }
                 stopLinear=layout.findViewById<LinearLayout>(R.id.stopList)
