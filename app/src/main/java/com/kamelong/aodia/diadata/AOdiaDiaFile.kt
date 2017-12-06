@@ -25,6 +25,8 @@ interface AOdiaDiaFile {
     val stationNum:Int
     fun getStationList():ArrayList<AOdiaStation>
 
+    val trainTypeNum:Int
+    fun getTrainType(index:Int):AOdiaTrainType
 
 
 

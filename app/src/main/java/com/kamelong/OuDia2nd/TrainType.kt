@@ -1,16 +1,19 @@
 package com.kamelong.OuDia2nd
 
+import com.kamelong.aodia.diadata.AOdiaTrainType
 import com.kamelong.tool.Color
+import com.kamelong.tool.Font
 
 
 /**
  */
-class TrainType {
-    var name = ""
+class TrainType :AOdiaTrainType{
+    override var font=Font()
+    override var name = ""
     /**
      * 種別名略称
      */
-    var shortName = ""
+    override var shortName = ""
     set(value) {
         //shift-jis特有の0x5c問題の解決策です
         if (value.length > 2) {
@@ -26,7 +29,7 @@ class TrainType {
      * 時刻表文字色をセットする
      * @param color 色を表すint
      */
-    var textColor = Color()
+    override var textColor = Color()
     /**
      * ダイヤグラム線色
      */
@@ -34,7 +37,7 @@ class TrainType {
      * ダイヤグラム線色をセットする
      * @param color 色を表すint
      */
-    var diaColor = Color()
+    override var diaColor = Color()
     /**
      * ダイヤグラムを太線で描画するか
      */
@@ -42,7 +45,7 @@ class TrainType {
      * 太字にするかどうかを返す
      * @return 太字にするときtrue
      */
-    var lineBold = false
+    override var lineBold = false
     /**
      * ダイヤグラムの線のスタイル
      * LINESTYLE_XXXの定数を用いる
@@ -51,7 +54,7 @@ class TrainType {
      * 線スタイルを取得します
      * @return 線スタイルを表すint
      */
-    var lineStyle = LINESTYLE_NORMAL
+    override var lineStyle = LINESTYLE_NORMAL
 
     /**
      * ダイヤグラム上で、停車駅を表示するかどうか
@@ -60,7 +63,7 @@ class TrainType {
      * 停車駅表示を取得する
      * @return 停車駅表示を行うとき、trueを返す
      */
-    var showStop = false
+    override var showStop = false
 
     var fontNumber = 0
 

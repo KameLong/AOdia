@@ -35,6 +35,7 @@ import com.kamelong.aodia.diagram.TrainSelectDiagramFragment
 import com.kamelong.aodia.editStation.EditStationFragment
 import com.kamelong.aodia.menu.MenuFragment
 import com.kamelong.aodia.diadata.AOdiaDiaFile
+import com.kamelong.aodia.editTrainType.EditTrainTypeFragment
 import com.kamelong.aodia.operation.OperationFragment
 import com.kamelong.aodia.stationInfo.StationInfoFragment
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment
@@ -374,7 +375,7 @@ class AOdiaActivity : AppCompatActivity() {
             diaFiles.add(diaFile)
             diaFilesIndex.add(0, diaFiles.size - 1)
             menuFragment!!.createMenu()
-            openEditStation(0)
+            openEditTrainType(0)
             //openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
         }
     }
@@ -804,6 +805,13 @@ class AOdiaActivity : AppCompatActivity() {
 
     fun openEditStation(fileNum: Int) {
         val fragment = EditStationFragment()
+        val args = Bundle()
+        args.putInt("fileNum", fileNum)
+        fragment.arguments = args
+        openFragment(fragment)
+    }
+    fun openEditTrainType(fileNum: Int) {
+        val fragment = EditTrainTypeFragment()
         val args = Bundle()
         args.putInt("fileNum", fileNum)
         fragment.arguments = args

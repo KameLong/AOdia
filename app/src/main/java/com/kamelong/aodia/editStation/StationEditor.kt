@@ -15,21 +15,20 @@ import com.kamelong.tool.downloadView.TableRadioGroup
 /**
  * １駅の編集を行う
  */
-class StationEditor( f:EditStationFragment, i:Int) : FrameLayout(f.aodiaActivity) {
+class StationEditor( f:EditStationFragment, i:Int,history: AOdiaStationHistory) : FrameLayout(f.aodiaActivity) {
     val index=i
     val fragment=f
     val layout = LayoutInflater.from(fragment.activity).inflate(R.layout.edit_station_dialog, this)
-    val stationHistory= AOdiaStationHistory()
     val station=fragment.stationList[index]
-
+val stationHistory=history
     lateinit var stopLinear:LinearLayout
     init{
-        stationHistory.station=fragment.stationList[index].clone()
-        stationHistory.changeIndex=index
 
 
         layout.findViewById<EditText>(R.id.stationNameEditText).setText(station.name)
-        layout.findViewById<Button>(R.id.SubmitButton).setOnClickListener { fragment.closeStationEdit(stationHistory,true) }
+        layout.findViewById<Button>(R.id.SubmitButton).setOnClickListener {
+            station.name=layout.findViewById<EditText>(R.id.stationNameEditText).text.toString()
+            fragment.closeStationEdit(true) }
         layout.findViewById<TableRadioGroup>(R.id.showTimeRadio).check(
                 when(station.getTimeViewStyle()){
                     Station.SHOW_HATU->R.id.showStop5

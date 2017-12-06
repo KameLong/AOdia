@@ -32,6 +32,12 @@ class EditStaiton(context: Context,fragment:EditStationFragment,station:AOdiaSta
         layout.findViewById<TextView>(R.id.textLoop).text=if(station.loopStation<0){""}else{station.loopStation.toString()}
 
         layout.setOnClickListener { fragment.openStationEdit(index) }
+        layout.setOnLongClickListener { fragment.fragmentContainer.performLongClick() }
+    }
+
+    override fun setSelected(selected: Boolean) {
+        super.setSelected(selected)
+        layout.findViewById<CheckBox>(R.id.checkBox).isChecked=selected
     }
 
 
