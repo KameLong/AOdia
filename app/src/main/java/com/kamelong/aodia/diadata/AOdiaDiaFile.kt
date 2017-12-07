@@ -20,6 +20,8 @@ interface AOdiaDiaFile {
     var menuOpen:Boolean
     fun getDiaNum():Int
     fun getDiaName(index:Int):String
+    fun setDiaName(index:Int,value:String)
+    fun addNewDia(index:Int,value:String)
 
     fun getStation(index:Int):AOdiaStation
     val stationNum:Int
@@ -27,6 +29,7 @@ interface AOdiaDiaFile {
 
     val trainTypeNum:Int
     fun getTrainType(index:Int):AOdiaTrainType
+    fun addTrainType(trainType:AOdiaTrainType)
 
 
 

@@ -6,13 +6,17 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.kamelong.OuDia.OuDiaTrainType
+import com.kamelong.OuDia2nd.TrainType
 import com.kamelong.aodia.AOdiaActivity
 import com.kamelong.aodia.AOdiaFragment
 import com.kamelong.aodia.AOdiaFragmentInterface
 import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
+import com.kamelong.aodia.diadata.AOdiaTrainType
 import com.kamelong.aodia.editStation.CopyPasteInsertAddDeleteDialog
 
 class EditTrainTypeFragment :Fragment(),AOdiaFragmentInterface{
@@ -62,6 +66,12 @@ class EditTrainTypeFragment :Fragment(),AOdiaFragmentInterface{
 
         fragmentContainer.setOnLongClickListener {
             true
+        }
+        fragmentContainer.findViewById<Button>(R.id.addButton).setOnClickListener {
+            val trainType= TrainType()
+            diaFile.addTrainType(trainType as AOdiaTrainType)
+            typeListLinear.addView(EditTrainTypeView(activity,trainType))
+
         }
     }
 

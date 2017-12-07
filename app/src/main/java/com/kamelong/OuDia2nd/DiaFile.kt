@@ -103,6 +103,10 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
      */
     override val trainTypeNum: Int
         get() = trainType.size
+
+    override fun addTrainType(value: AOdiaTrainType) {
+        trainType.add(value as TrainType)
+    }
     /**
      * ダイヤ数を返す
      */
