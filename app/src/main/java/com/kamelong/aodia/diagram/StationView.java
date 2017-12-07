@@ -69,14 +69,14 @@ public class StationView extends KLView {
         final float defaultLineSize=getResources().getDisplayMetrics().densityDpi / 160f;
 
 
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSkewX(0);
-        textPaint.setTypeface(Typeface.DEFAULT);
+        Companion.getTextPaint().setColor(Color.BLACK);
+        Companion.getTextPaint().setTextSkewX(0);
+        Companion.getTextPaint().setTypeface(Typeface.DEFAULT);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200,200,200));
         paint.setStrokeWidth(defaultLineSize);
-        canvas.drawLine(getWidth()-2, yshift,getWidth()-2, stationTime.get(station.getStationNum()-1) * scaleY / 60+(int)textPaint.getTextSize()+yshift, paint);
+        canvas.drawLine(getWidth()-2, yshift,getWidth()-2, stationTime.get(station.getStationNum()-1) * scaleY / 60+(int) Companion.getTextPaint().getTextSize()+yshift, paint);
         for(int i=0;i< station.getStationNum();i++){
             //主要駅なら太字にする
             if(station.bigStation(i)){
@@ -84,8 +84,8 @@ public class StationView extends KLView {
             }else{
                 paint.setStrokeWidth(defaultLineSize*0.5f);
             }
-            canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()+yshift,1440* scaleX,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()+yshift,paint);
-            canvas.drawText(station.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int)textPaint.getTextSize()*5/6+yshift,textPaint);
+            canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+yshift,1440* scaleX,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+yshift,paint);
+            canvas.drawText(station.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()*5/6+yshift, Companion.getTextPaint());
         }
     }
     @Override
@@ -97,10 +97,10 @@ public class StationView extends KLView {
         }
     }
     protected int getXsize(){
-            return (int)(textPaint.getTextSize()*5)+2;
+            return (int)(Companion.getTextPaint().getTextSize()*5)+2;
     }
     protected int getYsize(){
-            return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4)+yshift*2;
+            return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+4)+yshift*2;
     }
     public void setScale(float x,float y){
         scaleX =x;

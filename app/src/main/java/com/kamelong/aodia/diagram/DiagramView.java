@@ -211,14 +211,14 @@ public class DiagramView extends KLView {
                             //線の太さを太くする
                             paint.setStrokeWidth(defaultLineSize * 3f);
                             //文字色もダイヤ色に合わせて変更
-                            textPaint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
-                            textPaint.setAlpha(255);
+                            Companion.getTextPaint().setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
+                            Companion.getTextPaint().setAlpha(255);
                             for (int j = 0; j < station.getStationNum(); j++) {
                                 if (train.getTime(j)!=null&&train.getTime(j).getArrivalTime()>=0) {
-                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getArrivalTime() / 60) % 60), convertTime(train.getTime(j).getArrivalTime()) * scaleX / 60, stationTime.get(j) * scaleY / 60 + textPaint.getTextSize() * (-0.2f + direct * 1.2f)+yshift, textPaint);
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getArrivalTime() / 60) % 60), convertTime(train.getTime(j).getArrivalTime()) * scaleX / 60, stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (-0.2f + direct * 1.2f)+yshift, Companion.getTextPaint());
                                 }
                                 if (train.getTime(j)!=null&&train.getTime(j).getDepartureTime()>=0) {
-                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getDepartureTime() / 60) % 60), convertTime(train.getTime(j).getDepartureTime()) * scaleX / 60 - textPaint.getTextSize(), stationTime.get(j) * scaleY / 60 + textPaint.getTextSize() * (1 - direct * 1.2f)+yshift, textPaint);
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getTime(j).getDepartureTime() / 60) % 60), convertTime(train.getTime(j).getDepartureTime()) * scaleX / 60 - Companion.getTextPaint().getTextSize(), stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (1 - direct * 1.2f)+yshift, Companion.getTextPaint());
 
                                 }
                             }
@@ -489,11 +489,11 @@ public class DiagramView extends KLView {
                     //canvasを回転して
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
                     //列車番号を描画
-                    textPaint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
+                    Companion.getTextPaint().setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
                     if(focusTrain.size()==0||focusTrain.contains(trainList[direct].get(i))){
-                        textPaint.setAlpha(255);
+                        Companion.getTextPaint().setAlpha(255);
                     }else{
-                        textPaint.setAlpha(100);
+                        Companion.getTextPaint().setAlpha(100);
                     }
                     //textに表示したい文字列を代入
                     String text="";
@@ -512,9 +512,9 @@ public class DiagramView extends KLView {
                     }
                     //文字列を描画
                     if(rad>0) {
-                        canvas.drawText(text, x1 + (int) (textPaint.getTextSize() / Math.tan(rad)), y1 - textPaint.getTextSize() / 6, textPaint);
+                        canvas.drawText(text, x1 + (int) (Companion.getTextPaint().getTextSize() / Math.tan(rad)), y1 - Companion.getTextPaint().getTextSize() / 6, Companion.getTextPaint());
                     }else{
-                        canvas.drawText(text, x1+(int) (textPaint.getTextSize()), y1 - textPaint.getTextSize() / 6, textPaint);
+                        canvas.drawText(text, x1+(int) (Companion.getTextPaint().getTextSize()), y1 - Companion.getTextPaint().getTextSize() / 6, Companion.getTextPaint());
                     }
                     //canvasの回転をもとに戻す
                     canvas.restore();
@@ -672,7 +672,7 @@ public class DiagramView extends KLView {
      */
 
     protected int getYsize(){
-        return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int)textPaint.getTextSize()+4+yshift*2);
+        return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+4+yshift*2);
     }
 
 

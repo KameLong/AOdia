@@ -45,22 +45,22 @@ AOdia is free software: you can redistribute it and/or modify
         }
 
         public void onDraw(Canvas canvas) {
-            int startLine = (int) blackPaint.getTextSize();
+            int startLine = (int) Companion.getBlackPaint().getTextSize();
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
             if (spf.getBoolean("trainName", false)) {
-                int startX = (int) ((getWidth() - textPaint.getTextSize()) / 2);
-                canvas.drawText("列", startX, textPaint.getTextSize() * 1.2f, textPaint);
-                canvas.drawText("車", startX, textPaint.getTextSize() * 2.5f, textPaint);
-                canvas.drawText("名", startX, textPaint.getTextSize() * 3.8f, textPaint);
-                canvas.drawLine(0, textSize * 7.9f, getWidth(), textSize * 7.9f, blackPaint);
-                startLine = (int) blackPaint.getTextSize() * 9;
+                int startX = (int) ((getWidth() - Companion.getTextPaint().getTextSize()) / 2);
+                canvas.drawText("列", startX, Companion.getTextPaint().getTextSize() * 1.2f, Companion.getTextPaint());
+                canvas.drawText("車", startX, Companion.getTextPaint().getTextSize() * 2.5f, Companion.getTextPaint());
+                canvas.drawText("名", startX, Companion.getTextPaint().getTextSize() * 3.8f, Companion.getTextPaint());
+                canvas.drawLine(0, Companion.getTextSize() * 7.9f, getWidth(), Companion.getTextSize() * 7.9f, Companion.getBlackPaint());
+                startLine = (int) Companion.getBlackPaint().getTextSize() * 9;
             }
 
-            startLine += 1.2 * textSize;
-            canvas.drawText("始発", 1, startLine - 0.8f * textSize, blackPaint);
+            startLine += 1.2 * Companion.getTextSize();
+            canvas.drawText("始発", 1, startLine - 0.8f * Companion.getTextSize(), Companion.getBlackPaint());
 
-            canvas.drawLine(0, startLine, getWidth(), startLine, blackPaint);
-            startLine += 1 * textSize;
+            canvas.drawLine(0, startLine, getWidth(), startLine, Companion.getBlackPaint());
+            startLine += 1 * Companion.getTextSize();
             for (int i = 0; i < station.getStationNum(); i++) {
                 int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
 
@@ -69,69 +69,69 @@ AOdia is free software: you can redistribute it and/or modify
                         switch (station.getTimeShow(stationNumber, direct)) {
                             case 0:
                                 //発のみ
-                                canvas.drawText(station.getName(stationNumber), 1, startLine, blackPaint);
-                                startLine = startLine + (int) blackPaint.getTextSize();
+                                canvas.drawText(station.getName(stationNumber), 1, startLine, Companion.getBlackPaint());
+                                startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
                                 break;
                             case 1:
                                 //発着
 //                            canvas.drawText(station.getName(stationNumber), 1,startLine+(int)(textPaint.getTextSize()*4/6), blackBig);
 //                            startLine=startLine+(int)(textPaint.getTextSize()*13/6);
-                                canvas.drawText(station.getName(stationNumber), 1, startLine, blackPaint);
-                                startLine = startLine + (int) blackPaint.getTextSize();
-                                canvas.drawLine(0, startLine - (int) (textPaint.getTextSize() * 5 / 6), this.getWidth() - 1, startLine - (int) (textPaint.getTextSize() * 5 / 6), blackPaint);
-                                startLine = startLine + (int) (textPaint.getTextSize() * 1 / 6);
-                                canvas.drawText("発着番線", 1, startLine, blackPaint);
+                                canvas.drawText(station.getName(stationNumber), 1, startLine, Companion.getBlackPaint());
+                                startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
+                                canvas.drawLine(0, startLine - (int) (Companion.getTextPaint().getTextSize() * 5 / 6), this.getWidth() - 1, startLine - (int) (Companion.getTextPaint().getTextSize() * 5 / 6), Companion.getBlackPaint());
+                                startLine = startLine + (int) (Companion.getTextPaint().getTextSize() * 1 / 6);
+                                canvas.drawText("発着番線", 1, startLine, Companion.getBlackPaint());
 
-                                startLine = startLine + (int) blackPaint.getTextSize();
-                                canvas.drawLine(0, startLine - (int) (textPaint.getTextSize() * 5 / 6), this.getWidth() - 1, startLine - (int) (textPaint.getTextSize() * 5 / 6), blackPaint);
-                                startLine = startLine + (int) (textPaint.getTextSize() * 1 / 6);
-                                canvas.drawText(station.getName(stationNumber), 1, startLine, blackPaint);
-                                startLine = startLine + (int) blackPaint.getTextSize();
+                                startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
+                                canvas.drawLine(0, startLine - (int) (Companion.getTextPaint().getTextSize() * 5 / 6), this.getWidth() - 1, startLine - (int) (Companion.getTextPaint().getTextSize() * 5 / 6), Companion.getBlackPaint());
+                                startLine = startLine + (int) (Companion.getTextPaint().getTextSize() * 1 / 6);
+                                canvas.drawText(station.getName(stationNumber), 1, startLine, Companion.getBlackPaint());
+                                startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
                                 break;
                             case 2:
                                 //着のみ
-                                canvas.drawText(station.getName(stationNumber), 1, startLine, blackPaint);
-                                startLine = startLine + (int) blackPaint.getTextSize();
+                                canvas.drawText(station.getName(stationNumber), 1, startLine, Companion.getBlackPaint());
+                                startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
                                 break;
                         }
                         break;
                     case 1:
                         //着のみ
-                        canvas.drawText(station.getName(stationNumber), 1, startLine, blackPaint);
-                        startLine = startLine + (int) blackPaint.getTextSize();
-                        canvas.drawLine(0, startLine - (int) (textPaint.getTextSize() * 2 / 3), this.getWidth() - 1, startLine - (int) (textPaint.getTextSize() * 2 / 3), blackBPaint);
-                        startLine = startLine + (int) (textPaint.getTextSize() * 1 / 3);
+                        canvas.drawText(station.getName(stationNumber), 1, startLine, Companion.getBlackPaint());
+                        startLine = startLine + (int) Companion.getBlackPaint().getTextSize();
+                        canvas.drawLine(0, startLine - (int) (Companion.getTextPaint().getTextSize() * 2 / 3), this.getWidth() - 1, startLine - (int) (Companion.getTextPaint().getTextSize() * 2 / 3), Companion.getBlackBPaint());
+                        startLine = startLine + (int) (Companion.getTextPaint().getTextSize() * 1 / 3);
                         break;
                     case 2:
                         //発着
-                        canvas.drawText(station.getName(stationNumber), 1, startLine + (int) (textPaint.getTextSize() * 4 / 6), blackBig);
-                        startLine = startLine + (int) (textPaint.getTextSize() * 13 / 6);
+                        canvas.drawText(station.getName(stationNumber), 1, startLine + (int) (Companion.getTextPaint().getTextSize() * 4 / 6), blackBig);
+                        startLine = startLine + (int) (Companion.getTextPaint().getTextSize() * 13 / 6);
                         i++;
                         break;
                 }
             }
-            canvas.drawLine(0, startLine - textSize * 0.8f, getWidth(), startLine - textSize * 0.8f, blackPaint);
-            startLine += 1.2 * textSize;
-            canvas.drawText("終着", 1, startLine - 0.6f * textSize, blackPaint);
+            canvas.drawLine(0, startLine - Companion.getTextSize() * 0.8f, getWidth(), startLine - Companion.getTextSize() * 0.8f, Companion.getBlackPaint());
+            startLine += 1.2 * Companion.getTextSize();
+            canvas.drawText("終着", 1, startLine - 0.6f * Companion.getTextSize(), Companion.getBlackPaint());
 
-            startLine += 1 * textSize;
+            startLine += 1 * Companion.getTextSize();
 
             if (spf.getBoolean("remark", false)) {
-                int startY = (int) (this.getHeight() - 10.5f * textSize);
-                canvas.drawLine(0, startY, getWidth(), startY, blackBBPaint);
-                canvas.drawText("運用番号", 0, startY + 1.0f * textSize, blackPaint);
-                startY += 1.2f * textSize;
-                canvas.drawLine(0, startY, getWidth(), startY, blackPaint);
-                int startX = (getWidth() - textSize) / 2;
-                startY = startY + (int) (textSize * 1.5f);
-                canvas.drawText("備", startX, startY, blackPaint);
-                startY = startY + (int) (textSize * 1.5f);
-                canvas.drawText("考", startX, startY, blackPaint);
+                int startY = (int) (this.getHeight() - 10.5f * Companion.getTextSize());
+                canvas.drawLine(0, startY, getWidth(), startY, Companion.getBlackBBPaint());
+                canvas.drawText("運用番号", 0, startY + 1.0f * Companion.getTextSize(), Companion.getBlackPaint());
+                startY += 1.2f * Companion.getTextSize();
+                canvas.drawLine(0, startY, getWidth(), startY, Companion.getBlackPaint());
+                int startX = (getWidth() - Companion.getTextSize()) / 2;
+                startY = startY + (int) (Companion.getTextSize() * 1.5f);
+                canvas.drawText("備", startX, startY, Companion.getBlackPaint());
+                startY = startY + (int) (Companion.getTextSize() * 1.5f);
+                canvas.drawText("考", startX, startY, Companion.getBlackPaint());
             }
         }
 
         public int getYsize() {
-            int result = textSize;
+            int result = Companion.getTextSize();
             for (int i = 0; i < station.getStationNum(); i++) {
                 int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
                 switch (station.border(stationNumber - direct)) {
@@ -139,44 +139,44 @@ AOdia is free software: you can redistribute it and/or modify
                         switch (station.getTimeShow(stationNumber, direct)) {
                             case 0:
                                 //発のみ
-                                result = result + textSize;
+                                result = result + Companion.getTextSize();
                                 break;
                             case 1:
                                 //発着
-                                result = result + (textSize * 7 / 6);
-                                result = result + (textSize * 7 / 6);
-                                result = result + textSize;
+                                result = result + (Companion.getTextSize() * 7 / 6);
+                                result = result + (Companion.getTextSize() * 7 / 6);
+                                result = result + Companion.getTextSize();
                                 break;
                             case 2:
                                 //着のみ
-                                result = result + textSize;
+                                result = result + Companion.getTextSize();
                                 break;
                         }
                         break;
                     case 1:
                         //着のみ
-                        result = result + textSize;
-                        result = result + (textSize / 3);
+                        result = result + Companion.getTextSize();
+                        result = result + (Companion.getTextSize() / 3);
                         break;
                     case 2:
                         //発着
-                        result = result + (textSize * 7 / 6);
-                        result = result + textSize;
+                        result = result + (Companion.getTextSize() * 7 / 6);
+                        result = result + Companion.getTextSize();
                         i++;
                         break;
                 }
 
 
             }
-            result = result - (textSize * 4 / 6);
-            result += textSize * 4.4f;
+            result = result - (Companion.getTextSize() * 4 / 6);
+            result += Companion.getTextSize() * 4.4f;
 
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
             if (spf.getBoolean("remark", false)) {
-                result = result + (int) (textSize * 10.6f);
+                result = result + (int) (Companion.getTextSize() * 10.6f);
             }
             if (spf.getBoolean("trainName", false)) {
-                result = result + (int) (textSize * 8f);
+                result = result + (int) (Companion.getTextSize() * 8f);
 
             }
 
@@ -193,28 +193,28 @@ AOdia is free software: you can redistribute it and/or modify
                         switch (station.getTimeShow(stationNumber, direct)) {
                             case 0:
                                 //発のみ
-                                linePos = linePos + textSize;
+                                linePos = linePos + Companion.getTextSize();
                                 break;
                             case 1:
                                 //発着
-                                linePos = linePos + (textSize * 7 / 6);
-                                linePos = linePos + textSize;
+                                linePos = linePos + (Companion.getTextSize() * 7 / 6);
+                                linePos = linePos + Companion.getTextSize();
                                 break;
                             case 2:
                                 //着のみ
-                                linePos = linePos + textSize;
+                                linePos = linePos + Companion.getTextSize();
                                 break;
                         }
                         break;
                     case 1:
                         //着のみ
-                        linePos = linePos + textSize;
-                        linePos = linePos + (textSize / 3);
+                        linePos = linePos + Companion.getTextSize();
+                        linePos = linePos + (Companion.getTextSize() / 3);
                         break;
                     case 2:
                         //発着
-                        linePos = linePos + (textSize * 7 / 6);
-                        linePos = linePos + textSize;
+                        linePos = linePos + (Companion.getTextSize() * 7 / 6);
+                        linePos = linePos + Companion.getTextSize();
                         i++;
                         break;
                 }
@@ -231,6 +231,6 @@ AOdia is free software: you can redistribute it and/or modify
         }
 
         protected int getXsize() {
-            return (int) (textPaint.getTextSize() * 5);
+            return (int) (Companion.getTextPaint().getTextSize() * 5);
         }
     }

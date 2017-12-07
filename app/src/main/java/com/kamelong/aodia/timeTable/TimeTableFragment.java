@@ -238,9 +238,9 @@ public class TimeTableFragment extends AOdiaFragment implements TrainSelectListe
 
             LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
             trainNameLinea.removeAllViews();
-            TrainNameView[] trainNameViews = new TrainNameView[timeTable.getTrainNum()];
+            TrainNameViewOld[] trainNameViews = new TrainNameViewOld[timeTable.getTrainNum()];
             for (int i = 0; i < timeTable.getTrainNum(); i++) {
-                trainNameViews[i] = new TrainNameView(getAodiaActivity(), getDiaFile(), timeTable.getTrain(i));
+                trainNameViews[i] = new TrainNameViewOld(getAodiaActivity(), getDiaFile(), timeTable.getTrain(i));
                 trainNameLinea.addView(trainNameViews[i]);
             }
             LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);

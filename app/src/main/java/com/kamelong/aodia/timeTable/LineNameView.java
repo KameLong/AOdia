@@ -60,12 +60,12 @@ class LineNameView extends KLView {
      * @param canvas
      */
     public void onDraw(Canvas canvas){
-        int startLine=(int)textPaint.getTextSize();
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSkewX(0);
-        textPaint.setTypeface(Typeface.DEFAULT);
-        startLine=startLine+(int)textPaint.getTextSize();
-        canvas.drawText(dia.getDiaName(diaNum), 5,startLine, textPaint);
+        int startLine=(int) Companion.getTextPaint().getTextSize();
+        Companion.getTextPaint().setColor(Color.BLACK);
+        Companion.getTextPaint().setTextSkewX(0);
+        Companion.getTextPaint().setTypeface(Typeface.DEFAULT);
+        startLine=startLine+(int) Companion.getTextPaint().getTextSize();
+        canvas.drawText(dia.getDiaName(diaNum), 5,startLine, Companion.getTextPaint());
     }
 
     /**
@@ -73,7 +73,7 @@ class LineNameView extends KLView {
      * @return　縦サイズ
      */
     protected int getYsize(){
-            return (int)(textPaint.getTextSize()*2.2f);
+            return (int)(Companion.getTextPaint().getTextSize()*2.2f);
     }
 
     /**
@@ -81,6 +81,6 @@ class LineNameView extends KLView {
      * @return　横サイズ
      */
     protected int getXsize(){
-        return (int)(textPaint.getTextSize()*5);
+        return (int)(Companion.getTextPaint().getTextSize()*5);
     }
 }

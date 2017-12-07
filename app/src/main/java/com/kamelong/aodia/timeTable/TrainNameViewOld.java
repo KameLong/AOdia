@@ -35,17 +35,17 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-class TrainNameView extends KLView {
+class TrainNameViewOld extends KLView {
     private AOdiaDiaFile dia;
     private JPTI jpti;
     private AOdiaTrain train;
     private int direct;
     private boolean secondFrag=false;
     private boolean showTrainName=false;
-    private TrainNameView(Context context){
+    private TrainNameViewOld(Context context){
         super(context);
     }
-    TrainNameView(Context context, AOdiaDiaFile diaFile, AOdiaTrain t){
+    TrainNameViewOld(Context context, AOdiaDiaFile diaFile, AOdiaTrain t){
         this(context);
         dia=diaFile;
         train=t;
@@ -55,18 +55,18 @@ class TrainNameView extends KLView {
     }
     public void onDraw(Canvas canvas){
 
-        int startLine=(int)textPaint.getTextSize();
-        textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+        int startLine=(int) Companion.getTextPaint().getTextSize();
+        Companion.getTextPaint().setColor(train.getTrainType().getTextColor().getAndroidColor());
 
         if(secondFrag) {
-            drawText(canvas,train.getTrainType().getName(), 1, startLine, textPaint,true);
+            drawText(canvas,train.getTrainType().getName(), 1, startLine, Companion.getTextPaint(),true);
         }else{
-            drawText(canvas,train.getTrainType().getShortName(), 1, startLine, textPaint,true);
+            drawText(canvas,train.getTrainType().getShortName(), 1, startLine, Companion.getTextPaint(),true);
         }
-        startLine=startLine+(int)textPaint.getTextSize();
-        drawText(canvas,train.getNumber(), 1, startLine, textPaint,true);
+        startLine=startLine+(int) Companion.getTextPaint().getTextSize();
+        drawText(canvas,train.getNumber(), 1, startLine, Companion.getTextPaint(),true);
 
-        canvas.drawLine(this.getWidth()-1, 0,this.getWidth()-1,this.getHeight(),blackPaint);
+        canvas.drawLine(this.getWidth()-1, 0,this.getWidth()-1,this.getHeight(), Companion.getBlackPaint());
     }
     private void drawTrainName(Canvas canvas){
         try {
@@ -92,25 +92,25 @@ class TrainNameView extends KLView {
                 space--;
             }
             space = heightSpace;
-            int startX = (int) ((getWidth() - lineNum * textSize*1.2f) / 2 + (lineNum-1) * textSize*1.2f);
-            int startY = (int) (this.getHeight() - 8.1f * textSize);
+            int startX = (int) ((getWidth() - lineNum * Companion.getTextSize() *1.2f) / 2 + (lineNum-1) * Companion.getTextSize() *1.2f);
+            int startY = (int) (this.getHeight() - 8.1f * Companion.getTextSize());
             for (int i = 0; i < str.length; i++) {
                 if (space <= 0) {
                     space = heightSpace;
-                    startX = startX - (int)(textSize*1.2f);
-                    startY = (int) (this.getHeight() - 8.1f * textSize);
+                    startX = startX - (int)(Companion.getTextSize() *1.2f);
+                    startY = (int) (this.getHeight() - 8.1f * Companion.getTextSize());
                 }
                 if (charIsEng(str[i])) {
                     space--;
                     canvas.save();
                     canvas.rotate(90,0,0);
-                    drawText(canvas,String.valueOf(str[i]), startY+2,(int)( -startX-(textSize*0.2f)), textPaint,false);
+                    drawText(canvas,String.valueOf(str[i]), startY+2,(int)( -startX-(Companion.getTextSize() *0.2f)), Companion.getTextPaint(),false);
                     canvas.restore();
-                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                    startY = startY + (int) Companion.getTextPaint().measureText(String.valueOf(str[i]));
                 } else {
                     space = space - 2;
-                    startY = startY +textSize;
-                    drawText(canvas,String.valueOf(str[i]), startX, startY, textPaint,false);
+                    startY = startY + Companion.getTextSize();
+                    drawText(canvas,String.valueOf(str[i]), startX, startY, Companion.getTextPaint(),false);
                 }
 
             }
@@ -119,25 +119,25 @@ class TrainNameView extends KLView {
         }
 
 
-        float textSize=textPaint.getTextSize();
+        float textSize= Companion.getTextPaint().getTextSize();
         if(train.getCount().length()>0){
             String gousuu=train.getCount().substring(0,train.getCount().length()-1);
-            drawText(canvas,gousuu,0,(int)(getHeight()-textSize*1.2f),textPaint,true);
-            drawText(canvas,"号",0,(int)(getHeight()-textSize*0.2f),textPaint,true);
+            drawText(canvas,gousuu,0,(int)(getHeight()-textSize*1.2f), Companion.getTextPaint(),true);
+            drawText(canvas,"号",0,(int)(getHeight()-textSize*0.2f), Companion.getTextPaint(),true);
         }
     }
     private boolean charIsEng(char c){
         return c<256;
     }
-    protected int getYsize(){
-            return (int)(textPaint.getTextSize()*2.2f);
+    public int getYsize(){
+            return (int)(Companion.getTextPaint().getTextSize()*2.2f);
     }
     public int getXsize(){
         int lineTextSize=Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("lineTimetableWidth","4"))+1;
         if(secondFrag){
             lineTextSize+=3;
         }
-        return (int)(textSize*lineTextSize*0.5f);
+        return (int)(Companion.getTextSize() *lineTextSize*0.5f);
     }
     private void drawText(Canvas canvas, String text, int x, int y, Paint paint, boolean centerFrag){
         if(centerFrag){

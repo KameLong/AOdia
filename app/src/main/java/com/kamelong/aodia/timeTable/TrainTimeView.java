@@ -58,11 +58,11 @@ public class TrainTimeView extends KLView {
     }
 
     private void drawTime(Canvas canvas) {
-        int startLine = textSize;
+        int startLine = Companion.getTextSize();
         if (showTrainName) {
-            canvas.drawLine(0, textPaint.getTextSize() * 7.9f, getWidth(), textPaint.getTextSize() * 7.9f, blackPaint);
+            canvas.drawLine(0, Companion.getTextPaint().getTextSize() * 7.9f, getWidth(), Companion.getTextPaint().getTextSize() * 7.9f, Companion.getBlackPaint());
             drawTrainName(canvas);
-            startLine += 8 * textSize;
+            startLine += 8 * Companion.getTextSize();
         }
 
 
@@ -77,14 +77,14 @@ public class TrainTimeView extends KLView {
          }
          **/
         try {
-            textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+            Companion.getTextPaint().setColor(train.getTrainType().getTextColor().getAndroidColor());
 
-            drawNoService(canvas, startLine, textPaint);
-            startLine += textSize;
-            drawNoService(canvas, startLine, textPaint);
-            startLine += textSize * 0.2f;
-            canvas.drawLine(0, startLine, getWidth(), startLine, blackPaint);
-            startLine += textSize * 1f;
+            drawNoService(canvas, startLine, Companion.getTextPaint());
+            startLine += Companion.getTextSize();
+            drawNoService(canvas, startLine, Companion.getTextPaint());
+            startLine += Companion.getTextSize() * 0.2f;
+            canvas.drawLine(0, startLine, getWidth(), startLine, Companion.getBlackPaint());
+            startLine += Companion.getTextSize() * 1f;
 
             for (int i = 0; i < station.getStationNum(); i++) {
                 int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
@@ -93,103 +93,103 @@ public class TrainTimeView extends KLView {
                 if (border == 0 && timeShow == 0) {
                     //発のみ
                     if (station.bigStation(stationNumber) && (train.getStopType(stationNumber) == 0 && (station.border(stationNumber - 1 + direct) == 0) && stationNumber != 0)) {
-                        drawText(canvas, "- - - - - - -", 1, startLine, textPaint, true);
+                        drawText(canvas, "- - - - - - -", 1, startLine, Companion.getTextPaint(), true);
                     } else {
-                        drawDepartString(canvas, startLine, textPaint, train, stationNumber, direct);
+                        drawDepartString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                     }
-                    startLine = startLine + textSize;
+                    startLine = startLine + Companion.getTextSize();
                 }
                 if (timeShow == 1) {
                     //発着
                     int backwordStation = stationNumber + (direct * 2 - 1);
                     if (backwordStation < 0 || backwordStation >= station.getStationNum()) {
                         if (train.getTime(stationNumber).getArrivalTime() >= 0) {
-                            drawArriveString(canvas, startLine, textPaint, train, stationNumber, direct);
+                            drawArriveString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                         } else {
-                            drawNoService(canvas, startLine, textPaint);
+                            drawNoService(canvas, startLine, Companion.getTextPaint());
                         }
                     } else {
                         switch (train.getStopType(backwordStation)) {
                             case 0:
                                 if (train.getTime(backwordStation) != null && train.getTime(stationNumber).getArrivalTime() >= 0) {
-                                    drawArriveString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                    drawArriveString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                                 } else {
-                                    drawNoService(canvas, startLine, textPaint);
+                                    drawNoService(canvas, startLine, Companion.getTextPaint());
                                 }
                                 break;
                             case 3:
                                 if (train.getTime(backwordStation) != null && train.getTime(stationNumber).getArrivalTime() >= 0) {
-                                    drawArriveString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                    drawArriveString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                                 } else {
-                                    drawNoVia(canvas, startLine, textPaint);
+                                    drawNoVia(canvas, startLine, Companion.getTextPaint());
                                 }
                                 break;
                             default:
-                                drawArriveString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                drawArriveString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
 
                                 break;
                         }
                     }
-                    canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize / 5.0f), blackPaint);
-                    startLine = startLine + (textSize * 7 / 6);
-                    drawStopNum(canvas, startLine, textPaint, 88);
-                    canvas.drawLine(0, startLine + (int) (textSize / 5.0f), this.getWidth() - 1, startLine + (int) (textSize / 5.0f), blackPaint);
-                    startLine = startLine + (textSize * 7 / 6);
+                    canvas.drawLine(0, startLine + (int) (Companion.getTextSize() / 5.0f), this.getWidth() - 1, startLine + (int) (Companion.getTextSize() / 5.0f), Companion.getBlackPaint());
+                    startLine = startLine + (Companion.getTextSize() * 7 / 6);
+                    drawStopNum(canvas, startLine, Companion.getTextPaint(), 88);
+                    canvas.drawLine(0, startLine + (int) (Companion.getTextSize() / 5.0f), this.getWidth() - 1, startLine + (int) (Companion.getTextSize() / 5.0f), Companion.getBlackPaint());
+                    startLine = startLine + (Companion.getTextSize() * 7 / 6);
 
-                    textPaint.setColor(train.getTrainType().getTextColor().getAndroidColor());
+                    Companion.getTextPaint().setColor(train.getTrainType().getTextColor().getAndroidColor());
 
                     int forwordStation = stationNumber + (1 - direct * 2);
                     if (forwordStation < 0 || forwordStation >= station.getStationNum()) {
                         if (train.getTime(stationNumber).getDepartureTime() >= 0) {
-                            drawDepartString(canvas, startLine, textPaint, train, stationNumber, direct);
+                            drawDepartString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                         } else {
-                            drawNoService(canvas, startLine, textPaint);
+                            drawNoService(canvas, startLine, Companion.getTextPaint());
                         }
                     } else {
                         switch (train.getStopType(forwordStation)) {
                             case 0:
                                 if (train.getTime(forwordStation) != null && train.getTime(stationNumber).getDepartureTime() >= 0) {
-                                    drawDepartString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                    drawDepartString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                                 } else {
-                                    drawNoService(canvas, startLine, textPaint);
+                                    drawNoService(canvas, startLine, Companion.getTextPaint());
                                 }
                                 break;
                             case 3:
                                 if (train.getTime(forwordStation) != null && train.getTime(stationNumber).getDepartureTime() >= 0) {
-                                    drawDepartString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                    drawDepartString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                                 } else {
-                                    drawNoVia(canvas, startLine, textPaint);
+                                    drawNoVia(canvas, startLine, Companion.getTextPaint());
                                 }
                                 break;
                             default:
-                                drawDepartString(canvas, startLine, textPaint, train, stationNumber, direct);
+                                drawDepartString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
                                 break;
                         }
                     }
-                    startLine = startLine + textSize;
+                    startLine = startLine + Companion.getTextSize();
                 }
                 if (border != 0 || timeShow == 2) {
 
                     //着のみ
-                    drawArriveString(canvas, startLine, textPaint, train, stationNumber, direct);
-                    startLine = startLine + textSize;
+                    drawArriveString(canvas, startLine, Companion.getTextPaint(), train, stationNumber, direct);
+                    startLine = startLine + Companion.getTextSize();
                     if (border == 2) {
-                        canvas.drawLine(0, startLine - (textSize * 4 / 5), this.getWidth() - 1, startLine - (textSize * 4 / 5), blackPaint);
-                        startLine = startLine + (textSize / 6);
+                        canvas.drawLine(0, startLine - (Companion.getTextSize() * 4 / 5), this.getWidth() - 1, startLine - (Companion.getTextSize() * 4 / 5), Companion.getBlackPaint());
+                        startLine = startLine + (Companion.getTextSize() / 6);
                     }
                     if (border == 1) {
-                        canvas.drawLine(0, startLine - (textSize * 2 / 3), this.getWidth() - 1, startLine - (textSize * 2 / 3), blackBPaint);
-                        startLine = startLine + (textSize / 3);
+                        canvas.drawLine(0, startLine - (Companion.getTextSize() * 2 / 3), this.getWidth() - 1, startLine - (Companion.getTextSize() * 2 / 3), Companion.getBlackBPaint());
+                        startLine = startLine + (Companion.getTextSize() / 3);
                     }
 
                 }
             }
-            canvas.drawLine(0, startLine - textSize * 0.8f, getWidth(), startLine - textSize * 0.8f, blackPaint);
-            startLine += textSize * 0.2f;
-            drawNoService(canvas, startLine, textPaint);
-            startLine += textSize;
-            drawNoService(canvas, startLine, textPaint);
-            canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), blackPaint);
+            canvas.drawLine(0, startLine - Companion.getTextSize() * 0.8f, getWidth(), startLine - Companion.getTextSize() * 0.8f, Companion.getBlackPaint());
+            startLine += Companion.getTextSize() * 0.2f;
+            drawNoService(canvas, startLine, Companion.getTextPaint());
+            startLine += Companion.getTextSize();
+            drawNoService(canvas, startLine, Companion.getTextPaint());
+            canvas.drawLine(this.getWidth() - 1, 0, this.getWidth() - 1, this.getHeight(), Companion.getBlackPaint());
 
         } catch (Exception e) {
             SdLog.log(e);
@@ -220,25 +220,25 @@ public class TrainTimeView extends KLView {
                 space--;
             }
             space = heightSpace;
-            int startX = (int) ((getWidth() - lineNum * textSize * 1.2f) / 2 + (lineNum - 1) * textSize * 1.2f);
+            int startX = (int) ((getWidth() - lineNum * Companion.getTextSize() * 1.2f) / 2 + (lineNum - 1) * Companion.getTextSize() * 1.2f);
             int startY = 0;
             for (int i = 0; i < str.length; i++) {
                 if (space <= 0) {
                     space = heightSpace;
-                    startX = startX - (int) (textSize * 1.2f);
+                    startX = startX - (int) (Companion.getTextSize() * 1.2f);
                     startY = 0;
                 }
                 if (charIsEng(str[i])) {
                     space--;
                     canvas.save();
                     canvas.rotate(90, 0, 0);
-                    drawText(canvas, String.valueOf(str[i]), startY + 2, (int) (-startX - (textSize * 0.2f)), textPaint, false);
+                    drawText(canvas, String.valueOf(str[i]), startY + 2, (int) (-startX - (Companion.getTextSize() * 0.2f)), Companion.getTextPaint(), false);
                     canvas.restore();
-                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                    startY = startY + (int) Companion.getTextPaint().measureText(String.valueOf(str[i]));
                 } else {
                     space = space - 2;
-                    startY = startY + textSize;
-                    drawText(canvas, String.valueOf(str[i]), startX, startY, textPaint, false);
+                    startY = startY + Companion.getTextSize();
+                    drawText(canvas, String.valueOf(str[i]), startX, startY, Companion.getTextPaint(), false);
                 }
 
             }
@@ -247,27 +247,27 @@ public class TrainTimeView extends KLView {
         }
 
 
-        float textSize = textPaint.getTextSize();
+        float textSize = Companion.getTextPaint().getTextSize();
         if (train.getCount().length() > 0) {
             String gousuu = train.getCount().substring(0, train.getCount().length() - 1);
-            drawText(canvas, gousuu, 0, (int) (textSize * 7.0f), textPaint, true);
-            drawText(canvas, "号", 0, (int) (textSize * 8.0f), textPaint, true);
+            drawText(canvas, gousuu, 0, (int) (textSize * 7.0f), Companion.getTextPaint(), true);
+            drawText(canvas, "号", 0, (int) (textSize * 8.0f), Companion.getTextPaint(), true);
         }
     }
 
     private void drawRemark(Canvas canvas) {
         try {
-            int startY = (int) (this.getHeight() - 10.5f * textSize);
-            canvas.drawLine(0, startY, getWidth(), startY, blackBBPaint);
+            int startY = (int) (this.getHeight() - 10.5f * Companion.getTextSize());
+            canvas.drawLine(0, startY, getWidth(), startY, Companion.getBlackBBPaint());
 
             if (train.getOperation() != null) {
                 if (train.getOperation().getNumber() >= 0) {
-                    drawText(canvas, train.getOperation().getNumber() + "", 1, (int) (this.getHeight() - 9.4f * textSize), textPaint, true);
+                    drawText(canvas, train.getOperation().getNumber() + "", 1, (int) (this.getHeight() - 9.4f * Companion.getTextSize()), Companion.getTextPaint(), true);
                 }
 
             }
 
-            canvas.drawLine(0, startY + 1.2f * textSize, getWidth(), startY + 1.2f * textSize, blackPaint);
+            canvas.drawLine(0, startY + 1.2f * Companion.getTextSize(), getWidth(), startY + 1.2f * Companion.getTextSize(), Companion.getBlackPaint());
 
             int heightSpace = 18;
 
@@ -291,24 +291,24 @@ public class TrainTimeView extends KLView {
                 space--;
             }
             space = heightSpace;
-            int startX = (int) ((getWidth() - lineNum * textSize * 1.2f) / 2 + (lineNum - 1) * textSize * 1.2f);
-            startY = (int) (this.getHeight() - 9.1f * textSize);
+            int startX = (int) ((getWidth() - lineNum * Companion.getTextSize() * 1.2f) / 2 + (lineNum - 1) * Companion.getTextSize() * 1.2f);
+            startY = (int) (this.getHeight() - 9.1f * Companion.getTextSize());
             for (int i = 0; i < str.length; i++) {
                 if (space <= 0) {
                     space = heightSpace;
-                    startX = startX - (int) (textSize * 1.2f);
-                    startY = (int) (this.getHeight() - 9.1f * textSize);
+                    startX = startX - (int) (Companion.getTextSize() * 1.2f);
+                    startY = (int) (this.getHeight() - 9.1f * Companion.getTextSize());
                 }
                 if (charIsEng(str[i])) {
                     space--;
                     canvas.rotate(90);
-                    canvas.drawText(String.valueOf(str[i]), startY, -startX - (textSize * 0.2f), textPaint);
+                    canvas.drawText(String.valueOf(str[i]), startY, -startX - (Companion.getTextSize() * 0.2f), Companion.getTextPaint());
                     canvas.rotate(-90);
-                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                    startY = startY + (int) Companion.getTextPaint().measureText(String.valueOf(str[i]));
                 } else {
                     space = space - 2;
-                    startY = startY + textSize;
-                    canvas.drawText(String.valueOf(str[i]), startX, startY, textPaint);
+                    startY = startY + Companion.getTextSize();
+                    canvas.drawText(String.valueOf(str[i]), startX, startY, Companion.getTextPaint());
                 }
 
             }
@@ -324,7 +324,7 @@ public class TrainTimeView extends KLView {
     }
 
     public int getYsize() {
-        int result = (int) (textSize * 3.2f);
+        int result = (int) (Companion.getTextSize() * 3.2f);
         for (int i = 0; i < station.getStationNum(); i++) {
             int stationNumber = (station.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
             switch (station.border(stationNumber - direct)) {
@@ -332,45 +332,45 @@ public class TrainTimeView extends KLView {
                     switch (station.getTimeShow(stationNumber, direct)) {
                         case 0:
                             //発のみ
-                            result = result + textSize;
+                            result = result + Companion.getTextSize();
                             break;
                         case 1:
                             //発着
-                            result = result + (textSize * 7 / 6);
-                            result = result + (textSize * 7 / 6);
+                            result = result + (Companion.getTextSize() * 7 / 6);
+                            result = result + (Companion.getTextSize() * 7 / 6);
 
-                            result = result + textSize;
+                            result = result + Companion.getTextSize();
                             break;
                         case 2:
                             //着のみ
-                            result = result + textSize;
+                            result = result + Companion.getTextSize();
                             break;
                     }
                     break;
                 case 1:
                     //着のみ
-                    result = result + textSize;
-                    result = result + (textSize / 3);
+                    result = result + Companion.getTextSize();
+                    result = result + (Companion.getTextSize() / 3);
                     break;
                 case 2:
                     //
-                    result = result + textSize;
-                    result = result + (textSize * 7 / 6);
+                    result = result + Companion.getTextSize();
+                    result = result + (Companion.getTextSize() * 7 / 6);
                     i++;
                     break;
             }
 
 
         }
-        result = result - (textSize * 4 / 6);
+        result = result - (Companion.getTextSize() * 4 / 6);
 
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        result += textSize * 2.2f;
+        result += Companion.getTextSize() * 2.2f;
         if (spf.getBoolean("remark", false)) {
-            result = result + (int) (textSize * 10.6f);
+            result = result + (int) (Companion.getTextSize() * 10.6f);
         }
         if (showTrainName) {
-            result = result + (int) (textSize * 8f);
+            result = result + (int) (Companion.getTextSize() * 8f);
         }
         return result;
     }
@@ -380,7 +380,7 @@ public class TrainTimeView extends KLView {
         if (secondFrag) {
             lineTextSize += 3;
         }
-        return (int) (textSize * lineTextSize * 0.5f);
+        return (int) (Companion.getTextSize() * lineTextSize * 0.5f);
     }
 
     private String getDepartureTime(AOdiaTrain train, int station, int direct) {
@@ -393,7 +393,7 @@ public class TrainTimeView extends KLView {
                     return NOVIA_STRING;
                 case AOdiaTrain.PASS:
                     if (showPassFrag && (time.getArrivalTime() >= 0 || time.getDepartureTime() >= 0)) {
-                        textPaint.setColor(Color.GRAY);
+                        Companion.getTextPaint().setColor(Color.GRAY);
                     } else {
                         return PASS_STRING;
                     }
@@ -434,7 +434,7 @@ public class TrainTimeView extends KLView {
                     return NOVIA_STRING;
                 case AOdiaTrain.PASS:
                     if (showPassFrag && (time.getArrivalTime() >= 0 || time.getDepartureTime() >= 0)) {
-                        textPaint.setColor(Color.GRAY);
+                        Companion.getTextPaint().setColor(Color.GRAY);
                     } else {
                         return PASS_STRING;
                     }
@@ -485,7 +485,7 @@ public class TrainTimeView extends KLView {
                     return;
                 case AOdiaTrain.PASS:
                     if (showPassFrag && (time.getArrivalTime() >= 0 || time.getDepartureTime() >= 0)) {
-                        textPaint.setColor(Color.GRAY);
+                        Companion.getTextPaint().setColor(Color.GRAY);
                     } else {
                         drawPass(canvas, y, paint);
                         return;
@@ -511,7 +511,7 @@ public class TrainTimeView extends KLView {
             } else {
                 result = hh + String.format("%02d", mm);
             }
-            drawText(canvas, result, 1, y, textPaint, true);
+            drawText(canvas, result, 1, y, Companion.getTextPaint(), true);
             return;
 
         } catch (Exception e) {
@@ -534,7 +534,7 @@ public class TrainTimeView extends KLView {
                     return;
                 case AOdiaTrain.PASS:
                     if (showPassFrag && (time.getArrivalTime() >= 0 || time.getDepartureTime() >= 0)) {
-                        textPaint.setColor(Color.GRAY);
+                        Companion.getTextPaint().setColor(Color.GRAY);
                     } else {
                         drawPass(canvas, y, paint);
                         return;
@@ -561,7 +561,7 @@ public class TrainTimeView extends KLView {
             } else {
                 result = hh + String.format("%02d", mm);
             }
-            drawText(canvas, result, 1, y, textPaint, true);
+            drawText(canvas, result, 1, y, Companion.getTextPaint(), true);
             return;
         } catch (Exception e) {
             SdLog.log(e);
@@ -571,28 +571,28 @@ public class TrainTimeView extends KLView {
     }
 
     private void drawPass(Canvas canvas, int y, Paint paint) {
-        canvas.drawLine(getWidth() / 2, y + textSize * 0.1f, getWidth() / 2, y - textSize * 0.8f, paint);
-        canvas.drawLine(getWidth() / 2, y + textSize * 0.1f, getWidth() / 2 + textSize * 0.6f, y - textSize * 0.5f, paint);
+        canvas.drawLine(getWidth() / 2, y + Companion.getTextSize() * 0.1f, getWidth() / 2, y - Companion.getTextSize() * 0.8f, paint);
+        canvas.drawLine(getWidth() / 2, y + Companion.getTextSize() * 0.1f, getWidth() / 2 + Companion.getTextSize() * 0.6f, y - Companion.getTextSize() * 0.5f, paint);
 
     }
 
     private void drawNoVia(Canvas canvas, int y, Paint paint) {
-        canvas.drawLine(getWidth() * 0.4f, y + textSize * 0.1f, getWidth() * 0.4f, y - textSize * 0.8f, paint);
-        canvas.drawLine(getWidth() * 0.6f, y + textSize * 0.1f, getWidth() * 0.6f, y - textSize * 0.8f, paint);
+        canvas.drawLine(getWidth() * 0.4f, y + Companion.getTextSize() * 0.1f, getWidth() * 0.4f, y - Companion.getTextSize() * 0.8f, paint);
+        canvas.drawLine(getWidth() * 0.6f, y + Companion.getTextSize() * 0.1f, getWidth() * 0.6f, y - Companion.getTextSize() * 0.8f, paint);
 
     }
 
     private void drawNoService(Canvas canvas, int y, Paint paint) {
-        float dotSize = textSize * 0.1f;
-        canvas.drawOval(getWidth() * 0.4f - dotSize, y - textSize * 0.35f - dotSize, getWidth() * 0.4f + dotSize, y - textSize * 0.35f + dotSize, paint);
-        canvas.drawOval(getWidth() * 0.6f - dotSize, y - textSize * 0.35f - dotSize, getWidth() * 0.6f + dotSize, y - textSize * 0.35f + dotSize, paint);
+        float dotSize = Companion.getTextSize() * 0.1f;
+        canvas.drawOval(getWidth() * 0.4f - dotSize, y - Companion.getTextSize() * 0.35f - dotSize, getWidth() * 0.4f + dotSize, y - Companion.getTextSize() * 0.35f + dotSize, paint);
+        canvas.drawOval(getWidth() * 0.6f - dotSize, y - Companion.getTextSize() * 0.35f - dotSize, getWidth() * 0.6f + dotSize, y - Companion.getTextSize() * 0.35f + dotSize, paint);
 
     }
 
     private void drawStopNum(Canvas canvas, int y, Paint paint, int stopNum) {
         drawText(canvas, stopNum + "", 1, y, paint, true);
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawOval(getWidth() * 0.5f - textSize * 1.1f, y - textSize * 0.8f, getWidth() * 0.5f + textSize * 1.1f, y + textSize * 0.1f, paint);
+        canvas.drawOval(getWidth() * 0.5f - Companion.getTextSize() * 1.1f, y - Companion.getTextSize() * 0.8f, getWidth() * 0.5f + Companion.getTextSize() * 1.1f, y + Companion.getTextSize() * 0.1f, paint);
         paint.setStyle(Paint.Style.FILL);
 
     }

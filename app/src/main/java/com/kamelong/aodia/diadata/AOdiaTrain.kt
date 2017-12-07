@@ -17,6 +17,8 @@ interface AOdiaTrain {
 
     fun getStopStyle(station:Int)
 
+    val trainType:AOdiaTrainType
+
 
 
 }
