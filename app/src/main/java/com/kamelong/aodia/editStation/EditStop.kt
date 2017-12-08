@@ -4,12 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import com.kamelong.aodia.R
-import com.kamelong.aodia.SdLog
-import com.kamelong.aodia.diadata.AOdiaStationHistory
 
 /**
  */
-class EditStop(val stationEditor: StationEditor,index:Int) : FrameLayout(stationEditor.context), CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
+class EditStop(val stationEditor: EditStation, index:Int) : FrameLayout(stationEditor.context), CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
     val index=index
     override fun onClickCopyButton() {
     }

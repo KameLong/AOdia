@@ -1,16 +1,14 @@
 package com.kamelong.aodia.editStation
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.LinearLayout
 import com.kamelong.aodia.R
-import javax.sql.ConnectionEventListener
 
 /**
  * コピー、貼り付け、挿入、追加、削除を選択させるDialog
+ * interfaceを設置すること
  */
 class CopyPasteInsertAddDeleteDialog(context: Context,listener:CopyPasteInsertAddDeleteInterface) : AlertDialog(context) {
     val view = LayoutInflater.from(context).inflate(R.layout.cpiad_dialog, null)
@@ -45,7 +43,9 @@ class CopyPasteInsertAddDeleteDialog(context: Context,listener:CopyPasteInsertAd
         }
     }
 
-
+    /**
+     * 各種操作イベントを取得するためのinterface
+     */
     interface CopyPasteInsertAddDeleteInterface{
         fun onClickCopyButton()
         fun onClickPasteButton()

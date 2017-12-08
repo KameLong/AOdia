@@ -14,13 +14,22 @@ import com.kamelong.tool.downloadView.TableRadioGroup
 
 /**
  * １駅の編集を行う
+ * 駅の編集を行う間はdiaFileのstationをコピーしたもの(copyStation)に情報を書き込んでいき、
+ * 決定ボタンを押された瞬間にdiaFileのstationに変更を反映する。
+ *
+ * 番線情報についてはstationHistoryをあらかじめ作成しておき、stationHistoryに書き込めるようにする
+ *
+ * EditStation作成時、diaFile.stationは古いまま、EditStation.copyStationは編集用
+ * EditStation.stationHistoryは古いまま、番線変更情報のみ記載していく
+ *
+ * 変更確定時にEditStation.copyStationをdiaFile.stationに反映し、stationHistoryはEditStationFragmentに保存
  */
-class StationEditor( f:EditStationFragment, i:Int,history: AOdiaStationHistory) : FrameLayout(f.aodiaActivity) {
+class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : FrameLayout(f.aodiaActivity) {
     val index=i
     val fragment=f
     val layout = LayoutInflater.from(fragment.activity).inflate(R.layout.edit_station_dialog, this)
-    val station=fragment.stationList[index]
-val stationHistory=history
+    val station=fragment.stationList[index].clone()
+    val stationHistory=history
     lateinit var stopLinear:LinearLayout
     init{
 
@@ -86,7 +95,7 @@ val stationHistory=history
             },false,false).show()
             true
         }
-                stopLinear=layout.findViewById<LinearLayout>(R.id.stopList)
+        stopLinear=layout.findViewById<LinearLayout>(R.id.stopList)
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))
         }
@@ -230,7 +239,7 @@ val stationHistory=history
                                 enable(true)
                             }
                         }
-                        }catch (e:Exception){
+                    }catch (e:Exception){
                         SdLog.log(e)
                     }
                 }

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.kamelong.OuDia.OuDiaStation
 import com.kamelong.OuDia2nd.Station
 import com.kamelong.aodia.AOdiaActivity
 import com.kamelong.aodia.AOdiaFragmentInterface
@@ -18,12 +17,14 @@ import com.kamelong.aodia.diadata.AOdiaStation
 import com.kamelong.aodia.diadata.AOdiaStationHistory
 import java.util.*
 import kotlin.collections.ArrayList
-import android.view.KeyEvent.KEYCODE_BACK
 import com.kamelong.aodia.SdLog
 
 
 /**
- * Created by kame on 2017/12/03.
+ * 駅編集用Fragment
+ * 駅編集Fragment内での編集はTrainには反映されないので、onStop時には別途処理しないといけない。
+ * アプリ回転や画面回転などの不慮のFragment破棄についてはまだ未検証
+ * 
  */
 class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertAddDeleteDialog.CopyPasteInsertAddDeleteInterface {
     override fun onClickCopyButton() {
@@ -140,7 +141,8 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
                 return if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
                     val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
                     if(frameLayout.visibility == View.VISIBLE){
-                        closeStationEdit(false)
+                        val editor=frameLayout.getChildAt(0)as EditStation
+                        closeStationEdit(false,editor.index,editor.station)
                     }else{
                         back()
                     }
@@ -171,16 +173,22 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         }
     }
 
+    /**
+     * stationListLineaを作成する
+     */
     fun makeStationList() {
         stationLinear.removeAllViews()
 
         for (i in 0 until diaFile.stationNum) {
-            val stationView=EditStaiton(getActivity(), this, stationList[i], i)
+            val stationView= EditStaitonView(getActivity(), this, stationList[i], i)
             stationView.isSelected=stationSelected[i]
             stationLinear.addView(stationView)
         }
     }
 
+    /**
+     * 新規駅を追加する
+     */
     fun addStation(index: Int) {
         val station = Station()
         station.name = "new"
@@ -191,10 +199,11 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         station.upMain = 2
         station.downMain = 2
         addStation(index, station)
-
-
     }
 
+    /**
+     * 既存の駅を追加する
+     */
     fun addStation(index: Int, station: AOdiaStation) {
         val history = AOdiaStationHistory()
         history.addIndex = index
@@ -203,6 +212,9 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         stationSelected.add(index, false)
     }
 
+    /**
+     * 駅を削除する
+     */
     fun deleteStaiton(index: Int): Boolean {
         for (station in stationList) {
             if (station.branchStation == index || station.loopStation == index) {
@@ -218,25 +230,31 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         return true
     }
 
+    /**
+     * StationEditerを起動する
+     */
     fun openStationEdit(index: Int) {
         val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
         val history = AOdiaStationHistory()
-        frameLayout.addView(StationEditor(this, index,history))
+        frameLayout.addView(EditStation(this, index,history))
         frameLayout.visibility = View.VISIBLE
         history.changeIndex = index
         history.station = stationList[index].clone()
         backStack.addLast(history)
     }
 
-    fun closeStationEdit(renewFrag: Boolean) {
+    /**
+     * StationEditerを閉じる
+     * 引数は駅を更新する時はtrue更新しないときはfalse
+     */
+    fun closeStationEdit(renewFrag: Boolean,index:Int,station: AOdiaStation) {
         val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
         frameLayout.removeAllViews()
         frameLayout.visibility = View.GONE
-        if (!renewFrag) {
-            val history = backStack.pollLast() as AOdiaStationHistory
-
-            stationList[history.changeIndex] = history.station!!
-
+        if (renewFrag) {
+            stationList[index]=station
+        }else{
+            backStack.pollLast()
         }
         makeStationList()
     }
