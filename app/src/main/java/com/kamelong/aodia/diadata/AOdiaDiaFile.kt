@@ -31,6 +31,9 @@ interface AOdiaDiaFile {
     fun getTrainType(index:Int):AOdiaTrainType
     fun addTrainType(trainType:AOdiaTrainType)
 
+    fun getTrainNum(diaIndex:Int,direct:Int):Int
+    fun getTrain(diaIndex:Int,direct:Int,trainIndex:Int):AOdiaTrain
+
 
 
 

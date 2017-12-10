@@ -12,9 +12,7 @@ interface AOdiaStation {
      * 駅表示スタイルを返す
      * 4bitの整数で表す[列車番号,番線、着時刻、発時刻]
      */
-    fun getViewStyle(direct:Int):Int{
-        return 0
-    }
+    fun getViewStyle(direct:Int):Int
 
     /**
      * 駅表示スタイルのうち、発着時刻に関するbit値部分のみ返す
@@ -29,11 +27,16 @@ interface AOdiaStation {
     /**
      * 駅表示スタイルのうち、番線表示に関するbit値部分のみ返す
      */
-    fun getStopStyle():Int
+    fun getShowStopStyle():Int
+
+    /**
+     * 駅表示スタイルのうち、番線表示を行うときはtrueを返す
+     */
+    fun getStopStyle(direct:Int):Boolean
     /**
      * 駅表示スタイルのうち、番線表示に関するbit値部分のみ編集する
      */
-    fun setStopStyle(value:Int)
+    fun setShowStopStyle(value:Int)
     /**
      * 駅表示スタイルのうち、ダイヤグラムの番線表示
      */
@@ -77,7 +80,22 @@ interface AOdiaStation {
      */
     fun clone():AOdiaStation
 
+    /**
+     * この駅は末端に向かう分岐線の終点である
+     * @return 分岐点
+     */
+    fun branchEnd():Int
+    /**
+     * この駅は始点に向かう分岐線の始発である
+     * @return 分岐点
+     */
+    fun branchStart():Int
 
+    /**
+     * この駅は分岐点である
+     * @return 分岐親路線
+     */
+    fun branchRoot():Int
 
 
 

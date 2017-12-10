@@ -187,10 +187,10 @@ public class TimeView extends KLView {
 
 
     }
-    protected int getXsize(){
+    public int getXsize(){
         return (int)(scaleX *60*24);
     }
-    protected int getYsize(){
+    public  int getYsize(){
         return (int) Companion.getTextPaint().getTextSize();
     }
     public void setScale(float x,float y){

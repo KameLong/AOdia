@@ -96,10 +96,10 @@ public class StationView extends KLView {
             this.setMeasuredDimension(getXsize(),getYsize());
         }
     }
-    protected int getXsize(){
+    public int getXsize(){
             return (int)(Companion.getTextPaint().getTextSize()*5)+2;
     }
-    protected int getYsize(){
+    public int getYsize(){
             return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+4)+yshift*2;
     }
     public void setScale(float x,float y){

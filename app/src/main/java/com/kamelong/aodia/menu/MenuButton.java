@@ -53,8 +53,10 @@ public class MenuButton extends Button {
                 public void onClick(View view) {
                     if(fragmentNumber==3){
                         ((AOdiaActivity) context).openOperationFragment(fileNumber,diaNumber,0);
-                    }else {
-                        ((AOdiaActivity) context).openDiaOrTimeFragment(fileNumber, diaNumber, fragmentNumber);
+                    }else if(fragmentNumber==2){
+                        ((AOdiaActivity)context).openDiagram(fileNumber,diaNumber);
+                    }else{
+                        ((AOdiaActivity)context).openLineTimeTable(fileNumber,diaNumber,fragmentNumber,0);
                     }
                 }
             });

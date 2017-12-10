@@ -4,6 +4,8 @@ import com.kamelong.JPTI.Service
 import com.kamelong.JPTI.Station
 import com.kamelong.JPTI.TrainType
 import com.kamelong.JPTI.Trip
+import com.kamelong.aodia.diadata.AOdiaTrain
+import com.kamelong.aodia.diadata.AOdiaTrainType
 
 import java.util.ArrayList
 
@@ -14,12 +16,52 @@ import java.util.ArrayList
  * それぞれのダイヤ形式に合わせた変換はxxxDiaFileクラスに記述する
  * @author  KameLong
  */
-class Train {
+class Train :AOdiaTrain{
+    override fun getDepartureTime(station: Int, startTime: Int): Int {
+        return (getDepartureTime(station)-startTime)%86400+startTime
+    }
+
+    override fun getArrivalTime(station: Int, startTime: Int): Int {
+        return (getArrivalTime(station)-startTime)%86400+startTime
+    }
+
+
+
+    override val trainType: AOdiaTrainType
+        get() = diaFile.getTrainType(type)
 
     /**
      * 列車の進行方向
      */
-    var direct = -1
+    override var direction = -1
+    override val startStation: Int
+        get() {
+            for(i in if(direction==0){0 until stationNum}else{stationNum-1 downTo 0}){
+              if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
+                  return i
+              }
+            }
+            return 0
+        }
+    override var startAction=0
+    override var endAction=0
+    override var startExchangeStop=0
+    override var startExchangeTimeStart=0
+    override var startExchangeTimeEnd=0
+    override var endExchangeStop=0
+    override var endExchangeTimeStart=0
+    override var endExchangeTimeEnd=0
+
+    override val endStation: Int
+        get(){
+            for(i in if(direction==1){0 until stationNum}else{stationNum-1 downTo 0}){
+                if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
+                    return i
+                }
+            }
+            return 0
+
+        }
 
     /**
      * 列車種別
@@ -35,7 +77,7 @@ class Train {
     /**
      * 列車番号
      */
-    var number = ""
+    override var number = ""
         set(value) {
             if (value.isEmpty()) {
                 field = ""
@@ -47,15 +89,15 @@ class Train {
     /**
      * 列車名
      */
-    var name = ""
+    override var name = ""
     /**
      * 運用番号
      */
-    var operation=""
+    override var operation=""
     /**
      * 号数
      */
-    var count = ""
+    override var count = ""
         set(value) {
             if (value.isNotEmpty()) {
                 field = value + "号"
@@ -64,19 +106,18 @@ class Train {
     /**
      * 備考
      */
-    var remark = ""
+    override var remark = ""
     /**
      * １列車の駅依存の情報を格納する。
      * このデータは駅数分できるため、サイズの大きいオブジェクトはメモリを圧迫します。
      * 省メモリのため文字列などを用いず、すべてlongで表記します。
      * longは64bitなので、各ビットごとに役割を持たせたいます。
      * 先頭より
-     * 12bit フラグエリア：どの情報が存在するのかを示したもの（1:存在する,0:存在しない)
-     * [free,番線の存在,着時刻の存在,発時刻の存在,free,free,free,free,free,free,free,free]
+     * 12bit free
      * 4bit 駅扱いを記述する。この4bitの値がそのままstopTypeとなる
-     * 8bit 番線情報(駅の番線index)
-     * 20bit 着時刻（秒単位）
-     * 20bit 発時刻（秒単位）
+     * 8bit 番線情報(駅の番線index)　0はデフォルト番線
+     * 20bit 着時刻（秒単位） 最初の１bitは時刻存在フラグ
+     * 20bit 発時刻（秒単位）最初の1bitは時刻存在フラグ
      */
     protected var time= ArrayList<Long>()
 
@@ -86,7 +127,7 @@ class Train {
     /**
      * この列車が所属するDiaFile
      */
-    lateinit var diaFile: DiaFile
+    override lateinit var diaFile: DiaFile
         private set
 
     private val stationNum: Int
@@ -155,7 +196,7 @@ class Train {
         }
         result += ";"
         if (arriveExist(stationIndex)) {
-            result += timeInt2String(getArriveTime(stationIndex)) + "/"
+            result += timeInt2String(getArrivalTime(stationIndex)) + "/"
         }
         if (departExist(stationIndex)) {
 
@@ -186,14 +227,12 @@ class Train {
      * @return　着時刻(秒)
      */
 
-    fun getArriveTime(station: Int): Int {
+     override fun getArrivalTime(station: Int): Int {
         try {
-            if (time[station] and 0x2000000000000000L == 0L) {
-                return if (time[station] and 0x1000000000000000L == 0L) {
-                    -1
-                } else getDepartureTime(station)
+            if (time[station] and 0x000008000000000L == 0L) {
+                   return -1
             }
-            var result = time[station] and 0x000000fffff00000L
+            var result = time[station] and 0x0000007ffff00000L
             result = result.ushr(20)
             return result.toInt()
         } catch (e: Exception) {
@@ -212,14 +251,12 @@ class Train {
      * @param station　指定駅番号　null禁止
      * @return　発時刻(秒)
      */
-    fun getDepartureTime(station: Int): Int {
+    override fun getDepartureTime(station: Int): Int {
         try {
-            if (time[station] and 0x1000000000000000L == 0L) {
-                return if (time[station] and 0x2000000000000000L == 0L) {
-                    -1
-                } else getArriveTime(station)
+            if (time[station] and 0x000000000080000L == 0L) {
+                    return -1
             }
-            val result = time[station] and 0x000000000fffffL
+            val result = time[station] and 0x00000000007ffffL
             return result.toInt()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -244,26 +281,26 @@ class Train {
             value = STOP_TYPE_STOP.toLong()
         }
         value = value shl 48
-        time[station] = time[station] and 0x7FF0FFFFFFFFFFFFL
+        time[station] = time[station] and 0xFF0FFFFFFFFFFFFL
         time[station] = time[station] or value
     }
 
     /**
      * 発着番線をセットする
      */
-    fun setForm(station: Int, value: Int) {
+    fun setStopNumber(station: Int, value: Int) {
         var value = value.toLong()
         if (value > 256 || value < 0) {
             //error
             return
         }
         value = value shl 40
-        time[station] = time[station] and 0x7FFF00FFFFFFFFFFL
+        time[station] = time[station] and 0xFFF00FFFFFFFFFFL
         time[station] = time[station] or value
-        time[station] = time[station] or 0x4000000000000000L
-
-
-
+    }
+    override fun getStopNumber(station:Int):Int{
+        val result = time[station] and 0x0000FF0000000000L
+        return (result ushr 40).toInt()
 
     }
 
@@ -368,8 +405,8 @@ class Train {
             }
         }
         if (result > 0) {
-            time[station] = time[station] and 0x7FFFFF00000FFFFFL
-            time[station] = time[station] or 0x2000000000000000L
+            time[station] = time[station] and 0xFFFFF00000FFFFFL
+            time[station] = time[station] or 0x000008000000000L
             time[station] = time[station] or (result shl 20)
         }
     }
@@ -480,13 +517,13 @@ class Train {
             }
         }
         if (result > 0) {
-            time[station] = time[station] and 0x7FFFFFFFFFF00000L
-            time[station] = time[station] or 0x1000000000000000L
+            time[station] = time[station] and 0xFFFFFFFFFF00000L
+            time[station] = time[station] or 0x000000000080000L
             time[station] = time[station] or result
         }
     }
 
-    fun getStopType(station: Int): Int {
+    override fun getStopType(station: Int): Int {
         if (station < 0 || station >= time.size) {
             return 5
         }
@@ -508,7 +545,7 @@ class Train {
     fun arriveExist(station: Int): Boolean {
         return if (station < 0 || station >= time.size) {
             false
-        } else time[station] and 0x2000000000000000L != 0L
+        } else time[station] and 0x000008000000000L != 0L
     }
 
     /**
@@ -520,7 +557,7 @@ class Train {
     fun departExist(station: Int): Boolean {
         return if (station < 0 || station >= time.size) {
             false
-        } else time[station] and 0x1000000000000000L != 0L
+        } else time[station] and 0x000000000080000L != 0L
     }
 
     /**
@@ -534,10 +571,47 @@ class Train {
     protected fun timeExist(station: Int): Boolean {
         return if (station < 0 || station >= time.size) {
             false
-        } else time[station] and 0x3000000000000000L != 0L
+        } else time[station] and 0x000008000080000L != 0L
+    }
+
+    fun split(str:String,char:Char,index:Int):String{
+        var count=0
+        val result=StringBuilder("")
+        for(c in str){
+            if(c==char){
+                count++
+            }else{
+                if(count==index){
+                    result.append(c)
+                }
+            }
+        }
+        return result.toString()
     }
 
 
+    internal fun setStopNumber(str:String,direct:Int) {
+        val stopString = str.split(",")
+        for (i in stopString.indices) {
+            if (stopString[i].length != 0) {
+                setStopNumber((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(split(stopString[i],';',0)))
+                if((1 - 2 * direct) * i + direct * (stationNum - 1) ==startStation){
+                    if(split(stopString[i],';',1).isNotEmpty()){
+                        startAction=Integer.parseInt(split(split(stopString[i],';',1),'/',0))
+                        if(startAction==1){
+                        }
+                    }
+                }
+                if((1 - 2 * direct) * i + direct * (stationNum - 1)==endStation){
+                    if(split(stopString[i],';',1).isNotEmpty()){
+                        startAction=Integer.parseInt(split(split(stopString[i],';',1),'/',0))
+                    }
+
+                }
+            }
+
+        }
+    }
     /**
      * この列車の発着時刻を入力します。
      * oudiaのEkiJikoku形式の文字列を発着時刻に変換し、入力していきます。
@@ -546,7 +620,7 @@ class Train {
      */
     internal fun setTime(str: String, direct: Int) {
         try {
-            val timeString = str.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val timeString = str.split(",")
             for (i in timeString.indices) {
                 if (timeString[i].length == 0) {
                     setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Train.STOP_TYPE_NOSERVICE)
@@ -554,17 +628,17 @@ class Train {
                     if (!timeString[i].contains(";")) {
                         setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(timeString[i]))
                     } else {
-                        setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(timeString[i].split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]))
+                        setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(split(timeString[i],';',0)))
                         try {
-                            val stationTime = timeString[i].split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+                            val stationTime = split(timeString[i],';',1)
                             if (!stationTime.contains("/")) {
                                 setDepartTime((1 - 2 * direct) * i + direct * (stationNum - 1), stationTime)
                             } else {
-                                if (stationTime.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size == 2) {
-                                    setArriveTime((1 - 2 * direct) * i + direct * (stationNum - 1), stationTime.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
-                                    setDepartTime((1 - 2 * direct) * i + direct * (stationNum - 1), stationTime.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1])
+                                if (stationTime.split("/").size == 2) {
+                                    setArriveTime((1 - 2 * direct) * i + direct * (stationNum - 1),split(stationTime,'/',0))
+                                    setDepartTime((1 - 2 * direct) * i + direct * (stationNum - 1), split(stationTime,'/',1))
                                 } else {
-                                    setArriveTime((1 - 2 * direct) * i + direct * (stationNum - 1), stationTime.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0])
+                                    setArriveTime((1 - 2 * direct) * i + direct * (stationNum - 1), split(stationTime,'/',0))
                                 }
                             }
                         } catch (e: Exception) {
@@ -588,8 +662,8 @@ class Train {
      */
     private fun setArrivalTime(station: Int, value: Long) {
         if (value > 0 && value < 0xFFFFFF) {
-            time[station] = time[station] and 0x7FFFFF00000FFFFFL
-            time[station] = time[station] or 0x2000000000000000L
+            time[station] = time[station] and 0xFFFFF00000FFFFFL
+            time[station] = time[station] or 0x000008000000000L
             time[station] = time[station] or (value shl 20)
         } else {
             if (value > 0xFFFFFF) {
@@ -601,8 +675,8 @@ class Train {
 
     private fun setDepartureTime(station: Int, value: Long) {
         if (value > 0 && value < 0xFFFFFF) {
-            time[station] = time[station] and 0x7FFFFFFFFFF00000L
-            time[station] = time[station] or 0x1000000000000000L
+            time[station] = time[station] and 0xFFFFFFFFFF00000L
+            time[station] = time[station] or 0x000000000080000L
             time[station] = time[station] or value
         } else {
             if (value > 0xFFFFFF) {

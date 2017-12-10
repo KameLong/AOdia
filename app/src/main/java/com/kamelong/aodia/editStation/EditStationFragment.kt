@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.kamelong.OuDia2nd.DiaFile
 import com.kamelong.OuDia2nd.Station
 import com.kamelong.aodia.AOdiaActivity
 import com.kamelong.aodia.AOdiaFragmentInterface
@@ -92,13 +93,19 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
 
     override fun onClickDeleteButton() {
         stationCopyList = ArrayList<Int>()
-        for (i in 0 until stationSelected.size) {
+        var i = 0
+        while (i < stationSelected.size) {
             if (stationSelected[i]) {
-                deleteStaiton(i)
-                break
+                if (deleteStaiton(i)) {
+                    i--
+                }else{
+                    SdLog.toast(stationList[i].name + "駅は削除できません")
+
+                }
             }
+            i++
         }
-        makeStationList()
+            makeStationList()
 
     }
 
@@ -179,7 +186,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
     fun makeStationList() {
         stationLinear.removeAllViews()
 
-        for (i in 0 until diaFile.stationNum) {
+        for (i in 0 until stationList.size) {
             val stationView= EditStaitonView(getActivity(), this, stationList[i], i)
             stationView.isSelected=stationSelected[i]
             stationLinear.addView(stationView)
@@ -190,7 +197,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
      * 新規駅を追加する
      */
     fun addStation(index: Int) {
-        val station = Station()
+        val station = Station(diaFile as DiaFile)
         station.name = "new"
         station.trackName.add("１番線")
         station.trackName.add("２番線")
@@ -210,6 +217,11 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         backStack.addLast(history)
         stationList.add(index, station)
         stationSelected.add(index, false)
+        for(i in index until stationList.size){
+            if(stationList[i].branchStation>=index)stationList[i].branchStation++
+            if(stationList[i].loopStation>=index)stationList[i].loopStation++
+        }
+
     }
 
     /**
@@ -227,6 +239,10 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         backStack.addLast(history)
         stationList.remove(stationList[index])
         stationSelected.remove(stationSelected[index])
+        for(i in index until stationList.size){
+            if(stationList[i].branchStation>index)stationList[i].branchStation--
+            if(stationList[i].loopStation>index)stationList[i].loopStation--
+        }
         return true
     }
 
@@ -263,13 +279,22 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         if(history==null){
             SdLog.toast("これ以上駅を戻すことはできません")
         }else if(history.deleteIndex>=0){
-            addStation(history.deleteIndex,history.station!!)
             stationList.add(history.deleteIndex, history.station!!)
             stationSelected.add(history.deleteIndex, false)
+            for(i in history.deleteIndex until stationList.size){
+                if(stationList[i].branchStation>=history.deleteIndex)stationList[i].branchStation++
+                if(stationList[i].loopStation>=history.deleteIndex)stationList[i].loopStation++
+            }
+
 
         }else if(history.addIndex>=0){
             stationList.remove(stationList[history.addIndex])
             stationSelected.remove(stationSelected[history.addIndex])
+            for(i in history.addIndex until stationList.size){
+                if(stationList[i].branchStation>history.addIndex)stationList[i].branchStation--
+                if(stationList[i].loopStation>history.addIndex)stationList[i].loopStation--
+            }
+
         }else if(history.changeIndex>=0){
             stationList[history.changeIndex]=history.station!!
         }

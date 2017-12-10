@@ -3,11 +3,8 @@ package com.kamelong.aodia
 import android.Manifest
 import android.app.*
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.AssetManager
 import android.os.Build
 import android.os.Bundle
 
@@ -22,7 +19,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.Toast
 
 import com.kamelong.OuDia2nd.DiaFile
@@ -39,10 +35,7 @@ import com.kamelong.aodia.editTrainType.EditTrainTypeFragment
 import com.kamelong.aodia.operation.OperationFragment
 import com.kamelong.aodia.stationInfo.StationInfoFragment
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment
-import com.kamelong.aodia.timeTable.KLView
-import com.kamelong.aodia.timeTable.SelectTrainTimeTable
-import com.kamelong.aodia.timeTable.TimeTableFragment
-import com.kamelong.aodia.timeTable.TrainSelectListener
+import com.kamelong.aodia.timeTable.*
 
 import org.json.JSONException
 import org.json.JSONObject
@@ -50,8 +43,6 @@ import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.net.URLDecoder
 import java.util.ArrayList
 
@@ -328,7 +319,7 @@ class AOdiaActivity : AppCompatActivity() {
                 val spf = PreferenceManager.getDefaultSharedPreferences(this)
                 val textSize = spf.getInt("textsize", 30)
                 if (textSize > 0 && textSize < 100) {
-                    KLView.setTextSize(textSize)
+                    KLView.textSize=textSize
                 }
                 openDiaOrTimeFragment(0, 0, 0)
             } catch (e: Exception) {
@@ -375,7 +366,7 @@ class AOdiaActivity : AppCompatActivity() {
             diaFiles.add(diaFile)
             diaFilesIndex.add(0, diaFiles.size - 1)
             menuFragment!!.createMenu()
-            openEditTrainType(0)
+            openEditStation(diaFilesIndex[0])
             //openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
         }
     }
@@ -546,7 +537,7 @@ class AOdiaActivity : AppCompatActivity() {
     /**
      * ダイヤグラムを開く
      */
-    private fun openDiagram(fileNum: Int, diaNum: Int) {
+    fun openDiagram(fileNum: Int, diaNum: Int) {
 
         val fragment = DiagramFragment()
         val args = Bundle()
@@ -587,13 +578,10 @@ class AOdiaActivity : AppCompatActivity() {
             val fragment = TimeTableFragment()
             val args = Bundle()
             args.putInt("fileNum", fileNum)
-            args.putInt("diaN", diaNum)
-            args.putInt("direct", direct)
+            args.putInt("diaNum", diaNum)
+            args.putInt("direction", direct)
             fragment.arguments = args
             openFragment(fragment)
-            if (train != -1) {
-                fragment.goTrain(train)
-            }
         } catch (e: Exception) {
             SdLog.log(e)
         }
@@ -734,7 +722,7 @@ class AOdiaActivity : AppCompatActivity() {
             val spf = PreferenceManager.getDefaultSharedPreferences(this)
             val textSize = Integer.parseInt(spf.getString("textsize2", "30"))
             if (textSize > 0 && textSize < 100) {
-                KLView.setTextSize((textSize / 3.0f * scale).toInt())
+                KLView.textSize=(textSize / 3.0f * scale).toInt()
             }
 
 

@@ -1,14 +1,11 @@
 package com.kamelong.aodia.editStation
 
-import android.app.Fragment
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import com.kamelong.OuDia2nd.Station
 import com.kamelong.aodia.R
 import com.kamelong.aodia.SdLog
-import com.kamelong.aodia.diadata.AOdiaStation
 import com.kamelong.aodia.diadata.AOdiaStationHistory
 import com.kamelong.tool.downloadView.TableRadioGroup
 
@@ -37,7 +34,7 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
         layout.findViewById<EditText>(R.id.stationNameEditText).setText(station.name)
         layout.findViewById<Button>(R.id.SubmitButton).setOnClickListener {
             station.name=layout.findViewById<EditText>(R.id.stationNameEditText).text.toString()
-            fragment.closeStationEdit(true) }
+            fragment.closeStationEdit(true,index,station) }
         layout.findViewById<TableRadioGroup>(R.id.showTimeRadio).check(
                 when(station.getTimeViewStyle()){
                     Station.SHOW_HATU->R.id.showStop5
@@ -103,14 +100,14 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
 
 
 
-        layout.findViewById<CheckBox>(R.id.checkBox6).isChecked=(station.getStopStyle() and 0x4) !=0
+        layout.findViewById<CheckBox>(R.id.checkBox6).isChecked=(station.getShowStopStyle() and 0x4) !=0
 
         layout.findViewById<CheckBox>(R.id.checkBox6).setOnCheckedChangeListener { compoundButton, b ->
-            station.setStopStyle((station.getStopStyle() and 0x40) or if(b){0x04}else{0x00})
+            station.setShowStopStyle((station.getShowStopStyle() and 0x40) or if(b){0x04}else{0x00})
         }
-        layout.findViewById<CheckBox>(R.id.checkBox4).isChecked=(station.getStopStyle() and 0x40) !=0
+        layout.findViewById<CheckBox>(R.id.checkBox4).isChecked=(station.getShowStopStyle() and 0x40) !=0
         layout.findViewById<CheckBox>(R.id.checkBox4).setOnCheckedChangeListener { compoundButton, b ->
-            station.setStopStyle((station.getStopStyle() and 0x04) or if(b){0x40}else{0x00})
+            station.setShowStopStyle((station.getShowStopStyle() and 0x04) or if(b){0x40}else{0x00})
         }
         layout.findViewById<CheckBox>(R.id.checkBox5).isChecked=station.getStopDiaStyle()
         layout.findViewById<CheckBox>(R.id.checkBox5).setOnCheckedChangeListener { compoundButton, b ->

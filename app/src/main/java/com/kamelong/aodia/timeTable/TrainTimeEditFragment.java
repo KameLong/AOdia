@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.OverScroller;
 
-import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 
@@ -15,7 +13,7 @@ import com.kamelong.aodia.SdLog;
  * Created by kame on 2017/11/19.
  */
 
-public class TrainTimeEditFragment extends TimeTableFragment {
+public class TrainTimeEditFragment extends TimeTableFragmentOld {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);

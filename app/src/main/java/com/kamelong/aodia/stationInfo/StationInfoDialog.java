@@ -8,7 +8,7 @@ import android.view.Window;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.timeTable.TimeTableFragment;
+import com.kamelong.aodia.timeTable.TimeTableFragmentOld;
 
 /**
  * Created by kame on 2017/01/28.
@@ -36,14 +36,14 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class StationInfoDialog extends Dialog{
     private AOdiaDiaFile diaFile;
-    private TimeTableFragment fragment;
+    private TimeTableFragmentOld fragment;
     private int fileNum;
     private int station;
     private int direct;
     private int diaNum;
     private AOdiaActivity activity;
 
-    public StationInfoDialog(Context context, TimeTableFragment f, AOdiaDiaFile dia, int fileN, int diaN, int d, int s){
+    public StationInfoDialog(Context context, TimeTableFragmentOld f, AOdiaDiaFile dia, int fileN, int diaN, int d, int s){
         super(context);
         diaFile=dia;
         fragment=f;

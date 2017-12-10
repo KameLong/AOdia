@@ -7,7 +7,7 @@ import java.util.ArrayList
 /**
  *
  */
-class Station :AOdiaStation{
+class Station(val diaFile: DiaFile) :AOdiaStation{
     override val stopNum: Int
         get() =trackName.size
 
@@ -79,6 +79,23 @@ class Station :AOdiaStation{
     override fun getTimeViewStyle(): Int {
         return showType and 0b00110011
     }
+    override fun getViewStyle(direct: Int): Int {
+        if(direct==0){
+            return showType and 0b1111
+        }else{
+            return (showType and 0b11110000)ushr 4
+        }
+    }
+
+    override fun getStopStyle(direct: Int): Boolean {
+        if(direct==0){
+            return (showType and 0b1000 )!=0
+        }else{
+            return (showType and 0b10000000 )!=0
+        }
+    }
+
+
 
     override fun setTimeViewStyle(value: Int) {
         val m_value=value and 0b00110011
@@ -86,14 +103,24 @@ class Station :AOdiaStation{
         showType = showType or m_value
     }
 
-    override fun getStopStyle(): Int {
+    override fun getShowStopStyle(): Int {
         return showType and 0b01000100
     }
 
-    override fun setStopStyle(value: Int) {
-        val m_value=value and 0b01000100
+    override fun setShowStopStyle(value: Int) {
+        val mValue=value and 0b01000100
         showType = showType and 0b10111011
-        showType = showType or m_value
+        showType = showType or mValue
+    }
+    fun setShowStopStyle(direct:Int,frag:Boolean){
+        if(direct==0){
+            showType = showType and 0b11111011
+            showType = showType or if(frag){0b00000100}else{0b00000000}
+        }else{
+            showType = showType and 0b10111111
+            showType = showType or if(frag){0b01000000}else{0b00000000}
+
+        }
     }
 
 
@@ -218,7 +245,7 @@ class Station :AOdiaStation{
     }
 
     override fun clone(): AOdiaStation {
-        val station=Station()
+        val station=Station(diaFile)
         station.name=name
         station.showType=showType
         station.bigStation=bigStation
@@ -231,6 +258,34 @@ class Station :AOdiaStation{
         station.showStopDiagram=showStopDiagram
         
         return station
+    }
+
+    override fun branchEnd(): Int {
+        val index=diaFile.station.indexOf(this)
+        try {
+            if(diaFile.station[index+1].branchStation>=0&&diaFile.station[index+1].branchStation<index){
+                return diaFile.station[index+1].branchStation
+            }
+            return -1
+        }catch(e:Exception){
+            return -2
+        }
+    }
+
+    override fun branchStart(): Int {
+        val index=diaFile.station.indexOf(this)
+        try {
+            if(diaFile.station[index-1].branchStation>=0&&diaFile.station[index-1].branchStation>index){
+                return diaFile.station[index-1].branchStation
+            }
+            return -1
+        }catch(e:Exception){
+            return -2
+        }
+    }
+
+    override fun branchRoot(): Int {
+        return 0
     }
 
 
@@ -248,5 +303,7 @@ class Station :AOdiaStation{
         protected val STOP_DEPART = 0
         protected val STOP_ARRIVE = 1
     }
+
+
 
 }

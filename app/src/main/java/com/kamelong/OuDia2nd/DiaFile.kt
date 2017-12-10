@@ -18,7 +18,6 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
 import java.util.ArrayList
-
 /**
  * OuDiaSecond形式の1ファイルを取り扱う.
  * 内部に複数のダイヤを格納することができるが、駅リスト、種別リストは一つしか持てない.
@@ -26,6 +25,29 @@ import java.util.ArrayList
  * @author KameLong
  */
 class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
+    fun String.split(char:Char,index:Int):String{
+
+        var count=0
+        val result=StringBuilder("")
+        for(c in this){
+            if(c==char){
+                count++
+            }else{
+                if(count==index){
+                    result.append(c)
+                }
+            }
+        }
+        return result.toString()
+    }
+    override fun setDiaName(index: Int, value: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun addNewDia(index: Int, value: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getTrainType(index: Int): AOdiaTrainType {
         return trainType[index]
     }
@@ -140,9 +162,9 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             e.printStackTrace()
         }
     }
-    private fun oudiaSplit(str:String,index:Int):String{
+    inline fun oudiaSplit(str:String,index:Int):String{
         try{
-            return str.split("=")[index]
+            return str.split('=',index)
         }catch (e:Exception){
             e.printStackTrace()
             return ""
@@ -157,8 +179,11 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
     private fun loadDia(br: BufferedReader) {
         try {
             var line = br.readLine()
+            val time=System.currentTimeMillis()
             while (line != null) {
                 if (line == "Dia.") {
+                    println("dia"+(System.currentTimeMillis()-time))
+
                     line = br.readLine()
                     diaName.add(oudiaSplit(line,1))
                     val trainArray =ArrayList<ArrayList<Train>>()
@@ -170,36 +195,45 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                             var direct = 0
                             val t = Train(this)
                             while (line != ".") {
+                                val title=oudiaSplit(line,0)
 
-                                if (oudiaSplit(line,0) == "Houkou") {
+                                if (title == "Houkou") {
                                     if (oudiaSplit(line,1) == "Kudari") {
                                         direct = 0
                                     }
                                     if (oudiaSplit(line,1) == "Nobori") {
                                         direct = 1
                                     }
-                                    t.direct = direct
+                                    t.direction = direct
                                 }
 
-                                if (oudiaSplit(line,0) == "Syubetsu") {
+                                if (title == "Syubetsu") {
                                     t.type=Integer.parseInt(oudiaSplit(line,1))
                                 }
-                                if (oudiaSplit(line,0) == "Ressyamei") {
+                                if (title == "Ressyamei") {
                                     t.name = oudiaSplit(line,1)
                                 }
-                                if (oudiaSplit(line,0) == "Gousuu") {
+                                if (title == "Gousuu") {
                                     t.count=oudiaSplit(line,1)
                                 }
-                                if (oudiaSplit(line,0) == "Ressyabangou") {
+                                if (title == "Ressyabangou") {
                                     t.number=oudiaSplit(line,1)
                                 }
-                                if (oudiaSplit(line,0) == "Bikou") {
+                                if (title== "Bikou") {
                                     t.remark = oudiaSplit(line,1)
                                 }
 
-                                if (oudiaSplit(line,0) == "EkiJikoku") {
+                                if (title== "EkiJikoku") {
                                     try {
                                         t.setTime(oudiaSplit(line,1), direct)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                    }
+
+                                }
+                                if (title== "RessyaTrack") {
+                                    try {
+                                        t.setStopNumber(oudiaSplit(line,1), direct)
                                     } catch (e: Exception) {
                                         e.printStackTrace()
                                     }
@@ -221,32 +255,37 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                     trainArray[0].trimToSize()
                     trainArray[1].trimToSize()
                     train.add(trainArray)
+                    println("diaEnd"+(System.currentTimeMillis()-time))
+
                 }
                 if (line == "Ressyasyubetsu.") {
+
                     val mTrainType = TrainType()
                     while (line != ".") {
-                        if (oudiaSplit(line,0) == "Syubetsumei") {
+                        val title=oudiaSplit(line,0)
+
+                        if (title == "Syubetsumei") {
                             mTrainType.name = oudiaSplit(line,1)
                         }
-                        if (oudiaSplit(line,0) == "Ryakusyou") {
+                        if (title == "Ryakusyou") {
                             mTrainType.shortName=oudiaSplit(line,1)
                         }
-                        if (oudiaSplit(line,0) == "JikokuhyouMojiColor") {
+                        if (title == "JikokuhyouMojiColor") {
                             mTrainType.setTextColor(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "DiagramSenColor") {
+                        if (title== "DiagramSenColor") {
                             mTrainType.setDiaColor(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "DiagramSenStyle") {
+                        if (title== "DiagramSenStyle") {
                             mTrainType.setLineStyle(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "DiagramSenIsBold") {
+                        if (title == "DiagramSenIsBold") {
                             mTrainType.setLineBold(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "StopMarkDrawType") {
+                        if (title == "StopMarkDrawType") {
                             mTrainType.setShowStop(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "JikokuhyouFontIndex") {
+                        if( title == "JikokuhyouFontIndex") {
                             mTrainType.fontNumber = Integer.parseInt(oudiaSplit(line,1))
                         }
                         line = br.readLine()
@@ -254,27 +293,35 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                     trainType.add(mTrainType)
                 }
                 if (line == "Eki.") {
-                    val mStation = Station()
+                    val mStation = Station(this)
+
                     while (line != ".") {
-                        if (oudiaSplit(line,0) == "Ekimei") {
+                        val title=oudiaSplit(line,0)
+                        if (title == "Ekimei") {
                             mStation.name=oudiaSplit(line,1)
                         }
-                        if (oudiaSplit(line,0) == "Ekijikokukeisiki") {
+                        if (title  == "Ekijikokukeisiki") {
                             mStation.setStationTimeShow(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "Ekikibo") {
+                        if (title == "Ekikibo") {
                             mStation.setSize(oudiaSplit(line,1))
                         }
-                        if (oudiaSplit(line,0) == "DownMain") {
+                        if (title  == "DownMain") {
                             mStation.downMain = Integer.valueOf(oudiaSplit(line,1)) - 1
                         }
-                        if (oudiaSplit(line,0) == "UpMain") {
+                        if (title == "UpMain") {
                             mStation.upMain = Integer.valueOf(oudiaSplit(line,1)) - 1
                         }
-                        if (oudiaSplit(line,0) == "BrunchCoreEkiIndex") {
+                        if (title  == "BrunchCoreEkiIndex") {
                             mStation.branchStation=Integer.valueOf(oudiaSplit(line,1))
-
                         }
+                        if (title == "JikokuhyouTrackDisplayKudari"){
+                            mStation.setShowStopStyle(0,Integer.valueOf(oudiaSplit(line,1))==1)
+                        }
+                        if (title == "JikokuhyouTrackDisplayNobori"){
+                            mStation.setShowStopStyle(0,Integer.valueOf(oudiaSplit(line,1))==1)
+                        }
+
                         if (line == "EkiTrack2Cont.") {
                             while (line != ".") {
                                 if (line == "EkiTrack2.") {
@@ -302,11 +349,12 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                     line = br.readLine()
                     lineName = oudiaSplit(line,1)
                 }
-                if (oudiaSplit(line,0) == "Comment") {
+                val title=oudiaSplit(line,0)
+                if (title == "Comment") {
                     comment = oudiaSplit(line,1)
                     comment = comment.replace("\\n", "\n")
                 }
-                if (oudiaSplit(line,0) == "KitenJikoku") {
+                if (title== "KitenJikoku") {
                     val startTime = oudiaSplit(line,1)
                     if (startTime.length == 4) {
                         this.startTime = Integer.parseInt(startTime.substring(0, 2)) * 3600
@@ -318,83 +366,83 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
 
                     }
                 }
-                if (oudiaSplit(line,0) == "DiagramDgrYZahyouKyoriDefault") {
+                if (title == "DiagramDgrYZahyouKyoriDefault") {
                     stationDistanceDefault = Integer.parseInt(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "JikokuhyouFont") {
+                if (title == "JikokuhyouFont") {
                     val font = Font()
-                    font.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
-                    font.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    font.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    font.name = line.split('=',3).split(';',0)
                     font.bold = line.contains("Bold")
                     font.itaric = line.contains("Itaric")
                     tableFont.add(font)
                 }
-                if (oudiaSplit(line,0) == "JikokuhyouVFont") {
+                if (title == "JikokuhyouVFont") {
                     vfont = Font()
                     try {
-                        vfont.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
+                        vfont.height = Integer.parseInt(line.split('=',2).split(';',0))
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
 
-                    vfont.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    vfont.name = line.split('=',3).split(';',0)
 
                     vfont.bold = line.contains("Bold")
                     vfont.itaric = line.contains("Itaric")
                 }
-                if (oudiaSplit(line,0) == "DiaEkimeiFont") {
+                if (title == "DiaEkimeiFont") {
                     stationFont = Font()
-                    stationFont.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
-                    stationFont.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    stationFont.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    stationFont.name = line.split('=',3).split(';',0)
                     stationFont.bold = line.contains("Bold")
                     stationFont.itaric = line.contains("Itaric")
                 }
-                if (oudiaSplit(line,0) == "DiaJikokuFont") {
+                if (title == "DiaJikokuFont") {
                     diaTimeFont = Font()
-                    diaTimeFont.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
-                    diaTimeFont.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    diaTimeFont.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    diaTimeFont.name = line.split('=',3).split(';',0)
                     diaTimeFont.bold = line.contains("Bold")
                     diaTimeFont.itaric = line.contains("Itaric")
                 }
-                if (oudiaSplit(line,0) == "DiaRessyaFont") {
+                if (title == "DiaRessyaFont") {
                     diaTextFont = Font()
-                    diaTextFont.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
-                    diaTextFont.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    diaTextFont.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    diaTextFont.name = line.split('=',3).split(';',0)
                     diaTextFont.bold = line.contains("Bold")
                     diaTextFont.itaric = line.contains("Itaric")
                 }
-                if (oudiaSplit(line,0) == "CommentFont") {
+                if (title == "CommentFont") {
                     commnetFont = Font()
-                    commnetFont.height = Integer.parseInt(line.split("=".toRegex()).toTypedArray()[2].split(";".toRegex()).toTypedArray()[0])
-                    commnetFont.name = line.split("=".toRegex()).toTypedArray()[3].split(";".toRegex()).toTypedArray()[0]
+                    commnetFont.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    commnetFont.name = line.split('=',3).split(';',0)
                     commnetFont.bold = line.contains("Bold")
                     commnetFont.itaric = line.contains("Itaric")
                 }
-                if (oudiaSplit(line,0) == "DiaMojiColor") {
+                if (title == "DiaMojiColor") {
                     diaTextColor.setOuDiaColor(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "DiaHaikeiColor") {
+                if (title == "DiaHaikeiColor") {
                     backGroundColor.setOuDiaColor(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "DiaRessyaColor") {
+                if (title== "DiaRessyaColor") {
                     trainColor.setOuDiaColor(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "DiaJikuColor") {
+                if (title== "DiaJikuColor") {
                     axisColor.setOuDiaColor(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "EkimeiLength") {
+                if (title== "EkimeiLength") {
                     stationNameLength = Integer.parseInt(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "JikokuhyouRessyaWidth") {
+                if (title == "JikokuhyouRessyaWidth") {
                     trainWidth = 60 * Integer.parseInt(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "AnySecondIncDec1") {
+                if (title == "AnySecondIncDec1") {
                     anySecondIncDec1 = Integer.parseInt(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "AnySecondIncDec2") {
+                if (title== "AnySecondIncDec2") {
                     anySecondIncDec2 = Integer.parseInt(oudiaSplit(line,1))
                 }
-                if (oudiaSplit(line,0) == "FileType") {
+                if (title == "FileType") {
                     fileType = oudiaSplit(line,1)
                 }
                 line=br.readLine()
@@ -502,7 +550,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
         }
         catch (e:Exception) {
             e.printStackTrace()
-            return Station()
+            return Station(this)
         }
     }
     override fun getStationList():ArrayList<AOdiaStation> {
@@ -515,11 +563,11 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
         }
     }
 
-    fun getTrainNum(dia:Int, direction:Int):Int {
+    override fun getTrainNum(dia:Int, direction:Int):Int {
         return train.get(dia)[direction].size
     }
 
-    fun getTrain(dia:Int, direction:Int, index:Int):Train {
+    override fun getTrain(dia:Int, direction:Int, index:Int):Train {
         try
         {
             return train.get(dia)[direction].get(index)

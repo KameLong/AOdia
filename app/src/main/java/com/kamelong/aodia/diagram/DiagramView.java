@@ -664,14 +664,14 @@ public class DiagramView extends KLView {
      * このViewの実際の描画範囲のサイズ
      */
 
-    protected int getXsize(){
+    public  int getXsize(){
         return (int)(1440* scaleX);
     }
     /**
      * このViewの実際の描画範囲のサイズ
      */
 
-    protected int getYsize(){
+    public int getYsize(){
         return (int)(stationTime.get(station.getStationNum()-1)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+4+yshift*2);
     }
 
