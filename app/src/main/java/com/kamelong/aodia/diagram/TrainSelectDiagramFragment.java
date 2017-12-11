@@ -74,7 +74,7 @@ public class TrainSelectDiagramFragment extends DiagramFragment{
                             return 0;
                         }
                     });
-                    trainSelectListener.selectTrain(diagramView.focusTrain);
+//                    trainSelectListener.selectTrain(diagramView.focusTrain);
                 }
 
                 getAOdiaActivity().killFragment(TrainSelectDiagramFragment.this);

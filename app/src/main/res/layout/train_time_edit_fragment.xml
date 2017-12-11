@@ -1,273 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/edit2"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/edit1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/buttonN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="戻る" />
+
+        <Button
+            android:id="@+id/buttonM"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="番線編集" />
+
+        <Button
+            android:id="@+id/buttonL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="全時刻表示" />
+
+        <Button
+            android:id="@+id/buttonK"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="繰上変更する" />
+
+        <Button
+            android:id="@+id/buttonJ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="繰下変更する" />
+
+        <Button
+            android:id="@+id/buttonI"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="連続入力" />
+
+        <Button
+            android:id="@+id/buttonH"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:drawable/editbox_dropdown_light_frame"
+            android:text="カーソル移動方向" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timetable"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/edit1"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/edit2"
+        android:orientation="horizontal"></LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/edit1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
-            android:id="@+id/layout3"
-            android:layout_width="72dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/layout2"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/buttonN"
-                android:layout_width="match_parent"
+                android:id="@+id/buttonA"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="戻る" />
+                android:text="１分戻す" />
 
             <Button
-                android:id="@+id/buttonM"
-                android:layout_width="match_parent"
+                android:id="@+id/buttonB"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="カーソル\n上下左右" />
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="番線編集" />
+                android:text="1" />
 
             <Button
-                android:id="@+id/buttonL"
-                android:layout_width="match_parent"
+                android:id="@+id/button2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="全時刻表示" />
+                android:text="2" />
 
             <Button
-                android:id="@+id/buttonK"
-                android:layout_width="match_parent"
+                android:id="@+id/button3"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="繰上変更する" />
-
-            <Button
-                android:id="@+id/buttonJ"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="繰下変更する" />
-
-            <Button
-                android:id="@+id/buttonI"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="連続入力" />
-
-            <Button
-                android:id="@+id/buttonH"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="カーソル移動方向" />
+                android:text="3" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="false"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonC"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="１分進め\nる" />
+
+            <Button
+                android:id="@+id/buttonD"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="分割\n直通化" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="4" />
 
-                <Button
-                    android:id="@+id/buttonA"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="１分戻す" />
-
-                <Button
-                    android:id="@+id/buttonB"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="上下左右" />
-
-                <Button
-                    android:id="@+id/button1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="1" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="2" />
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="3" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="5" />
 
-                <Button
-                    android:id="@+id/buttonC"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="１分進め\nる" />
-
-                <Button
-                    android:id="@+id/buttonD"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="分割\n直通化" />
-
-                <Button
-                    android:id="@+id/button4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="4" />
-
-                <Button
-                    android:id="@+id/button5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="5" />
-
-                <Button
-                    android:id="@+id/button6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="6" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonE"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="運行なし" />
-
-                <Button
-                    android:id="@+id/buttonF"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="操作を\n戻す" />
-
-                <Button
-                    android:id="@+id/button7"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="7" />
-
-                <Button
-                    android:id="@+id/button8"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="8" />
-
-                <Button
-                    android:id="@+id/button9"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="9" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonEnter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="Enter" />
-
-                <Button
-                    android:id="@+id/button10"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="レ" />
-
-                <Button
-                    android:id="@+id/button0"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="0" />
-
-                <Button
-                    android:id="@+id/button11"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@android:drawable/editbox_dropdown_light_frame"
-                    android:text="|  |" />
-            </LinearLayout>
-
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="6" />
         </LinearLayout>
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout2"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentRight="true"
-            android:layout_toEndOf="@+id/layout3"
-            android:layout_toRightOf="@+id/layout3">
-            <include layout="@layout/time_table" android:id="@+id/include_views_1"/>
-        </FrameLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    </RelativeLayout>
-</FrameLayout>
+            <Button
+                android:id="@+id/buttonE"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="運行なし" />
+
+            <Button
+                android:id="@+id/buttonF"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="操作を\n戻す" />
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="7" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="8" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="9" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonEnter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="Enter" />
+
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="レ" />
+
+            <Button
+                android:id="@+id/button0"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="0" />
+
+            <Button
+                android:id="@+id/button11"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="|  |" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

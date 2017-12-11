@@ -9,10 +9,20 @@ import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.diadata.AOdiaStation
 import com.kamelong.aodia.diadata.AOdiaTrain
 
-class TrainView (context: Context, val direct:Int, val train: AOdiaTrain, override val xsize: Int) :KLView(context) {
+class TrainView (context: Context, val train: AOdiaTrain, override val xsize: Int) :KLView(context) {
     val diaFile=train.diaFile
-
+    val direct=train.direction
     val showPassTime=false
+
+    /**
+     * 駅数の３倍がmax
+     * focusPoint/3:駅Index
+     * focusPoint%3:
+     * ->0:着時刻
+     * ->1:番線
+     * ->2:発時刻
+     */
+    var focusPoint=-1
     override val ysize: Int
         get() {
             var result=0.4* textSize
@@ -58,6 +68,9 @@ class TrainView (context: Context, val direct:Int, val train: AOdiaTrain, overri
 
 
             if((viewStyle and 0b0010) ==0b0010){
+                if(focusPoint==i*3){
+                    canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
+                }
                 linePos+=textSize
                 when(train.getStopType(i)) {
                     Train.STOP_TYPE_NOSERVICE ->
@@ -108,6 +121,9 @@ class TrainView (context: Context, val direct:Int, val train: AOdiaTrain, overri
             }
             if((viewStyle and 0b0111) ==0b0110) {
                 linePos += textSize * 0.2f
+                if(focusPoint==i*3+1){
+                    canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
+                }
                 canvas.drawLine(0f, linePos, width.toFloat(), linePos, blackPaint)
                 linePos += textSize
                     drawStop(canvas, i,linePos, textPaint)
@@ -119,6 +135,10 @@ class TrainView (context: Context, val direct:Int, val train: AOdiaTrain, overri
             }
 
             if((viewStyle and 0b0001) ==0b0001){
+                if(focusPoint==i*3+2){
+                    canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
+                }
+
                 linePos+=textSize
 
                 when(train.getStopType(i)) {

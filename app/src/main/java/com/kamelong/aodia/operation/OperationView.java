@@ -113,7 +113,7 @@ public class OperationView extends RelativeLayout{
 
     public void addNewTrip(final OperationSubView subView){
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
-            @Override
+            //@Override
             public void selectTrain(AOdiaTrain train) {
                 for (int i = 0; i < operation.getTrainNum(); i++) {
                     if(operation.getTrain(i)==subView.train){
@@ -126,7 +126,7 @@ public class OperationView extends RelativeLayout{
 
             }
 
-            @Override
+            //@Override
             public void selectTrain(ArrayList<AOdiaTrain> trains) {
                 System.out.println(trains);
                 operation.removeAllTrain();
@@ -147,7 +147,7 @@ public class OperationView extends RelativeLayout{
     }
     private void addNewTrip(){
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
-            @Override
+           // @Override
             public void selectTrain(AOdiaTrain train) {
                 operation.addTrain(train);
                 opeList.addView(new OperationSubView(getContext(),train));
@@ -155,7 +155,7 @@ public class OperationView extends RelativeLayout{
 
             }
 
-            @Override
+            //@Override
             public void selectTrain(ArrayList<AOdiaTrain> trains) {
                 System.out.println(trains);
                     operation.removeAllTrain();

@@ -24,6 +24,7 @@ import android.widget.Toast
 import com.kamelong.OuDia2nd.DiaFile
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment
 import com.kamelong.aodia.AOdiaIO.ProgressDialog
+import com.kamelong.aodia.EditTimeTable.TrainTimeEditFragment
 import com.kamelong.aodia.detabase.DBHelper
 import com.kamelong.aodia.diadataOld.AOdiaOperation
 import com.kamelong.aodia.diagram.DiagramFragment
@@ -575,13 +576,16 @@ class AOdiaActivity : AppCompatActivity() {
      */
     fun openLineTimeTable(fileNum: Int, diaNum: Int, direct: Int, train: Int) {
         try {
-            val fragment = TimeTableFragment()
+
+            val fragment :Fragment= if(direct==0){
+                TrainTimeEditFragment()
+            }else{TimeTableFragment()}
             val args = Bundle()
             args.putInt("fileNum", fileNum)
             args.putInt("diaNum", diaNum)
             args.putInt("direction", direct)
             fragment.arguments = args
-            openFragment(fragment)
+            openFragment(fragment as AOdiaFragmentInterface)
         } catch (e: Exception) {
             SdLog.log(e)
         }
@@ -734,14 +738,14 @@ class AOdiaActivity : AppCompatActivity() {
 
     fun openSelectTrainTimeTable(fileNum: Int, diaNum: Int, direct: Int, listener: TrainSelectListener) {
         try {
-            val fragment = SelectTrainTimeTable()
+            val fragment = TimeTableFragment()
             val args = Bundle()
             args.putInt("fileNum", fileNum)
             args.putInt("diaN", diaNum)
             args.putInt("direct", direct)
             fragment.arguments = args
             openFragment(fragment)
-            fragment.setTrainSelectListener(listener)
+//            fragment.setTrainSelectListener(listener)
         } catch (e: Exception) {
             SdLog.log(e)
         }

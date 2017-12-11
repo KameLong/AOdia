@@ -103,4 +103,43 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
             }
         }
     }
+    fun postion(ypos: Float):Int{
+        var linePos=0.1f* textSize
+        val stationList=diaFile.getStationList().toMutableList()
+
+        for(i in if(direct==0){0 until stationList.size}else{stationList.size-1 downTo 0}){
+            val station=stationList[i]
+
+            if(station.branchStart()>=0){
+                linePos+=(textSize*0.2f)
+            }
+            val viewStyle=station.getViewStyle(direct)
+            if((viewStyle and 0b0010) ==0b0010){
+                linePos+=textSize
+            }
+            if(linePos>ypos)return 3*i
+            if((viewStyle and 0b0011) ==0b0011){
+                linePos+=textSize*0.2f
+            }
+            if((viewStyle and 0b0111) ==0b0110) {
+                linePos += textSize * 0.2f
+                linePos += textSize
+            } else if ((viewStyle and 0b0100) == 0b0100) {
+                linePos += textSize
+                linePos += textSize * 0.2f
+            }
+            if(linePos>ypos)return 3*i+1
+
+            if((viewStyle and 0b0001) ==0b0001){
+                linePos+=textSize
+
+            }
+
+            if(station.branchEnd()>=0){
+                linePos+=(textSize*0.2f)
+            }
+            if(linePos>ypos)return 3*i+2
+        }
+        return -1
+    }
 }

@@ -3,6 +3,7 @@ package com.kamelong.aodia.timeTable
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.view.View
 
@@ -49,30 +50,34 @@ abstract class KLView
     }
 
     companion object {
-        var textPaint: Paint//時刻表など普通の文字列用　色を変えてもよい
-        var grayPaint: Paint//灰色の線をひくためのペイント
-        var blackPaint: Paint//単純駅名＆細い枠線に用いる
-        var blackBPaint: Paint//主要駅名＆中枠線に用いる
-        var blackBBPaint: Paint//太い枠線部分に用いる
+        val textPaint: Paint//時刻表など普通の文字列用　色を変えてもよい
+        val grayPaint: Paint//灰色の線をひくためのペイント
+        val blackPaint: Paint//単純駅名＆細い枠線に用いる
+        val blackBPaint: Paint//主要駅名＆中枠線に用いる
+        val blackBBPaint: Paint//太い枠線部分に用いる
+
+        val focusPaint:Paint//フォーカスが当てられた部分のバックグラウンド
         /**
          * 文字サイズを変更する。
          * staticな関数なので、ここで変更したものはKLViewを継承したすべてのViewで適用される。
          * @param size
          */
 
-        var textSize:Int=30
-        set(value) {
-            textPaint.textSize = value.toFloat()
+        var textSize:Int=20
+            set(value) {
+                field=value
+                textPaint.textSize = value.toFloat()
 
-            blackPaint.textSize = value.toFloat()
-            blackBPaint.textSize = (value * 1.2).toInt().toFloat()
-            grayPaint.textSize = value.toFloat()
+                blackPaint.textSize = value.toFloat()
+                blackBPaint.textSize = (value * 1.2).toInt().toFloat()
+                grayPaint.textSize = value.toFloat()
 
-            textPaint.strokeWidth = value / 12.0f
-            blackPaint.strokeWidth = value / 20.0f
-            blackBPaint.strokeWidth = value / 12.0f
-            blackBBPaint.strokeWidth = value / 6.0f
-        }
+                textPaint.strokeWidth = value / 12.0f
+                blackPaint.strokeWidth = value / 20.0f
+                blackBPaint.strokeWidth = value / 12.0f
+                blackBBPaint.strokeWidth = value / 6.0f
+                focusPaint.strokeWidth=value / 12.0f
+            }
 
         /**
          * staticなコンストラクタ。
@@ -85,6 +90,10 @@ abstract class KLView
             blackPaint = Paint()
             blackBPaint = Paint()
             blackBBPaint = Paint()
+            focusPaint=Paint()
+
+            focusPaint.pathEffect= DashPathEffect(floatArrayOf( 10.0f,10.0f  ), 0f)
+            focusPaint.style=Paint.Style.STROKE
 
             grayPaint.color = Color.GRAY
 
@@ -93,7 +102,9 @@ abstract class KLView
             blackBPaint.isAntiAlias = true
             blackBBPaint.isAntiAlias = true
             grayPaint.isAntiAlias = true
-            textSize=30
+            focusPaint.isAntiAlias=true
+            textSize=40
+
         }
 
     }

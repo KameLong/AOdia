@@ -12,7 +12,7 @@ import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadataOld.AOdiaOperation;
-import com.kamelong.aodia.timeTable.TimeTableFragmentOld;
+import com.kamelong.aodia.timeTable.TimeTableFragment;
 import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 /**
@@ -21,7 +21,7 @@ import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 class TrainSelectDialog extends Dialog{
     private AOdiaDiaFile diaFile;
-    private TimeTableFragmentOld fragment;
+    private TimeTableFragment fragment;
     private AOdiaOperation ope=null;
     private int fileNum;
     int station;

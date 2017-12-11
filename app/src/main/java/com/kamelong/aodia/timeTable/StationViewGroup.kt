@@ -34,6 +34,7 @@ class StationViewGroup(context: Context, val diaFile: AOdiaDiaFile, val direct:I
     }
 
     fun onLayoutScroll(){
+
         var ysize=0
         numberView.layout(0,ysize,width-borderlineWidth,ysize+numberView.ysize)
         ysize+=numberView.ysize
@@ -64,10 +65,10 @@ class StationViewGroup(context: Context, val diaFile: AOdiaDiaFile, val direct:I
         scroll+=y
         if(maxHeight-scroll<height)scroll=maxHeight-height.toFloat()
         if(scroll<0)scroll=0f
-        onLayoutScroll()
     }
 
     override fun dispatchDraw(canvas: Canvas?) {
+        requestLayout()
         super.dispatchDraw(canvas)
         if(canvas==null)return
         canvas.drawRect(width-borderlineWidth.toFloat(),0f,width.toFloat(),height.toFloat(), Paint())
@@ -84,6 +85,10 @@ class StationViewGroup(context: Context, val diaFile: AOdiaDiaFile, val direct:I
         maxHeight=ysize
         this.setMeasuredDimension((KLView.textSize*5.5f).toInt()+borderlineWidth,MeasureSpec.getSize(heightMeasureSpec))
 
+    }
+    fun getStationIndex(value:Int):Int{
+        val y=value+scroll
+        return stationView.postion(y-nameView.ysize-startView.ysize-numberView.ysize)
     }
 
 }

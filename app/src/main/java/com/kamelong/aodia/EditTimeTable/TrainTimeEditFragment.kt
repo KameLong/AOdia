@@ -1,35 +1,42 @@
-package com.kamelong.aodia.timeTable
+package com.kamelong.aodia.EditTimeTable
 
 import android.app.Fragment
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.LinearLayout
 import com.kamelong.aodia.AOdiaActivity
 import com.kamelong.aodia.AOdiaFragmentInterface
+import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
+import com.kamelong.aodia.timeTable.StationViewGroup
+import com.kamelong.aodia.timeTable.TrainViewGroup
 
 /**
- * Created by kame on 2017/12/09.
+ * 時刻表を編集するためのFrgment
  */
-open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
+class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
+    val trainEdit=TrainEdit(this)
+
     override var fragment=this as Fragment
     override lateinit var diaFile: AOdiaDiaFile
     override var aodiaActivity: AOdiaActivity
         get() = activity as AOdiaActivity
-    set(value){}
+        set(value){}
 
     var fileIndex=0
     var diaIndex=0
     var direction=0
-    lateinit var fragmentContainer:LinearLayout
+    lateinit var fragmentContainer:ViewGroup
     lateinit var stationView: StationViewGroup
-    lateinit var trainLinear:ViewGroup
+    lateinit var trainLinear:LinearLayout
 
+    lateinit var timeTableLayout:LinearLayout
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        fragmentContainer=LinearLayout(activity)
+        fragmentContainer=inflater.inflate(R.layout.train_time_edit_fragment, container, false) as ViewGroup
         try {
             aodiaActivity = getActivity() as AOdiaActivity
             fragment = this
@@ -68,20 +75,17 @@ open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
                     }
 
                     override fun onDoubleTap(event: MotionEvent): Boolean {
-                        /*
                         val x = event.x.toInt()
-                        val timeTablex = x + findViewById(R.id.trainTimeLinear).getScrollX() - findViewById(R.id.stationNameLinear).getWidth()
-                        var train = timeTablex / (findViewById(R.id.trainNameLinear) as LinearLayout).getChildAt(0).width
-                        if (train < 0) {
-                            train = 0
-                        }
-                        if (train >= timeTable.getTrainNum()) {
-                            train = timeTable.getTrainNum() - 1
-                        }
-                        selectTrain(timeTable.getTrain(train))
-
-                        println(train)
-                        */
+                        val y =event.y.toInt()
+                        val timeTablex = x + trainLinear.getScrollX() - stationView.getWidth()
+                        if(trainLinear.childCount==0)return false
+                        val trainIndex=timeTablex/trainLinear.getChildAt(0).width
+                        if(trainIndex<0||trainIndex>=trainLinear.childCount)return false
+                        val stationIndex=stationView.getStationIndex(y)
+                        fragmentContainer.findViewById<LinearLayout>(R.id.edit1).visibility=View.VISIBLE
+                        fragmentContainer.findViewById<LinearLayout>(R.id.edit2).visibility=View.VISIBLE
+                        trainEdit.focusTrain=trainIndex
+                        trainEdit.focusPoint=stationIndex
                         return false
                     }
 
@@ -118,6 +122,8 @@ open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
                                     Thread.sleep(16)
                                     trainLinear.scrollBy((flingV * 16 / 1000f).toInt(), 0)
                                 } catch (e: Exception) {
+                                    e.printStackTrace()
+
                                     fling = false
                                 }
                             }
@@ -129,18 +135,47 @@ open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
 
 
         super.onViewCreated(view, savedInstanceState)
-        fragmentContainer.orientation=LinearLayout.HORIZONTAL
-        stationView= StationViewGroup(activity,diaFile,direction)
-        stationView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT))
+        timeTableLayout=fragmentContainer.findViewById(R.id.timetable)
+
+        stationView= StationViewGroup(activity, diaFile, direction)
+        stationView.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.MATCH_PARENT))
         trainLinear=LinearLayout(activity)
-        fragmentContainer.setOnTouchListener { v, event -> gesture.onTouchEvent(event) }
+        trainLinear.setLayoutParams(LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT))
+
+        timeTableLayout.setOnTouchListener { v, event -> gesture.onTouchEvent(event) }
 
         for(i in 0 until diaFile.getTrainNum(diaIndex,direction)){
-            trainLinear.addView(TrainViewGroup(activity,diaFile.getTrain(diaIndex,direction,i)))
+            val t= TrainViewGroup(activity, diaFile.getTrain(diaIndex, direction, i))
+            trainLinear.addView(t)
         }
 
-        fragmentContainer.addView(stationView)
-        fragmentContainer.addView(trainLinear)
+        timeTableLayout.addView(stationView)
+        timeTableLayout.addView(trainLinear)
+        initEditButton()
+    }
+    fun initEditButton(){
+        val backButton=fragmentContainer.findViewById<Button>(R.id.buttonN)
+        backButton.setOnClickListener {
+            fragmentContainer.findViewById<LinearLayout>(R.id.edit1).visibility=View.GONE
+            fragmentContainer.findViewById<LinearLayout>(R.id.edit2).visibility=View.GONE
+        }
+        val moveButton=fragmentContainer.findViewById<Button>(R.id.buttonB)
+        val moveButtonG=GestureDetector(aodiaActivity,
+                object :ButtonGestureDetectorInterface() {
+                    override fun flingDown() {
+                        trainEdit.focusPoint+=3
+                    }
+                    override fun flingUp() {
+                        trainEdit.focusPoint-=3
+                    }
+                    override fun flingLeft() {
+                        trainEdit.focusTrain--
+                    }
+                    override fun flingRight() {
+                        trainEdit.focusTrain++
+                    }
+                })
+        moveButton.setOnTouchListener { v, event -> moveButtonG.onTouchEvent(event)}
     }
 
 }
