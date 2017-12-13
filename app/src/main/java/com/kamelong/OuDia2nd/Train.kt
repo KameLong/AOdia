@@ -17,6 +17,22 @@ import java.util.ArrayList
  * @author  KameLong
  */
 class Train :AOdiaTrain{
+    override fun getStationTime(station: Int): Long {
+        return time[station]
+    }
+
+    override fun setStationTime(station: Int,value:Long) {
+        time[station]=value
+    }
+
+    override fun setDepartureTime(station: Int, value: Int) {
+        setDepartureTime(station,value.toLong())
+    }
+
+    override fun setArrivalTime(station: Int, value: Int) {
+        setArrivalTime(station,value.toLong())
+    }
+
     override fun getDepartureTime(station: Int, startTime: Int): Int {
         return (getDepartureTime(station)-startTime)%86400+startTime
     }
@@ -271,7 +287,7 @@ class Train :AOdiaTrain{
      * @param value　停車駅扱い番号
      */
 
-    protected fun setStopType(station: Int, value: Int) {
+     override fun setStopType(station: Int, value: Int) {
         var value = value.toLong()
         if (value > 16 || value < 0) {
             //error
@@ -288,7 +304,7 @@ class Train :AOdiaTrain{
     /**
      * 発着番線をセットする
      */
-    fun setStopNumber(station: Int, value: Int) {
+    override fun setStopNumber(station: Int, value: Int) {
         var value = value.toLong()
         if (value > 256 || value < 0) {
             //error

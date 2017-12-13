@@ -23,13 +23,24 @@ interface AOdiaTrain {
     var endExchangeTimeStart:Int
     var endExchangeTimeEnd:Int
 
+    fun getStationTime(station:Int):Long
+    fun setStationTime(station:Int,value:Long)
+
     fun getDepartureTime(station:Int):Int
     fun getArrivalTime(station:Int):Int
     fun getDepartureTime(station:Int, startTime: Int):Int
     fun getArrivalTime(station:Int,startTime:Int):Int
+    fun setDepartureTime(station:Int,value:Int)
+    fun setArrivalTime(station:Int,value:Int)
+
+
     fun getStopNumber(station:Int):Int
+    fun setStopNumber(station:Int,value:Int)
 
     fun getStopType(station:Int):Int
+    fun setStopType(station:Int,value:Int)
+
+
 
     val trainType:AOdiaTrainType
 

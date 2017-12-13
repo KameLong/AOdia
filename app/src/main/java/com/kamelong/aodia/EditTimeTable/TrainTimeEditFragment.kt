@@ -11,6 +11,11 @@ import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.timeTable.StationViewGroup
 import com.kamelong.aodia.timeTable.TrainViewGroup
+import com.kamelong.aodia.R.id.textView
+import android.view.ViewGroup.MarginLayoutParams
+import com.kamelong.aodia.R.id.button0
+import com.kamelong.aodia.diadata.AOdiaTrain
+
 
 /**
  * 時刻表を編集するためのFrgment
@@ -30,6 +35,7 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
     lateinit var fragmentContainer:ViewGroup
     lateinit var stationView: StationViewGroup
     lateinit var trainLinear:LinearLayout
+
 
     lateinit var timeTableLayout:LinearLayout
 
@@ -68,10 +74,36 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
 
                     private val flingV = 0f
                     var fling=false
+                    var flingEnd=false
 
                     override fun onDown(motionEvent: MotionEvent): Boolean {
-                        fling = false
+                        if(fling){
+                            fling=false
+                            flingEnd=true
+                        }else{
+                            flingEnd=false
+                        }
                         return true
+                    }
+
+                    override fun onSingleTapUp(event: MotionEvent): Boolean {
+                        if(flingEnd){
+                            flingEnd=false
+                            return true
+                        }
+                        val x = event.x.toInt()
+                        val y =event.y.toInt()
+                        val timeTablex = x + trainLinear.getScrollX() - stationView.getWidth()
+                        if(trainLinear.childCount==0)return false
+                        val trainIndex=timeTablex/trainLinear.getChildAt(0).width
+                        if(trainIndex<0||trainIndex>=trainLinear.childCount)return false
+                        val stationIndex=stationView.getStationIndex(y)
+                        fragmentContainer.findViewById<LinearLayout>(R.id.edit1).visibility=View.VISIBLE
+                        fragmentContainer.findViewById<LinearLayout>(R.id.edit2).visibility=View.VISIBLE
+                        (timeTableLayout.layoutParams as MarginLayoutParams).setMargins(0,0,0,getResources().getDimensionPixelSize(R.dimen.margin200))
+                        trainEdit.focusTrain=trainIndex
+                        trainEdit.focusPoint=stationIndex
+                        return false
                     }
 
                     override fun onDoubleTap(event: MotionEvent): Boolean {
@@ -84,6 +116,7 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
                         val stationIndex=stationView.getStationIndex(y)
                         fragmentContainer.findViewById<LinearLayout>(R.id.edit1).visibility=View.VISIBLE
                         fragmentContainer.findViewById<LinearLayout>(R.id.edit2).visibility=View.VISIBLE
+                        (timeTableLayout.layoutParams as MarginLayoutParams).setMargins(0,0,0,getResources().getDimensionPixelSize(R.dimen.margin200))
                         trainEdit.focusTrain=trainIndex
                         trainEdit.focusPoint=stationIndex
                         return false
@@ -158,6 +191,7 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
         backButton.setOnClickListener {
             fragmentContainer.findViewById<LinearLayout>(R.id.edit1).visibility=View.GONE
             fragmentContainer.findViewById<LinearLayout>(R.id.edit2).visibility=View.GONE
+            (timeTableLayout.layoutParams as MarginLayoutParams).setMargins(0,0,0,0)
         }
         val moveButton=fragmentContainer.findViewById<Button>(R.id.buttonB)
         val moveButtonG=GestureDetector(aodiaActivity,
@@ -176,6 +210,44 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
                     }
                 })
         moveButton.setOnTouchListener { v, event -> moveButtonG.onTouchEvent(event)}
+        fragmentContainer.findViewById<Button>(R.id.button0).setOnClickListener {
+            editStationTime(0)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button1).setOnClickListener {
+            editStationTime(1)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button2).setOnClickListener {
+            editStationTime(2)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button3).setOnClickListener {
+            editStationTime(3)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button4).setOnClickListener {
+            editStationTime(4)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button5).setOnClickListener {
+            editStationTime(5)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button6).setOnClickListener {
+            editStationTime(6)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button7).setOnClickListener {
+            editStationTime(7)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button8).setOnClickListener {
+            editStationTime(8)
+        }
+        fragmentContainer.findViewById<Button>(R.id.button9).setOnClickListener {
+            editStationTime(9)
+        }
+
+    }
+
+    fun editStationTime(value:Int){
+        trainEdit.stationTimeEdit(value)
+    }
+    fun getTrain(index:Int):AOdiaTrain{
+        return diaFile.getTrain(diaIndex,direction,index)
     }
 
 }
