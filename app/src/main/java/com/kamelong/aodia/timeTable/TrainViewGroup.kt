@@ -8,16 +8,35 @@ import android.view.ViewGroup
 import com.kamelong.JPTI.Station
 import com.kamelong.aodia.diadata.AOdiaTrain
 
-class TrainViewGroup(context: Context, val train: AOdiaTrain): ViewGroup(context){
-    val diaFile=train.diaFile
+class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context){
 
-    val xSize=(KLView.textSize*2.5).toInt()
-    val numberView=TrainNumberView(context,train,xSize)
-    val nameView=TrainNameView(context,train,xSize)
-    val startView=StartStationView(context,train,xSize)
-    val trainView =TrainView(context,train,xSize)
-    val endView=EndStationView(context,train,xSize)
-    val remarkView=RemarkView(context,train,xSize)
+    var train=newTrain
+    set(value){
+        field=value
+        removeAllViews()
+        numberView=TrainNumberView(context,train,xSize)
+        nameView=TrainNameView(context,train,xSize)
+        startView=StartStationView(context,train,xSize)
+        trainView =TrainView(context,train,xSize)
+        endView=EndStationView(context,train,xSize)
+        remarkView=RemarkView(context,train,xSize)
+        addView(nameView)
+        addView(trainView)
+        addView(remarkView)
+        addView(startView)
+        addView(endView)
+        addView(numberView)
+
+
+    }
+    val diaFile=train.diaFile
+    var xSize=(KLView.textSize*2.5).toInt()
+    var numberView=TrainNumberView(context,train,xSize)
+    var nameView=TrainNameView(context,train,xSize)
+    var startView=StartStationView(context,train,xSize)
+    var trainView =TrainView(context,train,xSize)
+    var endView=EndStationView(context,train,xSize)
+    var remarkView=RemarkView(context,train,xSize)
 
     var scroll=0f
     val borderlineWidth=2

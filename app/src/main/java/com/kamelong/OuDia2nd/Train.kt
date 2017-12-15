@@ -707,6 +707,19 @@ class Train :AOdiaTrain{
         }
     }
 
+    override fun clone(allCopy: Boolean): AOdiaTrain {
+        val train=Train(diaFile)
+        train.time=ArrayList(time)
+        train.number=number
+        train.name=name
+        train.type=type
+        train.operation=operation
+        train.count=count
+        train.remark=remark
+        train.direction=direction
+        return train
+    }
+
 
     companion object {
         /**

@@ -34,6 +34,7 @@ interface AOdiaDiaFile {
     fun getTrainNum(diaIndex:Int,direct:Int):Int
     fun getTrain(diaIndex:Int,direct:Int,trainIndex:Int):AOdiaTrain
 
+    fun setTrain(diaNum:Int,direction:Int,trainNum:Int,train:AOdiaTrain)
 
 
 

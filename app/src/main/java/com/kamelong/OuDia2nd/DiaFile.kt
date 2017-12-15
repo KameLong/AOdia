@@ -4,6 +4,7 @@ package com.kamelong.OuDia2nd
 import android.app.Activity
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.diadata.AOdiaStation
+import com.kamelong.aodia.diadata.AOdiaTrain
 import com.kamelong.aodia.diadata.AOdiaTrainType
 import com.kamelong.tool.Color
 import com.kamelong.tool.Font
@@ -25,6 +26,10 @@ import java.util.ArrayList
  * @author KameLong
  */
 class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
+    override fun setTrain(diaNum: Int, direction: Int, trainNum: Int, mTrain: AOdiaTrain) {
+        train[diaNum][direction][trainNum]=mTrain as Train
+    }
+
     fun String.split(char:Char,index:Int):String{
 
         var count=0

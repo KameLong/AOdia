@@ -263,4 +263,8 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
 
         }
     }
+    fun setTrain(newTrain:AOdiaTrain){
+
+    }
+
 }

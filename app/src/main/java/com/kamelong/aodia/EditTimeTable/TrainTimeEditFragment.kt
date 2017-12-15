@@ -35,7 +35,8 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
     lateinit var fragmentContainer:ViewGroup
     lateinit var stationView: StationViewGroup
     lateinit var trainLinear:LinearLayout
-
+    val trainNum:Int
+    get()=diaFile.getTrainNum(diaIndex,direction)
 
     lateinit var timeTableLayout:LinearLayout
 
@@ -241,15 +242,15 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
             editStationTime(9)
         }
         fragmentContainer.findViewById<Button>(R.id.button10).setOnClickListener {
-            trainEdit.editStationTime?.setStop(2)
+            trainEdit.setStop(2)
             moveNext()
         }
         fragmentContainer.findViewById<Button>(R.id.button11).setOnClickListener {
-            trainEdit.editStationTime?.setStop(3)
+            trainEdit.setStop(3)
             moveNext()
         }
         fragmentContainer.findViewById<Button>(R.id.buttonE).setOnClickListener {
-            trainEdit.editStationTime?.setStop(0)
+            trainEdit.setStop(0)
             moveNext()
         }
         fragmentContainer.findViewById<Button>(R.id.buttonEnter).setOnClickListener {
@@ -278,8 +279,23 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
             override fun flingLeft() { }
             override fun flingRight() {  }
         })
+        fragmentContainer.findViewById<Button>(R.id.buttonD).setOnTouchListener { v, event -> trainControlButtonG.onTouchEvent(event)}
 
-            fragmentContainer.findViewById<Button>(R.id.buttonD).setOnTouchListener { v, event -> trainControlButtonG.onTouchEvent(event)}
+        fragmentContainer.findViewById<Button>(R.id.buttonF).setOnClickListener{
+            trainEdit.editStationTime?.setStop(1)
+            moveNext()
+        }
+        fragmentContainer.findViewById<Button>(R.id.buttonC5).setOnClickListener{
+            trainEdit.editStationTime?.addNumber(-1)
+            moveNext()
+        }
+        fragmentContainer.findViewById<Button>(R.id.buttonC6).setOnClickListener{
+            trainEdit.forward()
+        }
+        fragmentContainer.findViewById<Button>(R.id.buttonC2).setOnClickListener{
+            trainEdit.back()
+        }
+
 
 
     }

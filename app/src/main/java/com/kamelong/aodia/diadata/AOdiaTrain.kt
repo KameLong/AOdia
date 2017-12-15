@@ -47,6 +47,8 @@ interface AOdiaTrain {
     val startStation:Int
     val endStation:Int
 
+    fun clone(allCopy:Boolean):AOdiaTrain
+
 
 
 

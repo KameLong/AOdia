@@ -9,6 +9,9 @@ import java.util.*
  */
 
 class EditStationTime(val station:Int,val pos:Int,val train:AOdiaTrain) {
+    var editMode=false
+
+    val copyTrain=train.clone(true)
     val backStack=ArrayDeque<Long>()
     val forwardStack=ArrayDeque<Long>()
     var time:String=""
@@ -16,7 +19,7 @@ class EditStationTime(val station:Int,val pos:Int,val train:AOdiaTrain) {
 
     val inputDatas=ArrayList<Int>()
     val inputDataSecond=ArrayList<Int>()
-    val inputSecondFrag=false
+    var inputSecondFrag=false
 
     /**
      * value:停車種別
@@ -43,7 +46,16 @@ class EditStationTime(val station:Int,val pos:Int,val train:AOdiaTrain) {
      * value:数字
      */
     fun addNumber(value:Int){
-        inputDatas.add(value)
+        editMode=true
+        if(value>=0) {
+            if(inputSecondFrag) {
+                inputDataSecond.add(value)
+            }else{
+            inputDatas.add(value)
+            }
+        }else{
+            inputSecondFrag=true
+        }
         reNewValue()
     }
     fun reNewValue(){

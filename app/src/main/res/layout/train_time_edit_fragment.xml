@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/edit1"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <Button
             android:id="@+id/buttonN"
@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@android:drawable/editbox_dropdown_light_frame"
-            android:text="番線編集" />
+            android:text="番線編集"
+            android:theme="@android:style/Widget.Button.Toggle" />
 
         <Button
             android:id="@+id/buttonL"
