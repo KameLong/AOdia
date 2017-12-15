@@ -197,16 +197,16 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
         val moveButtonG=GestureDetector(aodiaActivity,
                 object :ButtonGestureDetectorInterface() {
                     override fun flingDown() {
-                        trainEdit.focusPoint+=3
+                        trainEdit.moveDown()
                     }
                     override fun flingUp() {
-                        trainEdit.focusPoint-=3
+                        trainEdit.moveUp()
                     }
                     override fun flingLeft() {
-                        trainEdit.focusTrain--
+                        trainEdit.moveLeft()
                     }
                     override fun flingRight() {
-                        trainEdit.focusTrain++
+                        trainEdit.moveRight()
                     }
                 })
         moveButton.setOnTouchListener { v, event -> moveButtonG.onTouchEvent(event)}
@@ -240,6 +240,47 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
         fragmentContainer.findViewById<Button>(R.id.button9).setOnClickListener {
             editStationTime(9)
         }
+        fragmentContainer.findViewById<Button>(R.id.button10).setOnClickListener {
+            trainEdit.editStationTime?.setStop(2)
+            moveNext()
+        }
+        fragmentContainer.findViewById<Button>(R.id.button11).setOnClickListener {
+            trainEdit.editStationTime?.setStop(3)
+            moveNext()
+        }
+        fragmentContainer.findViewById<Button>(R.id.buttonE).setOnClickListener {
+            trainEdit.editStationTime?.setStop(0)
+            moveNext()
+        }
+        fragmentContainer.findViewById<Button>(R.id.buttonEnter).setOnClickListener {
+            moveNext()
+        }
+        val fastButtonG=GestureDetector(aodiaActivity, object :ButtonGestureDetectorInterface() {
+            override fun onDown(motionEvent: MotionEvent): Boolean {trainEdit.fast(60);return true}
+            override fun flingDown() { trainEdit.moveDown() }
+            override fun flingUp() { trainEdit.moveUp() }
+            override fun flingLeft() { trainEdit.moveLeft() }
+            override fun flingRight() { trainEdit.moveRight() }
+        })
+        fragmentContainer.findViewById<Button>(R.id.buttonA).setOnTouchListener { v, event -> fastButtonG.onTouchEvent(event)}
+        val slowButtonG=GestureDetector(aodiaActivity, object :ButtonGestureDetectorInterface() {
+            override fun onDown(motionEvent: MotionEvent): Boolean {trainEdit.slow(60);return true}
+            override fun flingDown() { trainEdit.moveDown() }
+            override fun flingUp() { trainEdit.moveUp() }
+            override fun flingLeft() { trainEdit.moveLeft() }
+            override fun flingRight() { trainEdit.moveRight() }
+        })
+        fragmentContainer.findViewById<Button>(R.id.buttonC).setOnTouchListener { v, event -> slowButtonG.onTouchEvent(event)}
+
+        val trainControlButtonG=GestureDetector(aodiaActivity, object :ButtonGestureDetectorInterface() {
+            override fun flingDown() { trainEdit.endThisStation();trainEdit.invalidate() }
+            override fun flingUp() { trainEdit.startThisStation();trainEdit.invalidate() }
+            override fun flingLeft() { }
+            override fun flingRight() {  }
+        })
+
+            fragmentContainer.findViewById<Button>(R.id.buttonD).setOnTouchListener { v, event -> trainControlButtonG.onTouchEvent(event)}
+
 
     }
 
@@ -248,6 +289,11 @@ class TrainTimeEditFragment : Fragment(),AOdiaFragmentInterface{
     }
     fun getTrain(index:Int):AOdiaTrain{
         return diaFile.getTrain(diaIndex,direction,index)
+    }
+    fun moveNext(){
+        if(true){
+            trainEdit.moveDown()
+        }
     }
 
 }

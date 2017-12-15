@@ -94,15 +94,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/buttonA"
+                android:id="@+id/buttonB2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="１分戻す" />
+                android:text="列車\n編集" />
 
             <Button
                 android:id="@+id/buttonB"
@@ -111,6 +112,14 @@
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:text="カーソル\n上下左右" />
+
+            <Button
+                android:id="@+id/buttonC5"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="-" />
 
             <Button
                 android:id="@+id/button1"
@@ -140,7 +149,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonC2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="戻る" />
 
             <Button
                 android:id="@+id/buttonC"
@@ -148,7 +166,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="１分進め\nる" />
+                android:text="１分\n進める" />
 
             <Button
                 android:id="@+id/buttonD"
@@ -186,15 +204,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/buttonE"
+                android:id="@+id/buttonC6"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="運行なし" />
+                android:text="進む" />
+
+            <Button
+                android:id="@+id/buttonA"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="１分戻す" />
 
             <Button
                 android:id="@+id/buttonF"
@@ -202,7 +229,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
-                android:text="操作を\n戻す" />
+                android:text="停車" />
 
             <Button
                 android:id="@+id/button7"
@@ -232,6 +259,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
@@ -241,6 +269,14 @@
                 android:layout_weight="2"
                 android:background="@android:drawable/editbox_dropdown_light_frame"
                 android:text="Enter" />
+
+            <Button
+                android:id="@+id/buttonE"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/editbox_dropdown_light_frame"
+                android:text="運行なし" />
 
             <Button
                 android:id="@+id/button10"

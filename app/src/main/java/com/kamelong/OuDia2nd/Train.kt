@@ -677,7 +677,10 @@ class Train :AOdiaTrain{
      * @param value
      */
     private fun setArrivalTime(station: Int, value: Long) {
-        if (value > 0 && value < 0xFFFFFF) {
+        if(value<0){
+            time[station] = time[station] and 0xFFFFF00000FFFFFL
+        }
+        if (value >= 0 && value < 0x7FFFFF) {
             time[station] = time[station] and 0xFFFFF00000FFFFFL
             time[station] = time[station] or 0x000008000000000L
             time[station] = time[station] or (value shl 20)
@@ -690,7 +693,10 @@ class Train :AOdiaTrain{
     }
 
     private fun setDepartureTime(station: Int, value: Long) {
-        if (value > 0 && value < 0xFFFFFF) {
+        if(value<0){
+            time[station] = time[station] and 0xFFFFFFFFFF00000L
+        }
+        if (value >= 0 && value < 0x7FFFFF) {
             time[station] = time[station] and 0xFFFFFFFFFF00000L
             time[station] = time[station] or 0x000000000080000L
             time[station] = time[station] or value
