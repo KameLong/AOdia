@@ -17,6 +17,14 @@ import java.util.ArrayList
  * @author  KameLong
  */
 class Train :AOdiaTrain{
+    override fun existArriveTime(station: Int): Boolean {
+        return arriveExist(station)
+    }
+
+    override fun existDepartTime(station: Int): Boolean {
+        return departExist(station)
+    }
+
     override fun getStationTime(station: Int): Long {
         return time[station]
     }
@@ -53,20 +61,20 @@ class Train :AOdiaTrain{
     override val startStation: Int
         get() {
             for(i in if(direction==0){0 until stationNum}else{stationNum-1 downTo 0}){
-              if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
-                  return i
-              }
+                if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
+                    return i
+                }
             }
             return 0
         }
     override var startAction=0
     override var endAction=0
     override var startExchangeStop=0
-    override var startExchangeTimeStart=0
-    override var startExchangeTimeEnd=0
+    override var startExchangeTimeStart=-1
+    override var startExchangeTimeEnd=-1
     override var endExchangeStop=0
-    override var endExchangeTimeStart=0
-    override var endExchangeTimeEnd=0
+    override var endExchangeTimeStart=-1
+    override var endExchangeTimeEnd=-1
 
     override val endStation: Int
         get(){
@@ -82,7 +90,7 @@ class Train :AOdiaTrain{
     /**
      * 列車種別
      */
-    var type = 0
+    override var type = 0
         set(value) {
             if (value < 0||value>=diaFile.trainTypeNum) {
                 field = 0
@@ -116,7 +124,7 @@ class Train :AOdiaTrain{
     override var count = ""
         set(value) {
             if (value.isNotEmpty()) {
-                field = value + "号"
+                field = value
             }
         }
     /**
@@ -198,6 +206,15 @@ class Train :AOdiaTrain{
             }
             result.append(makeStationTimeTxt(stationIndex)).append(",")
         }
+        result.append("\r\nRessyaTrack=")
+        for (i in 0 until diaFile.stationNum) {
+            var stationIndex = i
+            if (direct == 1) {
+                stationIndex = diaFile.stationNum - 1 - i
+            }
+            result.append(makeStopTxt(stationIndex)).append(",")
+        }
+
         result.append("\r\n.\r\n")
         return result
     }
@@ -219,6 +236,56 @@ class Train :AOdiaTrain{
             result += timeInt2String(getDepartureTime(stationIndex))
         }
         return result
+    }
+    private fun makeStopTxt(stationIndex:Int):String{
+        var result=getStopNumber(stationIndex).toString()
+        if(stationIndex==startStation){
+            when(startAction){
+                0->return result
+                1->{
+                    result+=";1/"+startExchangeStop+"$"
+                    if(startExchangeTimeStart>=0){
+                        result+=timeInt2String(startExchangeTimeStart)+"/"
+                    }
+                    if(startExchangeTimeEnd>=0){
+                        result+=timeInt2String(startExchangeTimeEnd)
+                    }
+                    return result
+
+                }
+                2->{
+                    result+=";2"
+                    if(operation.isNotEmpty()){
+                        result+="/"+operation
+
+                    }
+                    return result
+
+                }
+            }
+        }
+        if(stationIndex==endStation){
+            when(endAction){
+                0->return result
+                1->{
+                    result+=";1/"+endExchangeStop+"$"
+                    if(endExchangeTimeStart>=0){
+                        result+=timeInt2String(endExchangeTimeStart)+"/"
+                    }
+                    if(endExchangeTimeEnd>=0){
+                        result+=timeInt2String(endExchangeTimeEnd)
+                    }
+                    return result
+
+                }
+                2->{
+                    result+=";2"
+                    return result
+                }
+            }
+        }
+        return result
+
     }
 
     private fun timeInt2String(time: Int): String {
@@ -243,10 +310,10 @@ class Train :AOdiaTrain{
      * @return　着時刻(秒)
      */
 
-     override fun getArrivalTime(station: Int): Int {
+    override fun getArrivalTime(station: Int): Int {
         try {
             if (time[station] and 0x000008000000000L == 0L) {
-                   return -1
+                return -1
             }
             var result = time[station] and 0x0000007ffff00000L
             result = result.ushr(20)
@@ -270,7 +337,7 @@ class Train :AOdiaTrain{
     override fun getDepartureTime(station: Int): Int {
         try {
             if (time[station] and 0x000000000080000L == 0L) {
-                    return -1
+                return -1
             }
             val result = time[station] and 0x00000000007ffffL
             return result.toInt()
@@ -287,7 +354,7 @@ class Train :AOdiaTrain{
      * @param value　停車駅扱い番号
      */
 
-     override fun setStopType(station: Int, value: Int) {
+    override fun setStopType(station: Int, value: Int) {
         var value = value.toLong()
         if (value > 16 || value < 0) {
             //error
@@ -306,7 +373,7 @@ class Train :AOdiaTrain{
      */
     override fun setStopNumber(station: Int, value: Int) {
         var value = value.toLong()
-        if (value > 256 || value < 0) {
+        if (value >diaFile.station[station].trackName.size || value < 0) {
             //error
             return
         }
@@ -609,20 +676,46 @@ class Train :AOdiaTrain{
     internal fun setStopNumber(str:String,direct:Int) {
         val stopString = str.split(",")
         for (i in stopString.indices) {
-            if (stopString[i].length != 0) {
+            if (stopString[i].isNotEmpty()) {
                 setStopNumber((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(split(stopString[i],';',0)))
                 if((1 - 2 * direct) * i + direct * (stationNum - 1) ==startStation){
-                    if(split(stopString[i],';',1).isNotEmpty()){
-                        startAction=Integer.parseInt(split(split(stopString[i],';',1),'/',0))
+                    val stopStr=split(stopString[i],';',1)
+                    if(stopStr.isNotEmpty()){
+                        startAction=Integer.parseInt(split(stopStr,'/',0))
+                        val stopStr2=split(stopStr,'/',1)
                         if(startAction==1){
+                            if(stopStr2.isNotEmpty()){
+                                startExchangeStop=Integer.parseInt(split(stopStr2,'$',0))
+                                if(split(split(stopStr2,'$',1),'/',0).isNotEmpty()) {
+                                    startExchangeTimeStart =oudiaTime2Int(split(split(stopStr2, '$', 1), '/', 0))
+                                }
+                                if(split(stopStr,'/',2).isNotEmpty()) {
+                                    startExchangeTimeEnd = oudiaTime2Int(split(stopStr,'/',2))
+                                }
+                            }
+                        }
+                        if(startAction==2){
+                            operation=stopStr2
                         }
                     }
                 }
                 if((1 - 2 * direct) * i + direct * (stationNum - 1)==endStation){
-                    if(split(stopString[i],';',1).isNotEmpty()){
-                        startAction=Integer.parseInt(split(split(stopString[i],';',1),'/',0))
+                    val stopStr=split(stopString[i],';',1)
+                    if(stopStr.isNotEmpty()){
+                        endAction=Integer.parseInt(split(stopStr,'/',0))
+                        val stopStr2=split(stopStr,'/',1)
+                        if(endAction==1){
+                            if(stopStr2.isNotEmpty()){
+                                endExchangeStop=split(stopStr2,'$',0).toInt()
+                                if(split(split(stopStr2,'$',1),'/',0).isNotEmpty()){
+                                    endExchangeTimeStart=oudiaTime2Int(split(split(stopStr2,'$',1),'/',0))
+                                }
+                                if(split(stopStr,'/',2).isNotEmpty()) {
+                                    endExchangeTimeEnd = oudiaTime2Int(split(stopStr,'/',2))
+                                }
+                            }
+                        }
                     }
-
                 }
             }
 
@@ -717,6 +810,15 @@ class Train :AOdiaTrain{
         train.count=count
         train.remark=remark
         train.direction=direction
+        train.startAction=startAction
+        train.startExchangeStop=startExchangeStop
+        train.startExchangeTimeStart=startExchangeTimeStart
+        train.startExchangeTimeEnd=startExchangeTimeEnd
+        train.endAction=endAction
+        train.endExchangeStop=endExchangeStop
+        train.endExchangeTimeStart=endExchangeTimeStart
+        train.endExchangeTimeEnd=endExchangeTimeEnd
+        train.operation=operation
         return train
     }
 
@@ -729,6 +831,94 @@ class Train :AOdiaTrain{
         val STOP_TYPE_PASS = 2
         val STOP_TYPE_NOSERVICE = 0
         val STOP_TYPE_NOVIA = 3
+    }
+    fun oudiaTime2Int(str:String):Int{
+        var h=0
+        var m=0
+        var s=0
+        var result=0
+
+        if (str.indexOf(":") < 0) {
+            //no ":" char so str is only number
+            when (str.length) {
+                3 -> {
+                    h = Integer.parseInt(str.substring(0, 1))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(1, 3))
+                    result = (h * 3600 + m * 60)
+                }
+                4 -> {
+                    h = Integer.parseInt(str.substring(0, 2))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(2, 4))
+                    result = (h * 3600 + m * 60)
+                }
+                5 -> {
+                    h = Integer.parseInt(str.substring(0, 1))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(1, 3))
+                    s = Integer.parseInt(str.substring(3, 5))
+                    result = (h * 3600 + m * 60 + s)
+                }
+                6 -> {
+                    h = Integer.parseInt(str.substring(0, 2))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(2, 4))
+                    s = Integer.parseInt(str.substring(4, 6))
+                    result = (h * 3600 + m * 60 + s)
+                }
+                else -> result = -1
+            }
+        } else {
+            //this str inclues ":" for example 12:17
+            when (str.length) {
+                4 -> {
+                    h = Integer.parseInt(str.substring(0, 1))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(2, 4))
+                    result = (h * 3600 + m * 60)
+                }
+                5 -> {
+                    h = Integer.parseInt(str.substring(0, 2))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(3, 5))
+                    result = (h * 3600 + m * 60)
+                }
+                6 -> {
+                    h = Integer.parseInt(str.substring(0, 1))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(2, 4))
+                    s = Integer.parseInt(str.substring(4, 6))
+                    result = (h * 3600 + m * 60 + s)
+                }
+                7 -> {
+                    h = Integer.parseInt(str.substring(0, 2))
+                    if (h < 3) {
+                        h = h + 24
+                    }
+                    m = Integer.parseInt(str.substring(3, 5))
+                    s = Integer.parseInt(str.substring(5, 7))
+                    result = (h * 3600 + m * 60 + s)
+                }
+                else -> result = -1
+            }
+        }
+        return result
+
     }
 
 

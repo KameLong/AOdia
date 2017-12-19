@@ -13,7 +13,6 @@ class EditStationTime(val station:Int,val pos:Int,val train:AOdiaTrain) {
 
     val copyTrain=train.clone(true)
     val backStack=ArrayDeque<Long>()
-    val forwardStack=ArrayDeque<Long>()
     var time:String=""
     var stopType=0
 
@@ -89,6 +88,12 @@ class EditStationTime(val station:Int,val pos:Int,val train:AOdiaTrain) {
                 }
             }
         }else{
+            var result=0
+            for(i in 0 until inputDatas.size){
+                result*=10
+                result+=inputDatas[i]
+            }
+            train.setStopNumber(station,result%256)
         }
     }
     /**

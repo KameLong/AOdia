@@ -23,6 +23,9 @@ interface AOdiaTrain {
     var endExchangeTimeStart:Int
     var endExchangeTimeEnd:Int
 
+    fun existArriveTime(station:Int):Boolean
+    fun existDepartTime(station:Int):Boolean
+
     fun getStationTime(station:Int):Long
     fun setStationTime(station:Int,value:Long)
 
@@ -34,6 +37,7 @@ interface AOdiaTrain {
     fun setArrivalTime(station:Int,value:Int)
 
 
+
     fun getStopNumber(station:Int):Int
     fun setStopNumber(station:Int,value:Int)
 
@@ -43,6 +47,7 @@ interface AOdiaTrain {
 
 
     val trainType:AOdiaTrainType
+    var type:Int
 
     val startStation:Int
     val endStation:Int

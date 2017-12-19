@@ -3,6 +3,7 @@ package com.kamelong.aodia.timeTable
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import com.kamelong.aodia.diadata.AOdiaTrain
 
 /**
@@ -10,7 +11,7 @@ import com.kamelong.aodia.diadata.AOdiaTrain
  */
 class StartStationView(context: Context, val train:AOdiaTrain?, override val xsize: Int) :KLView(context) {
     override val ysize:Int
-    get()= (textSize*2.25).toInt()
+        get()= (textSize*2.25).toInt()
 
 
     init{
@@ -23,9 +24,30 @@ class StartStationView(context: Context, val train:AOdiaTrain?, override val xsi
             drawTextCenter(canvas,"始発駅操作",textSize*1.6f, blackPaint)
 
         }else{
+            textPaint.color=train.trainType.textColor.androidColor
+            when(train.startAction){
+                1->{
+                    drawTextCenter(canvas,train.startExchangeStop.toString(),textSize*1.1f, textPaint)
+                    if(train.startExchangeTimeEnd>=0){
+                        drawTime(canvas, textSize*2.1f,train.startExchangeTimeEnd, textPaint)
+                    }else if(train.startExchangeTimeStart>=0){
+                        drawTime(canvas, textSize*2.1f,train.startExchangeTimeStart, textPaint)
+                    }else{
+                    }
+                }
+                2->drawTextCenter(canvas,"出区",textSize*1.6f, textPaint)
+            }
+
+
         }
         canvas.drawLine(0f, blackBPaint.strokeWidth/2f,width.toFloat(), blackBPaint.strokeWidth/2f, blackBPaint)
         canvas.drawLine(0f, height-blackBPaint.strokeWidth/2f,width.toFloat(), height-blackBPaint.strokeWidth/2f, blackBPaint)
     }
+    fun drawTime(canvas:Canvas,y:Float,time:Int,paint: Paint){
+        val hh=(time/3600)%24
+        val mm=(time/60)%60
+        drawTextCenter(canvas,hh.toString()+String.format("%02d",mm),y, textPaint)
+    }
+
 
 }

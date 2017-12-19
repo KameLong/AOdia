@@ -54,7 +54,7 @@ public class HelpFragment extends AOdiaFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         WebView.setWebContentsDebuggingEnabled(true);
         handler=new Handler();
-        helpView = new WebView(getAodiaActivity());
+        helpView = new WebView(getActivity());
         helpView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {

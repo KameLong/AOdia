@@ -11,24 +11,24 @@ import com.kamelong.aodia.diadata.AOdiaTrain
 class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context){
 
     var train=newTrain
-    set(value){
-        field=value
-        removeAllViews()
-        numberView=TrainNumberView(context,train,xSize)
-        nameView=TrainNameView(context,train,xSize)
-        startView=StartStationView(context,train,xSize)
-        trainView =TrainView(context,train,xSize)
-        endView=EndStationView(context,train,xSize)
-        remarkView=RemarkView(context,train,xSize)
-        addView(nameView)
-        addView(trainView)
-        addView(remarkView)
-        addView(startView)
-        addView(endView)
-        addView(numberView)
+        set(value){
+            field=value
+            removeAllViews()
+            numberView=TrainNumberView(context,train,xSize)
+            nameView=TrainNameView(context,train,xSize)
+            startView=StartStationView(context,train,xSize)
+            trainView =TrainView(context,train,xSize)
+            endView=EndStationView(context,train,xSize)
+            remarkView=RemarkView(context,train,xSize)
+            addView(nameView)
+            addView(trainView)
+            addView(remarkView)
+            addView(startView)
+            addView(endView)
+            addView(numberView)
 
 
-    }
+        }
     val diaFile=train.diaFile
     var xSize=(KLView.textSize*2.5).toInt()
     var numberView=TrainNumberView(context,train,xSize)
@@ -100,15 +100,27 @@ class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var ysize=0
-        ysize+=numberView.ysize
-        ysize+=nameView.ysize
-        ysize+=startView.ysize
-        ysize+= trainView.ysize
-        ysize+=endView.ysize
-        ysize+=remarkView.ysize
-        maxHeight=ysize
-        this.setMeasuredDimension(xSize +borderlineWidth,MeasureSpec.getSize (heightMeasureSpec ))
+        var ysize = 0
+        ysize += numberView.ysize
+        ysize += nameView.ysize
+        ysize += startView.ysize
+        ysize += trainView.ysize
+        ysize += endView.ysize
+        ysize += remarkView.ysize
+        maxHeight = ysize
+        this.setMeasuredDimension(xSize + borderlineWidth, MeasureSpec.getSize(heightMeasureSpec))
 
+
+    }
+    fun reNewPreference(){
+        trainView.reNewPreference()
+        requestLayout()
+    }
+
+    override fun invalidate() {
+        trainView.invalidate()
+        startView.invalidate()
+        endView.invalidate()
+        super.invalidate()
     }
 }

@@ -39,8 +39,9 @@ class RemarkView (context: Context, val train: AOdiaTrain?, override val xsize: 
                 for(char in nameList[line]){
                     if(isHorizontal(char)){
                         canvas.save()
+                        canvas.translate(width/2+textSize*(nameList.size/2f-line),textSize*(1.0f+0.5f*i))
                         canvas.rotate(90f)
-                        canvas.drawText(char.toString(),textSize*(1.0f+0.5f*i),-width/2-textSize*(nameList.size/2f-line), textPaint)
+                        canvas.drawText(char.toString(),- textSize*0.8f,textSize*0.8f, textPaint)
                         canvas.restore()
 
                     }else{

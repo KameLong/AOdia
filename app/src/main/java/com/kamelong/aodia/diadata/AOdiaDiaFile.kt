@@ -7,6 +7,7 @@ import com.kamelong.JPTI.JPTI
 import com.kamelong.JPTI.Operation
 import com.kamelong.JPTI.Service
 import com.kamelong.aodia.AOdiaActivity
+import java.io.File
 import java.util.ArrayList
 
 /**
@@ -33,9 +34,28 @@ interface AOdiaDiaFile {
 
     fun getTrainNum(diaIndex:Int,direct:Int):Int
     fun getTrain(diaIndex:Int,direct:Int,trainIndex:Int):AOdiaTrain
+    /**
+     * 新しい列車を作ります
+     */
+    fun getNewTrain(direction:Int):AOdiaTrain
+
+    /**
+     * 新しい列車を挿入します
+     */
+    fun addTrain(diaIndex: Int,direct: Int,index:Int,train:AOdiaTrain)
+    /**
+     * 列車を削除します
+     * return 削除した列車のIndex
+     */
+    fun deleteTrain(diaIndex: Int,direct: Int,train:AOdiaTrain):Int
+
 
     fun setTrain(diaNum:Int,direction:Int,trainNum:Int,train:AOdiaTrain)
 
 
+    /**
+     * ファイル形式で保存します
+     */
+    fun save(outFile:File)
 
 }

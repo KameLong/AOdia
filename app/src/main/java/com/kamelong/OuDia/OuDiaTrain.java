@@ -70,6 +70,8 @@ public class OuDiaTrain {
      * この列車が所属するDiaFile
      */
     protected OuDiaFile diaFile;
+
+
     protected OuDiaTrain(){}
     /**
      * 列車の生成には所属するDiaFileが必要となります。

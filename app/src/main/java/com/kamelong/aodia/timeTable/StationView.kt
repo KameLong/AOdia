@@ -13,20 +13,24 @@ import com.kamelong.aodia.diadataOld.AOdiaTrain
  */
 class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, override val xsize: Int) :KLView(context) {
     val borderFrag=ArrayList<Boolean>()
-    override var ysize=0
-    init{
+    var prefer=context.getSharedPreferences("AOdia-LineTrainTime", Context.MODE_PRIVATE)
+    var editAllTime=prefer.getBoolean("editAllTime",false)
+    var editAllStop=prefer.getBoolean("editAllStop",false)
+
+    override var ysize:Int=0
+    get(){
         var result=0.4* textSize
         for(station in diaFile.getStationList()){
-            if((station.getViewStyle(direct) and 0b01)!=0){
+            if(editAllTime||(station.getViewStyle(direct) and 0b01)!=0){
                 result+= textSize
             }
-            if((station.getViewStyle(direct) and 0b10)!=0){
+            if(editAllTime||(station.getViewStyle(direct) and 0b10)!=0){
                 result+= textSize
             }
-            if((station.getViewStyle(direct) and 0b11)==0b11){
+            if(editAllTime||(station.getViewStyle(direct) and 0b11)==0b11){
                 result+= (textSize*0.2).toInt()
             }
-            if((station.getViewStyle(direct) and 0b100)==0b100){
+            if(editAllStop||(station.getViewStyle(direct) and 0b100)==0b100){
                 result+= (textSize*1.2).toInt()
             }
             if(station.branchEnd()>=0){
@@ -38,7 +42,10 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
             borderFrag.add(false)
 
         }
-        ysize=result.toInt()
+        return result.toInt()
+
+    }
+    init{
         for(i in 0 until diaFile.stationNum){
             if(diaFile.getStation(i).branchStation>=0){
                 if((direct==0) xor (i<diaFile.getStation(i).branchStation)){
@@ -62,9 +69,9 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
         for(station in stationList){
             val viewStyle=station.getViewStyle(direct)
             var lineNum=0
-            if((viewStyle and 0b1) !=0)lineNum++
-            if((viewStyle and 0b10) !=0)lineNum++
-            if((viewStyle and 0b100) !=0)lineNum++
+            if(editAllTime||(viewStyle and 0b1) !=0)lineNum++
+            if(editAllTime||(viewStyle and 0b10) !=0)lineNum++
+            if(editAllStop||(viewStyle and 0b100) !=0)lineNum++
             if(station.branchStart()>=0){
                 linePos+=(textSize*0.2f)
                 canvas.drawLine(0f,linePos-0.1f* textSize,width.toFloat(),linePos-0.1f* textSize, blackBPaint)
@@ -114,23 +121,23 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
                 linePos+=(textSize*0.2f)
             }
             val viewStyle=station.getViewStyle(direct)
-            if((viewStyle and 0b0010) ==0b0010){
+            if(editAllTime||(viewStyle and 0b0010) ==0b0010){
                 linePos+=textSize
             }
             if(linePos>ypos)return 3*i
-            if((viewStyle and 0b0011) ==0b0011){
+            if(editAllTime||(viewStyle and 0b0011) ==0b0011){
                 linePos+=textSize*0.2f
             }
             if((viewStyle and 0b0111) ==0b0110) {
                 linePos += textSize * 0.2f
                 linePos += textSize
-            } else if ((viewStyle and 0b0100) == 0b0100) {
+            } else if (editAllStop||(viewStyle and 0b0100) == 0b0100) {
                 linePos += textSize
                 linePos += textSize * 0.2f
             }
             if(linePos>ypos)return 3*i+1
 
-            if((viewStyle and 0b0001) ==0b0001){
+            if(editAllTime||(viewStyle and 0b0001) ==0b0001){
                 linePos+=textSize
 
             }
@@ -142,4 +149,11 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
         }
         return -1
     }
+    fun reNewPreference(){
+        editAllTime=prefer.getBoolean("editAllTime",false)
+        editAllStop=prefer.getBoolean("editAllStop",false)
+
+        invalidate()
+    }
+
 }

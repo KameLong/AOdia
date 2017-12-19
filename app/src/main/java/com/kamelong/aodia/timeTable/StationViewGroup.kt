@@ -87,8 +87,15 @@ class StationViewGroup(context: Context, val diaFile: AOdiaDiaFile, val direct:I
 
     }
     fun getStationIndex(value:Int):Int{
-        val y=value+scroll
-        return stationView.postion(y-nameView.ysize-startView.ysize-numberView.ysize)
+        var y=value+scroll-numberView.ysize-nameView.ysize-startView.ysize
+
+        if(y<0)return -1
+        if(y>stationView.ysize)return -1
+        return stationView.postion(y)
+    }
+    fun reNewPreference(){
+        stationView.reNewPreference()
+        requestLayout()
     }
 
 }

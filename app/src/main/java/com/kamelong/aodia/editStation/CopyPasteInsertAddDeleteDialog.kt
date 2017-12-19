@@ -47,10 +47,10 @@ class CopyPasteInsertAddDeleteDialog(context: Context,listener:CopyPasteInsertAd
      * 各種操作イベントを取得するためのinterface
      */
     interface CopyPasteInsertAddDeleteInterface{
-        fun onClickCopyButton()
-        fun onClickPasteButton()
-        fun onClickInsertButton()
-        fun onClickAddButton()
-        fun onClickDeleteButton()
+        fun onClickCopyButton(){}
+        fun onClickPasteButton(){}
+        fun onClickInsertButton(){}
+        fun onClickAddButton(){}
+        fun onClickDeleteButton(){}
     }
 }

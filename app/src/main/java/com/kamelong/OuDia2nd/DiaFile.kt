@@ -26,6 +26,24 @@ import java.util.ArrayList
  * @author KameLong
  */
 class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
+    override fun getNewTrain(direction:Int): AOdiaTrain {
+        val t=Train(this)
+        t.direction=direction
+        return t
+    }
+
+    override fun addTrain(diaIndex: Int, direct: Int, index: Int, mTrain: AOdiaTrain) {
+        train[diaIndex][direct].add(index,mTrain as Train)
+    }
+
+    override fun deleteTrain(diaIndex: Int, direct: Int, mTrain: AOdiaTrain): Int {
+        val index=train[diaIndex][direct].indexOf(mTrain)
+        println(index)
+        if(index<0)return -1
+        train[diaIndex][direct].remove(mTrain)
+        return index
+    }
+
     override fun setTrain(diaNum: Int, direction: Int, trainNum: Int, mTrain: AOdiaTrain) {
         train[diaNum][direction][trainNum]=mTrain as Train
     }
@@ -154,7 +172,8 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
      * fileがnullの時はnullPointerExceptionが発生する
      */
     constructor(activity: Activity) : this(activity,true) {}
-        constructor(activity: Activity,file: File) : this(activity,true) {
+    constructor(activity: Activity,file: File) : this(activity,true) {
+        filePath=file.path
         try {
             val `is` = FileInputStream(file)
             if (file.path.endsWith(".oud2")||file.path.endsWith(".oud")) {
@@ -582,5 +601,9 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             return Train(this)
         }
 
+    }
+
+    override fun save(outFile: File) {
+        makeOuDiaText(outFile,true)
     }
 }

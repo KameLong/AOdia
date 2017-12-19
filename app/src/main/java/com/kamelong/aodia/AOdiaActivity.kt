@@ -22,9 +22,11 @@ import android.widget.Button
 import android.widget.Toast
 
 import com.kamelong.OuDia2nd.DiaFile
+import com.kamelong.OuDia2nd.Test
+import com.kamelong.OuDia2nd.Test2
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment
 import com.kamelong.aodia.AOdiaIO.ProgressDialog
-import com.kamelong.aodia.EditTimeTable.TrainTimeEditFragment
+import com.kamelong.aodia.EditTimeTable.LineTrainTimeFragment
 import com.kamelong.aodia.detabase.DBHelper
 import com.kamelong.aodia.diadataOld.AOdiaOperation
 import com.kamelong.aodia.diagram.DiagramFragment
@@ -45,7 +47,9 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URLDecoder
-import java.util.ArrayList
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 /*
  *     This file is part of AOdia.
@@ -578,7 +582,7 @@ class AOdiaActivity : AppCompatActivity() {
         try {
 
             val fragment :Fragment= if(direct==0){
-                TrainTimeEditFragment()
+                LineTrainTimeFragment()
             }else{TimeTableFragment()}
             val args = Bundle()
             args.putInt("fileNum", fileNum)
@@ -768,19 +772,20 @@ class AOdiaActivity : AppCompatActivity() {
     }
 
     fun saveFile() {
-        if (!payment!!.buyCheck("001")) {
+/*        if (!payment!!.buyCheck("001")) {
             payment!!.buy("001")
             return
         }
+        */
 
         try {
             val saveFile = fragments[fragments.size - 1].diaFile
-            val handler = Handler()
-            //saveFile.saveAOdia();
-            println(fragments[fragments.size - 1])
-            val outFile = File(saveFile.filePath.substring(0, saveFile.filePath.lastIndexOf(".")) + ".jpti")
-            val dialog = ProgressDialog()
-            dialog.show(fragmentManager, "test")
+            val date = Date(System.currentTimeMillis())
+            val dataStr = SimpleDateFormat("MMddHHmmss").format(date)
+            val outFile = File(saveFile.filePath.substring(0, saveFile.filePath.lastIndexOf(".")) +"-" +dataStr+".oud2")
+            saveFile.save(outFile)
+//            val dialog = ProgressDialog()
+//            dialog.show(fragmentManager, "test")
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
             drawer.closeDrawer(GravityCompat.START)
 

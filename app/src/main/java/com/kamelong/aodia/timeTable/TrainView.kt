@@ -14,6 +14,10 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
     val direct=train.direction
     val showPassTime=false
 
+    var prefer=context.getSharedPreferences("AOdia-LineTrainTime", Context.MODE_PRIVATE)
+    var editAllTime=prefer.getBoolean("editAllTime",false)
+    var editAllStop=prefer.getBoolean("editAllStop",false)
+
     /**
      * 駅数の３倍がmax
      * focusPoint/3:駅Index
@@ -27,16 +31,16 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
         get() {
             var result=0.4* textSize
             for(station in diaFile.getStationList()){
-                if((station.getViewStyle(direct) and 0b01)!=0){
+                if(editAllTime||(station.getViewStyle(direct) and 0b01)!=0){
                     result+= textSize
                 }
-                if((station.getViewStyle(direct) and 0b10)!=0){
+                if(editAllTime||(station.getViewStyle(direct) and 0b10)!=0){
                     result+= textSize
                 }
-                if((station.getViewStyle(direct) and 0b11)==0b11){
+                if(editAllTime||(station.getViewStyle(direct) and 0b11)==0b11){
                     result+= (textSize*0.2).toInt()
                 }
-                if((station.getViewStyle(direct) and 0b100)==0b100){
+                if(editAllStop||(station.getViewStyle(direct) and 0b100)==0b100){
                     result+= (textSize*1.2).toInt()
                 }
 
@@ -67,7 +71,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
             val viewStyle=station.getViewStyle(direct)
 
 
-            if((viewStyle and 0b0010) ==0b0010){
+            if(editAllTime||(viewStyle and 0b0010) ==0b0010){
                 if(focusPoint==i*3){
                     canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
                 }
@@ -78,7 +82,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                     Train.STOP_TYPE_STOP ->
                         if (train.getArrivalTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getArrivalTime(i),textPaint)
-                        } else if (((viewStyle and 0b0001) !=0b0001) &&train.getDepartureTime(i) >= 0) {
+                        } else if (!editAllTime&&((viewStyle and 0b0001) !=0b0001) &&train.getDepartureTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getDepartureTime(i),textPaint)
                         } else {
                             if(i>0){
@@ -115,7 +119,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
 
                 }
             }
-            if((viewStyle and 0b0011) ==0b0011){
+            if(editAllTime||(viewStyle and 0b0011) ==0b0011){
                 linePos+=textSize*0.2f
                 canvas.drawLine(0f,linePos,width.toFloat(),linePos, blackPaint)
             }
@@ -127,14 +131,17 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                 canvas.drawLine(0f, linePos, width.toFloat(), linePos, blackPaint)
                 linePos += textSize
                     drawStop(canvas, i,linePos, textPaint)
-            } else if ((viewStyle and 0b0100) == 0b0100) {
+            } else if (editAllStop||(viewStyle and 0b0100) == 0b0100) {
+                if(focusPoint==i*3+1){
+                    canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
+                }
                 linePos += textSize
                 drawStop(canvas,i, linePos, textPaint)
                 linePos += textSize * 0.2f
                 canvas.drawLine(0f, linePos, width.toFloat(), linePos, blackPaint)
             }
 
-            if((viewStyle and 0b0001) ==0b0001){
+            if(editAllTime||(viewStyle and 0b0001) ==0b0001){
                 if(focusPoint==i*3+2){
                     canvas.drawRect(2f,linePos+textSize*0.1f,width-2f,linePos+ textSize*1.1f, focusPaint);
                 }
@@ -239,12 +246,15 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
         drawTextCenter(canvas,hh.toString()+String.format("%02d",mm),y, textPaint)
     }
     fun drawStop(canvas: Canvas,i:Int,y:Float,paint: Paint){
-        val string=diaFile.getStation(i).getShortName(train.getStopNumber(if(i==0){if(direct==0){train.diaFile.getStation(i).downMain}else{train.diaFile.getStation(i).upMain}}else{i-1}))
+
+        val string=diaFile.getStation(i).getShortName(if(train.getStopNumber(i)==0){if(direct==0){train.diaFile.getStation(i).downMain}else{train.diaFile.getStation(i).upMain}}else{train.getStopNumber(i)-1})
 
         when(train.getStopType(i)){
             1->{
                 textPaint.style = Paint.Style.STROKE
-                canvas.drawOval(width / 2 - textSize * 1.1f, y - textSize * 0.9f, width / 2 + textSize * 1.1f, y + textSize * 0.1f, textPaint)
+                if(string.all { it.toInt()<256}){
+                    canvas.drawOval(width / 2 - textSize * 1.1f, y - textSize * 0.85f, width / 2 + textSize * 1.1f, y + textSize * 0.05f, textPaint)
+                }
                 textPaint.style = Paint.Style.FILL
                 drawTextCenter(canvas,string,y-0.05f* textSize,paint)
             }
@@ -252,7 +262,9 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                 if(false) {
                     textPaint.color = Color.GRAY
                     textPaint.style = Paint.Style.STROKE
-                    canvas.drawOval(width / 2 - textSize * 1.1f, y - textSize * 0.9f, width / 2 + textSize * 1.1f, y + textSize * 0.1f, textPaint)
+                    if(string.all { it.toInt()<256}){
+                        canvas.drawOval(width / 2 - textSize * 1.1f, y - textSize * 0.85f, width / 2 + textSize * 1.1f, y + textSize * 0.05f, textPaint)
+                    }
                     textPaint.style = Paint.Style.FILL
                     drawTextCenter(canvas, string, y - 0.05f * textSize, paint)
                     textPaint.color = train.trainType.textColor.androidColor
@@ -264,6 +276,12 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
         }
     }
     fun setTrain(newTrain:AOdiaTrain){
+
+    }
+    fun reNewPreference(){
+        editAllTime=prefer.getBoolean("editAllTime",false)
+        editAllStop=prefer.getBoolean("editAllStop",false)
+        invalidate()
 
     }
 

@@ -20,7 +20,10 @@ class Station(val diaFile: DiaFile) :AOdiaStation{
     }
 
     override fun getShortName(index: Int):String {
-        return trackRyakusyou[index]
+        if(index>= trackRyakusyou.size) {
+            return ""
+        }
+            return trackRyakusyou[index]
     }
 
     override fun setShortName(index: Int, value: String) {
@@ -89,9 +92,9 @@ class Station(val diaFile: DiaFile) :AOdiaStation{
 
     override fun getStopStyle(direct: Int): Boolean {
         if(direct==0){
-            return (showType and 0b1000 )!=0
+            return (showType and 0b0100 )!=0
         }else{
-            return (showType and 0b10000000 )!=0
+            return (showType and 0b01000000 )!=0
         }
     }
 
@@ -160,7 +163,7 @@ class Station(val diaFile: DiaFile) :AOdiaStation{
     fun makeStationText(oudiaSecond: Boolean): StringBuilder {
         val result = StringBuilder("Eki.")
         result.append("\r\nEkimei=").append(name)
-        when (this.showType) {
+        when (showType and 0b00110011) {
             SHOW_HATU -> result.append("\r\nEkijikokukeisiki=").append("Jikokukeisiki_Hatsu")
             SHOW_HATUTYAKU -> result.append("\r\nEkijikokukeisiki=").append("Jikokukeisiki_Hatsuchaku")
             SHOW_KUDARITYAKU -> result.append("\r\nEkijikokukeisiki=").append("Jikokukeisiki_KudariChaku")
@@ -181,7 +184,16 @@ class Station(val diaFile: DiaFile) :AOdiaStation{
         }else{
             result.append("\r\nEkikibo=").append("Ekikibo_Ippan")
         }
-
+        result.append("\r\nDownMain=").append(downMain+1)
+        result.append("\r\nUpMain=").append(upMain+1)
+        result.append("\r\nEkiTrack2Cont.")
+        for(i in 0 until trackName.size){
+            result.append("\r\nEkiTrack2.")
+            result.append("\r\nTrackName=").append(trackName[i])
+            result.append("\r\nTrackRyakusyou=").append(trackRyakusyou[i])
+            result.append("\r\n.")
+        }
+        result.append("\r\n.")
         result.append("\r\n.\r\n")
         return result
 

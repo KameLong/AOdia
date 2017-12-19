@@ -121,7 +121,7 @@ public class LineMenu  extends LinearLayout{
             trainType.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
+                    ((AOdiaActivity) context).openEditTrainType(fileNum);
                 }
             });
             lineContLinear.addView(trainType);
@@ -137,7 +137,7 @@ public class LineMenu  extends LinearLayout{
                     ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
-            lineContLinear.addView(timetable);
+//            lineContLinear.addView(timetable);
 
 
             for (int i = 0; i < diaFile.getDiaNum(); i++) {
@@ -177,8 +177,8 @@ public class LineMenu  extends LinearLayout{
                 lineContLinear.addView(diaTitle);
                 lineContLinear.addView(downButton);
                 lineContLinear.addView(upButton);
-                lineContLinear.addView(diagramButton);
-                lineContLinear.addView(operationButton);
+               // lineContLinear.addView(diagramButton);
+               // lineContLinear.addView(operationButton);
 
             }
             Button comment = new Button(context);
