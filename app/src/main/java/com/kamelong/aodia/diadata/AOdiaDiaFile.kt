@@ -57,5 +57,8 @@ interface AOdiaDiaFile {
      * ファイル形式で保存します
      */
     fun save(outFile:File)
+    fun addStation(s:AOdiaStation,index:Int)
+    fun deleteStation(index:Int)
+    fun setStation(s:AOdiaStationHistory,index:Int)
 
 }

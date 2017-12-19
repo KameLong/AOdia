@@ -920,6 +920,34 @@ class Train :AOdiaTrain{
         return result
 
     }
+    fun addStation(index:Int){
+        if(getStopType(index)==1||getStopType(index)==2){
+            if(getStopType(index+1)==1||getStopType(index+1)==2){
+                time.add(index,0x002000000000000L)
+                return
+            }
+        }
+        time.add(index,0x000000000000000L)
+        return
+
+    }
+    fun deleteStation(index:Int){
+        time.removeAt(index)
+    }
+    fun deleteStop(station:Int,stop:Int){
+        if(getStopNumber(station)==stop){
+            setStopNumber(station,0)
+        }
+        if(getStopNumber(station)>stop){
+            setStopNumber(station,getStopNumber(station)-1)
+        }
+    }
+    fun addStop(station:Int,stop:Int){
+        if(getStopNumber(station)>=stop){
+            setStopNumber(station,getStopNumber(station)+1)
+        }
+
+    }
 
 
 }

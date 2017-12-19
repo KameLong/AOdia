@@ -2,10 +2,7 @@ package com.kamelong.OuDia2nd
 
 
 import android.app.Activity
-import com.kamelong.aodia.diadata.AOdiaDiaFile
-import com.kamelong.aodia.diadata.AOdiaStation
-import com.kamelong.aodia.diadata.AOdiaTrain
-import com.kamelong.aodia.diadata.AOdiaTrainType
+import com.kamelong.aodia.diadata.*
 import com.kamelong.tool.Color
 import com.kamelong.tool.Font
 import com.kamelong.tool.ShiftJISBufferedReader
@@ -601,6 +598,48 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             return Train(this)
         }
 
+    }
+    override fun addStation(s:AOdiaStation,index:Int){
+        station.add(index,s as Station)
+        for(i in 0 until getDiaNum()){
+            for(direct in 0 .. 1){
+                for(t in 0 until getTrainNum(i,direct)){
+                    train[i][direct][t].addStation(index)
+                }
+            }
+        }
+    }
+    override fun deleteStation(index:Int){
+        station.removeAt(index)
+        for(i in 0 until getDiaNum()){
+            for(direct in 0 .. 1){
+                for(t in 0 until getTrainNum(i,direct)){
+                    train[i][direct][t].deleteStation(index)
+                }
+            }
+        }
+    }
+    override fun setStation(history:AOdiaStationHistory,index:Int){
+        station[index]=history.newStation as Station
+        for(i in history.addStop){
+            if(i<0){
+                for(dia in 0 until getDiaNum()){
+                    for(direct in 0 .. 1){
+                        for(t in 0 until getTrainNum(i,direct)){
+                            train[dia][direct][t].deleteStop(index,-i)
+                        }
+                    }
+                }
+            }else{
+                for(dia in 0 until getDiaNum()){
+                    for(direct in 0 .. 1){
+                        for(t in 0 until getTrainNum(i,direct)){
+                            train[dia][direct][t].addStop(index,-i)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun save(outFile: File) {

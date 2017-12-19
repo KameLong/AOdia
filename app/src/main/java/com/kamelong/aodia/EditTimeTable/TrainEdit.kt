@@ -105,7 +105,10 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
             return
         }
             while(true){
-                if(focusPoint<0 || focusPoint>=diaFile.stationNum*3)return
+                if(focusPoint<0 || focusPoint>=diaFile.stationNum*3){
+                    focusPoint=-1
+                    return
+                }
                 when(focusPoint%3){
                     0->if(editAllTime||(diaFile.getStation(focusPoint/3).getViewStyle(trainEditFragment.direction) and 0b10)!=0)return
                     1->if(editAllStop||diaFile.getStation(focusPoint/3).getStopStyle(trainEditFragment.direction))return

@@ -214,6 +214,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
     fun addStation(index: Int, station: AOdiaStation) {
         val history = AOdiaStationHistory()
         history.addIndex = index
+        history.newStation=station
         backStack.addLast(history)
         stationList.add(index, station)
         stationSelected.add(index, false)
@@ -256,6 +257,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         frameLayout.visibility = View.VISIBLE
         history.changeIndex = index
         history.station = stationList[index].clone()
+        history.newStation=stationList[index]
         backStack.addLast(history)
     }
 
@@ -302,6 +304,23 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         stationCopyList=ArrayList<Int>()
 
 
+    }
+
+    override fun onStop() {
+        super.onStop()
+        for(history in backStack){
+            if(history.addIndex>=0){
+                diaFile.addStation(history.newStation!!,history.addIndex)
+
+            }
+            if(history.deleteIndex>=0){
+                diaFile.deleteStation(history.deleteIndex)
+            }
+            if(history.changeIndex>=0){
+                diaFile.setStation(history,history.changeIndex)
+
+            }
+        }
     }
 
 

@@ -10,7 +10,7 @@ class AOdiaStationHistory{
     var deleteIndex=-1
     var changeIndex=-1
     var station:AOdiaStation?=null
-    var removeStop=ArrayList<Int>()
+    var newStation:AOdiaStation?=null
     var addStop=ArrayList<Int>()
 
 

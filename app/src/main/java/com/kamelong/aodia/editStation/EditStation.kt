@@ -277,8 +277,8 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
             SdLog.toast("主要番線は削除できません")
             return
         }
-        station.deleteStop(index)
-        stationHistory.addStop.add(-index)
+        station.deleteStop(index+1)
+        stationHistory.addStop.add(-index-1)
         stopLinear.removeAllViews()
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))
