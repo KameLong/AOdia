@@ -30,7 +30,7 @@ import java.util.*
  * 時刻表を編集するためのFrgment
  */
 class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
-    val trainEdit=TrainEdit(this)
+    lateinit var trainEdit:TrainEdit
 
     override var fragment=this as Fragment
     override lateinit var diaFile: AOdiaDiaFile
@@ -67,6 +67,7 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
             e.printStackTrace()
             //activity.killFragment(this)
         }
+        trainEdit=TrainEdit(this,direction)
         fragmentContainer.isFocusableInTouchMode=true
         fragmentContainer.requestFocus()
         fragmentContainer.setOnKeyListener(object : View.OnKeyListener {
@@ -186,6 +187,7 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
                     }
 
                     override fun onScroll(motionEvent: MotionEvent, motionEvent1: MotionEvent, vx: Float, vy: Float): Boolean {
+                        if(trainLinear.childCount==0)return false
                         var scrollX=trainLinear.scrollX+vx
                         if(scrollX>trainLinear.getChildAt(0).width*trainLinear.childCount-trainLinear.width+100){
                             scrollX=trainLinear.getChildAt(0).width*trainLinear.childCount-trainLinear.width+100f

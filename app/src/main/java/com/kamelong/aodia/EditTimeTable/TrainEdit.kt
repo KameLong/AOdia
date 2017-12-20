@@ -9,7 +9,7 @@ import kotlin.concurrent.fixedRateTimer
 
 /**
  */
-class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
+class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int){
     val trainBackUpStack=ArrayDeque<TrainHistory>()
     val trainBackUpStackFoward=ArrayDeque<TrainHistory>()
 
@@ -100,6 +100,10 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
      */
     fun moveDown(){
         focusPoint++
+        if(direction==1&&focusPoint%3==0){
+            focusPoint-=6
+        }
+
         if(focusPoint>diaFile.stationNum*3+2){
             focusPoint=diaFile.stationNum*3+2
             return
@@ -115,6 +119,9 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
                     2->if(editAllTime||(diaFile.getStation(focusPoint/3).getViewStyle(trainEditFragment.direction) and 0b1)!=0)return
                 }
                 focusPoint++
+                if(direction==1&&focusPoint%3==0){
+                    focusPoint-=6
+                }
             }
 
     }
@@ -123,6 +130,9 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
      */
     fun moveUp(){
         focusPoint--
+        if(direction==1&&focusPoint%3==2){
+            focusPoint+=6
+        }
         if(focusPoint<-6){
             focusPoint=-6
             return
@@ -135,6 +145,9 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment){
                     2->if(editAllTime||(diaFile.getStation(focusPoint/3).getViewStyle(trainEditFragment.direction) and 0b1)!=0)return
                 }
                 focusPoint--
+                if(direction==1&&focusPoint%3==2){
+                    focusPoint+=6
+                }
 
         }
 

@@ -6,7 +6,6 @@ import android.widget.*
 import com.kamelong.OuDia2nd.Station
 import com.kamelong.aodia.R
 import com.kamelong.aodia.SdLog
-import com.kamelong.aodia.diadata.AOdiaStationHistory
 import com.kamelong.tool.downloadView.TableRadioGroup
 
 /**
@@ -21,12 +20,12 @@ import com.kamelong.tool.downloadView.TableRadioGroup
  *
  * 変更確定時にEditStation.copyStationをdiaFile.stationに反映し、stationHistoryはEditStationFragmentに保存
  */
-class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : FrameLayout(f.aodiaActivity) {
+class EditStation(f:EditStationFragment, i:Int) : FrameLayout(f.aodiaActivity) {
     val index=i
     val fragment=f
     val layout = LayoutInflater.from(fragment.activity).inflate(R.layout.edit_station_dialog, this)
-    val station=fragment.stationList[index].clone()
-    val stationHistory=history
+    val editStation=fragment.stationList[index].clone()
+    val station=editStation.station
     lateinit var stopLinear:LinearLayout
     init{
 
@@ -34,7 +33,16 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
         layout.findViewById<EditText>(R.id.stationNameEditText).setText(station.name)
         layout.findViewById<Button>(R.id.SubmitButton).setOnClickListener {
             station.name=layout.findViewById<EditText>(R.id.stationNameEditText).text.toString()
-            fragment.closeStationEdit(true,index,station) }
+            for(i in 0 until station.stopNum){
+                station.setStopName(i,layout.findViewById<LinearLayout>(R.id.stopList).getChildAt(i).findViewById<EditText>(R.id.textStopName).text.toString())
+                station.setShortName(i,layout.findViewById<LinearLayout>(R.id.stopList).getChildAt(i).findViewById<EditText>(R.id.textStopShort).text.toString())
+                when(layout.findViewById<LinearLayout>(R.id.stopList).getChildAt(i).findViewById<Spinner>(R.id.mainSropSpnner).selectedItemPosition){
+                0->station.downMain=i
+                        1->station.upMain=i
+                }
+            }
+            station.bigStation=layout.findViewById<RadioGroup>(R.id.bigRadio).checkedRadioButtonId==R.id.bigStation
+            fragment.closeStationEdit(true,index,editStation) }
         layout.findViewById<TableRadioGroup>(R.id.showTimeRadio).check(
                 when(station.getTimeViewStyle()){
                     Station.SHOW_HATU->R.id.showStop5
@@ -265,7 +273,7 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
     }
     fun addStop(index:Int){
         station.addStop(index)
-        stationHistory.addStop.add(index)
+        editStation.editStopList.add(index+1)
         stopLinear.removeAllViews()
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))
@@ -277,8 +285,8 @@ class EditStation(f:EditStationFragment, i:Int, history: AOdiaStationHistory) : 
             SdLog.toast("主要番線は削除できません")
             return
         }
-        station.deleteStop(index+1)
-        stationHistory.addStop.add(-index-1)
+        station.deleteStop(index)
+        editStation.editStopList.add(-index-1)
         stopLinear.removeAllViews()
         for(i in 0 until station.stopNum){
             stopLinear.addView(EditStop(this,i))

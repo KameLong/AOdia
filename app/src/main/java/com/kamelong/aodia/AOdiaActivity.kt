@@ -581,9 +581,7 @@ class AOdiaActivity : AppCompatActivity() {
     fun openLineTimeTable(fileNum: Int, diaNum: Int, direct: Int, train: Int) {
         try {
 
-            val fragment :Fragment= if(direct==0){
-                LineTrainTimeFragment()
-            }else{TimeTableFragment()}
+            val fragment :Fragment= LineTrainTimeFragment()
             val args = Bundle()
             args.putInt("fileNum", fileNum)
             args.putInt("diaNum", diaNum)

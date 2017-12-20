@@ -56,6 +56,11 @@ class EditStop(val stationEditor: EditStation, index:Int) : FrameLayout(stationE
 
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 stationEditor.setStopSpinnerValue(index,pos)
+                when(pos){
+                    0->spinner.isEnabled=false
+                    1->spinner.isEnabled=false
+                    2->spinner.isEnabled=true
+                }
             }
            override fun onNothingSelected(parent: AdapterView<out Adapter>?) {
             }

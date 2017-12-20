@@ -4,9 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import com.kamelong.aodia.diadata.AOdiaDiaFile
-import com.kamelong.aodia.diadata.AOdiaStationHistory
-import com.kamelong.aodia.diadataOld.AOdiaStation
-import com.kamelong.aodia.diadataOld.AOdiaTrain
 
 /**
  * 駅名のViewを作成する

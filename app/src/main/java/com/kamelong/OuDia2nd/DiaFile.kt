@@ -3,6 +3,7 @@ package com.kamelong.OuDia2nd
 
 import android.app.Activity
 import com.kamelong.aodia.diadata.*
+import com.kamelong.aodia.editStation.AOdiaStationHistory
 import com.kamelong.tool.Color
 import com.kamelong.tool.Font
 import com.kamelong.tool.ShiftJISBufferedReader
@@ -601,6 +602,9 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
     }
     override fun addStation(s:AOdiaStation,index:Int){
         station.add(index,s as Station)
+        addStationRenew(index)
+    }
+    override fun addStationRenew(index: Int) {
         for(i in 0 until getDiaNum()){
             for(direct in 0 .. 1){
                 for(t in 0 until getTrainNum(i,direct)){
@@ -609,6 +613,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             }
         }
     }
+
     override fun deleteStation(index:Int){
         station.removeAt(index)
         for(i in 0 until getDiaNum()){
@@ -619,9 +624,15 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             }
         }
     }
-    override fun setStation(history:AOdiaStationHistory,index:Int){
-        station[index]=history.newStation as Station
-        for(i in history.addStop){
+    override fun setStation(s: AOdiaStation) {
+        station.add(s as Station)
+    }
+    override fun save(outFile: File) {
+        makeOuDiaText(outFile,true)
+    }
+
+    override fun setStationRenew(index: Int, editStopList: ArrayList<Int>) {
+        for(i in editStopList){
             if(i<0){
                 for(dia in 0 until getDiaNum()){
                     for(direct in 0 .. 1){
@@ -642,7 +653,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
         }
     }
 
-    override fun save(outFile: File) {
-        makeOuDiaText(outFile,true)
+    override fun resetStation() {
+        station=ArrayList()
     }
 }

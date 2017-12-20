@@ -15,7 +15,6 @@ import com.kamelong.aodia.AOdiaFragmentInterface
 import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.diadata.AOdiaStation
-import com.kamelong.aodia.diadata.AOdiaStationHistory
 import java.util.*
 import kotlin.collections.ArrayList
 import com.kamelong.aodia.SdLog
@@ -49,7 +48,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
             }
         }
         for (i in 0 until stationCopyList.size) {
-            addStation(insertIndex + 1+i, stationList[ stationCopyList[i]].clone())
+            addStation(insertIndex + 1+i, stationList[ stationCopyList[i]].station.clone())
             for (j in 0 until stationCopyList.size) {
                 if (insertIndex < stationCopyList[j]) {
                     stationCopyList[j]++
@@ -99,7 +98,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
                 if (deleteStaiton(i)) {
                     i--
                 }else{
-                    SdLog.toast(stationList[i].name + "駅は削除できません")
+                    SdLog.toast(stationList[i].station.name + "駅は削除できません")
 
                 }
             }
@@ -120,7 +119,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
     val stationSelected = ArrayList<Boolean>()
     var stationCopyList = ArrayList<Int>()
 
-    lateinit var stationList: ArrayList<AOdiaStation>
+    var stationList=ArrayList<AOdiaStationEdit>()
 
 
     val backStack = ArrayDeque<AOdiaStationHistory>()
@@ -133,7 +132,10 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
             val bundle = arguments
             fileIndex = bundle.getInt("fileNum")
             diaFile = aodiaActivity.diaFiles[fileIndex]
-            stationList = ArrayList(diaFile.getStationList())
+            for(i in 0 until diaFile.stationNum){
+                stationList.add(AOdiaStationEdit(diaFile.getStation(i).clone()))
+
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             //activity.killFragment(this)
@@ -149,7 +151,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
                     val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
                     if(frameLayout.visibility == View.VISIBLE){
                         val editor=frameLayout.getChildAt(0)as EditStation
-                        closeStationEdit(false,editor.index,editor.station)
+                        closeStationEdit(false,editor.index,editor.editStation)
                     }else{
                         back()
                     }
@@ -187,7 +189,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         stationLinear.removeAllViews()
 
         for (i in 0 until stationList.size) {
-            val stationView= EditStaitonView(getActivity(), this, stationList[i], i)
+            val stationView= EditStaitonView(getActivity(), this, stationList[i].station, i)
             stationView.isSelected=stationSelected[i]
             stationLinear.addView(stationView)
         }
@@ -214,13 +216,12 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
     fun addStation(index: Int, station: AOdiaStation) {
         val history = AOdiaStationHistory()
         history.addIndex = index
-        history.newStation=station
         backStack.addLast(history)
-        stationList.add(index, station)
+        stationList.add(index, AOdiaStationEdit(station))
         stationSelected.add(index, false)
         for(i in index until stationList.size){
-            if(stationList[i].branchStation>=index)stationList[i].branchStation++
-            if(stationList[i].loopStation>=index)stationList[i].loopStation++
+            if(stationList[i].station.branchStation>=index)stationList[i].station.branchStation++
+            if(stationList[i].station.loopStation>=index)stationList[i].station.loopStation++
         }
 
     }
@@ -230,7 +231,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
      */
     fun deleteStaiton(index: Int): Boolean {
         for (station in stationList) {
-            if (station.branchStation == index || station.loopStation == index) {
+            if (station.station.branchStation == index || station.station.loopStation == index) {
                 return false
             }
         }
@@ -241,8 +242,8 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         stationList.remove(stationList[index])
         stationSelected.remove(stationSelected[index])
         for(i in index until stationList.size){
-            if(stationList[i].branchStation>index)stationList[i].branchStation--
-            if(stationList[i].loopStation>index)stationList[i].loopStation--
+            if(stationList[i].station.branchStation>index)stationList[i].station.branchStation--
+            if(stationList[i].station.loopStation>index)stationList[i].station.loopStation--
         }
         return true
     }
@@ -253,11 +254,10 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
     fun openStationEdit(index: Int) {
         val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
         val history = AOdiaStationHistory()
-        frameLayout.addView(EditStation(this, index,history))
+        frameLayout.addView(EditStation(this, index))
         frameLayout.visibility = View.VISIBLE
         history.changeIndex = index
         history.station = stationList[index].clone()
-        history.newStation=stationList[index]
         backStack.addLast(history)
     }
 
@@ -265,7 +265,7 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
      * StationEditerを閉じる
      * 引数は駅を更新する時はtrue更新しないときはfalse
      */
-    fun closeStationEdit(renewFrag: Boolean,index:Int,station: AOdiaStation) {
+    fun closeStationEdit(renewFrag: Boolean,index:Int,station: AOdiaStationEdit) {
         val frameLayout = fragmentContainer.findViewById<FrameLayout>(R.id.frameLayout)
         frameLayout.removeAllViews()
         frameLayout.visibility = View.GONE
@@ -284,8 +284,8 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
             stationList.add(history.deleteIndex, history.station!!)
             stationSelected.add(history.deleteIndex, false)
             for(i in history.deleteIndex until stationList.size){
-                if(stationList[i].branchStation>=history.deleteIndex)stationList[i].branchStation++
-                if(stationList[i].loopStation>=history.deleteIndex)stationList[i].loopStation++
+                if(stationList[i].station.branchStation>=history.deleteIndex)stationList[i].station.branchStation++
+                if(stationList[i].station.loopStation>=history.deleteIndex)stationList[i].station.loopStation++
             }
 
 
@@ -293,8 +293,8 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
             stationList.remove(stationList[history.addIndex])
             stationSelected.remove(stationSelected[history.addIndex])
             for(i in history.addIndex until stationList.size){
-                if(stationList[i].branchStation>history.addIndex)stationList[i].branchStation--
-                if(stationList[i].loopStation>history.addIndex)stationList[i].loopStation--
+                if(stationList[i].station.branchStation>history.addIndex)stationList[i].station.branchStation--
+                if(stationList[i].station.loopStation>history.addIndex)stationList[i].station.loopStation--
             }
 
         }else if(history.changeIndex>=0){
@@ -310,16 +310,20 @@ class EditStationFragment : Fragment(), AOdiaFragmentInterface, CopyPasteInsertA
         super.onStop()
         for(history in backStack){
             if(history.addIndex>=0){
-                diaFile.addStation(history.newStation!!,history.addIndex)
+                diaFile.addStationRenew(history.addIndex)
 
             }
             if(history.deleteIndex>=0){
                 diaFile.deleteStation(history.deleteIndex)
             }
             if(history.changeIndex>=0){
-                diaFile.setStation(history,history.changeIndex)
+                diaFile.setStationRenew(history.changeIndex,history.station!!.editStopList)
 
             }
+        }
+        diaFile.resetStation()
+        for(i in 0 until stationList.size){
+            diaFile.setStation(stationList[i].station)
         }
     }
 

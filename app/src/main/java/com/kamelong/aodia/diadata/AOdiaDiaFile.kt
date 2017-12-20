@@ -1,12 +1,8 @@
 package com.kamelong.aodia.diadata
 
 import android.app.Activity
-import android.content.Context
 
-import com.kamelong.JPTI.JPTI
-import com.kamelong.JPTI.Operation
-import com.kamelong.JPTI.Service
-import com.kamelong.aodia.AOdiaActivity
+import com.kamelong.aodia.editStation.AOdiaStationHistory
 import java.io.File
 import java.util.ArrayList
 
@@ -58,7 +54,10 @@ interface AOdiaDiaFile {
      */
     fun save(outFile:File)
     fun addStation(s:AOdiaStation,index:Int)
+    fun addStationRenew(index:Int)
     fun deleteStation(index:Int)
-    fun setStation(s:AOdiaStationHistory,index:Int)
+    fun setStation(s: AOdiaStation)
+    fun setStationRenew( index:Int,editStopList:ArrayList<Int>)
+    fun resetStation()
 
 }
