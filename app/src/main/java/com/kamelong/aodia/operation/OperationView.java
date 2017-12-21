@@ -13,7 +13,6 @@ import com.kamelong.aodia.R;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadataOld.AOdiaOperation;
 import com.kamelong.aodia.diadataOld.AOdiaTrain;
-import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 import java.util.ArrayList;
 
@@ -112,6 +111,7 @@ public class OperationView extends RelativeLayout{
     }
 
     public void addNewTrip(final OperationSubView subView){
+        /*
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
             //@Override
             public void selectTrain(AOdiaTrain train) {
@@ -144,8 +144,10 @@ public class OperationView extends RelativeLayout{
             }
         },this.operation);
         dialog.show();
+        */
     }
     private void addNewTrip(){
+        /*
         TrainSelectDialog dialog=new TrainSelectDialog(getContext(), diaFile, fileID, diaNum, new TrainSelectListener() {
            // @Override
             public void selectTrain(AOdiaTrain train) {
@@ -173,6 +175,7 @@ public class OperationView extends RelativeLayout{
             }
         },this.operation);
         dialog.show();
+        */
     }
 
     public void deleteTrip(final OperationSubView subView){

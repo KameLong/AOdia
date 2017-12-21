@@ -96,135 +96,6 @@ public class DiagramFragment extends AOdiaFragment {
     private boolean autoScroll=false;
 
 
-    /**
-     * DiagramFragment内のタッチジェスチャー
-     */
-    private final GestureDetector gesture = new GestureDetector(getAodiaActivity(),
-            new GestureDetector.SimpleOnGestureListener() {
-                private boolean pinchFragX=false;
-                private boolean pinchFragY=false;
-                private boolean fling = false;
-
-                private float startX1;
-                private float startX0;
-                private float startY1;
-                private float startY0;
-
-                @Override
-                public boolean onDown(MotionEvent motionEvent) {
-                    //ピンチ、フリングを中断する
-                    pinchFragX=false;
-                    pinchFragY=false;
-                    fling = false;
-                    return true;
-                }
-                @Override
-                public boolean onSingleTapUp(MotionEvent motionEvent){
-                    return false;
-                }
-                @Override
-                public void onShowPress(MotionEvent motionEvent) {
-                }
-                @Override
-                public void onLongPress(MotionEvent motionEvent) {
-                    longPress(motionEvent);
-
-
-                }
-
-                @Override
-                public boolean onScroll(MotionEvent motionEvent1, MotionEvent motionEvent, float vx, float vy) {
-                    float scrolldx=0;
-                    float scrolldy=0;
-                    if(motionEvent.getPointerCount()==1){
-                        //１本指の時はスクロールする
-                        pinchFragX=false;
-                        pinchFragY=false;
-                        DiagramFragment.this.scrollBy(vx,  vy);
-                    }
-                    if(motionEvent.getPointerCount()==2){
-
-                        //二本指の時はピンチをする。
-                        //２本の指が押しているポイントが変化しないように座標計算を行う
-                        //なお２本の指がx方向y方向においてそれぞれ200ピクセル以下しか離れていないときは、その方向のピンチを無効化する
-                        if(pinchFragX) {
-                            if(Math.abs(motionEvent.getX(1) - motionEvent.getX(0))>200) {
-                                scrolldx=- motionEvent.getX(0)+stationView.getWidth()+(scrollX+startX0)/(startX1-startX0)*(motionEvent.getX(1)-motionEvent.getX(0))-scrollX;
-                                scaleX =  ((motionEvent.getX(1) - motionEvent.getX(0)) / (startX1 - startX0) * scaleX);
-                                scrollX=scrollX+scrolldx;
-                                startX1=motionEvent.getX(1)-stationView.getWidth();
-                                startX0=motionEvent.getX(0)-stationView.getWidth();
-                            }else{
-                                pinchFragX=false;
-                            }
-                        }else if(Math.abs(motionEvent.getX(1)-stationView.getWidth()-motionEvent.getX(0)+stationView.getWidth())>200){
-                            startX0 = motionEvent.getX(0)-stationView.getWidth();
-                            startX1 = motionEvent.getX(1)-stationView.getWidth();
-                            pinchFragX=true;
-                        }
-
-                        if(pinchFragY) {
-                            if(Math.abs(motionEvent.getY(1) - motionEvent.getY(0))>200){
-
-                                scrolldy=- motionEvent.getY(0)+timeView.getHeight()+(scrollY+startY0)/(startY1-startY0)*(motionEvent.getY(1)-motionEvent.getY(0))-scrollY;
-                                scaleY =  ((motionEvent.getY(1) - motionEvent.getY(0)) / (startY1 - startY0) * scaleY);
-                                scrollY=scrollY+scrolldy;
-                                startY1=motionEvent.getY(1)-timeView.getHeight();
-                                startY0=motionEvent.getY(0)-timeView.getHeight();
-
-                            }else{
-                                pinchFragY=false;
-                            }
-                        }else if(Math.abs(motionEvent.getY(1)-motionEvent.getY(0))>200){
-                            startY0 = motionEvent.getY(0)-timeView.getHeight();
-                            startY1 = motionEvent.getY(1)-timeView.getHeight();
-                            pinchFragY=true;
-                        }
-                        try {
-                            Thread.sleep(20);
-                        } catch (InterruptedException e) {
-                            SdLog.log(e);
-                        }
-                        setScale();
-                        diagramView.scrollBy((int)scrolldx,(int)scrolldy);
-                        stationView.scrollBy(0,(int)scrolldy);
-                        timeView.scrollBy((int)scrolldx,0);
-                        scrollTo();
-
-                    }
-                    if(motionEvent.getPointerCount()==3){
-                        //３本指はピンチを無効化
-                        pinchFragX=false;
-                        pinchFragY=false;
-                    }
-                    return false;
-                }
-
-                @Override
-                public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
-                    //フリングしたときは、別スレッドで等速フリング動作を行う
-                    if(e2.getPointerCount()==1) {
-                        final float flingV = -v1 / 60;
-                        fling = true;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                while (fling) {
-                                    try {
-                                        DiagramFragment.this.scrollBy( flingV, 0);
-
-                                        Thread.sleep(16);
-                                    } catch (Exception e) {
-                                        SdLog.log(e);
-                                        fling=false;
-                                    }
-                                }
-                            }
-                        }).start();
-                    }
-                    return false;
-                }
-            });
 
 
     /**
@@ -257,7 +128,7 @@ public class DiagramFragment extends AOdiaFragment {
         super.onViewCreated(view, savedInstanceState);
         try{
             try {
-                setDiaFile(((AOdiaActivity) getAodiaActivity()).getDiaFiles().get(fileNum));
+                setDiaFile((getAodiaActivity()).getDiaFiles().get(fileNum));
             }catch(Exception e){
                 SdLog.log(e);
                 Toast.makeText(getAodiaActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
@@ -282,10 +153,10 @@ public class DiagramFragment extends AOdiaFragment {
             FrameLayout stationFrame = (FrameLayout) view.findViewById(R.id.station);
             FrameLayout timeFrame = (FrameLayout) view.findViewById(R.id.time);
             FrameLayout diaFrame = (FrameLayout) view.findViewById(R.id.diagramFrame);
-            diagramView = new DiagramView(getAodiaActivity(), setting, getDiaFile(), diaNumber);
-            stationView = new StationView(getAodiaActivity(),setting, getDiaFile(),diaNumber);
+            diagramView = new DiagramView(getAodiaActivity(), setting, diaFile, diaNumber);
+            stationView = new StationView(getAodiaActivity(),setting, diaFile,diaNumber);
             stationFrame.addView(stationView);
-            timeView = new TimeView(getAodiaActivity(),setting, getDiaFile());
+            timeView = new TimeView(getAodiaActivity(),setting, diaFile);
             timeFrame.addView(timeView);
             diaFrame.addView(diagramView);
 
@@ -304,6 +175,136 @@ public class DiagramFragment extends AOdiaFragment {
         catch(Exception e){
             SdLog.log(e);
         }
+        /**
+         * DiagramFragment内のタッチジェスチャー
+         */
+        final GestureDetector gesture = new GestureDetector(getAodiaActivity(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    private boolean pinchFragX=false;
+                    private boolean pinchFragY=false;
+                    private boolean fling = false;
+
+                    private float startX1;
+                    private float startX0;
+                    private float startY1;
+                    private float startY0;
+
+                    @Override
+                    public boolean onDown(MotionEvent motionEvent) {
+                        //ピンチ、フリングを中断する
+                        pinchFragX=false;
+                        pinchFragY=false;
+                        fling = false;
+                        return true;
+                    }
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent motionEvent){
+                        return false;
+                    }
+                    @Override
+                    public void onShowPress(MotionEvent motionEvent) {
+                    }
+                    @Override
+                    public void onLongPress(MotionEvent motionEvent) {
+                        longPress(motionEvent);
+
+
+                    }
+
+                    @Override
+                    public boolean onScroll(MotionEvent motionEvent1, MotionEvent motionEvent, float vx, float vy) {
+                        float scrolldx=0;
+                        float scrolldy=0;
+                        if(motionEvent.getPointerCount()==1){
+                            //１本指の時はスクロールする
+                            pinchFragX=false;
+                            pinchFragY=false;
+                            DiagramFragment.this.scrollBy(vx,  vy);
+                        }
+                        if(motionEvent.getPointerCount()==2){
+
+                            //二本指の時はピンチをする。
+                            //２本の指が押しているポイントが変化しないように座標計算を行う
+                            //なお２本の指がx方向y方向においてそれぞれ200ピクセル以下しか離れていないときは、その方向のピンチを無効化する
+                            if(pinchFragX) {
+                                if(Math.abs(motionEvent.getX(1) - motionEvent.getX(0))>200) {
+                                    scrolldx=- motionEvent.getX(0)+stationView.getWidth()+(scrollX+startX0)/(startX1-startX0)*(motionEvent.getX(1)-motionEvent.getX(0))-scrollX;
+                                    scaleX =  ((motionEvent.getX(1) - motionEvent.getX(0)) / (startX1 - startX0) * scaleX);
+                                    scrollX=scrollX+scrolldx;
+                                    startX1=motionEvent.getX(1)-stationView.getWidth();
+                                    startX0=motionEvent.getX(0)-stationView.getWidth();
+                                }else{
+                                    pinchFragX=false;
+                                }
+                            }else if(Math.abs(motionEvent.getX(1)-stationView.getWidth()-motionEvent.getX(0)+stationView.getWidth())>200){
+                                startX0 = motionEvent.getX(0)-stationView.getWidth();
+                                startX1 = motionEvent.getX(1)-stationView.getWidth();
+                                pinchFragX=true;
+                            }
+
+                            if(pinchFragY) {
+                                if(Math.abs(motionEvent.getY(1) - motionEvent.getY(0))>200){
+
+                                    scrolldy=- motionEvent.getY(0)+timeView.getHeight()+(scrollY+startY0)/(startY1-startY0)*(motionEvent.getY(1)-motionEvent.getY(0))-scrollY;
+                                    scaleY =  ((motionEvent.getY(1) - motionEvent.getY(0)) / (startY1 - startY0) * scaleY);
+                                    scrollY=scrollY+scrolldy;
+                                    startY1=motionEvent.getY(1)-timeView.getHeight();
+                                    startY0=motionEvent.getY(0)-timeView.getHeight();
+
+                                }else{
+                                    pinchFragY=false;
+                                }
+                            }else if(Math.abs(motionEvent.getY(1)-motionEvent.getY(0))>200){
+                                startY0 = motionEvent.getY(0)-timeView.getHeight();
+                                startY1 = motionEvent.getY(1)-timeView.getHeight();
+                                pinchFragY=true;
+                            }
+                            try {
+                                Thread.sleep(20);
+                            } catch (InterruptedException e) {
+                                SdLog.log(e);
+                            }
+                            setScale();
+                            diagramView.scrollBy((int)scrolldx,(int)scrolldy);
+                            stationView.scrollBy(0,(int)scrolldy);
+                            timeView.scrollBy((int)scrolldx,0);
+                            scrollTo();
+
+                        }
+                        if(motionEvent.getPointerCount()==3){
+                            //３本指はピンチを無効化
+                            pinchFragX=false;
+                            pinchFragY=false;
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2, float v1, float v2) {
+                        //フリングしたときは、別スレッドで等速フリング動作を行う
+                        if(e2.getPointerCount()==1) {
+                            final float flingV = -v1 / 60;
+                            fling = true;
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while (fling) {
+                                        try {
+                                            DiagramFragment.this.scrollBy( flingV, 0);
+
+                                            Thread.sleep(16);
+                                        } catch (Exception e) {
+                                            SdLog.log(e);
+                                            fling=false;
+                                        }
+                                    }
+                                }
+                            }).start();
+                        }
+                        return false;
+                    }
+                });
+
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

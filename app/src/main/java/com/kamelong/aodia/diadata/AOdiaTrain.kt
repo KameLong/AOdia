@@ -26,6 +26,11 @@ interface AOdiaTrain {
     fun existArriveTime(station:Int):Boolean
     fun existDepartTime(station:Int):Boolean
 
+    fun existTime(station:Int):Boolean{
+        return existDepartTime(station)||existDepartTime(station)
+    }
+
+
     fun getStationTime(station:Int):Long
     fun setStationTime(station:Int,value:Long)
 
@@ -33,8 +38,27 @@ interface AOdiaTrain {
     fun getArrivalTime(station:Int):Int
     fun getDepartureTime(station:Int, startTime: Int):Int
     fun getArrivalTime(station:Int,startTime:Int):Int
+    fun getADTime(station:Int):Int{
+        if(getArrivalTime(station)>=0){
+            return getArrivalTime(station)
+        }else if(getDepartureTime(station)>=0){
+            return getDepartureTime(station)
+        }
+        return -1
+    }
+    fun getDATime(station:Int):Int{
+        if(getDepartureTime(station)>=0){
+            return getDepartureTime(station)
+        }else if(getArrivalTime(station)>=0){
+            return getArrivalTime(station)
+        }
+        return -1
+    }
+
     fun setDepartureTime(station:Int,value:Int)
     fun setArrivalTime(station:Int,value:Int)
+
+
 
 
 

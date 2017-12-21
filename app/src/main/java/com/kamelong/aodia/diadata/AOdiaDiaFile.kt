@@ -60,4 +60,71 @@ interface AOdiaDiaFile {
     fun setStationRenew( index:Int,editStopList:ArrayList<Int>)
     fun resetStation()
 
+    fun stationTime(firstStation:Int,endStation:Int):Int{
+        var result=100000
+            for(d in 0 until getDiaNum()){
+                if(getDiaName(d)=="基準運転時分"){
+                    result=100000
+                    for(t in 0 until getTrainNum(d,0)){
+                        val train=getTrain(d,0,t)
+                        if(train.existTime(firstStation)&&train.existTime(endStation)){
+                            val value=train.getADTime(endStation)-train.getDATime(firstStation)
+                            if(result>value){
+                                result=value
+                            }
+                        }
+                    }
+                    for(t in 0 until getTrainNum(d,1)){
+                        val train=getTrain(d,1,t)
+                        if(train.existTime(firstStation)&&train.existTime(endStation)){
+                            val value=train.getADTime(firstStation)-train.getDATime(endStation)
+                            if(result>value){
+                                result=value
+                            }
+                        }
+                    }
+                    if(result==100000){
+                        return 120
+                    }
+                    return result
+                }else{
+                    for(t in 0 until getTrainNum(d,0)){
+                        val train=getTrain(d,0,t)
+                        if(train.existTime(firstStation)&&train.existTime(endStation)){
+                            val value=train.getADTime(endStation)-train.getDATime(firstStation)
+                            if(result>value){
+                                result=value
+                            }
+                        }
+                    }
+                    for(t in 0 until getTrainNum(d,1)){
+                        val train=getTrain(d,1,t)
+                        if(train.existTime(firstStation)&&train.existTime(endStation)){
+                            val value=train.getADTime(firstStation)-train.getDATime(endStation)
+                            if(result>value){
+                                result=value
+                            }
+                        }
+                    }
+
+                }
+            }
+        if(result==100000){
+            return 120
+        }
+        if(result<30){
+            return 30
+        }
+        return result
+
+    }
+    fun getStationTime():ArrayList<Int>{
+        val result=ArrayList<Int>()
+        result.add(0)
+        for(s in 1 until stationNum){
+            result.add(result[s-1]+stationTime(s-1,s))
+        }
+        return result
+    }
+
 }

@@ -8,12 +8,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.kamelong.aodia.AOdiaActivity;
+import com.kamelong.aodia.EditTimeTable.LineTrainTimeFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.diadataOld.AOdiaOperation;
-import com.kamelong.aodia.timeTable.TimeTableFragment;
-import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 /**
  * Created by kame on 2017/10/14.
@@ -21,7 +20,7 @@ import com.kamelong.aodia.timeTable.TrainSelectListener;
 
 class TrainSelectDialog extends Dialog{
     private AOdiaDiaFile diaFile;
-    private TimeTableFragment fragment;
+    private LineTrainTimeFragment fragment;
     private AOdiaOperation ope=null;
     private int fileNum;
     int station;
@@ -30,16 +29,14 @@ class TrainSelectDialog extends Dialog{
 
     private LinearLayout contentView;
 
-    private TrainSelectListener trainSelectListener;
 
-    public TrainSelectDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN, TrainSelectListener listener,AOdiaOperation ope){
+    public TrainSelectDialog(Context context, AOdiaDiaFile dia, int fileN, int diaN,AOdiaOperation ope){
         super(context);
         diaFile=dia;
         fragment=null;
         diaNum=diaN;
         fileNum=fileN;
         activity=(AOdiaActivity)context;
-        trainSelectListener=listener;
         this.ope=ope;
     }
 
@@ -59,7 +56,6 @@ class TrainSelectDialog extends Dialog{
             downTimetable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openSelectTrainTimeTable(fileNum, diaNum, 0,trainSelectListener);
                     TrainSelectDialog.this.dismiss();
                 }
             });
@@ -68,7 +64,6 @@ class TrainSelectDialog extends Dialog{
             upTimetable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openSelectTrainTimeTable(fileNum, diaNum, 1,trainSelectListener);
                     TrainSelectDialog.this.dismiss();
                 }
             });
@@ -77,7 +72,6 @@ class TrainSelectDialog extends Dialog{
             diagram.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openSelectDiagram(fileNum, diaNum,trainSelectListener,ope);
                     TrainSelectDialog.this.dismiss();
                 }
             });

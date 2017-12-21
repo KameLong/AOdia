@@ -46,6 +46,7 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
     lateinit var stationView: StationViewGroup
     lateinit var trainLinear:LinearLayout
 
+
     val trainNum:Int
     get()=diaFile.getTrainNum(diaIndex,direction)
 

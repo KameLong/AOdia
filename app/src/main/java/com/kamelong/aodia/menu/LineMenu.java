@@ -177,7 +177,7 @@ public class LineMenu  extends LinearLayout{
                 lineContLinear.addView(diaTitle);
                 lineContLinear.addView(downButton);
                 lineContLinear.addView(upButton);
-               // lineContLinear.addView(diagramButton);
+                lineContLinear.addView(diagramButton);
                // lineContLinear.addView(operationButton);
 
             }

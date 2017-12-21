@@ -30,7 +30,6 @@ import com.kamelong.aodia.EditTimeTable.LineTrainTimeFragment
 import com.kamelong.aodia.detabase.DBHelper
 import com.kamelong.aodia.diadataOld.AOdiaOperation
 import com.kamelong.aodia.diagram.DiagramFragment
-import com.kamelong.aodia.diagram.TrainSelectDiagramFragment
 import com.kamelong.aodia.editStation.EditStationFragment
 import com.kamelong.aodia.menu.MenuFragment
 import com.kamelong.aodia.diadata.AOdiaDiaFile
@@ -738,37 +737,6 @@ class AOdiaActivity : AppCompatActivity() {
 
     }
 
-    fun openSelectTrainTimeTable(fileNum: Int, diaNum: Int, direct: Int, listener: TrainSelectListener) {
-        try {
-            val fragment = TimeTableFragment()
-            val args = Bundle()
-            args.putInt("fileNum", fileNum)
-            args.putInt("diaN", diaNum)
-            args.putInt("direct", direct)
-            fragment.arguments = args
-            openFragment(fragment)
-//            fragment.setTrainSelectListener(listener)
-        } catch (e: Exception) {
-            SdLog.log(e)
-        }
-
-    }
-
-    fun openSelectDiagram(fileNum: Int, diaNum: Int, listener: TrainSelectListener, operation: AOdiaOperation) {
-        try {
-            val fragment = TrainSelectDiagramFragment()
-            val args = Bundle()
-            args.putInt("fileNum", fileNum)
-            args.putInt("diaN", diaNum)
-            fragment.arguments = args
-            openFragment(fragment)
-            fragment.setOnTrainSelectListener(listener, operation)
-        } catch (e: Exception) {
-            SdLog.log(e)
-        }
-
-    }
-
     fun saveFile() {
 /*        if (!payment!!.buyCheck("001")) {
             payment!!.buy("001")
@@ -782,19 +750,13 @@ class AOdiaActivity : AppCompatActivity() {
             val dataStr = SimpleDateFormat("MMddHHmmss").format(date)
             val outFile = File(saveFile.filePath.substring(0, saveFile.filePath.lastIndexOf(".")) +"-" +dataStr+".oud2")
             saveFile.save(outFile)
-//            val dialog = ProgressDialog()
-//            dialog.show(fragmentManager, "test")
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
             drawer.closeDrawer(GravityCompat.START)
 
         } catch (e: Exception) {
             SdLog.log(e)
             Toast.makeText(this, "ファイルを保存時にエラーが発生しました。", Toast.LENGTH_LONG).show()
-
-
         }
-
-
     }
 
 
