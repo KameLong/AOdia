@@ -69,7 +69,7 @@ class TrainNameView(context: Context, val train:AOdiaTrain?, override val xsize:
         if(c.toInt()<256){
             return true
         }
-        val list= arrayOf('「','」','（','）')
+        val list= arrayOf('「','」','（','）','ー')
         for(char in list){
             if(c==char)return true
         }

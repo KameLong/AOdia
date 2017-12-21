@@ -18,17 +18,16 @@
         android:enabled="true"
         >
         <EditTextPreference
-            android:key="lineTimetableWidth"
-            android:title="路線時刻表の列車の幅：？文字（半角）"
-            android:inputType="number"
-            android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
             android:defaultValue="4"
-            android:maxLength="1">
-        </EditTextPreference>
+            android:inputType="number"
+            android:key="lineTimetableWidth"
+            android:maxLength="1"
+            android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
+            android:title="路線時刻表の列車の幅：？文字（半角）"></EditTextPreference>
         <CheckBoxPreference
             android:key="secondSystem"
-            android:title="秒単位時刻"
-            android:summary="時刻表が秒単位になります" />
+            android:summary="時刻表が秒単位になります"
+            android:title="秒単位時刻" />
         <CheckBoxPreference
             android:key="showPass"
             android:title="駅通過時刻"

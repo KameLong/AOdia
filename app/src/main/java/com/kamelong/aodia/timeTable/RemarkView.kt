@@ -45,7 +45,7 @@ class RemarkView (context: Context, val train: AOdiaTrain?, override val xsize: 
                         canvas.restore()
 
                     }else{
-                        canvas.drawText(char.toString(),width/2-textSize*(nameList.size/2f-line),textSize*(1.0f+0.5f*i), textPaint)
+                        canvas.drawText(char.toString(),width/2+textSize*(nameList.size/2f-line),textSize*(1.0f+0.5f*i), textPaint)
                     }
                     i+=if(isEng(char)){1}else{2}
                 }
@@ -59,7 +59,7 @@ class RemarkView (context: Context, val train: AOdiaTrain?, override val xsize: 
         if(c.toInt()<256){
             return true
         }
-        val list= arrayOf('「','」','（','）')
+        val list= arrayOf('「','」','（','）','ー','＝')
         for(char in list){
             if(c==char)return true
         }

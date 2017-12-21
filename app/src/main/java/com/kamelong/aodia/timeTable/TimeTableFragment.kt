@@ -12,6 +12,7 @@ import com.kamelong.aodia.diadata.AOdiaDiaFile
  * Created by kame on 2017/12/09.
  */
 open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
+
     override var fragment=this as Fragment
     override lateinit var diaFile: AOdiaDiaFile
     override var aodiaActivity: AOdiaActivity
@@ -29,6 +30,17 @@ open class TimeTableFragment:Fragment(),AOdiaFragmentInterface{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
+        val minTime=Array(diaFile.stationNum,{0})
+        for(i in 0 until diaFile.stationNum){
+            for(d in 0 until diaFile.getDiaNum()){
+                if(diaFile.getDiaName(d)=="基準運転時分"){
+                    minTime[i]=0
+                }
+            }
+        }
+
+
+
         fragmentContainer=LinearLayout(activity)
         try {
             aodiaActivity = getActivity() as AOdiaActivity

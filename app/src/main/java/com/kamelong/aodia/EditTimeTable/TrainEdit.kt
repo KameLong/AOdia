@@ -183,7 +183,7 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
         trainBackUpStackFoward.clear()
         editStationTime?.moveTime(-value)
         if(movingDownFrag){
-            for(i in focusPoint/3+1 until diaFile.stationNum){
+            for(i in if(trainEditFragment.diaIndex==0){focusPoint/3+1 until diaFile.stationNum}else{focusPoint/3-1 downTo 0}){
                 if(train?.existArriveTime(i)?:false){
                     train?.setArrivalTime(i,(train!!.getArrivalTime(i)+86400-value)%86400)
                 }
@@ -200,7 +200,7 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
             }
         }
         if(movingUpFrag){
-            for(i in focusPoint/3-1 downTo 0){
+            for(i in if(trainEditFragment.diaIndex==1){focusPoint/3+1 until diaFile.stationNum}else{focusPoint/3-1 downTo 0}){
                 if(train?.existArriveTime(i)?:false){
                     train?.setArrivalTime(i,(train!!.getArrivalTime(i)+86400-value)%86400)
                 }
@@ -375,12 +375,12 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
      * 列車を追加する
      */
     fun addTrain(train:AOdiaTrain):Int{
-        focusTrain++
 
-        val history=TrainHistory(-1,focusTrain,-1,null)
+        val history=TrainHistory(-1,focusTrain+1,-1,null)
         trainBackUpStack.addLast(history)
-        diaFile.addTrain(trainEditFragment.diaIndex, trainEditFragment.direction,focusTrain,train)
-        trainEditFragment.trainLinear.addView(TrainViewGroup(trainEditFragment.activity, train),focusTrain)
+        diaFile.addTrain(trainEditFragment.diaIndex, trainEditFragment.direction,focusTrain+1,train)
+        trainEditFragment.addTrain( train,focusTrain+1)
+        focusTrain++
         return focusTrain
     }
     /**
@@ -390,7 +390,7 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
         val history=TrainHistory(-1,focusTrain,-1,null)
         trainBackUpStack.addLast(history)
         diaFile.addTrain(trainEditFragment.diaIndex, trainEditFragment.direction,focusTrain,train)
-        trainEditFragment.trainLinear.addView(TrainViewGroup(trainEditFragment.activity, train),focusTrain)
+        trainEditFragment.addTrain( train,focusTrain)
         focusTrain++
         return focusTrain-1
     }
@@ -406,6 +406,7 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
         return index
     }
     fun splitTrain(){
+        if(focusTrain<0)return
         val train=trainEditFragment.getTrain(focusTrain).clone(true)
         addTrain(train)
         focusTrain--
@@ -420,12 +421,14 @@ class TrainEdit (val trainEditFragment: LineTrainTimeFragment,val direction:Int)
         if(train.endStation!=focusPoint/3){
             return
         }
+        val history=TrainHistory(-1,-1,focusTrain,train.clone(true))
+        trainBackUpStack.addLast(history)
         for(i in focusTrain until trainEditFragment.trainLinear.childCount){
             val train2=trainEditFragment.getTrain(i);
             if(train2.startStation==focusPoint/3){
                 if(train2.type==train.type){
                     train.setDepartureTime(focusPoint/3,train2.getDepartureTime(focusPoint/3))
-                    for(j in focusPoint/3 until diaFile.stationNum){
+                    for(j in if(trainEditFragment.direction==0){focusPoint/3+1 until diaFile.stationNum}else{focusPoint/3-1 downTo 0}){
                         train.setArrivalTime(j,train2.getArrivalTime(j))
                         train.setDepartureTime(j,train2.getDepartureTime(j))
                         train.setStopType(j,train2.getStopType(j))

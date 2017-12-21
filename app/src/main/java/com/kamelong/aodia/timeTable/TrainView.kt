@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.preference.PreferenceManager
 import com.kamelong.OuDia2nd.Train
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.diadata.AOdiaStation
@@ -17,6 +18,8 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
     var prefer=context.getSharedPreferences("AOdia-LineTrainTime", Context.MODE_PRIVATE)
     var editAllTime=prefer.getBoolean("editAllTime",false)
     var editAllStop=prefer.getBoolean("editAllStop",false)
+    var secondsFrag=PreferenceManager.getDefaultSharedPreferences(context).getBoolean("secondSystem",false)
+
 
     /**
      * 駅数の３倍がmax
@@ -85,8 +88,8 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         } else if (!editAllTime&&((viewStyle and 0b0001) !=0b0001) &&train.getDepartureTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getDepartureTime(i),textPaint)
                         } else {
-                            if(i>0){
-                                when(train.getStopType(i-1)){
+                            if(if(direct==0){i>0}else{i<diaFile.stationNum-1}){
+                                when(train.getStopType(i +if(direct==0){-1}else{1})){
                                     Train.STOP_TYPE_NOSERVICE ->
                                         drawNoService(canvas, linePos, textPaint)
                                     Train.STOP_TYPE_NOVIA->
@@ -157,8 +160,8 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         } else if (((viewStyle and 0b0001) !=0b0001) &&train.getArrivalTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getArrivalTime(i),textPaint)
                         } else {
-                            if(i<stationList.size-1){
-                                when(train.getStopType(i+1)){
+                            if(if(direct==1){i>0}else{i<diaFile.stationNum-1}){
+                                when(train.getStopType(i +if(direct==1){-1}else{1})){
                                     Train.STOP_TYPE_NOSERVICE ->
                                         drawNoService(canvas, linePos, textPaint)
                                     Train.STOP_TYPE_NOVIA->
@@ -243,7 +246,14 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
     fun drawTime(canvas:Canvas,y:Float,time:Int,paint: Paint){
         val hh=(time/3600)%24
         val mm=(time/60)%60
-        drawTextCenter(canvas,hh.toString()+String.format("%02d",mm),y, textPaint)
+        if(secondsFrag){
+            val ss=time%60
+            drawTextCenter(canvas,hh.toString()+String.format("%02d",mm)+"-"+String.format("%02d",ss),y, paint)
+
+        }else{
+            drawTextCenter(canvas,hh.toString()+String.format("%02d",mm),y, paint)
+
+        }
     }
     fun drawStop(canvas: Canvas,i:Int,y:Float,paint: Paint){
 

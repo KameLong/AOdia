@@ -3,7 +3,6 @@ package com.kamelong.OuDia2nd
 
 import android.app.Activity
 import com.kamelong.aodia.diadata.*
-import com.kamelong.aodia.editStation.AOdiaStationHistory
 import com.kamelong.tool.Color
 import com.kamelong.tool.Font
 import com.kamelong.tool.ShiftJISBufferedReader
@@ -24,6 +23,7 @@ import java.util.ArrayList
  * @author KameLong
  */
 class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
+
     override fun getNewTrain(direction:Int): AOdiaTrain {
         val t=Train(this)
         t.direction=direction
@@ -125,7 +125,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
     var stationFont = Font.OUDIA_DEFAULT
     var diaTimeFont = Font.OUDIA_DEFAULT
     var diaTextFont = Font.OUDIA_DEFAULT
-    var commnetFont = Font.OUDIA_DEFAULT
+    var commentFont = Font.OUDIA_DEFAULT
     var diaTextColor = Color()
     var backGroundColor = Color()
     var trainColor = Color()
@@ -146,6 +146,10 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
      */
     override val trainTypeNum: Int
         get() = trainType.size
+
+    /**
+     *
+     */
 
     override fun addTrainType(value: AOdiaTrainType) {
         trainType.add(value as TrainType)
@@ -434,11 +438,11 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
                     diaTextFont.itaric = line.contains("Itaric")
                 }
                 if (title == "CommentFont") {
-                    commnetFont = Font()
-                    commnetFont.height = Integer.parseInt(line.split('=',2).split(';',0))
-                    commnetFont.name = line.split('=',3).split(';',0)
-                    commnetFont.bold = line.contains("Bold")
-                    commnetFont.itaric = line.contains("Itaric")
+                    commentFont = Font()
+                    commentFont.height = Integer.parseInt(line.split('=',2).split(';',0))
+                    commentFont.name = line.split('=',3).split(';',0)
+                    commentFont.bold = line.contains("Bold")
+                    commentFont.itaric = line.contains("Itaric")
                 }
                 if (title == "DiaMojiColor") {
                     diaTextColor.setOuDiaColor(oudiaSplit(line,1))
@@ -529,7 +533,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
             a.append("\r\nDiaRessyaFont=")
             a.append(diaTextFont.font2OudiaFontTxt())
             a.append("\r\nCommentFont=")
-            a.append(commnetFont.font2OudiaFontTxt())
+            a.append(commentFont.font2OudiaFontTxt())
 
             a.append("\r\nDiaMojiColor=")
             a.append(diaTextColor.oudiaString)

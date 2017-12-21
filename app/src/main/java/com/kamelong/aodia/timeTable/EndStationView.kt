@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.preference.PreferenceManager
 import com.kamelong.aodia.diadata.AOdiaTrain
 
 
@@ -11,6 +12,7 @@ import com.kamelong.aodia.diadata.AOdiaTrain
  * 終着駅作業を表示するView
  */
 class EndStationView(context: Context, val train: AOdiaTrain?, override val xsize: Int) :KLView(context) {
+    var secondsFrag= PreferenceManager.getDefaultSharedPreferences(context).getBoolean("secondSystem",false)
     override val ysize:Int
         get()= (textSize*2.25).toInt()
     init{
@@ -45,7 +47,13 @@ class EndStationView(context: Context, val train: AOdiaTrain?, override val xsiz
     fun drawTime(canvas:Canvas,y:Float,time:Int,paint: Paint){
         val hh=(time/3600)%24
         val mm=(time/60)%60
-        drawTextCenter(canvas,hh.toString()+String.format("%02d",mm),y,paint)
+        if(secondsFrag){
+            val ss=time%60
+            drawTextCenter(canvas, hh.toString() + String.format("%02d", mm)+"-"+String.format("%02d", ss), y, paint)
+
+        }else {
+            drawTextCenter(canvas, hh.toString() + String.format("%02d", mm), y, paint)
+        }
     }
 
 }

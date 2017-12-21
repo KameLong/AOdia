@@ -353,7 +353,6 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
         }
         fragmentContainer.findViewById<Button>(R.id.buttonC5).setOnClickListener{
             trainEdit.editStationTime?.addNumber(-1)
-            moveNext()
         }
         fragmentContainer.findViewById<Button>(R.id.buttonC6).setOnClickListener{
             trainEdit.forward()
@@ -478,5 +477,12 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
             trainEdit.moveDown()
         }
     }
+    fun addTrain(train:AOdiaTrain,focusTrain:Int){
+        val viewGroup=TrainViewGroup(activity,train)
+        trainLinear.addView(viewGroup,focusTrain)
+        viewGroup.scrollTo(stationView.scroll)
+
+    }
+
 
 }

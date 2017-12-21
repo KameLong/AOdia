@@ -3,6 +3,7 @@ package com.kamelong.aodia.timeTable
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.preference.PreferenceManager
 import android.view.View
 import android.view.ViewGroup
 import com.kamelong.JPTI.Station
@@ -10,6 +11,8 @@ import com.kamelong.aodia.diadata.AOdiaTrain
 
 class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context){
 
+    var secondsFrag=PreferenceManager.getDefaultSharedPreferences(context).getBoolean("secondSystem",false)
+    var trainViewSize=Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(context).getString("lineTimetableWidth","4"))+1
     var train=newTrain
         set(value){
             field=value
@@ -30,7 +33,7 @@ class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context)
 
         }
     val diaFile=train.diaFile
-    var xSize=(KLView.textSize*2.5).toInt()
+    var xSize=(KLView.textSize*(if(secondsFrag){1.5}else{0.0}+trainViewSize/2.0)).toInt()
     var numberView=TrainNumberView(context,train,xSize)
     var nameView=TrainNameView(context,train,xSize)
     var startView=StartStationView(context,train,xSize)
@@ -118,6 +121,7 @@ class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context)
     }
 
     override fun invalidate() {
+        numberView.invalidate()
         trainView.invalidate()
         startView.invalidate()
         endView.invalidate()
