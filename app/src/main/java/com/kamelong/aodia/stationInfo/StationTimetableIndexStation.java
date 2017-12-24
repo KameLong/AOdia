@@ -3,6 +3,7 @@ package com.kamelong.aodia.stationInfo;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
@@ -33,10 +34,11 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimetableIndexStation extends LinearLayout {
-    public StationTimetableIndexStation(Context context, AOdiaDiaFile diaFile, int fileNum, int stationNum){
+    public StationTimetableIndexStation(Context context, AOdiaDiaFile diaFile,int fileNum,int stationNum){
         super(context);
         try{
             LayoutInflater.from(context).inflate(R.layout.station_timetable_index_onestation, this);
+            ((TextView)findViewById(R.id.stationName)).setText(diaFile.getStation(stationNum).getName());
             LinearLayout diaList=(LinearLayout)findViewById(R.id.diaList);
             for(int i=0;i<diaFile.getDiaNum();i++){
                 StationTimetableIndexDia stationTimetableIndexDia=new StationTimetableIndexDia(context,diaFile,fileNum,stationNum,i);

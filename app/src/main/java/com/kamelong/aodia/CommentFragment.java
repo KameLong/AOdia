@@ -45,7 +45,7 @@ public class CommentFragment extends AOdiaFragment {
 
             Bundle bundle = getArguments();
             fileNum=bundle.getInt("fileNum");
-            setDiaFile(getAOdiaActivity().getDiaFiles().get(fileNum));
+            diaFile=getAOdiaActivity().getDiaFiles().get(fileNum);
         }catch(Exception e){
             Toast.makeText(getAodiaActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
             SdLog.log(e);
@@ -58,6 +58,7 @@ public class CommentFragment extends AOdiaFragment {
             text.setTextColor(Color.BLACK);
             scrollView.addView(text);
             LinearLayout.LayoutParams mlp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            text.setText(diaFile.getComment());
            mlp.setMargins(10, 10, 10, 10);
             main.addView(scrollView,mlp);
         }catch(Exception e){
@@ -74,7 +75,7 @@ public class CommentFragment extends AOdiaFragment {
     @Override
     public String fragmentName(){
         try {
-            return "";
+            return "コメント";
         }catch(Exception e){
             SdLog.log(e);
             Toast.makeText(getAodiaActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();

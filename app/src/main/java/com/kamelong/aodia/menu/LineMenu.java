@@ -137,7 +137,7 @@ public class LineMenu  extends LinearLayout{
                     ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
-//            lineContLinear.addView(timetable);
+            lineContLinear.addView(timetable);
 
 
             for (int i = 0; i < diaFile.getDiaNum(); i++) {

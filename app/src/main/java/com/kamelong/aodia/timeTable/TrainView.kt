@@ -80,9 +80,9 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                 }
                 linePos+=textSize
                 when(train.getStopType(i)) {
-                    Train.STOP_TYPE_NOSERVICE ->
+                    AOdiaTrain.STOP_TYPE_NOSERVICE ->
                         drawNoService(canvas, linePos, textPaint)
-                    Train.STOP_TYPE_STOP ->
+                    AOdiaTrain.STOP_TYPE_STOP ->
                         if (train.getArrivalTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getArrivalTime(i),textPaint)
                         } else if (!editAllTime&&((viewStyle and 0b0001) !=0b0001) &&train.getDepartureTime(i) >= 0) {
@@ -90,9 +90,9 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         } else {
                             if(if(direct==0){i>0}else{i<diaFile.stationNum-1}){
                                 when(train.getStopType(i +if(direct==0){-1}else{1})){
-                                    Train.STOP_TYPE_NOSERVICE ->
+                                    AOdiaTrain.STOP_TYPE_NOSERVICE ->
                                         drawNoService(canvas, linePos, textPaint)
-                                    Train.STOP_TYPE_NOVIA->
+                                    AOdiaTrain.STOP_TYPE_NOVIA->
                                         drawNoVia(canvas, linePos, textPaint)
                                     else->
                                         drawTextCenter(canvas, "○", linePos, textPaint)
@@ -101,7 +101,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                                 drawTextCenter(canvas, "○", linePos, textPaint)
                             }
                         }
-                    Train.STOP_TYPE_PASS->
+                    AOdiaTrain.STOP_TYPE_PASS->
                         if(showPassTime){
                             if (train.getArrivalTime(i) >= 0) {
                                 textPaint.color= Color.GRAY
@@ -117,7 +117,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         }else{
                             drawPass(canvas,linePos, textPaint)
                         }
-                    Train.STOP_TYPE_NOVIA->
+                    AOdiaTrain.STOP_TYPE_NOVIA->
                         drawNoVia(canvas, linePos, textPaint)
 
                 }
@@ -152,9 +152,9 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                 linePos+=textSize
 
                 when(train.getStopType(i)) {
-                    Train.STOP_TYPE_NOSERVICE ->
+                    AOdiaTrain.STOP_TYPE_NOSERVICE ->
                         drawNoService(canvas, linePos, textPaint)
-                    Train.STOP_TYPE_STOP ->
+                    AOdiaTrain.STOP_TYPE_STOP ->
                         if (train.getDepartureTime(i) >= 0) {
                             drawTime(canvas, linePos, train.getDepartureTime(i),textPaint)
                         } else if (((viewStyle and 0b0001) !=0b0001) &&train.getArrivalTime(i) >= 0) {
@@ -162,9 +162,9 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         } else {
                             if(if(direct==1){i>0}else{i<diaFile.stationNum-1}){
                                 when(train.getStopType(i +if(direct==1){-1}else{1})){
-                                    Train.STOP_TYPE_NOSERVICE ->
+                                    AOdiaTrain.STOP_TYPE_NOSERVICE ->
                                         drawNoService(canvas, linePos, textPaint)
-                                    Train.STOP_TYPE_NOVIA->
+                                    AOdiaTrain.STOP_TYPE_NOVIA->
                                         drawNoVia(canvas, linePos, textPaint)
                                     else->
                                         drawTextCenter(canvas, "○", linePos, textPaint)
@@ -173,7 +173,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                                 drawTextCenter(canvas, "○", linePos, textPaint)
                             }
                         }
-                    Train.STOP_TYPE_PASS->
+                    AOdiaTrain.STOP_TYPE_PASS->
                         if(showPassTime){
                             if (train.getDepartureTime(i) >= 0) {
                                 textPaint.color= Color.GRAY
@@ -189,7 +189,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                         }else{
                             drawPass(canvas,linePos, textPaint)
                         }
-                    Train.STOP_TYPE_NOVIA->
+                    AOdiaTrain.STOP_TYPE_NOVIA->
                         drawNoVia(canvas, linePos, textPaint)
 
                 }

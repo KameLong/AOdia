@@ -100,8 +100,19 @@ public class DiagramView extends KLView {
     private float defaultLineSize=1;
     private final int yshift=30;
     private ArrayList<Integer>stationTime=new ArrayList<>();
-    private DiagramView(Context context){
+    DiagramView(Context context,DiagramSetting s,AOdiaDiaFile diaFile,int diaNum){
         super(context);
+        setting=s;
+        this.diaFile=diaFile;
+        stationTime=diaFile.getStationTime();
+        this.diaNum=diaNum;
+        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
+        onlySolid=spf.getBoolean("onlySolid",false);
+
+
+
+        getDensity();
+        makeDiagramPath();
     }
 
     /**
@@ -114,30 +125,135 @@ public class DiagramView extends KLView {
     /**
      * diagramPathを作成する
      */
-    private void makeDiagramPath(){
+    private void makeDiagramPath() {
+        for (int direct = 0; direct < 2; direct++) {
+            stopMark[direct]=new ArrayList<Integer>();
+            diagramPath[direct]=new ArrayList<>();
+            trainList[direct]=new ArrayList<>();
 
-    }
-    DiagramView(Context context,DiagramSetting s, AOdiaDiaFile dia,int num){
-        this(context);
-        try {
-            setting=s;
-            diaFile=dia;
-            stationTime=diaFile.getStationTime();
-            diaNum=num;
+            for (int i = 0; i < diaFile.getTrainNum(diaNum, direct); i++) {
+                AOdiaTrain train = diaFile.getTrain(diaNum, direct, i);
+                if (train.getStartStation() < 0) {
+                    continue;
+                }
+                ArrayList<Integer> trainPath = new ArrayList<Integer>();
+                trainPath.add(convertTime(train.getDepartureTime(train.getStartStation(),diagramStartTime)));
+                trainPath.add(stationTime.get(train.getStartStation()));
+                boolean drawable = true;
+                for (int j = train.getStartStation() + (1 - direct * 2); (1 - direct * 2) * j < (1 - direct * 2) * (train.getEndStation() + (1 - direct * 2)); j = j + (1 - direct * 2)) {
+                    if (drawable && train.getStopType(j) == AOdiaTrain.Companion.getSTOP_TYPE_NOSERVICE()) {
+                        //描画打ち切り
+                        drawable = false;
+                        trainPath.add(trainPath.get(trainPath.size() - 2));
+                        trainPath.add(trainPath.get(trainPath.size() - 2));
+                        continue;
+                    }
+                    if (drawable && train.getStopType(j) == AOdiaTrain.Companion.getSTOP_TYPE_NOVIA()) {
+                        //描画打ち切り
+                        drawable = false;
+                        trainPath.add(trainPath.get(trainPath.size() - 2));
+                        trainPath.add(trainPath.get(trainPath.size() - 2));
+                        continue;
+                    }
 
-            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
-            onlySolid=spf.getBoolean("onlySolid",false);
+                    if (train.getADTime(j,diagramStartTime) >= 0) {
+                        //時刻が存在するとき
+                        if (train.getDepartureTime(j - (1 - 2 * direct),diagramStartTime) >= 0) {
+                            //一つ前の駅にも発時刻が存在する場合　最小所要時間を考慮
+                            if (train.getArrivalTime(j,diagramStartTime) < 0 &&
+                                    Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 60 < train.getADTime(j,diagramStartTime) - train.getDATime(j - (1 - 2 * direct),diagramStartTime)) {
+                                //最小所要時間以上かかっているので最小所要時間を適用
+                                trainPath.add(convertTime(train.getDepartureTime(j - (1 - 2 * direct),diagramStartTime) + Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct)) + 30)));
+                            } else {
+                                //最小所要時間を採用しないとき
+                                trainPath.add(convertTime(train.getADTime(j,diagramStartTime)));
+                            }
+                        } else {
+                            //一つ前が通過駅の時など
+                            trainPath.add(convertTime(train.getADTime(j,diagramStartTime)));
+                        }
+                        trainPath.add(stationTime.get(j));
+                        if (drawable) {
+                            //現段階で線描画途中の時は、終端点を追加
+                            trainPath.add(trainPath.get(trainPath.size() - 2));
+                            trainPath.add(trainPath.get(trainPath.size() - 2));
+                        }
+                        drawable = true;
+                        try {
+                            //もしパスが12時間以上遡るのなら、日付をまたいでいると判断する
+                            if (trainPath.get(trainPath.size() - 4) - trainPath.get(trainPath.size() - 6) < -60 * 60 * 12) {
+                                trainPath.set(trainPath.size() - 4, trainPath.get(trainPath.size() - 4) + 60 * 60 * 24);
+                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6) - 60 * 60 * 24);//x
+                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6));//y
+                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 2));//x
+                                trainPath.add(trainPath.size() - 2, trainPath.get(trainPath.size() - 6));//y
+                            }
+                        } catch (Exception e) {
+                            //no problem
+                        }
+                    } else {
+                        if (drawable && train.getStopType(j) == AOdiaTrain.Companion.getSTOP_TYPE_PASS() && train.getStopType(j + (1 - 2 * direct)) == AOdiaTrain.Companion.getSTOP_TYPE_NOVIA() && train.getADTime(j,diagramStartTime) < 0) {
 
+                            if (train.predictTime(j,direct) >= 0) {
+                                //この次の駅から経由なしになるとき
+                                trainPath.add(convertTime(train.predictTime(j,direct)));
+                                trainPath.add(stationTime.get(j));
+                                drawable = false;
+                            }
+                        }
+                        if (!drawable && train.getStopType(j) == AOdiaTrain.Companion.getSTOP_TYPE_PASS() && train.getStopType(j - (1 - 2 * direct)) == AOdiaTrain.Companion.getSTOP_TYPE_NOVIA() && train.getADTime(j,diagramStartTime) < 0) {
+                            if (train.predictTime(j,direct) >= 0) {
+                                //この前の駅まで経由なしのとき
+                                trainPath.add(convertTime(train.predictTime(j,direct)));
+                                trainPath.add(stationTime.get(j));
+                                drawable = true;
+                            }
+                        }
+                    } if(train.getDepartureTime(j,diagramStartTime)>=0){
+                        //停車時間を描画する
+                        trainPath.add(convertTime(train.getDepartureTime(j,diagramStartTime)));
+                        trainPath.add( stationTime.get(j) );
+                        if(drawable) {
+                            trainPath.add(trainPath.get(trainPath.size()-2));
+                            trainPath.add(trainPath.get(trainPath.size()-2));
+                            try {
+                                //もしパスが12時間以上遡るのなら、日付をまたいでいると判断する
+                                if (trainPath.get(trainPath.size() - 4) - trainPath.get(trainPath.size() - 6) < -60 * 60 * 12) {
+                                    trainPath.set(trainPath.size() - 4, trainPath.get(trainPath.size() - 4) + 60 * 60 * 24);
+                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 6)- 60 * 60 * 24);//x
+                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 4));//y
+                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 2));//x
+                                    trainPath.add(trainPath.size()-2,trainPath.get(trainPath.size() - 4));//y
+                                }
+                            }catch(Exception e){
+                                //no probrem
+                            }
+                        }
+                        try {
+                            if (train.getStopType(j) == 1 &&
+                                    train.getTrainType().getShowStop() &&
+                                    j!=train.getStartStation()&&
+                                    j!=train.getEndStation()&&
+                                    trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
+                                //始発終着駅を除き　停車マークを用意する
+                                stopMark[direct].add(trainPath.get(trainPath.size() - 4));
+                                stopMark[direct].add(trainPath.get(trainPath.size() - 3));
+                            }
+                        }catch(Exception e){
+                            SdLog.log(e);
+                        }
+                    }
+                }
+                if(drawable) {
+                    trainPath.add(trainPath.get(trainPath.size() - 2));
+                    trainPath.add(trainPath.get(trainPath.size() - 2));
 
-            getDensity();
-            makeDiagramPath();
+                }
+                diagramPath[direct].add(trainPath);
+                trainList[direct].add(train);
 
-
-
-        } catch(Exception e){
-            SdLog.log(e);
+            }
         }
-
     }
 
     /**
@@ -213,11 +329,11 @@ public class DiagramView extends KLView {
                             Companion.getTextPaint().setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
                             Companion.getTextPaint().setAlpha(255);
                             for (int j = 0; j < diaFile.getStationNum(); j++) {
-                                if (train.getArrivalTime(j)>=0) {
-                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getArrivalTime(j) / 60) % 60), convertTime(train.getArrivalTime(j)) * scaleX / 60, stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (-0.2f + direct * 1.2f)+yshift, Companion.getTextPaint());
+                                if (train.getArrivalTime(j,diagramStartTime)>=0) {
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getArrivalTime(j,diagramStartTime) / 60) % 60), convertTime(train.getArrivalTime(j,diagramStartTime)) * scaleX / 60, stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (-0.2f + direct * 1.2f)+yshift, Companion.getTextPaint());
                                 }
-                                if (train.getDepartureTime(j)>=0) {
-                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getDepartureTime(j) / 60) % 60), convertTime(train.getDepartureTime(j)) * scaleX / 60 - Companion.getTextPaint().getTextSize(), stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (1 - direct * 1.2f)+yshift, Companion.getTextPaint());
+                                if (train.getDepartureTime(j,diagramStartTime)>=0) {
+                                    canvas.drawText(String.format(Locale.JAPAN,"%02d", (train.getDepartureTime(j,diagramStartTime) / 60) % 60), convertTime(train.getDepartureTime(j,diagramStartTime)) * scaleX / 60 - Companion.getTextPaint().getTextSize(), stationTime.get(j) * scaleY / 60 + Companion.getTextPaint().getTextSize() * (1 - direct * 1.2f)+yshift, Companion.getTextPaint());
 
                                 }
                             }

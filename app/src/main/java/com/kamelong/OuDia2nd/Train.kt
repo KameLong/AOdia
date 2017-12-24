@@ -41,13 +41,6 @@ class Train :AOdiaTrain{
         setArrivalTime(station,value.toLong())
     }
 
-    override fun getDepartureTime(station: Int, startTime: Int): Int {
-        return (getDepartureTime(station)-startTime)%86400+startTime
-    }
-
-    override fun getArrivalTime(station: Int, startTime: Int): Int {
-        return (getArrivalTime(station)-startTime)%86400+startTime
-    }
 
 
 
@@ -61,7 +54,7 @@ class Train :AOdiaTrain{
     override val startStation: Int
         get() {
             for(i in if(direction==0){0 until stationNum}else{stationNum-1 downTo 0}){
-                if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
+                if(getStopType(i)== AOdiaTrain.STOP_TYPE_STOP||getStopType(i)== AOdiaTrain.STOP_TYPE_PASS){
                     return i
                 }
             }
@@ -79,7 +72,7 @@ class Train :AOdiaTrain{
     override val endStation: Int
         get(){
             for(i in if(direction==1){0 until stationNum}else{stationNum-1 downTo 0}){
-                if(getStopType(i)== STOP_TYPE_STOP||getStopType(i)== STOP_TYPE_PASS){
+                if(getStopType(i)==AOdiaTrain. STOP_TYPE_STOP||getStopType(i)== AOdiaTrain.STOP_TYPE_PASS){
                     return i
                 }
             }
@@ -361,7 +354,7 @@ class Train :AOdiaTrain{
             return
         }
         if (value == 8.toLong() || value == 9.toLong()) {
-            value = STOP_TYPE_STOP.toLong()
+            value = AOdiaTrain.STOP_TYPE_STOP.toLong()
         }
         value = value shl 48
         time[station] = time[station] and 0xFF0FFFFFFFFFFFFL
@@ -732,7 +725,7 @@ class Train :AOdiaTrain{
             val timeString = str.split(",")
             for (i in timeString.indices) {
                 if (timeString[i].length == 0) {
-                    setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Train.STOP_TYPE_NOSERVICE)
+                    setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), AOdiaTrain.STOP_TYPE_NOSERVICE)
                 } else {
                     if (!timeString[i].contains(";")) {
                         setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), Integer.parseInt(timeString[i]))
@@ -823,15 +816,7 @@ class Train :AOdiaTrain{
     }
 
 
-    companion object {
-        /**
-         * 駅扱いの定数。long timeの9~12bitがstop typeに対応する。
-         */
-        val STOP_TYPE_STOP = 1
-        val STOP_TYPE_PASS = 2
-        val STOP_TYPE_NOSERVICE = 0
-        val STOP_TYPE_NOVIA = 3
-    }
+
     fun oudiaTime2Int(str:String):Int{
         var h=0
         var m=0

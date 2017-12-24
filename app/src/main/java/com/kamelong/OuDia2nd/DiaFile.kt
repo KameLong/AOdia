@@ -22,8 +22,8 @@ import java.util.ArrayList
  *
  * @author KameLong
  */
-class DiaFile(override var activity: Activity, override var menuOpen: Boolean) : AOdiaDiaFile {
-
+class DiaFile(override var activity: Activity, override var menuOpen: Boolean ) : AOdiaDiaFile {
+    override var predictTime= ArrayList<Int>()
     override fun getNewTrain(direction:Int): AOdiaTrain {
         val t=Train(this)
         t.direction=direction
@@ -81,7 +81,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
     /**
      * 路線名.
      */
-    var lineName = ""
+    override var lineName = ""
     /**
      * ダイヤ名。
      * 複数のダイヤを保持することができるためArrayListを用いる。
@@ -111,7 +111,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean) :
      * oudiaデータには路線ごとにコメントがついている。
      * ダイヤごとにコメントをつけたい場合はArrayListに拡張しないといけない。
      */
-    var comment = ""
+    override var comment = ""
     /**
      * ダイヤグラム起点時刻。
      */

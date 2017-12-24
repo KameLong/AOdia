@@ -22,8 +22,6 @@ import android.widget.Button
 import android.widget.Toast
 
 import com.kamelong.OuDia2nd.DiaFile
-import com.kamelong.OuDia2nd.Test
-import com.kamelong.OuDia2nd.Test2
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment
 import com.kamelong.aodia.AOdiaIO.ProgressDialog
 import com.kamelong.aodia.EditTimeTable.LineTrainTimeFragment

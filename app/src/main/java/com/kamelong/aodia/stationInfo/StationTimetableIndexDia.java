@@ -18,17 +18,14 @@ import com.kamelong.aodia.diadata.AOdiaDiaFile;
  */
 /*
  *     This file is part of AOdia.
-
 AOdia is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
-
  Foobar is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-
  When you want to know about GNU, see <http://www.gnu.org/licenses/>.
  */
 /*
@@ -38,8 +35,8 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimetableIndexDia extends LinearLayout {
-    private AOdiaActivity activity;
-    public StationTimetableIndexDia(Context context, AOdiaDiaFile diaFile, final int fileNum, final int stationNum, final int diaNum){
+    AOdiaActivity activity;
+    public StationTimetableIndexDia(Context context, AOdiaDiaFile diaFile, final int fileNum,final int stationNum, final int diaNum){
         super(context);
         activity=(AOdiaActivity)context;
         try{

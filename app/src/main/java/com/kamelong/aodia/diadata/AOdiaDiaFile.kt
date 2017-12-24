@@ -15,6 +15,8 @@ interface AOdiaDiaFile {
     var activity:Activity
     var filePath:String
     var menuOpen:Boolean
+    var lineName:String
+    var comment:String
     fun getDiaNum():Int
     fun getDiaName(index:Int):String
     fun setDiaName(index:Int,value:String)
@@ -126,5 +128,48 @@ interface AOdiaDiaFile {
         }
         return result
     }
+    var predictTime:ArrayList<Int>
+    fun renewPredictTime(){
+        for(i in 0 until stationNum){
+            predictTime.add(-1)
+        }
+
+        predictTime[0]=0
+        reNewPredictTimeFoward(1)
+    }
+    private fun reNewPredictTimeFoward(i:Int){
+        if(i<=0||i>=stationNum)return
+        if(predictTime[i]>=0)return
+        if(getStation(i).branchStation>i){
+            predictTime[i]=predictTime[i-1]+stationTime(i-1,i)
+            predictTime[getStation(i).branchStation]=predictTime[i]
+            reNewPredictTimeFoward(i+1)
+
+        }else if(getStation(i).branchStation>=0){
+            predictTime[i]=predictTime[getStation(i).branchStation]
+            reNewPredictTimeBack(i-1)
+            reNewPredictTimeFoward(i+1)
+        }else{
+            predictTime[i]=predictTime[i-1]+stationTime(i-1,i)
+        }
+    }
+    private fun reNewPredictTimeBack(i:Int){
+        if(i<0||i>=stationNum-1)return
+        if(predictTime[i]>=0)return
+        if(getStation(i).branchStation>i){
+            predictTime[i]=predictTime[getStation(i).branchStation]
+            reNewPredictTimeFoward(i+1)
+            reNewPredictTimeBack(i-1)
+        }else if(getStation(i).branchStation>=0){
+            predictTime[i]=predictTime[i+1]-stationTime(i,i+1)
+            predictTime[getStation(i).branchStation]=predictTime[i]
+            reNewPredictTimeBack(i-1)
+        }else{
+            predictTime[i]=predictTime[i+1]-stationTime(i,i+1)
+            reNewPredictTimeBack(i-1)
+
+        }
+    }
+
 
 }
