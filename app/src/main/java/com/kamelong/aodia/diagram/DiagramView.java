@@ -92,7 +92,7 @@ public class DiagramView extends KLView {
      *
      * ダイヤグラム画面内を長押しすることで近くにあるダイヤ線の列車が強調表示に切り替わります
      */
-    public ArrayList<AOdiaTrain> focusTrain=new ArrayList<>();
+    public ArrayList<AOdiaTrain> focuTrain=new ArrayList();
     /**
      * これがtrueの時は実線表示のみとなり、点線などは使えなくなる
      */
@@ -307,7 +307,7 @@ public class DiagramView extends KLView {
                     for (int i = 0; i < trainList[direct].size(); i++) {
                         //ダイヤ線色を指定
                         paint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
-                        if (focusTrain.size()>0) {
+                        if (focuTrain.size()==0) {
                             //強調表示の列車があるときは半透明化
                             paint.setAlpha(100);
                         }
@@ -319,7 +319,7 @@ public class DiagramView extends KLView {
                         }
 
                         //強調ダイヤ線時刻描画
-                        if (focusTrain.contains(trainList[direct].get(i))) {
+                        if (focuTrain.contains(trainList[direct].get(i))) {
                             AOdiaTrain train=trainList[direct].get(i);
                             //強調表示の線は半透明ではない
                             paint.setAlpha(255);
@@ -606,7 +606,7 @@ public class DiagramView extends KLView {
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
                     //列車番号を描画
                     Companion.getTextPaint().setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
-                    if(focusTrain.size()==0||focusTrain.contains(trainList[direct].get(i))){
+                    if(focuTrain.contains(trainList[direct].get(i))){
                         Companion.getTextPaint().setAlpha(255);
                     }else{
                         Companion.getTextPaint().setAlpha(100);
@@ -667,7 +667,7 @@ public class DiagramView extends KLView {
     /**
      * フォーカスする列車を選択する。
      * ダイヤグラム画面内を長押しすることで実行する。
-     * @see #focusTrain フォーカスする列車
+     * @see #focuTrain フォーカスする列車
      *
      * これらのパラメーターは、DiagramViewの左上を基準とした座標
      */
@@ -709,23 +709,14 @@ public class DiagramView extends KLView {
                 }}
 
             if(minTrainNum < 0){
-                focusTrain=new ArrayList<>();
+                focuTrain.clear();
                 this.invalidate();
                 return;
             }
-            if(focusTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
-                focusTrain=new ArrayList<>();
+            if(focuTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
+                focuTrain.clear();
             }else {
-
-                if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
-                    focusTrain=new ArrayList<>();
-                    focusTrain.add(trainList[minTrainDirect].get(minTrainNum));
-
-                }else{
-//                    focusTrain = trainList[minTrainDirect].get(minTrainNum).getOperation().getTrain();
-
-                }
-
+                focuTrain=diaFile.getOperationTrains(trainList[minTrainDirect].get(minTrainNum));
             }
             this.invalidate();
 
@@ -920,7 +911,7 @@ public class DiagramView extends KLView {
     /**
      * フォーカスする列車を選択する。
      * ダイヤグラム画面内を長押しすることで実行する。
-     * @see #focusTrain フォーカスする列車
+     * @see #focuTrain フォーカスする列車
      *
      * これらのパラメーターは、DiagramViewの左上を基準とした座標
      */
@@ -964,14 +955,14 @@ public class DiagramView extends KLView {
             if(trainList[minTrainDirect].get(minTrainNum)==null){
                 return;
             }
-            if(focusTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
-                focusTrain.remove(trainList[minTrainDirect].get(minTrainNum));
+            if(focuTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
+                focuTrain.clear();
             }else {
-                if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
-                    focusTrain.add(trainList[minTrainDirect].get(minTrainNum));
-                }else{
-                    SdLog.toast("この列車は既に運用が登録されています");
-                }
+//                if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
+                    focuTrain=diaFile.getOperationTrains(trainList[minTrainDirect].get(minTrainNum));
+ //               }else{
+ //                   SdLog.toast("この列車は既に運用が登録されています");
+  //              }
             }
             this.invalidate();
 
