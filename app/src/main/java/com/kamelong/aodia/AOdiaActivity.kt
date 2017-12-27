@@ -752,12 +752,10 @@ class AOdiaActivity : AppCompatActivity() {
     }
 
     fun saveFile() {
-/*        if (!payment!!.buyCheck("001")) {
+        if (!payment!!.buyCheck("001")) {
             payment!!.buy("001")
             return
         }
-        */
-
         try {
             val saveFile = fragments[fragments.size - 1].diaFile
             FileSaveDialog(this,saveFile).show()

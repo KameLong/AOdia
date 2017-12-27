@@ -33,16 +33,6 @@
             android:title="駅通過時刻"
             android:defaultValue="true"
             android:summary="通過時刻をグレーの文字で表示します" />
-        <CheckBoxPreference
-            android:key="trainName"
-            android:title="列車名"
-            android:defaultValue="true"
-            android:summary="列車名と号数を表示します" />
-        <CheckBoxPreference
-            android:key="remark"
-            android:title="備考"
-            android:defaultValue="true"
-            android:summary="備考を表示します" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="ダイヤグラム設定"

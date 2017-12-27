@@ -598,7 +598,7 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
     }
 
     override fun getTrainNum(dia:Int, direction:Int):Int {
-        return train.get(dia)[direction].size
+        return train[dia][direction].size
     }
 
     override fun getTrain(dia:Int, direction:Int, index:Int):Train {

@@ -29,9 +29,11 @@ class EditDiaDialog(activity: Activity, diaFile: AOdiaDiaFile, diaIndex:Int):Ale
         }
         view.findViewById<Button>(R.id.button16).setOnClickListener {
             diaFile.addNewDiaFile(diaFile.getDiaName(diaIndex)+"-コピー",diaIndex)
+            dismiss()
         }
-        view.findViewById<Button>(R.id.button16).setOnClickListener {
+        view.findViewById<Button>(R.id.button17).setOnClickListener {
             diaFile.addNewDiaFile("新規作成",-1)
+            dismiss()
         }
 
     }
