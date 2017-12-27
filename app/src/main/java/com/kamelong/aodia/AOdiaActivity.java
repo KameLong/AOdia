@@ -847,11 +847,6 @@ public class AOdiaActivity extends AppCompatActivity {
     }
 
     public void saveFile(){
-        if(!payment.buyCheck("001")){
-            payment.buy("001");
-            return;
-        }
-
         try {
             final AOdiaDiaFile saveFile = fragments.get(fragments.size() - 1).getDiaFile();
             final Handler handler=new Handler();
