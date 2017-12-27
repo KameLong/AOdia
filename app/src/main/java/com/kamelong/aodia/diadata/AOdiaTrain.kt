@@ -80,6 +80,16 @@ interface AOdiaTrain {
 
 
     fun getStopNumber(station:Int):Int
+    fun getActualStopNumber(station:Int):Int{
+        if(getStopNumber(station)==0){
+            if(direction==0){
+                return diaFile.getStation(station).downMain+1
+            }else{
+                return diaFile.getStation(station).upMain+1
+            }
+        }
+        return getStopNumber(station)
+    }
     fun setStopNumber(station:Int,value:Int)
 
     fun getStopType(station:Int):Int

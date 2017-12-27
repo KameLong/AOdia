@@ -15,6 +15,7 @@ import com.kamelong.aodia.timeTable.StationViewGroup
 import com.kamelong.aodia.timeTable.TrainViewGroup
 import com.kamelong.aodia.R.id.textView
 import android.view.ViewGroup.MarginLayoutParams
+import android.widget.TextView
 import android.widget.ToggleButton
 import com.kamelong.OuDia.OuDiaTrain
 import com.kamelong.OuDia2nd.DiaFile
@@ -484,6 +485,24 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
         viewGroup.scrollTo(stationView.scroll)
 
     }
+
+    override fun fragmentName(): String {
+        try {
+            return if(direction==0){"下り"}else{"上り"}+"時刻表　" + diaFile.lineName + "\n" + diaFile.getDiaName(diaIndex)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return ""
+        }
+
+    }
+    override fun onStart() {
+        super.onStart()
+        (getActivity().findViewById<View>(R.id.titleView) as TextView).text = fragmentName()
+
+
+    }
+
+
 
 
 }

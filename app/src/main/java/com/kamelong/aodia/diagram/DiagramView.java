@@ -70,6 +70,11 @@ public class DiagramView extends KLView {
      */
     private ArrayList<AOdiaTrain>[]trainList=new ArrayList[2];
     /**
+     * ダイヤグラムに表示する列車のリスト
+     * DiaFile内で順番が変更されることを考慮し、配列に取得しています。
+     */
+    private ArrayList<AOdiaTrain>[]nextTrainList=new ArrayList[2];
+    /**
      * ダイヤグラム描画に用いるパス
      * diagramPath[0]は下りダイヤ
      * diagramPath[1]は上りダイヤ
@@ -130,6 +135,7 @@ public class DiagramView extends KLView {
             stopMark[direct]=new ArrayList<Integer>();
             diagramPath[direct]=new ArrayList<>();
             trainList[direct]=new ArrayList<>();
+            nextTrainList[direct]=new ArrayList<>();
 
             for (int i = 0; i < diaFile.getTrainNum(diaNum, direct); i++) {
                 AOdiaTrain train = diaFile.getTrain(diaNum, direct, i);
@@ -251,6 +257,8 @@ public class DiagramView extends KLView {
                 }
                 diagramPath[direct].add(trainPath);
                 trainList[direct].add(train);
+                nextTrainList[direct].add(diaFile.getOperationNextTrain(diaNum,trainList[direct].get(i)));
+
 
             }
         }
@@ -307,7 +315,7 @@ public class DiagramView extends KLView {
                     for (int i = 0; i < trainList[direct].size(); i++) {
                         //ダイヤ線色を指定
                         paint.setColor(trainList[direct].get(i).getTrainType().getDiaColor().getAndroidColor());
-                        if (focuTrain.size()==0) {
+                        if (focuTrain.size()!=0) {
                             //強調表示の列車があるときは半透明化
                             paint.setAlpha(100);
                         }
@@ -362,31 +370,29 @@ public class DiagramView extends KLView {
                         paint2.setAntiAlias(true);
                         paint2.setStyle(Paint.Style.STROKE);
                         paint2.setStrokeWidth(defaultLineSize);
-                        if(trainList[direct].get(i).getOperation()!=null){
-                            /*
-                            if(trainList[direct].get(i).getOperation().getNext(trainList[direct].get(i))!=null&&trainList[direct].get(i).getOperation().getNext(trainList[direct].get(i)).isUsed()){
+                        if(nextTrainList[direct].get(i)!=null){
                                 AOdiaTrain train1=trainList[direct].get(i);
-                                AOdiaTrain train2=train1.getOperation().getNext(trainList[direct].get(i));
+                                AOdiaTrain train2=nextTrainList[direct].get(i);
                                 if(train1.getEndStation()==train2.getStartStation()){
-                                    if(train1.getDirect()==0&&train2.getDirect()==1){
+                                    if(train1.getDirection()==0&&train2.getDirection()==1){
                                         canvas.drawArc(new RectF(
-                                                        convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
+                                                        convertTime(train1.getArrivalTime(train1.getEndStation()))*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
-                                                        convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
+                                                        convertTime(train2.getDepartureTime(train1.getEndStation()))*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 0, 180, false, paint2);
                                     }
-                                    if(train1.getDirect()==1&&train2.getDirect()==0){
+                                    if(train1.getDirection()==1&&train2.getDirection()==0){
                                         canvas.drawArc(new RectF(
-                                                        convertTime(train1.getTime(train1.getEndStation()).getArrivalTime())*scaleX/60,
+                                                        convertTime(train1.getArrivalTime(train1.getEndStation()))*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60-25+yshift,
-                                                        convertTime(train2.getTime(train1.getEndStation()).getDepartureTime())*scaleX/60,
+                                                        convertTime(train2.getDepartureTime(train1.getEndStation()))*scaleX/60,
                                                         stationTime.get(train1.getEndStation())*scaleY/60+25+yshift)
                                                 , 180, 180, false, paint2);
                                     }
                                 }
 
-                            }*/
+
                         }
                     }
                     if (setting.stopFrag) {
@@ -672,6 +678,7 @@ public class DiagramView extends KLView {
      * これらのパラメーターは、DiagramViewの左上を基準とした座標
      */
     public void showDetail(int x,int y) {
+        System.out.println("showDetail");
         try {
             //まずタッチポイントから実際の秒単位のタッチ場所を検出します。
             x =(int)( x * 60 / scaleX);
@@ -707,6 +714,7 @@ public class DiagramView extends KLView {
                         }
                     }
                 }}
+            System.out.println(minTrainNum);
 
             if(minTrainNum < 0){
                 focuTrain.clear();
@@ -716,8 +724,10 @@ public class DiagramView extends KLView {
             if(focuTrain.contains(trainList[minTrainDirect].get(minTrainNum))){
                 focuTrain.clear();
             }else {
-                focuTrain=diaFile.getOperationTrains(trainList[minTrainDirect].get(minTrainNum));
+                focuTrain=diaFile.getOperationTrains(diaNum,trainList[minTrainDirect].get(minTrainNum));
+                System.out.println(focuTrain.size());
             }
+            System.out.println(focuTrain.size());
             this.invalidate();
 
         }catch(Exception e){
@@ -959,7 +969,7 @@ public class DiagramView extends KLView {
                 focuTrain.clear();
             }else {
 //                if(trainList[minTrainDirect].get(minTrainNum).getOperation()==null){
-                    focuTrain=diaFile.getOperationTrains(trainList[minTrainDirect].get(minTrainNum));
+                    focuTrain=diaFile.getOperationTrains(diaNum,trainList[minTrainDirect].get(minTrainNum));
  //               }else{
  //                   SdLog.toast("この列車は既に運用が登録されています");
   //              }

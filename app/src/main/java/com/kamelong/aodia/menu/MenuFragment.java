@@ -17,6 +17,7 @@ import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
+import com.kamelong.aodia.editDia.NewFileDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -87,6 +88,19 @@ public class MenuFragment extends Fragment {
             LinearLayout fileOpenLayout=new LinearLayout(activity);
             fileOpenLayout.setOrientation(LinearLayout.HORIZONTAL);
 
+            Button newFile = new Button(activity);
+            newFile.setText("　新規作成");
+            newFile.setBackgroundColor(Color.TRANSPARENT);
+            newFile.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            newFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    NewFileDialog dialog=new NewFileDialog(activity);
+                    dialog.show();
+                }
+            });
+            layout.addView(newFile);
             Button openFileIcon=new Button(activity);
             //openFileIcon.setBackgroundResource(R.drawable.menu_open_file);
             fileOpenLayout.addView(openFileIcon);
@@ -179,7 +193,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v2.2.8のヘルプを開く");
+            openHelp.setText("　v2.3.0のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {

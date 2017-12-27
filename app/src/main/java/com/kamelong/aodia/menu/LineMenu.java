@@ -14,6 +14,7 @@ import com.kamelong.aodia.R;
 import com.kamelong.aodia.ReSizeAnimation;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.editDia.EditDiaDialog;
 
 /**
  * Created by kame on 2017/01/24.
@@ -148,7 +149,15 @@ public class LineMenu  extends LinearLayout{
 
                 diaTitle.setBackgroundColor(Color.TRANSPARENT);
                 diaTitle.setTextColor(Color.GRAY);
-                diaTitle.setClickable(false);
+                final int j=i;
+                diaTitle.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        EditDiaDialog dialog=new EditDiaDialog((Activity)context,diaFile,j);
+                        dialog.show();
+                        ((AOdiaActivity) context).closeMenu();
+                    }
+                });
                 MenuButton downButton = new MenuButton(context);
                 downButton.setText("　　下り時刻表");
                 downButton.fileNumber=fileNum;
@@ -210,18 +219,13 @@ public class LineMenu  extends LinearLayout{
     private void closeMenu(){
         findViewById(R.id.hidden).setVisibility(GONE);
         findViewById(R.id.expand).setVisibility(VISIBLE);
-        final ReSizeAnimation closeAnimation = new ReSizeAnimation(lineContLinear,  -1);
-        closeAnimation.setDuration(300);
-        lineContLinear.startAnimation(closeAnimation);
+        lineContLinear.setVisibility(GONE);
 
     }
     private void openMenu(){
         findViewById(R.id.hidden).setVisibility(VISIBLE);
         findViewById(R.id.expand).setVisibility(GONE);
-        // ビューを開くアニメーションを生成
-        final ReSizeAnimation expandAnimation = new ReSizeAnimation(lineContLinear,1);
-        expandAnimation.setDuration(300);
-        lineContLinear.startAnimation(expandAnimation);
+        lineContLinear.setVisibility(VISIBLE);
 
 
     }

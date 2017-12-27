@@ -170,124 +170,165 @@ interface AOdiaDiaFile {
 
         }
     }
+    fun getOperationNextTrain(diaIndex: Int,baseTrain: AOdiaTrain):AOdiaTrain?{
+        if(baseTrain.endAction==2)return null
+        val endStation=baseTrain.endStation
+        val endStop=
+                if(baseTrain.endAction==1&&baseTrain.endExchangeStop>0){baseTrain.endExchangeStop}else{baseTrain.getActualStopNumber(endStation)}
+        val endTime=if(baseTrain.endAction==1&&baseTrain.endExchangeStop>0&&baseTrain.endExchangeTimeEnd>=0){
+            baseTrain.endExchangeTimeEnd
+        }else{
+            baseTrain.getADTime(endStation)
+        }
+        var valueTime=200000
+        var valueTrain:AOdiaTrain?=null
+        for(i in 0 until getTrainNum(diaIndex,0)){
+            val train=getTrain(diaIndex,0,i)
+            if(train==baseTrain)continue
+            val startStop=if(train.startAction==1&&train.startExchangeStop>0){train.startExchangeStop}else{train.getActualStopNumber(endStation)}
+            if(startStop==endStop){
+                if(train.startAction==1&&train.startExchangeTimeStart>=0){
+                    if(train.startExchangeTimeStart>=endTime&&train.startExchangeTimeStart<valueTime){
+                        valueTime=train.startExchangeTimeStart
+                        valueTrain=train
+                    }
+                }else{
+                    if(train.getDATime(endStation)>=0&&train.getDATime(endStation)>=endTime&&train.getDATime(endStation)<valueTime){
+                        valueTime=train.getDATime(endStation)
+                        valueTrain=train
+                        if(baseTrain.number=="M0507A"){
+                            println("M0507A")
+                            println(valueTrain?.number+","+valueTime+","+endTime)
+                        }
+
+                    }
+
+                }
+            }
+        }
+        if(baseTrain.number=="M0507A"){
+            println(endStop)
+        }
+        for(i in 0 until getTrainNum(diaIndex,1)){
+            val train=getTrain(diaIndex,1,i)
+            if(train==baseTrain)continue
+            val startStop=if(train.startAction==1&&train.startExchangeStop>0){train.startExchangeStop}else{train.getActualStopNumber(endStation)}
+
+            if(startStop==endStop){
+                if(train.startAction==1&&train.startExchangeTimeStart>=0){
+                    if(train.startExchangeTimeStart>=endTime&&train.startExchangeTimeStart<valueTime){
+                        valueTime=train.startExchangeTimeStart
+                        valueTrain=train
+                    }
+                }else{
+                    if(baseTrain.number=="M0507A"){
+                        println(valueTrain?.number+","+valueTime+","+train.getDATime(endStation))
+                    }
+                    if(train.getDATime(endStation)>=0&&train.getDATime(endStation)>=endTime&&train.getDATime(endStation)<valueTime){
+                        valueTime=train.getDATime(endStation)
+                        valueTrain=train
+                        if(baseTrain.number=="M0507A"){
+                            println("M0507A")
+                            println(valueTrain?.number+","+valueTime)
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        if(baseTrain.number=="M0507A"){
+            println("M0507A")
+            println(valueTrain?.number+","+valueTime)
+        }
+
+    if(valueTrain!=null&&valueTrain.startStation==endStation&&valueTrain.startAction!=2){
+            return valueTrain
+        }
+        return null
+    }
+    fun getOperationBeforeTrain(diaIndex: Int,baseTrain: AOdiaTrain):AOdiaTrain?{
+        if(baseTrain.startAction==2)return null
+        val startStation=baseTrain.startStation
+        val startStop=
+                if(baseTrain.startAction==1&&baseTrain.startExchangeStop>0){baseTrain.startExchangeStop}else{baseTrain.getActualStopNumber(startStation)}
+        val startTime=if(baseTrain.startAction==1&&baseTrain.startExchangeStop>0&&baseTrain.startExchangeTimeStart>=0){
+            baseTrain.startExchangeTimeStart
+        }else{
+            baseTrain.getADTime(startStation)
+        }
+        var valueTime=0
+        var valueTrain:AOdiaTrain?=null
+        for(i in 0 until getTrainNum(diaIndex,0)){
+            val train=getTrain(diaIndex,0,i)
+            if(train==baseTrain)continue
+            val endStop=if(train.endAction==1&&train.endExchangeStop>0){train.endExchangeStop}else{train.getActualStopNumber(startStation)}
+            if(startStop==endStop){
+                if(train.endAction==1&&train.endExchangeTimeEnd>=0){
+                    if(train.endExchangeTimeEnd<=startTime&&train.endExchangeTimeEnd>valueTime){
+                        valueTime=train.endExchangeTimeEnd
+                        valueTrain=train
+                    }
+                }else{
+                    if(train.getDATime(startStation)>=0&&train.getDATime(startStation)<=startTime&&train.getDATime(startStation)>valueTime){
+                        valueTime=train.getDATime(startStation)
+                        valueTrain=train
+
+                    }
+
+                }
+            }
+        }
+        for(i in 0 until getTrainNum(diaIndex,1)){
+            val train=getTrain(diaIndex,1,i)
+            if(train==baseTrain)continue
+            val endStop=if(train.endAction==1&&train.endExchangeStop>0){train.endExchangeStop}else{train.getActualStopNumber(startStation)}
+            if(startStop==endStop){
+                if(train.endAction==1&&train.endExchangeTimeEnd>=0){
+                    if(train.endExchangeTimeEnd<=startTime&&train.endExchangeTimeEnd>valueTime){
+                        valueTime=train.endExchangeTimeEnd
+                        valueTrain=train
+                    }
+                }else{
+                    if(train.getDATime(startStation)>=0&&train.getDATime(startStation)<=startTime&&train.getDATime(startStation)>valueTime){
+                        valueTime=train.getDATime(startStation)
+                        valueTrain=train
+
+                    }
+
+                }
+            }
+        }
+        if(valueTrain!=null&&valueTrain.endStation==startStation&&valueTrain.endAction!=2){
+            return valueTrain
+        }
+        return null
+    }
     fun getOperationTrains(diaIndex:Int,baseTrain:AOdiaTrain):ArrayList<AOdiaTrain>{
         val result=ArrayList<AOdiaTrain>()
         result.add(baseTrain)
-        var nowTrain=baseTrain
+        var nowTrain:AOdiaTrain?=baseTrain
         while(true){
-            //後方列車リストを作成する
-            val endStation=nowTrain.endStation
-            val endStop=
-                    if(nowTrain.endExchangeStop>0){nowTrain.endExchangeStop}else{nowTrain.getStopNumber(endStation)}
-            val endTime=if(nowTrain.endExchangeStop>0&&nowTrain.endExchangeTimeEnd>=0){
-                nowTrain.endExchangeTimeEnd
-            }else{
-                nowTrain.getADTime(endStation)
+            nowTrain=getOperationNextTrain(diaIndex,nowTrain!!)
+            if(nowTrain==null){
+                break;
             }
-            var valueTime=200000
-            var valueTrain:AOdiaTrain?=null
-            for(i in 0 until getTrainNum(diaIndex,0)){
-                val train=getTrain(diaIndex,0,i)
-                if(train.startStation==endStation){
-                    val startStop=if(nowTrain.startExchangeStop>0){nowTrain.startExchangeStop}else{nowTrain.getStopNumber(endStation)}
-                    if(startStop==endStop){
-                        if(train.startExchangeTimeStart>=0){
-                            if(train.startExchangeTimeStart>=endTime&&train.startExchangeTimeStart<valueTime){
-                                valueTime=train.startExchangeTimeStart
-                                valueTrain=train
-                            }
-                        }else{
-                            if(train.getDATime(train.startStation)>=endTime&&train.getDATime(train.startStation)<valueTime){
-                                valueTime=train.getDATime(train.startStation)
-                                valueTrain=train
-                            }
-
-                        }
-                    }
-                }
-            }
-            for(i in 0 until getTrainNum(diaIndex,1)){
-                val train=getTrain(diaIndex,1,i)
-                if(train.startStation==endStation){
-                    val startStop=if(nowTrain.startExchangeStop>0){nowTrain.startExchangeStop}else{nowTrain.getStopNumber(endStation)}
-                    if(startStop==endStop){
-                        if(train.startExchangeTimeStart>=0){
-                            if(train.startExchangeTimeStart>=endTime&&train.startExchangeTimeStart<valueTime){
-                                valueTime=train.startExchangeTimeStart
-                                valueTrain=train
-                            }
-                        }
-                    }
-                }
-            }
-            if(valueTrain!=null){
-                result.add(valueTrain)
-            }else{
-                break
-            }
+            result.add(nowTrain)
         }
+        nowTrain=baseTrain
         while(true){
-            //前方列車リストを作成する
-            val startStation=nowTrain.startStation
-            val startStop=
-                    if(nowTrain.startExchangeStop>0){nowTrain.startExchangeStop}else{nowTrain.getStopNumber(startStation)}
-            val startTime=if(nowTrain.startExchangeStop>0&&nowTrain.startExchangeTimeStart>=0){
-                nowTrain.startExchangeTimeStart
-            }else{
-                nowTrain.getDATime(startStation)
+            nowTrain=getOperationBeforeTrain(diaIndex,nowTrain!!)
+            if(nowTrain==null){
+                break;
             }
-            var valueTime=0
-            var valueTrain:AOdiaTrain?=null
-            for(i in 0 until getTrainNum(diaIndex,0)){
-                val train=getTrain(diaIndex,0,i)
-                if(train.endStation==startStation){
-                    val endStop=if(nowTrain.endExchangeStop>0){nowTrain.endExchangeStop}else{nowTrain.getStopNumber(startStation)}
-                    if(endStop==startStop){
-                        if(train.endExchangeTimeEnd>=0){
-                            if(train.endExchangeTimeEnd<=startTime&&train.endExchangeTimeEnd>valueTime){
-                                valueTime=train.endExchangeTimeEnd
-                                valueTrain=train
-                            }
-                        }else{
-                            if(train.getADTime(train.endStation)<=startTime&&train.getADTime(train.endStation)>valueTime){
-                                valueTime=train.getADTime(train.endStation)
-                                valueTrain=train
-                            }
-
-                        }
-                    }
-                }
-            }
-            for(i in 0 until getTrainNum(diaIndex,1)){
-                val train=getTrain(diaIndex,1,i)
-                if(train.endStation==startStation){
-                    val endStop=if(nowTrain.endExchangeStop>0){nowTrain.endExchangeStop}else{nowTrain.getStopNumber(startStation)}
-                    if(endStop==startStop){
-                        if(train.endExchangeTimeEnd>=0){
-                            if(train.endExchangeTimeEnd<=startTime&&train.endExchangeTimeEnd>valueTime){
-                                valueTime=train.endExchangeTimeEnd
-                                valueTrain=train
-                            }
-                        }else{
-                            if(train.getADTime(train.endStation)<=startTime&&train.getADTime(train.endStation)>valueTime){
-                                valueTime=train.getADTime(train.endStation)
-                                valueTrain=train
-                            }
-
-                        }
-                    }
-                }
-            }
-            if(valueTrain!=null){
-                result.add(valueTrain)
-            }else{
-                break
-            }
-
+            result.add(nowTrain)
         }
         return result
 
     }
+
+    fun addNewDiaFile(dName:String,copyIndex:Int)
 
 
 }

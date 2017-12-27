@@ -20,7 +20,7 @@ class Station(val diaFile: DiaFile) :AOdiaStation{
     }
 
     override fun getShortName(index: Int):String {
-        if(index>= trackRyakusyou.size) {
+        if(index>= trackRyakusyou.size||index<0) {
             return ""
         }
             return trackRyakusyou[index]

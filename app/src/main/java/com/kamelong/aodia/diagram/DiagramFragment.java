@@ -538,7 +538,7 @@ public class DiagramFragment extends AOdiaFragment {
     @Override
     public String fragmentName() {
         try {
-            return "ダイヤグラム　";
+            return "ダイヤグラム　"+diaFile.getLineName()+"\n"+diaFile.getDiaName(diaNumber);
         }catch(Exception e){
             e.printStackTrace();
             return "";

@@ -165,6 +165,9 @@ class Train :AOdiaTrain{
             e.printStackTrace()
         }
     }
+    constructor(diaFile: DiaFile,d:Int):this(diaFile){
+        direction=d
+    }
 
     /**
      * OuDia保存用の文字列を作成する
@@ -724,6 +727,7 @@ class Train :AOdiaTrain{
         try {
             val timeString = str.split(",")
             for (i in timeString.indices) {
+                if(i==stationNum)return
                 if (timeString[i].length == 0) {
                     setStopType((1 - 2 * direct) * i + direct * (stationNum - 1), AOdiaTrain.STOP_TYPE_NOSERVICE)
                 } else {

@@ -79,6 +79,6 @@
             android:enabled="true"
             android:key="001"
             android:summary="有料オプションです"
-            android:title="（100円）ファイル保存機能を解禁する" />
+            android:title="（300円）oud2ファイル保存機能を解禁する" />
     </PreferenceCategory>
 </PreferenceScreen>

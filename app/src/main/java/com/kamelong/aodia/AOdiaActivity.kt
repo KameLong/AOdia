@@ -16,6 +16,7 @@ import android.util.Log
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
+import android.view.DragEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -135,10 +136,26 @@ class AOdiaActivity : AppCompatActivity() {
         setting()
         //Drawer初期化
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
+        drawer.addDrawerListener(object:DrawerLayout.DrawerListener{
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+
+            override fun onDrawerSlide(drawerView: View?, slideOffset: Float) {
+            }
+
+            override fun onDrawerClosed(drawerView: View?) {
+            }
+
+            override fun onDrawerOpened(drawerView: View?) {
+                menuFragment!!.createMenu()
+            }
+
+        })
         val openDrawer = findViewById<Button>(R.id.Button2) as Button
         openDrawer.setOnClickListener {
             if (!drawer.isDrawerOpen(GravityCompat.START)) {
                 drawer.openDrawer(GravityCompat.START)
+
             } else {
                 drawer.closeDrawer(GravityCompat.START)
             }
@@ -368,8 +385,7 @@ class AOdiaActivity : AppCompatActivity() {
             diaFiles.add(diaFile)
             diaFilesIndex.add(0, diaFiles.size - 1)
             menuFragment!!.createMenu()
-            openEditStation(diaFilesIndex[0])
-            //openDiaOrTimeFragment(diaFilesIndex.get(0),0,0);//Fragmentをセットする
+            openLineTimeTable(diaFilesIndex[0],0,0)
         }
     }
 
@@ -744,10 +760,7 @@ class AOdiaActivity : AppCompatActivity() {
 
         try {
             val saveFile = fragments[fragments.size - 1].diaFile
-            val date = Date(System.currentTimeMillis())
-            val dataStr = SimpleDateFormat("MMddHHmmss").format(date)
-            val outFile = File(saveFile.filePath.substring(0, saveFile.filePath.lastIndexOf(".")) +"-" +dataStr+".oud2")
-            saveFile.save(outFile)
+            FileSaveDialog(this,saveFile).show()
             val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
             drawer.closeDrawer(GravityCompat.START)
 
@@ -771,6 +784,17 @@ class AOdiaActivity : AppCompatActivity() {
         args.putInt("fileNum", fileNum)
         fragment.arguments = args
         openFragment(fragment)
+    }
+    fun addDiaFile(diaFile:AOdiaDiaFile){
+        diaFilesIndex.add(0,diaFiles.size)
+        diaFiles.add(diaFile)
+        menuFragment!!.createMenu()
+        openLineTimeTable(diaFilesIndex[0],0,0)
+    }
+    fun closeMenu(){
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout) as DrawerLayout
+        drawer.closeDrawer(GravityCompat.START)
+
     }
 
 

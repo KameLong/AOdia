@@ -66,7 +66,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
         for(i in if(direct==0){0 until stationList.size}else{stationList.size-1 downTo 0}){
             val station=stationList[i]
 
-            if(station.branchStart()>=0){
+            if(direct==0&&station.branchStart()>=0||direct==1&&station.branchEnd()>=0){
                 linePos+=(textSize*0.2f)
                 canvas.drawLine(0f,linePos,width.toFloat(),linePos, blackBPaint)
             }
@@ -195,7 +195,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
                 }
             }
 
-            if(station.branchEnd()>=0){
+            if(direct==0&&station.branchEnd()>=0||direct==0&&station.branchStart()>=0){
                 linePos+=(textSize*0.2f)
                 canvas.drawLine(0f,linePos,width.toFloat(),linePos, blackBPaint)
             }
@@ -257,7 +257,7 @@ class TrainView (context: Context, val train: AOdiaTrain, override val xsize: In
     }
     fun drawStop(canvas: Canvas,i:Int,y:Float,paint: Paint){
 
-        val string=diaFile.getStation(i).getShortName(if(train.getStopNumber(i)==0){if(direct==0){train.diaFile.getStation(i).downMain}else{train.diaFile.getStation(i).upMain}}else{train.getStopNumber(i)-1})
+        val string=diaFile.getStation(i).getShortName(train.getActualStopNumber(i)-1)
 
         when(train.getStopType(i)){
             1->{

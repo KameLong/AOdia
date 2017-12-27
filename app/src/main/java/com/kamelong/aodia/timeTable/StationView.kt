@@ -69,7 +69,7 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
             if(editAllTime||(viewStyle and 0b1) !=0)lineNum++
             if(editAllTime||(viewStyle and 0b10) !=0)lineNum++
             if(editAllStop||(viewStyle and 0b100) !=0)lineNum++
-            if(station.branchStart()>=0){
+            if(direct==0&&station.branchStart()>=0||direct==1&&station.branchEnd()>=0){
                 linePos+=(textSize*0.2f)
                 canvas.drawLine(0f,linePos-0.1f* textSize,width.toFloat(),linePos-0.1f* textSize, blackBPaint)
             }
@@ -79,7 +79,7 @@ class StationView(context: Context, val direct:Int, val diaFile: AOdiaDiaFile, o
                 2->drawTextFit(canvas,station.name,linePos.toFloat()-0.5f* textSize, blackPaint)
                 3->drawTextFit(canvas,station.name,linePos.toFloat()- textSize, blackBPaint)
             }
-            if(station.branchEnd()>=0){
+            if(direct==0&&station.branchEnd()>=0||direct==0&&station.branchStart()>=0){
                 linePos+=(textSize*0.2f)
                 canvas.drawLine(0f,linePos-0.1f* textSize,width.toFloat(),linePos-0.1f* textSize, blackBPaint)
             }

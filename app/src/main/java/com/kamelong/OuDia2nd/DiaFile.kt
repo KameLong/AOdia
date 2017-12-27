@@ -2,27 +2,24 @@ package com.kamelong.OuDia2nd
 
 
 import android.app.Activity
-import com.kamelong.aodia.diadata.*
+import com.kamelong.aodia.diadata.AOdiaDiaFile
+import com.kamelong.aodia.diadata.AOdiaStation
+import com.kamelong.aodia.diadata.AOdiaTrain
+import com.kamelong.aodia.diadata.AOdiaTrainType
 import com.kamelong.tool.Color
 import com.kamelong.tool.Font
 import com.kamelong.tool.ShiftJISBufferedReader
+import java.io.*
+import java.util.*
 
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.util.ArrayList
 /**
  * OuDiaSecond形式の1ファイルを取り扱う.
  * 内部に複数のダイヤを格納することができるが、駅リスト、種別リストは一つしか持てない.
  *
  * @author KameLong
  */
-class DiaFile(override var activity: Activity, override var menuOpen: Boolean ) : AOdiaDiaFile {
+class DiaFile(override var activity: Activity) : AOdiaDiaFile {
+    override var menuOpen=true
     override var predictTime= ArrayList<Int>()
     override fun getNewTrain(direction:Int): AOdiaTrain {
         val t=Train(this)
@@ -62,7 +59,7 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean ) 
         return result.toString()
     }
     override fun setDiaName(index: Int, value: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        diaName.set(index,value)
     }
 
     override fun addNewDia(index: Int, value: String) {
@@ -173,7 +170,18 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean ) 
      *
      * fileがnullの時はnullPointerExceptionが発生する
      */
-    constructor(activity: Activity) : this(activity,true) {}
+    constructor(activity: Activity,name:String):this(activity){
+        lineName=name
+        val s=Station(this)
+        s.name="新規作成"
+        station.add(s)
+
+        trainType.add(TrainType())
+        addNewDiaFile("新規作成",-1)
+    }
+    constructor(activity: Activity,b:Boolean) : this(activity) {
+        menuOpen=b
+    }
     constructor(activity: Activity,file: File) : this(activity,true) {
         filePath=file.path
         try {
@@ -659,5 +667,26 @@ class DiaFile(override var activity: Activity, override var menuOpen: Boolean ) 
 
     override fun resetStation() {
         station=ArrayList()
+    }
+    override fun addNewDiaFile(dName:String,copyIndex:Int){
+        diaName.add(dName)
+        val trains=ArrayList<ArrayList<Train>>()
+        trains.add(ArrayList<Train>())
+        trains.add(ArrayList<Train>())
+        train.add(trains)
+        if(copyIndex>=0){
+            for(i in 0 until getTrainNum(copyIndex,0)){
+                trains[0].add(getTrain(copyIndex,0,i).clone(true) as Train)
+            }
+            for(i in 0 until getTrainNum(copyIndex,1)){
+                trains[1].add(getTrain(copyIndex,1,i).clone(true) as Train)
+            }
+        }else{
+            trains[0].add(Train(this,0))
+            trains[1].add(Train(this,1))
+
+
+        }
+
     }
 }
