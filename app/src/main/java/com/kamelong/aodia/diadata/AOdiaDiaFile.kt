@@ -2,7 +2,6 @@ package com.kamelong.aodia.diadata
 
 import android.app.Activity
 
-import com.kamelong.aodia.editStation.AOdiaStationHistory
 import java.io.File
 import java.util.ArrayList
 
@@ -17,18 +16,56 @@ interface AOdiaDiaFile {
     var menuOpen:Boolean
     var lineName:String
     var comment:String
-    fun getDiaNum():Int
-    fun getDiaName(index:Int):String
-    fun setDiaName(index:Int,value:String)
-    fun addNewDia(index:Int,value:String)
 
-    fun getStation(index:Int):AOdiaStation
     val stationNum:Int
+    fun getStation(index:Int):AOdiaStation
     fun getStationList():ArrayList<AOdiaStation>
+    fun addStation(s:AOdiaStation,index:Int)
+    /**
+     * 指定インデックスに駅が挿入されたことを列車に通知します
+     */
+    fun addStationRenew(index:Int)
+
+    /**
+     * 指定インデックスの列車を削除します
+     */
+    fun deleteStation(index:Int)
+
+    /**
+     * 駅リストの末尾に駅を追加します
+     */
+    fun setStation(s: AOdiaStation)
+
+    /**
+     * 駅が変更されたことを列車に通知します
+     */
+    fun setStationRenew( index:Int,editStopList:ArrayList<Int>)
+
+    /**
+     * 駅リストを空にします
+     */
+    fun resetStation()
 
     val trainTypeNum:Int
     fun getTrainType(index:Int):AOdiaTrainType
     fun addTrainType(trainType:AOdiaTrainType)
+
+    fun getDiaNum():Int
+    fun getDiaName(index:Int):String
+    fun setDiaName(index:Int,value:String)
+    /**
+     * 指定インデックスにダイヤを追加します
+     */
+    fun addNewDia(index:Int,value:String)
+
+    /**
+     * 既存ダイヤをコピーして新しくダイヤを作成します。
+     * dName:新ダイヤ名
+     * copyIndex:コピー元のダイヤindex
+     */
+    fun addNewDiaFile(dName:String,copyIndex:Int)
+
+
 
     fun getTrainNum(diaIndex:Int,direct:Int):Int
     fun getTrain(diaIndex:Int,direct:Int,trainIndex:Int):AOdiaTrain
@@ -52,25 +89,22 @@ interface AOdiaDiaFile {
 
 
     /**
-     * ファイル形式で保存します
+     * oudiaSecondファイル形式で保存します
      */
     fun save(outFile:File)
-    fun addStation(s:AOdiaStation,index:Int)
-    fun addStationRenew(index:Int)
-    fun deleteStation(index:Int)
-    fun setStation(s: AOdiaStation)
-    fun setStationRenew( index:Int,editStopList:ArrayList<Int>)
-    fun resetStation()
 
-    fun stationTime(firstStation:Int,endStation:Int):Int{
+    /**
+     * startStationからendStationまでの最小所要時間を計算します
+     */
+    fun stationTime(startStation:Int, endStation:Int):Int{
         var result=100000
         for(d in 0 until getDiaNum()){
             if(getDiaName(d)=="基準運転時分"){
                 result=100000
                 for(t in 0 until getTrainNum(d,0)){
                     val train=getTrain(d,0,t)
-                    if(train.existTime(firstStation)&&train.existTime(endStation)){
-                        val value=train.getADTime(endStation)-train.getDATime(firstStation)
+                    if(train.existTime(startStation)&&train.existTime(endStation)){
+                        val value=train.getADTime(endStation)-train.getDATime(startStation)
                         if(result>value){
                             result=value
                         }
@@ -78,8 +112,8 @@ interface AOdiaDiaFile {
                 }
                 for(t in 0 until getTrainNum(d,1)){
                     val train=getTrain(d,1,t)
-                    if(train.existTime(firstStation)&&train.existTime(endStation)){
-                        val value=train.getADTime(firstStation)-train.getDATime(endStation)
+                    if(train.existTime(startStation)&&train.existTime(endStation)){
+                        val value=train.getADTime(startStation)-train.getDATime(endStation)
                         if(result>value){
                             result=value
                         }
@@ -92,8 +126,8 @@ interface AOdiaDiaFile {
             }else{
                 for(t in 0 until getTrainNum(d,0)){
                     val train=getTrain(d,0,t)
-                    if(train.existTime(firstStation)&&train.existTime(endStation)){
-                        val value=train.getADTime(endStation)-train.getDATime(firstStation)
+                    if(train.existTime(startStation)&&train.existTime(endStation)){
+                        val value=train.getADTime(endStation)-train.getDATime(startStation)
                         if(result>value){
                             result=value
                         }
@@ -101,8 +135,8 @@ interface AOdiaDiaFile {
                 }
                 for(t in 0 until getTrainNum(d,1)){
                     val train=getTrain(d,1,t)
-                    if(train.existTime(firstStation)&&train.existTime(endStation)){
-                        val value=train.getADTime(firstStation)-train.getDATime(endStation)
+                    if(train.existTime(startStation)&&train.existTime(endStation)){
+                        val value=train.getADTime(startStation)-train.getDATime(endStation)
                         if(result>value){
                             result=value
                         }
@@ -120,6 +154,10 @@ interface AOdiaDiaFile {
         return result
 
     }
+
+    /**
+     * 最小所要時間のリストを返します
+     */
     fun getStationTime():ArrayList<Int>{
         val result=ArrayList<Int>()
         result.add(0)
@@ -128,7 +166,14 @@ interface AOdiaDiaFile {
         }
         return result
     }
+
+    /**
+     * 路線分岐を考慮した最小所要時間
+     */
     var predictTime:ArrayList<Int>
+    /**
+     * 路線分岐を考慮した最小所要時間を更新する
+     */
     fun renewPredictTime(){
         for(i in 0 until stationNum){
             predictTime.add(-1)
@@ -170,6 +215,10 @@ interface AOdiaDiaFile {
 
         }
     }
+
+    /**
+     * baseTrainの次の運用を求める
+     */
     fun getOperationNextTrain(diaIndex: Int,baseTrain: AOdiaTrain):AOdiaTrain?{
         if(baseTrain.endAction==2)return null
         val endStation=baseTrain.endStation
@@ -248,6 +297,9 @@ interface AOdiaDiaFile {
         }
         return null
     }
+    /**
+     * baseTrainの前の運用を求める
+     */
     fun getOperationBeforeTrain(diaIndex: Int,baseTrain: AOdiaTrain):AOdiaTrain?{
         if(baseTrain.startAction==2)return null
         val startStation=baseTrain.startStation
@@ -328,7 +380,6 @@ interface AOdiaDiaFile {
 
     }
 
-    fun addNewDiaFile(dName:String,copyIndex:Int)
 
 
 }

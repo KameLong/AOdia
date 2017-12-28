@@ -23,6 +23,7 @@ interface AOdiaTrain {
     var endExchangeTimeStart:Int
     var endExchangeTimeEnd:Int
 
+
     fun existArriveTime(station:Int):Boolean
     fun existDepartTime(station:Int):Boolean
 
@@ -106,6 +107,9 @@ interface AOdiaTrain {
     fun clone(allCopy:Boolean):AOdiaTrain
 
 
+    /**
+     * 列車通過時刻予測
+     */
     fun predictTime(station:Int,adFrag:Int):Int{
         if(adFrag==0&&existDepartTime(station)){
                 return getDepartureTime(station)
@@ -140,6 +144,32 @@ interface AOdiaTrain {
         }
         return (lastTime-firstTime)*(thisPredict-firstPredict)/(lastPredict-firstPredict)+firstTime
 
+    }
+
+    /**
+     * 起点時刻を変更した場合はこの関数を呼び出すこと
+     */
+    fun changeStartTime(startTime: Int){
+        for(i in 0 until diaFile.stationNum){
+            if(getArrivalTime(i)>=0) {
+                setArrivalTime(i, (getArrivalTime(i) + 86400 - startTime) % 86400 + startTime)
+            }
+            if(getDATime(i)>=0){
+                setDepartureTime(i, (getDepartureTime(i) + 86400 - startTime) % 86400 + startTime)
+            }
+        }
+        if(startExchangeTimeStart>=0){
+            startExchangeTimeStart=(startExchangeTimeStart+86400-startTime)%86400+startTime
+        }
+        if(startExchangeTimeEnd>=0){
+            startExchangeTimeEnd=(startExchangeTimeEnd+86400-startTime)%86400+startTime
+        }
+        if(endExchangeTimeStart>=0){
+            endExchangeTimeStart=(endExchangeTimeStart+86400-startTime)%86400+startTime
+        }
+        if(endExchangeTimeEnd>=0){
+            endExchangeTimeEnd=(endExchangeTimeEnd+86400-startTime)%86400+startTime
+        }
     }
     companion object {
         /**

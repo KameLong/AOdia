@@ -71,7 +71,7 @@ interface AOdiaStation {
 
 
     /**
-     * 本線
+     * 本線を表す
      */
     var downMain :Int
     var upMain :Int

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.ReSizeAnimation;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.editDia.EditDiaDialog;
