@@ -13,17 +13,12 @@ import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.timeTable.StationViewGroup
 import com.kamelong.aodia.timeTable.TrainViewGroup
-import com.kamelong.aodia.R.id.textView
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.TextView
 import android.widget.ToggleButton
-import com.kamelong.OuDia.OuDiaTrain
-import com.kamelong.OuDia2nd.DiaFile
-import com.kamelong.OuDia2nd.Train
-import com.kamelong.aodia.R.id.button0
+import com.kamelong.aodia.SdLog
+import com.kamelong.aodia.detabase.DBHelper
 import com.kamelong.aodia.diadata.AOdiaTrain
-import com.kamelong.aodia.editStation.CopyPasteInsertAddDeleteDialog
-import com.kamelong.aodia.timeTable.TrainGroup
 import java.util.*
 
 
@@ -68,6 +63,10 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
         } catch (e: Exception) {
             e.printStackTrace()
             //activity.killFragment(this)
+        }
+        if(diaFile==null){
+            SdLog.toast("LineTrainTimeFragment:ダイヤファイルが存在しません。")
+            this.onDestroy()
         }
         trainEdit=TrainEdit(this,direction)
         fragmentContainer.isFocusableInTouchMode=true
@@ -498,8 +497,16 @@ class LineTrainTimeFragment : Fragment(),AOdiaFragmentInterface{
     override fun onStart() {
         super.onStart()
         (getActivity().findViewById<View>(R.id.titleView) as TextView).text = fragmentName()
+        val db=DBHelper(activity)
+        val scrollList=db.getPositionData(diaFile.filePath,diaIndex,direction)
+        trainLinear.scrollTo(scrollList[0],scrollList[1])
+        stationView.scrollBy(scrollList[1].toFloat())
+    }
 
-
+    override fun onStop() {
+        val db=DBHelper(activity)
+        db.updateLineData(diaFile.filePath,diaIndex,direction,trainLinear.scrollX,stationView.scroll.toInt())
+        super.onStop()
     }
 
 

@@ -28,7 +28,7 @@ interface AOdiaTrain {
     fun existDepartTime(station:Int):Boolean
 
     fun existTime(station:Int):Boolean{
-        return existDepartTime(station)||existDepartTime(station)
+        return existDepartTime(station)||existArriveTime(station)
     }
 
 

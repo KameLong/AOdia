@@ -353,7 +353,7 @@ public class DiagramFragment extends AOdiaFragment {
 
                 FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
                 final int width = diagramFrame.getWidth();
-                int nowTime = (int) (System.currentTimeMillis() % (24 * 60 * 60 * 1000)) / 1000;//システムの時間
+                int nowTime = (int) (System.currentTimeMillis() % (24 * 60 * 60 * 1000)) / 1000+diagramView.diagramStartTime;//システムの時間
                 if (nowTime < 0) {
                     nowTime = nowTime + 24 * 60 * 60;
                 }
@@ -459,7 +459,7 @@ public class DiagramFragment extends AOdiaFragment {
         super.onStart();
         try {
             DBHelper db = new DBHelper(getAodiaActivity());
-            int[] scroll = db.getPositionData(db.getReadableDatabase(),  getDiaFile().getFilePath(), diaNumber, 2);
+            int[] scroll = db.getPositionData(getDiaFile().getFilePath(), diaNumber, 2);
             scaleX=scroll[2]/100f;
             scaleY=scroll[3]/100f;
             if(scaleX<0.5f){
@@ -521,7 +521,7 @@ public class DiagramFragment extends AOdiaFragment {
     public void fitVertical(){
         FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
         float frameSize=diagramFrame.getHeight()-40;
-        float nessTime=0;
+        float nessTime=diaFile.getStationTime().get(diaFile.getStationNum()-1);
         scaleY=frameSize/nessTime*60;
         setScale();
         stationView.invalidate();

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 
-import android.os.Handler
 import android.preference.PreferenceManager
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -16,7 +15,6 @@ import android.util.Log
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
-import android.view.DragEvent
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
@@ -24,16 +22,13 @@ import android.widget.Toast
 
 import com.kamelong.OuDia2nd.DiaFile
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment
-import com.kamelong.aodia.AOdiaIO.ProgressDialog
 import com.kamelong.aodia.EditTimeTable.LineTrainTimeFragment
 import com.kamelong.aodia.detabase.DBHelper
-import com.kamelong.aodia.diadataOld.AOdiaOperation
 import com.kamelong.aodia.diagram.DiagramFragment
 import com.kamelong.aodia.editStation.EditStationFragment
 import com.kamelong.aodia.menu.MenuFragment
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.editTrainType.EditTrainTypeFragment
-import com.kamelong.aodia.operation.OperationFragment
 import com.kamelong.aodia.stationInfo.StationInfoFragment
 import com.kamelong.aodia.stationInfo.StationInfoIndexFragment
 import com.kamelong.aodia.timeTable.*
@@ -381,7 +376,6 @@ class AOdiaActivity : AppCompatActivity() {
             val diaFile = DiaFile(this, file)
             val db = DBHelper(this)
             db.addHistory(filePath)
-            db.addNewFileToLineData(filePath, diaFile.getDiaNum())
             diaFiles.add(diaFile)
             diaFilesIndex.add(0, diaFiles.size - 1)
             menuFragment!!.createMenu()
@@ -440,11 +434,24 @@ class AOdiaActivity : AppCompatActivity() {
      * @param menuIndex
      */
     fun killDiaFile(index: Int, menuIndex: Int) {
+        killDiaFileFragment(index)
+        diaFilesIndex.removeAt(menuIndex)
+        menuFragment!!.createMenu()
+
+    }
+
+    /**
+     * 指定ダイヤファイルのFragmentを全て削除する
+     */
+    fun killDiaFileFragment(index:Int){
+        killDiaFileFragment(diaFiles[index])
+    }
+    fun killDiaFileFragment(diaFile:AOdiaDiaFile){
         var i = 0
         while (i < fragments.size) {
             try {
-                val fragment = fragments[i] as AOdiaFragment
-                if (fragment.diaFile === diaFiles[index]) {
+                val fragment = fragments[i]
+                if (fragment.diaFile == diaFile) {
                     killFragment(i)
                     i--
                 }
@@ -453,8 +460,6 @@ class AOdiaActivity : AppCompatActivity() {
 
             i++
         }
-        diaFilesIndex.removeAt(menuIndex)
-        menuFragment!!.createMenu()
 
     }
 
@@ -611,17 +616,6 @@ class AOdiaActivity : AppCompatActivity() {
      * 運用表を開く
      */
     fun openOperationFragment(fileNum: Int, diaNum: Int, operationNum: Int) {
-        try {
-            val fragment = OperationFragment()
-            val args = Bundle()
-            args.putInt("fileNum", fileNum)
-            args.putInt("diaNum", diaNum)
-            fragment.arguments = args
-            openFragment(fragment)
-        } catch (e: Exception) {
-            SdLog.log(e)
-        }
-
     }
 
 
@@ -752,7 +746,7 @@ class AOdiaActivity : AppCompatActivity() {
     }
 
     fun saveFile() {
-        if (!payment!!.buyCheck("001")) {
+        if (BuildConfig.BUILD_TYPE!="beta"&&!payment!!.buyCheck("001")) {
             payment!!.buy("001")
             return
         }

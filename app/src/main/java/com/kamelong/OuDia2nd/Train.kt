@@ -1,9 +1,6 @@
 package com.kamelong.OuDia2nd
 
-import com.kamelong.JPTI.Service
-import com.kamelong.JPTI.Station
-import com.kamelong.JPTI.TrainType
-import com.kamelong.JPTI.Trip
+import com.kamelong.aodia.SdLog
 import com.kamelong.aodia.diadata.AOdiaTrain
 import com.kamelong.aodia.diadata.AOdiaTrainType
 
@@ -26,6 +23,7 @@ class Train :AOdiaTrain{
     }
 
     override fun getStationTime(station: Int): Long {
+        if(station<0||station>=stationNum)return 0
         return time[station]
     }
 
@@ -189,10 +187,10 @@ class Train :AOdiaTrain{
             result.append("Ressyamei=").append(name).append("\r\n")
         }
         if (count.length > 0) {
-            result.append("Gousuu=").append(name).append("\r\n")
+            result.append("Gousuu=").append(count).append("\r\n")
         }
         if (remark.length > 0) {
-            result.append("Bikou=").append(name).append("\r\n")
+            result.append("Bikou=").append(remark).append("\r\n")
         }
         result.append("EkiJikoku=")
         for (i in 0 until diaFile.stationNum) {
@@ -225,11 +223,11 @@ class Train :AOdiaTrain{
         }
         result += ";"
         if (arriveExist(stationIndex)) {
-            result += timeInt2String(getArrivalTime(stationIndex)) + "/"
+            result += time2outText(getArrivalTime(stationIndex)) + "/"
         }
         if (departExist(stationIndex)) {
 
-            result += timeInt2String(getDepartureTime(stationIndex))
+            result += time2outText(getDepartureTime(stationIndex))
         }
         return result
     }
@@ -292,6 +290,17 @@ class Train :AOdiaTrain{
             hh + mm
         } else {
             hh + mm + "-" + ss
+
+        }
+    }
+    private fun time2outText(time: Int): String {
+        val hh = (time / 3600 % 24).toString()
+        val mm = String.format("%02d", time / 60 % 60)
+        val ss = String.format("%02d", time % 60)
+        return if (time % 60 == 0) {
+            hh + mm
+        } else {
+            hh + mm  + ss
 
         }
     }
@@ -378,6 +387,10 @@ class Train :AOdiaTrain{
         time[station] = time[station] or value
     }
     override fun getStopNumber(station:Int):Int{
+        if(station<0||station>=stationNum){
+            SdLog.toast("Train:getStopNumber:予期せぬエラー")
+            return 0
+        }
         val result = time[station] and 0x0000FF0000000000L
         return (result ushr 40).toInt()
 

@@ -35,6 +35,11 @@ class EditDiaDialog(activity: Activity, diaFile: AOdiaDiaFile, diaIndex:Int):Ale
             diaFile.addNewDiaFile("新規作成",-1)
             dismiss()
         }
+        view.findViewById<Button>(R.id.button18).setOnClickListener {
+            diaFile.deleteDia(diaIndex)
+            (activity as AOdiaActivity).killDiaFileFragment(diaFile)
+            dismiss()
+        }
 
     }
 

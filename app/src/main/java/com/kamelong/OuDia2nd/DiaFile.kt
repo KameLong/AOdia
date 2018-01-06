@@ -112,7 +112,7 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
     /**
      * ダイヤグラム起点時刻。
      */
-    var startTime = 10800
+    override var startTime = 10800
     /**
      * DiagramDgrYZahyouKyoriDefault
      */
@@ -353,7 +353,7 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
                             mStation.setShowStopStyle(0,Integer.valueOf(oudiaSplit(line,1))==1)
                         }
                         if (title == "JikokuhyouTrackDisplayNobori"){
-                            mStation.setShowStopStyle(0,Integer.valueOf(oudiaSplit(line,1))==1)
+                            mStation.setShowStopStyle(1,Integer.valueOf(oudiaSplit(line,1))==1)
                         }
 
                         if (line == "EkiTrack2Cont.") {
@@ -649,7 +649,7 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
                 for(dia in 0 until getDiaNum()){
                     for(direct in 0 .. 1){
                         for(t in 0 until getTrainNum(i,direct)){
-                            train[dia][direct][t].deleteStop(index,-i)
+                            train[dia][direct][t].deleteStop(index,-i+1)
                         }
                     }
                 }
@@ -657,7 +657,7 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
                 for(dia in 0 until getDiaNum()){
                     for(direct in 0 .. 1){
                         for(t in 0 until getTrainNum(i,direct)){
-                            train[dia][direct][t].addStop(index,-i)
+                            train[dia][direct][t].addStop(index,i-1)
                         }
                     }
                 }
@@ -688,5 +688,10 @@ class DiaFile(override var activity: Activity) : AOdiaDiaFile {
 
         }
 
+    }
+
+    override fun deleteDia(index: Int) {
+        train.removeAt(index)
+        diaName.removeAt(index)
     }
 }

@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.preference.PreferenceManager
-import android.view.View
 import android.view.ViewGroup
-import com.kamelong.JPTI.Station
 import com.kamelong.aodia.diadata.AOdiaTrain
 
 class TrainViewGroup(context: Context, newTrain: AOdiaTrain): ViewGroup(context){

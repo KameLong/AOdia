@@ -16,6 +16,7 @@ interface AOdiaDiaFile {
     var menuOpen:Boolean
     var lineName:String
     var comment:String
+    var startTime:Int
 
     val stationNum:Int
     fun getStation(index:Int):AOdiaStation
@@ -58,6 +59,7 @@ interface AOdiaDiaFile {
      */
     fun addNewDia(index:Int,value:String)
 
+    fun deleteDia(index:Int)
     /**
      * 既存ダイヤをコピーして新しくダイヤを作成します。
      * dName:新ダイヤ名
@@ -105,7 +107,7 @@ interface AOdiaDiaFile {
                     val train=getTrain(d,0,t)
                     if(train.existTime(startStation)&&train.existTime(endStation)){
                         val value=train.getADTime(endStation)-train.getDATime(startStation)
-                        if(result>value){
+                        if(value>0&&result>value){
                             result=value
                         }
                     }
@@ -114,7 +116,7 @@ interface AOdiaDiaFile {
                     val train=getTrain(d,1,t)
                     if(train.existTime(startStation)&&train.existTime(endStation)){
                         val value=train.getADTime(startStation)-train.getDATime(endStation)
-                        if(result>value){
+                        if(value>0&&result>value){
                             result=value
                         }
                     }
@@ -127,8 +129,9 @@ interface AOdiaDiaFile {
                 for(t in 0 until getTrainNum(d,0)){
                     val train=getTrain(d,0,t)
                     if(train.existTime(startStation)&&train.existTime(endStation)){
+                        println(result.toString()+",0,"+t)
                         val value=train.getADTime(endStation)-train.getDATime(startStation)
-                        if(result>value){
+                        if(value>0&&result>value){
                             result=value
                         }
                     }
@@ -136,8 +139,9 @@ interface AOdiaDiaFile {
                 for(t in 0 until getTrainNum(d,1)){
                     val train=getTrain(d,1,t)
                     if(train.existTime(startStation)&&train.existTime(endStation)){
+                        println(result.toString()+",1,"+t)
                         val value=train.getADTime(startStation)-train.getDATime(endStation)
-                        if(result>value){
+                        if(value>0&&result>value){
                             result=value
                         }
                     }
@@ -245,18 +249,10 @@ interface AOdiaDiaFile {
                     if(train.getDATime(endStation)>=0&&train.getDATime(endStation)>=endTime&&train.getDATime(endStation)<valueTime){
                         valueTime=train.getDATime(endStation)
                         valueTrain=train
-                        if(baseTrain.number=="M0507A"){
-                            println("M0507A")
-                            println(valueTrain?.number+","+valueTime+","+endTime)
-                        }
-
                     }
 
                 }
             }
-        }
-        if(baseTrain.number=="M0507A"){
-            println(endStop)
         }
         for(i in 0 until getTrainNum(diaIndex,1)){
             val train=getTrain(diaIndex,1,i)
@@ -270,17 +266,9 @@ interface AOdiaDiaFile {
                         valueTrain=train
                     }
                 }else{
-                    if(baseTrain.number=="M0507A"){
-                        println(valueTrain?.number+","+valueTime+","+train.getDATime(endStation))
-                    }
                     if(train.getDATime(endStation)>=0&&train.getDATime(endStation)>=endTime&&train.getDATime(endStation)<valueTime){
                         valueTime=train.getDATime(endStation)
                         valueTrain=train
-                        if(baseTrain.number=="M0507A"){
-                            println("M0507A")
-                            println(valueTrain?.number+","+valueTime)
-                        }
-
                     }
 
                 }

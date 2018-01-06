@@ -10,10 +10,9 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.preference.PreferenceManager;
 
-import com.kamelong.JPTI.TrainType;
+import com.kamelong.OuDia2nd.TrainType;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
 import com.kamelong.aodia.diadata.AOdiaTrain;
 import com.kamelong.aodia.timeTable.KLView;
 
@@ -55,7 +54,7 @@ public class DiagramView extends KLView {
     private AOdiaDiaFile diaFile;
     private DiagramSetting setting;
     private int diaNum=0;
-    private int diagramStartTime=0;
+    public int diagramStartTime=0;
 
     /**
      * ダイヤグラム画面のスケールサイズ
@@ -107,6 +106,7 @@ public class DiagramView extends KLView {
     private ArrayList<Integer>stationTime=new ArrayList<>();
     DiagramView(Context context,DiagramSetting s,AOdiaDiaFile diaFile,int diaNum){
         super(context);
+        diagramStartTime=diaFile.getStartTime();
         setting=s;
         this.diaFile=diaFile;
         stationTime=diaFile.getStationTime();
@@ -351,16 +351,16 @@ public class DiagramView extends KLView {
                             canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                         }else {
                             switch (trainList[direct].get(i).getTrainType().getLineStyle()) {
-                                case TrainType.LINESTYLE_NORMAL:
+                                case 0:
                                     canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case TrainType.LINESTYLE_DASH:
+                                case 1:
                                     drawDashLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
-                                case TrainType.LINESTYLE_DOT:
+                                case 2:
                                     drawDotLines(canvas, toArr(diagramPath[direct].get(i)), paint);
                                     break;
-                                case TrainType.LINESTYLE_CHAIN:
+                                case 3:
                                     drawChainLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
                                     break;
                             }

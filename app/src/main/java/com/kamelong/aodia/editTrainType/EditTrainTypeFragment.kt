@@ -9,15 +9,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import com.kamelong.OuDia.OuDiaTrainType
 import com.kamelong.OuDia2nd.TrainType
 import com.kamelong.aodia.AOdiaActivity
-import com.kamelong.aodia.AOdiaFragment
 import com.kamelong.aodia.AOdiaFragmentInterface
 import com.kamelong.aodia.R
 import com.kamelong.aodia.diadata.AOdiaDiaFile
 import com.kamelong.aodia.diadata.AOdiaTrainType
-import com.kamelong.aodia.editStation.CopyPasteInsertAddDeleteDialog
 
 class EditTrainTypeFragment :Fragment(),AOdiaFragmentInterface{
     override var fragment=this as Fragment

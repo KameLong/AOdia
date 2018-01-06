@@ -21,12 +21,12 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kamelong.GTFS.GTFS;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
+import com.kamelong.tool.ShiftJISBufferedReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,10 +36,12 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -137,11 +139,11 @@ public class FileSelectFragment extends AOdiaFragment {
                 rootFolderName[i] = (i + 1) + ":使用不可";
                 continue;
             }
-                if (Environment.isExternalStorageRemovable(rootFolderList[i])) {
-                    rootFolderName[i] = (i + 1) + ":SDカード";
-                } else {
-                    rootFolderName[i] = (i + 1) + ":端末フォルダ";
-                }
+            if (Environment.isExternalStorageRemovable(rootFolderList[i])) {
+                rootFolderName[i] = (i + 1) + ":SDカード";
+            } else {
+                rootFolderName[i] = (i + 1) + ":端末フォルダ";
+            }
         }
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getAodiaActivity(),android.R.layout.simple_spinner_item,rootFolderName);
 
@@ -359,58 +361,62 @@ public class FileSelectFragment extends AOdiaFragment {
      * position=0の部分は親フォルダーへの遷移を担うので別処理にすること
      * 参考URL:http://android.keicode.com/basics/ui-listview.php
      */
-    private class FileListAdapter extends BaseAdapter{
-        ArrayList<File> fileList=new ArrayList<>();
+    private class FileListAdapter extends BaseAdapter {
+        ArrayList<File> fileList = new ArrayList<>();
         LayoutInflater layoutInflater = null;
-        Context context=null;
-        private int fileValue(File a){
-            if(a.isDirectory()){
+        Context context = null;
+
+        private int fileValue(File a) {
+            if (a.isDirectory()) {
                 return 10000;
-            }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")||(a.getPath().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),a)).isGTFS())){
-                DBHelper db=null;
-                try {
-                    db = new DBHelper(getAodiaActivity());
-                    return db.fileOpenedNum(a.getPath());
-                }finally {
-                    if(db!=null){
-                        db.close();
-                    }
-                }
-            }else{
+            } else if (a.getPath().endsWith(".oud") || a.getPath().endsWith(".oud2")) {
+                return 0;
+            } else {
                 return -1;
             }
 
         }
-        public FileListAdapter(Context context,String directoryPath) throws FilePermException {
-            this.context = context;
-            this.layoutInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            File directory=new File(directoryPath);
-            try {
-                File[] files=directory.listFiles();
-                Arrays.sort(files);
-                Map<File,Integer>fileMap=new HashMap<>();
-                for(File file:files){
-                    fileMap.put(file,fileValue(file));
-                }
-                List<Map.Entry<File,Integer>> entries =
-                        new ArrayList<>(fileMap.entrySet());
-                Collections.sort(entries, new Comparator<Map.Entry<File,Integer>>() {
 
+        public FileListAdapter(Context context, String directoryPath) throws FilePermException {
+            this.context = context;
+            this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            File directory = new File(directoryPath);
+            try {
+                File[] files = directory.listFiles();
+                Comparator<File> comparator = new Comparator<File>() {
                     @Override
-                    public int compare(
-                            Map.Entry<File,Integer> entry1, Map.Entry<File,Integer> entry2) {
-                        return (entry2.getValue()).compareTo(entry1.getValue());
+                    public int compare(File o1, File o2) {
+                        if(o1.isDirectory()){
+                            if(o2.isDirectory()){
+                                return o1.getName().compareTo(o2.getName());
+                            }
+                            return -1;
+                        }
+                        if(!o1.getName().endsWith("oud")&&!o1.getName().endsWith("oud2")){
+                            if(!o2.isDirectory()&&!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
+                                return o1.getName().compareTo(o2.getName());
+                            }
+                            return 1;
+                        }
+                        if(o2.isDirectory()){
+                            return 1;
+                        }
+                        if(!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
+                            return -1;
+                        }
+                        return o1.getName().compareTo(o2.getName());
                     }
-                });
-                for (Map.Entry<File,Integer> s : entries) {
-                    fileList.add(s.getKey());
-                }
-            }catch (NullPointerException e){
+                };
+
+                Arrays.sort(files,comparator);
+                fileList=new ArrayList<>(Arrays.asList(files));
+            } catch (NullPointerException e) {
 
                 throw new FilePermException();
             }
-            fileList.add(0,new File(new File(directoryPath).getParent()));
+            fileList.add(0, new File(new File(directoryPath).getParent()));
         }
+
         @Override
         public int getCount() {
             return fileList.size();
@@ -428,31 +434,71 @@ public class FileSelectFragment extends AOdiaFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            convertView = layoutInflater.inflate(R.layout.file_select_file_list,parent,false);
+            convertView = layoutInflater.inflate(R.layout.file_select_file_list, parent, false);
 
-            ((TextView)convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
-            if(position==0){
-                ImageView fileIcon=convertView.findViewById(R.id.fileIcon);
+            ((TextView) convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
+            ((TextView) convertView.findViewById(R.id.stationName)).setText(stationName(fileList.get(position)));
+            if (position == 0) {
+                ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.back_to_up);
-                ((TextView)convertView.findViewById(R.id.fileName)).setText("上のフォルダ");
-            }
-            else if(fileList.get(position).isDirectory()){
-                ImageView fileIcon=convertView.findViewById(R.id.fileIcon);
+                ((TextView) convertView.findViewById(R.id.fileName)).setText("上のフォルダ");
+            } else if (fileList.get(position).isDirectory()) {
+                ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.folder_icon);
-            }
-            else if(fileList.get(position).getName().endsWith(".oud")
-                    ||fileList.get(position).getName().endsWith(".oud2")
-                    ||fileList.get(position).getName().endsWith(".jpti")
-                    ||(fileList.get(position).getName().endsWith(".zip")&&(new GTFS(getAOdiaActivity(),fileList.get(position))).isGTFS()))
-            {
-                ImageView fileIcon=convertView.findViewById(R.id.fileIcon);
+            } else if (fileList.get(position).getName().endsWith(".oud")
+                    || fileList.get(position).getName().endsWith(".oud2")
+                    ) {
+                ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.dia_icon);
             }
 
 
-            return convertView;        }
-    }
+            return convertView;
+        }
 
+        private String stationName(File file) {
+            String filePath = file.getPath();
+            if (filePath.endsWith("oud2")||filePath.endsWith("oud")) {
+                try {
+
+                    ShiftJISBufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift_JIS"));
+                    String line = br.readLine();
+                    ArrayList<String> stationNameList = new ArrayList<>();
+                    ArrayList<String> startStation = new ArrayList<>();
+                    ArrayList<String> endStation = new ArrayList<>();
+                    while (line != null) {
+                        if (line.equals("Eki.")) {
+                            while (!line.equals(".")) {
+                                String title = line.split("=", -1)[0];
+                                if (title.equals("Ekimei")) {
+                                    if (stationNameList.size() == 0) {
+                                        startStation.add(line.split("=", -1)[1]);
+                                    }
+                                    stationNameList.add(line.split("=", -1)[1]);
+                                }
+                                if (title.equals("BrunchCoreEkiIndex")) {
+                                    int branchStation = Integer.valueOf(line.split("=", -1)[1]);
+                                    if (branchStation < stationNameList.size()) {
+
+                                    }
+                                }
+                                line = br.readLine();
+
+                            }
+                        }
+                        line = br.readLine();
+
+                    }
+                    endStation.add(stationNameList.get(stationNameList.size() - 1));
+                    return startStation.get(0) + "～" + endStation.get(0);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return "";
+        }
+    }
     private class DatabaseListAdapter extends BaseAdapter{
         ArrayList<JSONObject>jsonArray=new ArrayList<>();
         LayoutInflater layoutInflater = null;
@@ -612,11 +658,11 @@ public class FileSelectFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-            return "ファイル選択";
+        return "ファイル選択";
     }
     @Override
     public String fragmentHash(){
-            return "FileSelect";
+        return "FileSelect";
     }
 
 }

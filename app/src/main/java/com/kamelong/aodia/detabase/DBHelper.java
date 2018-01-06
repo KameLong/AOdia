@@ -194,7 +194,7 @@ public class DBHelper extends SQLiteOpenHelper {
                                 + FILE_PATH + " text)");
             case 2:
                 try {
-                    db.execSQL("drop table" + TABLE_WINDOW_TYPE);
+                    db.execSQL("drop table " + TABLE_WINDOW_TYPE);
                 }catch(Exception e){
                     SdLog.log("データベースの削除に失敗しました");
                     SdLog.log(e);
@@ -294,109 +294,111 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     */
     /**
-     * line dataに新しいファイルを追加する。
-     * もしすでに同じファイルパスが登録されている場合、
-     * ダイヤ数が同じならそのままデータを再利用する
-     * ダイヤ数が異なるならデータを削除し再生成する
-     *
-     * @param filePath
-     * @param fileDiaNum
+     * line deta をアップデートする
+     * これは路線時刻表のデータを更新するためのメソッド
+     * これまでに同じfilePath,diaIndexの行がなければ新規作成する
+     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
      */
-    public void addNewFileToLineData(final String filePath,final int fileDiaNum){
+    public void updateLineData(final String filePath,final int diaIndex,final int direct,final int scrollX,final int scrollY){
         Cursor cursor=null;
-        try {
-            cursor = getReadableDatabase().query(TABLE_LINEDATA, null, FILE_PATH + "= ?", new String[]{filePath}, null, null, null);
-            if(cursor.getCount()!=fileDiaNum){
-                getWritableDatabase().delete(TABLE_LINEDATA,FILE_PATH+"= ?",new String[]{filePath});
-                for(int i=0;i<fileDiaNum;i++){
-                    ContentValues val = new ContentValues();
-                    val.put(FILE_PATH, filePath );
-                    val.put(DIA_NUM ,String.valueOf(i) );
-                    val.put(DOWN_SCROLL_X, 0 );
-                    val.put(DOWN_SCROLL_Y, 0 );
+        try{
+            cursor=getReadableDatabase().query(TABLE_LINEDATA,null,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaIndex},null,null,null);
+            if(cursor.getCount()==0){
+                ContentValues val = new ContentValues();
+                val.put(FILE_PATH, filePath );
+                val.put(DIA_NUM ,diaIndex);
+                if(direct==0){
+                    val.put(DOWN_SCROLL_X, scrollX );
+                    val.put(DOWN_SCROLL_Y, scrollY );
                     val.put(UP_SCROLL_X, 0 );
                     val.put(UP_SCROLL_Y, 0 );
-                    val.put(DIA_SCROLL_X, 0 );
-                    val.put(DIA_SCROLL_X, 0 );
-                    val.put(DIA_SCALE_X, 0 );
-                    val.put(DIA_SCALE_Y, 0 );
-                    getWritableDatabase().insert(TABLE_LINEDATA, null, val );
+                }else{
+                    val.put(DOWN_SCROLL_X, 0 );
+                    val.put(DOWN_SCROLL_Y, 0 );
+                    val.put(UP_SCROLL_X, scrollX);
+                    val.put(UP_SCROLL_Y, scrollY );
                 }
+                val.put(DIA_SCROLL_X, 0 );
+                val.put(DIA_SCROLL_X, 0 );
+                val.put(DIA_SCALE_X, 0 );
+                val.put(DIA_SCALE_Y, 0 );
+                getWritableDatabase().insert(TABLE_LINEDATA, null, val );
+
+            }else{
+                ContentValues val=new ContentValues();
+                if(direct==0){
+                    val.put(DOWN_SCROLL_X,scrollX);
+                    val.put(DOWN_SCROLL_Y,scrollY);
+                }else{
+                    val.put(UP_SCROLL_X,scrollX);
+                    val.put(UP_SCROLL_Y,scrollY);
+                }
+                getWritableDatabase().update(TABLE_LINEDATA,val,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaIndex});
+            }
+            cursor.close();
+        }catch (Exception e){
+            SdLog.log(e);
+        }finally {
+            if(cursor!=null){
+                cursor.close();
             }
         }
-        catch(Exception e){
-            SdLog.log(e);
+    }
+    /**
+     * line deta をアップデートする
+     * これはダイヤグラムのデータを更新するためのメソッド
+     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
+     */
+    public void updateLineData(final String filePath,final int diaIndex,final int scrollX,final int scrollY,final int scaleX,final int scaleY){
+        Cursor cursor=null;
+        try{
+            cursor=getReadableDatabase().query(TABLE_LINEDATA,null,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaIndex},null,null,null);
+            if(cursor.getCount()==0){
+                ContentValues val = new ContentValues();
+                val.put(FILE_PATH, filePath );
+                val.put(DIA_NUM ,diaIndex);
+                val.put(DOWN_SCROLL_X, 0 );
+                val.put(DOWN_SCROLL_Y, 0 );
+                val.put(UP_SCROLL_X, 0 );
+                val.put(UP_SCROLL_Y, 0 );
+                val.put(DIA_SCROLL_X, scrollX );
+                val.put(DIA_SCROLL_X, scrollY );
+                val.put(DIA_SCALE_X, scaleX );
+                val.put(DIA_SCALE_Y, scaleY );
+                getWritableDatabase().insert(TABLE_LINEDATA, null, val );
 
-        }
-        finally {
+            }else{
+                ContentValues val=new ContentValues();
+                val.put(DIA_SCROLL_X, scrollX );
+                val.put(DIA_SCROLL_Y, scrollY );
+                val.put(DIA_SCALE_X, scaleX );
+                val.put(DIA_SCALE_Y, scaleY );
+                getWritableDatabase().update(TABLE_LINEDATA,val,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaIndex});
+            }
+            cursor.close();
+        }catch (Exception e){
+            SdLog.log(e);
+        }finally {
             if(cursor!=null){
                 cursor.close();
             }
         }
     }
 
-    /**
-     * line deta をアップデートする
-     * これは路線時刻表のデータを更新するためのメソッド
-     * あらかじめ該当するfilePath,diaNumについてのデータを作成しておく必要がある。
-     * @see #addNewFileToLineData(String, int)
-     * @param filePath
-     * @param diaNum
-     * @param direct
-     * @param scrollX
-     * @param scrollY
-     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
-     */
-    public void updateLineData(final String filePath,final int diaNum,final int direct,final int scrollX,final int scrollY){
-        ContentValues cv=new ContentValues();
-        if(direct==0){
-            cv.put(DOWN_SCROLL_X,scrollX);
-            cv.put(DOWN_SCROLL_Y,scrollY);
-        }else{
-            cv.put(UP_SCROLL_X,scrollX);
-            cv.put(UP_SCROLL_Y,scrollY);
-        }
-        getWritableDatabase().update(TABLE_LINEDATA,cv,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum});
-        int[] data=getPositionData(getReadableDatabase(),filePath,diaNum,direct);
-        System.out.println(data[0]);
-    }
-    /**
-     * line deta をアップデートする
-     * これはダイヤグラムのデータを更新するためのメソッド
-     * あらかじめ該当するfilePath,diaNumについてのデータを作成しておく必要がある。
-     * @see #addNewFileToLineData(String, int)
-     * @param filePath
-     * @param diaNum
-     * @param scrollX
-     * @param scrollY
-     * @param scaleX
-     * @param scaleY
-     * @see #getPositionData(SQLiteDatabase, String, int, int)  保存したデータを読み出す
-     */
-    public void updateLineData(final String filePath,final int diaNum,final int scrollX,final int scrollY,final int scaleX,final int scaleY){
-        ContentValues cv=new ContentValues();
-        cv.put(DIA_SCROLL_X,scrollX);
-        cv.put(DIA_SCROLL_Y,scrollY);
-        cv.put(DIA_SCALE_X,scaleX);
-        cv.put(DIA_SCALE_Y,scaleY);
-        getWritableDatabase().update(TABLE_LINEDATA,cv,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum});
-    }
-
 
     /**
      * 各路線ファイル、各画面のスクロール位置を読みだす
      *
-     * @param db
      * @param filePath
      * @param diaNum
      * @param key 方向識別　下り路線時刻表=0　上り路線時刻表=1 ダイヤグラム=2
      * @return
      * @see #updateLineData(String, int, int, int, int)  データの保存方法
      */
-    public int[] getPositionData(SQLiteDatabase db, String filePath, int diaNum, int key){
+    public int[] getPositionData( String filePath, int diaNum, int key){
         Cursor cursor = null;
         try{
-            cursor = db.query(TABLE_LINEDATA, null,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum}, null, null, null );
+            cursor = getReadableDatabase().query(TABLE_LINEDATA, null,FILE_PATH+" = ? AND "+DIA_NUM+" = ?",new String[]{filePath,""+diaNum}, null, null, null );
             if(cursor.getCount()==0){
                 throw new Exception("no data in lineData");
             }

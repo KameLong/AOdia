@@ -13,7 +13,7 @@ import com.kamelong.aodia.diadata.AOdiaTrain
 class TrainView (context: Context, val train: AOdiaTrain, override val xsize: Int) :KLView(context) {
     val diaFile=train.diaFile
     val direct=train.direction
-    val showPassTime=false
+    val showPassTime=PreferenceManager.getDefaultSharedPreferences(context).getBoolean("secondSystem",false)
 
     var prefer=context.getSharedPreferences("AOdia-LineTrainTime", Context.MODE_PRIVATE)
     var editAllTime=prefer.getBoolean("editAllTime",false)
