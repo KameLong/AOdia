@@ -1,66 +1,28 @@
-package com.kamelong.aodia.diagram;
+package com.kamelong.aodia.Diagram;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.diadata.AOdiaStation;
-import com.kamelong.aodia.timeTable.KLView;
+import com.kamelong.OuDia.DiaFile;
+import com.kamelong.aodia.AOdiaDefaultView;
 
 import java.util.ArrayList;
 
-/*
- *     This file is part of AOdia.
-
-AOdia is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- Foobar is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- When you want to know about GNU, see <http://www.gnu.org/licenses/>.
- */
-/*
- * AOdiaはGNUに従う、オープンソースのフリーソフトです。
- * ソースコートの再利用、改変し、公開することは自由ですが、
- * 公開した場合はそのアプリにもGNUライセンスとしてください。
- *
- */
-
-/**
- * @author KameLong
- * ダイヤグラム表示画面において、駅名を表示するView
- * scaleサイズに合わせて、駅間距離を調整する
- *
- * 駅間距離は最小所要時間に比例するようにする
- *
- */
-public class StationView extends KLView {
-    private AOdiaDiaFile diaFile;
-    private DiagramSetting setting;
-    private final int yshift=30;
-    private int diaNum;
-    private float scaleX =15;
-    private float scaleY =42;
-    private Paint paint = new Paint();
-
-    private ArrayList<Integer>stationTime=new ArrayList<>();
-    private StationView(Context context){
+public class StationView extends AOdiaDefaultView {
+    DiaFile diaFile;
+    DiagramSetting setting;
+    private ArrayList<Integer> stationTime=new ArrayList<Integer>();
+    StationView(Context context){
         super(context);
     }
-    StationView(Context context, DiagramSetting s, AOdiaDiaFile dia, int num){
-       this(context);
+
+    StationView(Context context, DiagramSetting s,DiaFile dia){
+        this(context);
         setting=s;
         diaFile=dia;
-        diaNum=num;
-        stationTime=diaFile.getStationTime();
+        stationTime=dia.getStationTime();
     }
     @Override
     public void onDraw(Canvas canvas){
@@ -68,23 +30,22 @@ public class StationView extends KLView {
         final float defaultLineSize=getResources().getDisplayMetrics().densityDpi / 160f;
 
 
-        Companion.getTextPaint().setColor(Color.BLACK);
-        Companion.getTextPaint().setTextSkewX(0);
-        Companion.getTextPaint().setTypeface(Typeface.DEFAULT);
+        textPaint.setColor(Color.BLACK);
+        Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.rgb(200,200,200));
         paint.setStrokeWidth(defaultLineSize);
-        canvas.drawLine(getWidth()-2, yshift,getWidth()-2, stationTime.get(diaFile.getStationNum()-1) * scaleY / 60+(int) Companion.getTextPaint().getTextSize()+yshift, paint);
+        canvas.drawLine(getWidth()-2, 0,getWidth()-2, stationTime.get(diaFile.getStationNum()-1) * setting.scaleY+(int)textPaint.getTextSize(), paint);
         for(int i=0;i< diaFile.getStationNum();i++){
             //主要駅なら太字にする
-            if(diaFile.getStation(i).getBigStation()){
+            if(diaFile.station.get(i).bigStation){
                 paint.setStrokeWidth(defaultLineSize);
             }else{
                 paint.setStrokeWidth(defaultLineSize*0.5f);
             }
-            canvas.drawLine(0,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+yshift,1440* scaleX,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+yshift,paint);
-            canvas.drawText(diaFile.getStation(i).getName(),2,stationTime.get(i)* scaleY /60+(int) Companion.getTextPaint().getTextSize()*5/6+yshift, Companion.getTextPaint());
+            canvas.drawLine(0,stationTime.get(i)* setting.scaleY+(int)textPaint.getTextSize(),getWidth(),stationTime.get(i)* setting.scaleY+(int)textPaint.getTextSize(),paint);
+            canvas.drawText(diaFile.station.get(i).name,2,stationTime.get(i)* setting.scaleY+(int)textPaint.getTextSize()*5/6,textPaint);
         }
     }
     @Override
@@ -95,14 +56,11 @@ public class StationView extends KLView {
             this.setMeasuredDimension(getXsize(),getYsize());
         }
     }
-    public int getXsize(){
-            return (int)(Companion.getTextPaint().getTextSize()*5)+2;
+    protected int getXsize(){
+        return (int)(textPaint.getTextSize()*5)+2;
     }
-    public int getYsize(){
-            return (int)(stationTime.get(diaFile.getStationNum()-1)* scaleY /60+(int) Companion.getTextPaint().getTextSize()+4)+yshift*2;
+    protected int getYsize(){
+        return (int)(stationTime.get(diaFile.getStationNum()-1)* setting.scaleY+(int)textPaint.getTextSize()+4);
     }
-    public void setScale(float x,float y){
-        scaleX =x;
-        scaleY =y;
-    }
+
 }

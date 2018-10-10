@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kamelong.OuDia.DiaFile;
+import com.kamelong.OuDia.Diagram;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
-import com.kamelong.aodia.editDia.EditDiaDialog;
 
 /**
  * Created by kame on 2017/01/24.
@@ -51,7 +51,7 @@ public class LineMenu  extends LinearLayout{
     private int fileNum;
     private int menuIndex;
 //    private View container;
-    public LineMenu(final Context context, final AOdiaDiaFile diaFile, int index, int mMenuIndex){
+    public LineMenu(final Context context, final DiaFile diaFile, int index, int mMenuIndex){
         this(context);
         fileNum=index;
         menuIndex=mMenuIndex;
@@ -73,7 +73,6 @@ public class LineMenu  extends LinearLayout{
                 @Override
                 public void onClick(View view) {
                     ((AOdiaActivity)getContext()).upDiaFile(menuIndex);
-
                 }
             });
             if(menuIndex==0){
@@ -82,20 +81,20 @@ public class LineMenu  extends LinearLayout{
             findViewById(R.id.hidden).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    diaFile.setMenuOpen(false);
+                    diaFile.menuOpen=false;
                     closeMenu();
                 }
             });
             findViewById(R.id.expand).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    diaFile.setMenuOpen(true);
+                   diaFile.menuOpen=true;
                     openMenu();
 
                 }
             });
             TextView titleButton = (TextView)v.findViewById(R.id.TitleView);
-            titleButton.setText(diaFile.getFilePath().substring(diaFile.getFilePath().lastIndexOf("/") + 1));
+            titleButton.setText(diaFile.filePath.substring(diaFile.filePath.lastIndexOf("/") + 1));
             titleButton.setBackgroundColor(Color.TRANSPARENT);
             titleButton.setGravity(Gravity.LEFT);
             titleButton.setGravity(Gravity.CENTER_VERTICAL);
@@ -108,7 +107,7 @@ public class LineMenu  extends LinearLayout{
             station.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openEditStation(fileNum);
+//                    ((AOdiaActivity) context).openEditStation(fileNum);
                 }
             });
             lineContLinear.addView(station);
@@ -121,7 +120,7 @@ public class LineMenu  extends LinearLayout{
             trainType.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openEditTrainType(fileNum);
+//                    ((AOdiaActivity) context).openEditTrainType(fileNum);
                 }
             });
             lineContLinear.addView(trainType);
@@ -134,7 +133,7 @@ public class LineMenu  extends LinearLayout{
             timetable.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
+//                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
             lineContLinear.addView(timetable);
@@ -142,7 +141,8 @@ public class LineMenu  extends LinearLayout{
 
             for (int i = 0; i < diaFile.getDiaNum(); i++) {
                 Button diaTitle = new Button(context);
-                diaTitle.setText("　"+diaFile.getDiaName(i));
+                Diagram diagram=diaFile.diagram.get(i);
+                diaTitle.setText("　"+diagram.name);
                 diaTitle.setGravity(Gravity.LEFT);
                 diaTitle.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -152,9 +152,9 @@ public class LineMenu  extends LinearLayout{
                 diaTitle.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        EditDiaDialog dialog=new EditDiaDialog((Activity)context,diaFile,j);
-                        dialog.show();
-                        ((AOdiaActivity) context).closeMenu();
+//                        EditDiaDialog dialog=new EditDiaDialog((Activity)context,diaFile,j);
+//                        dialog.show();
+//                        ((AOdiaActivity) context).closeMenu();
                     }
                 });
                 MenuButton downButton = new MenuButton(context);
@@ -198,12 +198,12 @@ public class LineMenu  extends LinearLayout{
             comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openComment(fileNum);
+//                    ((AOdiaActivity) context).openComment(fileNum);
                 }
             });
             lineContLinear.addView(comment);
             addView(lineContLinear);
-            if(diaFile.getMenuOpen()){
+            if(diaFile.menuOpen){
                 openMenu();
             }else{
                 closeMenu();

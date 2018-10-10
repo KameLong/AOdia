@@ -11,13 +11,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
 import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
-import com.kamelong.aodia.editDia.NewFileDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,10 +48,9 @@ AOdia is free software: you can redistribute it and/or modify
  *
  *
  */
-public class MenuFragment extends Fragment {
+public class MenuFragment extends android.support.v4.app.Fragment {
     private LinearLayout layout;
-    private ArrayList<AOdiaDiaFile>diaFiles;
-    private ArrayList<Integer>diaFilesIndex;
+    private ArrayList<DiaFile>diaFiles;
     private AOdiaActivity activity;
 
     // 初期フォルダ
@@ -62,8 +59,7 @@ public class MenuFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
         activity=(AOdiaActivity) getActivity();
-        diaFiles= activity.getDiaFiles();
-            diaFilesIndex= activity.getDiaFilesIndex();
+        diaFiles= activity.diaFiles;
             return inflater.inflate(R.layout.menu, container, false);
         }catch(Exception e){
             SdLog.log(e);
@@ -93,13 +89,6 @@ public class MenuFragment extends Fragment {
             newFile.setBackgroundColor(Color.TRANSPARENT);
             newFile.setGravity(Gravity.START);
             //fileOpenLayout.addView(openFile);
-            newFile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    NewFileDialog dialog=new NewFileDialog(activity);
-                    dialog.show();
-                }
-            });
             layout.addView(newFile);
             Button openFileIcon=new Button(activity);
             //openFileIcon.setBackgroundResource(R.drawable.menu_open_file);
@@ -112,7 +101,7 @@ public class MenuFragment extends Fragment {
             openFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openFileDialog();
+                    activity.openFileSelectFragment();
                 }
             });
             layout.addView(openFile);
@@ -124,7 +113,7 @@ public class MenuFragment extends Fragment {
             saveFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.saveFile();
+//                    activity.saveFile();
                 }
             });
 
@@ -154,7 +143,7 @@ public class MenuFragment extends Fragment {
                         @Override
                         public void onFileSelect(File file) {
                             //MainActivityに処理を投げる
-                            activity.onFileSelect(file);
+//                            activity.onFileSelect(file);
                         }
                         @Override
                         public void onFileListSelect(File[] file) {
@@ -162,9 +151,9 @@ public class MenuFragment extends Fragment {
                         }
                     };
                     SearchFileDialog searchDialog=new SearchFileDialog(getActivity(),test);
-                    DBHelper db=new DBHelper(activity);
-                    ArrayList<String> fileList=db.searchStationPath(stationName);
-                    searchDialog.show(stationName,fileList);
+//                    DBHelper db=new DBHelper(activity);
+//                    ArrayList<String> fileList=db.searchStationPath(stationName);
+//                    searchDialog.show(stationName,fileList);
                     return true;
                 }
 
@@ -187,7 +176,7 @@ public class MenuFragment extends Fragment {
             resetButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.resetDetabase();
+//                    activity.resetDetabase();
                 }
             });
             layout.addView(resetButton);
@@ -199,12 +188,12 @@ public class MenuFragment extends Fragment {
             openHelp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openHelp();
+//                    activity.openHelp();
                 }
             });
             layout.addView(openHelp);
-            for (int i = 0; i < diaFilesIndex.size(); i++) {
-                LineMenu lineMenu=new LineMenu(activity,diaFiles.get(diaFilesIndex.get(i)),diaFilesIndex.get(i),i);
+            for (int i = 0; i < diaFiles.size(); i++) {
+                LineMenu lineMenu=new LineMenu(activity,diaFiles.get(activity.diaFilesIndex.get(i)),i,i);
                 layout.addView(lineMenu);
             }
             Button openSetting = new Button(activity);
@@ -215,7 +204,7 @@ public class MenuFragment extends Fragment {
             openSetting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    activity.openSetting();
+                  //  activity.openSetting();
                 }
             });
             layout.addView(openSetting);

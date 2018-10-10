@@ -1,78 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/title"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="horizontal"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lineNameFrame"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingRight="2dp">
+        </FrameLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:id="@+id/trainNameFrame"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingRight="2dp">
 
-            <FrameLayout
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lineNameFrame"
-                android:background="@drawable/frame_layout_border_line"
-                android:paddingBottom="2dp"
-                android:paddingRight="2dp">
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/trainNameFrame"
-                android:background="@drawable/frame_layout_border_line"
-                android:paddingBottom="2dp"
-                android:paddingRight="2dp">
-
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/trainNameLinear"/>
-            </FrameLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/stationNameFrame"
-                android:background="@drawable/frame_layout_border_line"
-                android:paddingBottom="2dp"
-                android:paddingRight="2dp">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/stationNameLinear"/>
-            </FrameLayout>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/trainTimeFrame"
-                android:background="@drawable/frame_layout_border_line"
-                android:paddingBottom="2dp"
-                android:paddingRight="2dp">
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/trainTimeLinear"/>
-            </FrameLayout>
-        </LinearLayout>
+                android:id="@+id/trainNameLinear"/>
+        </FrameLayout>
     </LinearLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/mainContents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@+id/bottomContents"
+        android:layout_below="@+id/title"
+        android:layout_weight="0.4"
+        android:orientation="horizontal">
+
+
+        <FrameLayout
+            android:id="@+id/stationNameFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingRight="2dp">
+
+            <LinearLayout
+                android:id="@+id/stationNameLinear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/trainTimeFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentStart="false"
+            android:layout_toRightOf="@+id/stationNameFrame"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingRight="2dp">
+
+            <LinearLayout
+                android:id="@+id/trainTimeLinear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="16dp">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabTrainTime"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:clickable="true"
+                android:padding="0dp"
+                android:visibility="visible"
+                app:backgroundTint="@android:color/holo_blue_dark"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_setting" />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/bottomContents"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="false"
+        android:layout_weight="0.6"
+        android:visibility="gone">
+
+    </FrameLayout>
+</LinearLayout>
+

@@ -11,7 +11,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kamelong.aodia.web.UrlOpenDialog;
 
 /**
  * ヘルプを表示するためのFragment
@@ -96,7 +95,7 @@ public class HelpFragment extends AOdiaFragment {
             return;
         }
         if(url.endsWith("oud")||url.endsWith("oud2")) {
-            UrlOpenDialog dialog=new UrlOpenDialog(getAodiaActivity(),url,helpView.getUrl());
+          //  UrlOpenDialog dialog=new UrlOpenDialog(getAodiaActivity(),url,helpView.getUrl());
         }
 
     }

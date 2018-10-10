@@ -25,7 +25,6 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.tool.ShiftJISBufferedReader;
 
 import org.json.JSONArray;
@@ -70,8 +69,8 @@ public class FileSelectFragment extends AOdiaFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
-        setFragmentContainer(inflater.inflate(R.layout.file_select_fragment, container, false));
-        return getFragmentContainer();
+        fragmentContainer=inflater.inflate(R.layout.file_select_fragment, container, false);
+        return fragmentContainer;
     }
 
     /**
@@ -132,7 +131,7 @@ public class FileSelectFragment extends AOdiaFragment {
     private void initTab1(){
         Spinner spinner=(Spinner)findViewById(R.id.spinner);
 
-        final File[] rootFolderList= getAodiaActivity().getExternalFilesDirs(null);
+        final File[] rootFolderList= getAOdiaActivity().getExternalFilesDirs(null);
         String[] rootFolderName=new String[rootFolderList.length];
         for(int i=0;i<rootFolderList.length;i++){
             if(rootFolderList[i]==null){
@@ -145,7 +144,7 @@ public class FileSelectFragment extends AOdiaFragment {
                 rootFolderName[i] = (i + 1) + ":端末フォルダ";
             }
         }
-        ArrayAdapter<String>adapter=new ArrayAdapter<>(getAodiaActivity(),android.R.layout.simple_spinner_item,rootFolderName);
+        ArrayAdapter<String>adapter=new ArrayAdapter<>(getAOdiaActivity(),android.R.layout.simple_spinner_item,rootFolderName);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -179,7 +178,7 @@ public class FileSelectFragment extends AOdiaFragment {
             System.out.println("tab1Open");
             if (file.isDirectory()) {
                 final ListView fileListView = (ListView) findViewById(R.id.fileList);
-                final FileListAdapter adapter = new FileListAdapter(getAodiaActivity(), file.getPath());
+                final FileListAdapter adapter = new FileListAdapter(getAOdiaActivity(), file.getPath());
 
 
                 fileListView.setAdapter(adapter);
@@ -197,19 +196,19 @@ public class FileSelectFragment extends AOdiaFragment {
             } else if (file.exists()) {
                 if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")) {
                     try{
-                        ((AOdiaActivity) getAodiaActivity()).onFileSelect(file);
+                        ((AOdiaActivity) getAOdiaActivity()).openFile(file);
                     }catch (Exception e){
                         System.out.println("AOdia専用の処理です");
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(getAodiaActivity(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getAOdiaActivity(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getAodiaActivity(), "このファイルは開けません", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getAOdiaActivity(), "このファイルは開けません", Toast.LENGTH_SHORT).show();
             }
         }catch (FilePermException e){
-            Toast.makeText(getAodiaActivity(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAOdiaActivity(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -320,7 +319,7 @@ public class FileSelectFragment extends AOdiaFragment {
                                 inReader.close();
                                 in.close();
                             }else{
-                                Toast.makeText(getAodiaActivity(),"検索エラー"+connection.getResponseCode(),Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getAOdiaActivity(),"検索エラー"+connection.getResponseCode(),Toast.LENGTH_SHORT).show();
                             }
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
@@ -341,7 +340,7 @@ public class FileSelectFragment extends AOdiaFragment {
     private void tab2Result(JSONArray json) {
         ListView listView=(ListView)findViewById(R.id.databaseList);
         try {
-            DatabaseListAdapter adapter = new DatabaseListAdapter(getAodiaActivity(),json);
+            DatabaseListAdapter adapter = new DatabaseListAdapter(getAOdiaActivity(),json);
             listView.setAdapter(adapter);
 
 
@@ -546,10 +545,10 @@ public class FileSelectFragment extends AOdiaFragment {
                 for(int i=0;i<jsonArray.get(position).getJSONArray("stationName").length();i++){
                     stationNameList.add(jsonArray.get(position).getJSONArray("stationName").getString(i));
                 }
-                ArrayAdapter<String>keywordAdapter=new ArrayAdapter<>(getAodiaActivity(),android.R.layout.simple_spinner_item,keywordList);
+                ArrayAdapter<String>keywordAdapter=new ArrayAdapter<>(getAOdiaActivity(),android.R.layout.simple_spinner_item,keywordList);
                 keywordAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 keywordSpinner.setAdapter(keywordAdapter);
-                ArrayAdapter<String>stationAdapter=new ArrayAdapter<>(getAodiaActivity(),android.R.layout.simple_spinner_item,stationNameList);
+                ArrayAdapter<String>stationAdapter=new ArrayAdapter<>(getAOdiaActivity(),android.R.layout.simple_spinner_item,stationNameList);
                 stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 stationSpinner.setAdapter(stationAdapter);
                 convertView.findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
@@ -567,7 +566,7 @@ public class FileSelectFragment extends AOdiaFragment {
                                         download.connect();
                                         final DataInputStream DATA_INPUT = new DataInputStream(download.getInputStream());
                                         // 書き込み用ストリーム
-                                        final FileOutputStream FILE_OUTPUT = new FileOutputStream(getAodiaActivity().getExternalFilesDir(null).getPath() + "/"+jsonArray.get(position).getString("lineName")+".oud");
+                                        final FileOutputStream FILE_OUTPUT = new FileOutputStream(getAOdiaActivity().getExternalFilesDir(null).getPath() + "/"+jsonArray.get(position).getString("lineName")+".oud");
                                         final DataOutputStream DATA_OUT = new DataOutputStream(FILE_OUTPUT);
                                         // 読み込みデータ単位
                                         final byte[] BUFFER = new byte[4096];
@@ -587,7 +586,7 @@ public class FileSelectFragment extends AOdiaFragment {
                                             @Override
                                             public void run() {
                                                 try {
-                                                    ((AOdiaActivity) getAodiaActivity()).onFileSelect(new File(getAodiaActivity().getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud"));
+//                                                    ((AOdiaActivity) getAOdiaActivity()).onFileSelect(new File(getAOdiaActivity().getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud"));
                                                 }catch (Exception e){
                                                     e.printStackTrace();
                                                 }
@@ -629,8 +628,8 @@ public class FileSelectFragment extends AOdiaFragment {
                 valueA=10000;
             }else if(a.getPath().endsWith(".oud")||a.getPath().endsWith(".oud2")||a.getPath().endsWith(".jpti")){
                 long time=System.currentTimeMillis();
-                DBHelper db=new DBHelper(getAodiaActivity());
-                valueA=db.fileOpenedNum(a.getPath());
+//                DBHelper db=new DBHelper(getAodiaActivity());
+//                valueA=db.fileOpenedNum(a.getPath());
                 System.out.println(System.currentTimeMillis()-time);
             }else{
                 valueA=-1;
@@ -640,8 +639,8 @@ public class FileSelectFragment extends AOdiaFragment {
                 valueB=10000;
             }else if(b.getPath().endsWith(".oud")||b.getPath().endsWith(".oud2")||b.getPath().endsWith(".jpti")){
                 long time=System.currentTimeMillis();
-                DBHelper db=new DBHelper(getAodiaActivity());
-                valueB=db.fileOpenedNum(b.getPath());
+//                DBHelper db=new DBHelper(getAodiaActivity());
+//                valueB=db.fileOpenedNum(b.getPath());
                 System.out.println(System.currentTimeMillis()-time);
             }else{
                 valueB=-1;
@@ -656,11 +655,9 @@ public class FileSelectFragment extends AOdiaFragment {
         }
 
     }
-    @Override
     public String fragmentName(){
         return "ファイル選択";
     }
-    @Override
     public String fragmentHash(){
         return "FileSelect";
     }
