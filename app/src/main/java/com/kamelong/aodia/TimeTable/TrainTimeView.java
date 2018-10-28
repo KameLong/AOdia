@@ -21,28 +21,39 @@ public class TrainTimeView extends AOdiaDefaultView {
      * 秒単位時刻
      */
     private boolean secondFrag=false;
-    private boolean remarkFrag=false;
     private boolean showPassFrag=false;
+    private boolean remarkFrag=false;
+    private int textWidth=5;
     public TrainTimeView(Context context, DiaFile diaFile, Train train,int direct){
         super(context);
         this.diaFile=diaFile;
         this.direct=direct;
         this.train=train;
+        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
+        secondFrag=spf.getBoolean("secondSystem",false);
+        showPassFrag=spf.getBoolean("showPass",false);
+        remarkFrag=spf.getBoolean("showRemark",true);
+        textWidth=Integer.parseInt(spf.getString("lineTimetableWidth",textWidth+""));
     }
 
     protected int getXsize(){
-        return (int)(textPaint.getTextSize()*2.5);
+        if(secondFrag) {
+            return (int) (textPaint.getTextSize() *(textWidth+3)/2);
+        }else{
+            return (int) (textPaint.getTextSize() *textWidth/2);
+
+        }
     }
     public void onDraw(Canvas canvas){
         drawTime(canvas);
-//        if(remarkFrag)drawRemark(canvas);
+        if(remarkFrag)drawRemark(canvas);
         canvas.drawLine(getWidth()-1,0,getWidth()-1,getHeight(),blackPaint);
 
     }
     private void drawTime(Canvas canvas){
         int startLine=0;
-        textPaint.setColor(diaFile.trainType.get(train.type).textColor.getAndroidColor());
         for(int i=0;i<diaFile.getStationNum();i++){
+            textPaint.setColor(diaFile.trainType.get(train.type).textColor.getAndroidColor());
             int stationNumber=(diaFile.getStationNum()-1)*direct+(1-2*direct)*i;
             Station station=diaFile.station.get(stationNumber);
             switch (station.getTimeTableStyle(direct)){
@@ -241,8 +252,8 @@ public class TrainTimeView extends AOdiaDefaultView {
                 checkStation=0;
             }
             if(diaFile.station.get(checkStation).getBorder()){
-                canvas.drawLine(0, startLine-(int)(textPaint.getTextSize()*4/5),this.getWidth()-1,startLine-(int)(textPaint.getTextSize()*4/5),blackPaint);
-                startLine=startLine+(int)(textPaint.getTextSize()*1/6);
+                startLine=startLine+(int)(textPaint.getTextSize()*1/3);
+                canvas.drawLine(0, startLine,this.getWidth()-1,startLine,blackBPaint);
             }
         }
 
@@ -296,14 +307,14 @@ public class TrainTimeView extends AOdiaDefaultView {
                 checkStation=0;
             }
             if(diaFile.station.get(checkStation).getBorder()){
-                startLine+=(textSize*1/6);
+                startLine+=(textSize*1/3);
             }
         }
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("remark",false)){
+        if(remarkFrag){
             startLine+=(int)(textSize*9.4f);
         }
-        startLine+=textSize/6;
+        startLine+=textSize/3;
         return startLine;
     }
     private void drawText(Canvas canvas, String text, int x, int y, Paint paint, boolean centerFrag){
@@ -392,7 +403,59 @@ public class TrainTimeView extends AOdiaDefaultView {
         return "○";
     }
 
+    private void drawRemark(Canvas  canvas){
+        try {
+            int startY = (int) (this.getHeight() - 9.3f * textSize);
+            canvas.drawLine(0, startY, getWidth(), startY, blackBPaint);
+            int heightSpace = 18;
 
+            String value= train.remark;
+            value=value.replace('ー','｜');
+            value=value.replace('（','(');
+            value=value.replace('）',')');
+            value=value.replace('「','┐');
+            value=value.replace('」','└');
+            char[] str =value.toCharArray();
+            int lineNum = 1;
+            int space = heightSpace;
+            for (int i = 0; i < str.length; i++) {
+                if (space <= 0) {
+                    space = heightSpace;
+                    lineNum++;
+                }
+                if (!charIsEng(str[i])) {
+                    space--;
+                }
+                space--;
+            }
+            space = heightSpace;
+            int startX = (int) ((getWidth() - lineNum * textSize*1.2f) / 2 + (lineNum-1) * textSize*1.2f);
+            startY = (int) (this.getHeight() - 9.1f * textSize);
+            for (int i = 0; i < str.length; i++) {
+                if (space <= 0) {
+                    space = heightSpace;
+                    startX = startX - (int)(textSize*1.2f);
+                    startY = (int) (this.getHeight() - 9.1f * textSize);
+                }
+                if (charIsEng(str[i])) {
+                    space--;
+                    canvas.rotate(90);
+                    canvas.drawText(String.valueOf(str[i]), startY, -startX-(textSize*0.2f), textPaint);
+                    canvas.rotate(-90);
+                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                } else {
+                    space = space - 2;
+                    startY = startY +textSize;
+                    canvas.drawText(String.valueOf(str[i]), startX, startY, textPaint);
+                }
 
+            }
+        }catch(Exception e){
+            SdLog.log(e);
+        }
+    }
+    private boolean charIsEng(char c){
+        return c<256;
+    }
 
 }

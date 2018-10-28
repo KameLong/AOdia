@@ -83,27 +83,222 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal" />
         </FrameLayout>
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+        <RelativeLayout
+            android:layout_width="170dp"
+            android:layout_height="170dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="16dp">
 
+
+            <FrameLayout
+                android:id="@+id/frameShowPass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabShowPass"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="通過時刻"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameTrainDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabTrainDelete"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="列車削除"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameShowSecond"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabShowSeconds"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="秒表示"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameShowRemark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabShowRemark"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="備考"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameShowTrainName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabShowTrainName"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="列車名"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/frameRenewOperation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabRenewOperation"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+                <TextView
+                    android:layout_width="56dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="運用更新"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="13dp" />
+            </FrameLayout>
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fabTrainTime"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
                 android:layout_gravity="center"
                 android:layout_margin="0dp"
-                android:clickable="true"
                 android:padding="0dp"
                 android:visibility="visible"
                 app:backgroundTint="@android:color/holo_blue_dark"
                 app:elevation="0dp"
                 app:fabSize="normal"
                 app:srcCompat="@drawable/diagram_setting" />
-        </FrameLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
@@ -112,8 +307,6 @@
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="false"
         android:layout_weight="0.6"
         android:visibility="gone">
 

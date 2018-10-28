@@ -1,8 +1,12 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.tool.ShiftJISBufferedReader;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -29,7 +33,8 @@ public class DiaFile {
         filePath=file.getPath();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         version=br.readLine().split("=",-1)[1];
-        if(version.startsWith("OuDia.")){
+        double v=Double.parseDouble(version.substring(version.indexOf(".")+1));
+        if(version.startsWith("OuDia.")||v<1.03){
             loadShiftJis(file);
         }else{
             loadDiaFile(br);
@@ -39,7 +44,7 @@ public class DiaFile {
 
     }
     private void loadShiftJis(File file)throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
+        BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
         String nouse=br.readLine();
         loadDiaFile(br);
     }
@@ -48,15 +53,30 @@ public class DiaFile {
             br.readLine();//Rosen.
             name=br.readLine().split("=",-1)[1];
             String line=br.readLine();
-            while(!line.equals(".")){
+            while(line!=null){
                 if(line.equals("Eki.")){
-                    station.add(new Station(br));
+                    station.add(new Station(br,this));
                 }
                 if(line.equals("Ressyasyubetsu.")){
                     trainType.add(new TrainType(br));
                 }
                 if(line.equals("Dia.")){
                     diagram.add(new Diagram(this,br));
+                }
+                if(line.startsWith("KitenJikoku=")){
+                    String value=line.split("=")[1];
+                    if(value.length()==4){
+                        diagramStartTime=Integer.parseInt(value.substring(0,2))*60;
+                        diagramStartTime+=Integer.parseInt(value.substring(2,4));
+                        diagramStartTime=diagramStartTime*60;
+                    }else{
+                        diagramStartTime=Integer.parseInt(value.substring(0,1))*60;
+                        diagramStartTime+=Integer.parseInt(value.substring(1,3));
+                        diagramStartTime=diagramStartTime*60;
+                    }
+                }
+                if(line.startsWith("Comment=")){
+                    comment=line.split("=",-1)[1].replace("\\n","\n");
                 }
                 line=br.readLine();
             }
@@ -187,6 +207,45 @@ public class DiaFile {
         }
 
         return result;
+    }
+    public void saveToFile(String fileName){
+        try {
+            FileOutputStream fos = new FileOutputStream(fileName);
+
+            //BOM付与
+            fos.write(0xef);
+            fos.write(0xbb);
+            fos.write(0xbf);
+            fos.close();
+            FileWriter out=new FileWriter(fileName,true);
+            out.write("FileType=OuDiaSecond.1.04\r\n");
+            out.write("Rosen.\r\n");
+            out.write("Rosenmei="+name+"\r\n");
+            for(Station s:station){
+                s.saveToFile(out);
+            }
+            for(TrainType type:trainType){
+                type.saveToFile(out);
+            }
+            for(Diagram dia:diagram){
+                dia.saveToFile(out);
+            }
+
+            out.write("KitenJikoku="+diagramStartTime/3600+String.format("%02d",(diagramStartTime/60)%60)+"\r\n");
+            out.write("DiagramDgrYZahyouKyoriDefault=60\r\n");
+            out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
+            out.write(".\r\n");
+            out.write("DispProp.\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouVFont=PointTextHeight=9;Facename=@ＭＳ ゴシック\r\nDiaEkimeiFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaJikokuFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaRessyaFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nCommentFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaMojiColor=00000000\r\nDiaHaikeiColor=00FFFFFF\r\nDiaRessyaColor=00000000\r\nDiaJikuColor=00C0C0C0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00F0F0F0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00FFFFFF\r\nStdOpeTimeLowerColor=00E0E0FF\r\nStdOpeTimeHigherColor=00FFFFE0\r\nStdOpeTimeUndefColor=0080FFFF\r\nStdOpeTimeIllegalColor=00A0A0A0\r\nEkimeiLength=6\r\nJikokuhyouRessyaWidth=8\r\nAnySecondIncDec1=10\r\nAnySecondIncDec2=-10\r\nDisplayRessyamei=1\r\nDisplayOuterTerminalEkimeiOriginSide=0\r\nDisplayOuterTerminalEkimeiTerminalSide=0\r\nDiagramDisplayOuterTerminal=0\r\n.\r\nFileTypeAppComment=OuDiaSecond Ver. 1.04.03");
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void copyDiagram(int diagramIndex,String diaName){
+        diagram.add(new Diagram(diagram.get(diagramIndex)));
+        diagram.get(diagram.size()-1).name=diaName;
     }
 
 }

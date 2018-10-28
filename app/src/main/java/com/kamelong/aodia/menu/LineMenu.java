@@ -2,7 +2,9 @@ package com.kamelong.aodia.menu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -62,7 +64,20 @@ public class LineMenu  extends LinearLayout{
             lineContLinear.setOrientation(VERTICAL);
             View v= ((Activity)getContext()).getLayoutInflater().inflate(R.layout.menu_line_buttons, lineButtonLinear);
             addView(lineButtonLinear);
+            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+            if(spf.getBoolean("001",false)){
+                findViewById(R.id.saveButton).setVisibility(VISIBLE);
+            }else{
+                findViewById(R.id.saveButton).setVisibility(GONE);
 
+            }
+
+            findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ((AOdiaActivity)getContext()).openSaveDialog(menuIndex);
+                }
+            });
             findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -110,7 +125,7 @@ public class LineMenu  extends LinearLayout{
 //                    ((AOdiaActivity) context).openEditStation(fileNum);
                 }
             });
-            lineContLinear.addView(station);
+//            lineContLinear.addView(station);
             Button trainType = new Button(context);
             trainType.setText("　種別編集");
             trainType.setGravity(Gravity.LEFT);
@@ -123,7 +138,7 @@ public class LineMenu  extends LinearLayout{
 //                    ((AOdiaActivity) context).openEditTrainType(fileNum);
                 }
             });
-            lineContLinear.addView(trainType);
+//            lineContLinear.addView(trainType);
             Button timetable = new Button(context);
             timetable.setText("　駅時刻表一覧");
             timetable.setGravity(Gravity.LEFT);
@@ -133,7 +148,7 @@ public class LineMenu  extends LinearLayout{
             timetable.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
+                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
             lineContLinear.addView(timetable);
@@ -152,9 +167,9 @@ public class LineMenu  extends LinearLayout{
                 diaTitle.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                        EditDiaDialog dialog=new EditDiaDialog((Activity)context,diaFile,j);
-//                        dialog.show();
-//                        ((AOdiaActivity) context).closeMenu();
+                        DiagramEditDialog dialog=new DiagramEditDialog((AOdiaActivity)context,diaFile,j);
+                        dialog.show();
+                        ((AOdiaActivity) context).closeMenu();
                     }
                 });
                 MenuButton downButton = new MenuButton(context);
@@ -198,7 +213,7 @@ public class LineMenu  extends LinearLayout{
             comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    ((AOdiaActivity) context).openComment(fileNum);
+                    ((AOdiaActivity) context).openCommentFragment(fileNum);
                 }
             });
             lineContLinear.addView(comment);

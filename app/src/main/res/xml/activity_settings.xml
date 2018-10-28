@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="全体設定">
+
+   <PreferenceCategory android:title="全体設定">
         <EditTextPreference
             android:key="textsize2"
             android:title="文字サイズ"
@@ -23,7 +24,7 @@
             android:key="lineTimetableWidth"
             android:maxLength="1"
             android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
-            android:title="路線時刻表の列車の幅：？文字（半角）"></EditTextPreference>
+            android:title="路線時刻表の列車の幅：？文字（半角）"/>
         <CheckBoxPreference
             android:key="secondSystem"
             android:summary="時刻表が秒単位になります"
@@ -69,6 +70,6 @@
             android:enabled="true"
             android:key="001"
             android:summary="有料オプションです"
-            android:title="（300円）oud2ファイル保存機能を解禁する" />
+            android:title="（300円）OuDiaSecond形式でのファイル保存機能を解禁する" />
     </PreferenceCategory>
 </PreferenceScreen>

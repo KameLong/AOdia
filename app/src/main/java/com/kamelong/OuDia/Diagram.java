@@ -1,6 +1,7 @@
 package com.kamelong.OuDia;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Diagram {
@@ -40,6 +41,16 @@ public class Diagram {
             e.printStackTrace();
         }
     }
+    public Diagram(Diagram old){
+        diaFile=old.diaFile;
+        name=old.name;
+        for(int direction=0;direction<2;direction++){
+            trains[direction]=new ArrayList<>();
+            for(Train t:old.trains[direction]){
+                trains[direction].add(new Train(t));
+            }
+        }
+    }
     /**
      * 時刻表を並び替える。
      * 並び替えに関しては、基準駅の通過時刻をもとに並び替えた後
@@ -50,9 +61,9 @@ public class Diagram {
         Train[] trainList=trains[direction].toArray(new Train[0]);
 
         //ソートする前の順番を格納したクラス
-        ArrayList<Integer> sortBefore=new ArrayList<Integer>();
+        ArrayList<Integer> sortBefore=new ArrayList<>();
         //ソートした後の順番を格納したクラス
-        ArrayList<Integer> sortAfter=new ArrayList<Integer>();
+        ArrayList<Integer> sortAfter=new ArrayList<>();
 
         for(int i=0;i<trainList.length;i++){
             sortBefore.add(i);
@@ -62,7 +73,7 @@ public class Diagram {
             if (trainList[sortBefore.get(i)].getPredictionTime(stationNumber)>0&&!trainList[sortBefore.get(i)].checkDoubleDay()) {
                 //今からsortAfterに追加する列車の基準駅の時間
                 int baseTime=trainList[sortBefore.get(i)].getPredictionTime(stationNumber);
-                int j=0;
+                int j;
                 for(j=sortAfter.size();j>0;j--) {
                     if(trainList[sortAfter.get(j-1)].getPredictionTime(stationNumber)<baseTime){
                         break;
@@ -181,7 +192,7 @@ public class Diagram {
             if (trainList[sortBefore.get(i)].getPredictionTime(stationNumber)>0) {
                 //今からsortAfterに追加する列車の基準駅の時間
                 int baseTime=trainList[sortBefore.get(i)].getPredictionTime(stationNumber);
-                int j=0;
+                int j;
                 for(j=sortAfter.size();j>0;j--) {
                     if(trainList[sortAfter.get(j-1)].getPredictionTime(stationNumber)>0&&trainList[sortAfter.get(j-1)].getPredictionTime(stationNumber)<baseTime){
                         break;
@@ -193,10 +204,8 @@ public class Diagram {
             }
         }
 
-        for(int i=0;i<sortBefore.size();i++) {
-            sortAfter.add(sortBefore.get(i));
-        }
-        ArrayList<Train> trainAfter=new ArrayList<Train>();
+            sortAfter.addAll(sortBefore);
+        ArrayList<Train> trainAfter=new ArrayList<>();
         for(int i=0;i<sortAfter.size();i++){
             trainAfter.add(trainList[sortAfter.get(i)]);
         }
@@ -209,7 +218,7 @@ public class Diagram {
             if (baseTime < 0||trains[sortBefore.get(i-1)].checkDoubleDay()) {
                 continue;
             }
-            int j = 0;
+            int j =0;
             boolean frag = false;
 
             for (j = 0; j < sortAfter.size(); j++) {
@@ -338,7 +347,7 @@ public class Diagram {
         int bestTime=10000000;
         int stop=train.getStop(endStation);
         if(stop==0){
-            stop=diaFile.station.get(endStation).stopMain[0];
+            stop=diaFile.station.get(endStation).stopMain[train.direction];
         }
         for(Train t:trains[0]){
             int stop2=t.getStop(endStation);
@@ -355,7 +364,7 @@ public class Diagram {
         for(Train t:trains[1]){
             int stop2=t.getStop(endStation);
             if(stop2==0){
-                stop2=diaFile.station.get(endStation).stopMain[0];
+                stop2=diaFile.station.get(endStation).stopMain[1];
             }
             if(stop==stop2){
                 if(t.getDATime(endStation)>endTime&&t.getDATime(endStation)<bestTime){
@@ -375,21 +384,39 @@ public class Diagram {
     }
     public Train beforeOperation(Train train){
         int startStation=train.startStation();
+        if(startStation<0)return null;
         int startTime=train.getDATime(startStation);
         if(startTime<0)return null;
         Train bestTrain=null;
-        int bestTime=10000000;
+        int bestTime=0;
+        int stop=train.getStop(startStation);
+        if(stop==0){
+            stop=diaFile.station.get(startStation).stopMain[train.direction];
+        }
         for(Train t:trains[0]){
-            if(t.getStop(startStation)==train.getStop(startStation)){
-                if(t.getDATime(startStation)>startTime&&t.getPredictionTime(startStation,0)<bestTime){
+            int stop2=t.getStop(startStation);
+            if(stop2==0){
+                stop2=diaFile.station.get(startStation).stopMain[0];
+            }
+
+            if(stop==stop2){
+                if(t.getADTime(startStation)<startTime&&t.getADTime(startStation)>bestTime){
                     bestTrain=t;
+                    bestTime=t.getADTime(startStation);
                 }
             }
         }
-        for(Train t:trains[0]){
-            if(t.getStop(startStation)==train.getStop(startStation)){
-                if(t.getDATime(startStation)>startTime&&t.getPredictionTime(startStation,0)<bestTime){
+        for(Train t:trains[1]){
+            int stop2=t.getStop(startStation);
+            if(stop2==0){
+                stop2=diaFile.station.get(startStation).stopMain[1];
+            }
+
+            if(stop==stop2){
+                if(t.getADTime(startStation)<startTime&&t.getADTime(startStation)>bestTime){
                     bestTrain=t;
+                    bestTime=t.getADTime(startStation);
+
                 }
             }
         }
@@ -425,6 +452,26 @@ public class Diagram {
             }
         }
 
+    }
+    public void saveToFile(FileWriter out){
+        try{
+            out.write("Dia.\r\n");
+            out.write("DiaName="+name+"\r\n");
+            out.write("Kudari.\r\n");
+            for(Train t:trains[0]){
+                t.saveToFile(out);
+            }
+            out.write(".\r\n");
+            out.write("Nobori.\r\n");
+            for(Train t:trains[1]){
+                t.saveToFile(out);
+            }
+            out.write(".\r\n");
+            out.write(".\r\n");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }

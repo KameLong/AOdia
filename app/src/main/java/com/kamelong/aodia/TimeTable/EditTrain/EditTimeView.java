@@ -3,6 +3,7 @@ package com.kamelong.aodia.TimeTable.EditTrain;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputFilter;
 import android.text.InputType;

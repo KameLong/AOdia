@@ -72,6 +72,7 @@ public class DiagramSetting {
         this.activity = activity;
         this.fragment = fragment;
         this.diaFile = diaFile;
+        if(diaFile==null)return;
         //デフォルトscaleはTrainNumに依存する
         if (diaFile.getTrainSize(diaNumber, 0) > 100) {
             scaleX = 0.1f;
@@ -249,7 +250,28 @@ public class DiagramSetting {
             }
         });
 
-
+        //オートスクロールについての処理
+        //処理の後はbuttonInitを呼び出してボタンを再構成する
+        FloatingActionButton fabAuto = (FloatingActionButton) fragment.findViewById(R.id.autoScroll);
+        fabAuto.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                autoScrollState=(autoScrollState+1)%3;
+                switch(autoScrollState){
+                    case 0:
+                        break;
+                    case 1:
+                        fragment.autoScroll();//スクロール開始
+                        break;
+                    case 2:
+                        fragment.stopAutoScroll();//スクロール終了
+                        break;
+                }
+                //diagramFrameを再構成
+                ((FrameLayout)fragment.findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+                DiagramSetting.this.buttonInit();
+            }
+        });
         //時間軸を細かくする
         FloatingActionButton fabFinely = (FloatingActionButton) fragment.findViewById(R.id.fabFinely);
         fabFinely.setOnClickListener(new View.OnClickListener(){
@@ -315,7 +337,7 @@ public class DiagramSetting {
         fabFit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-//                fragment.fitVertical();
+                fragment.fitVertical();
             }
         });
         //列車番号・列車名の表示を切り替える

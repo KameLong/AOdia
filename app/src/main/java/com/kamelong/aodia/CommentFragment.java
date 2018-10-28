@@ -44,7 +44,7 @@ public class CommentFragment extends AOdiaFragment {
         try {
 
             Bundle bundle = getArguments();
-            fileNum=bundle.getInt("fileNum");
+            fileNum=bundle.getInt("fileIndex");
             diaFile=getAOdiaActivity().diaFiles.get(fileNum);
         }catch(Exception e){
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
@@ -75,7 +75,7 @@ public class CommentFragment extends AOdiaFragment {
 //    @Override
     public String fragmentName(){
         try {
-            return "コメント";
+            return "コメント\n"+diaFile.name;
         }catch(Exception e){
             SdLog.log(e);
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();

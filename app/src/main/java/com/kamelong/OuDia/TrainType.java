@@ -3,6 +3,7 @@ package com.kamelong.OuDia;
 import com.kamelong.tool.Color;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 
 public class TrainType {
     public String name="";
@@ -54,6 +55,38 @@ public class TrainType {
 
 
             }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void saveToFile(FileWriter out){
+        try{
+            out.write("Ressyasyubetsu.\r\n");
+            out.write("Syubetsumei="+name+"\r\n");
+            out.write("Ryakusyou="+shortName+"\r\n");
+            out.write("JikokuhyouMojiColor="+textColor.getOudiaString()+"\r\n");
+            out.write("DiagramSenColor="+diaColor.getOudiaString()+"\r\n");
+            switch (lineStyle){
+                case 0:
+                    out.write("DiagramSenStyle=SenStyle_Jissen\r\n");
+                    break;
+                case 1:
+                    out.write("DiagramSenStyle=SenStyle_Hasen\r\n");
+                    break;
+                case 2:
+                    out.write("DiagramSenStyle=SenStyle_Tensen\r\n");
+                    break;
+                case 3:
+                    out.write("DiagramSenStyle=SenStyle_Ittensasen\r\n");
+                    break;
+            }
+            if (bold){
+                out.write("DiagramSenIsBold=1");
+            }
+            if(stopmark){
+                out.write("StopMarkDrawType=EStopMarkDrawType_DrawOnStop\r\n");
+            }
+            out.write(".\r\n");
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

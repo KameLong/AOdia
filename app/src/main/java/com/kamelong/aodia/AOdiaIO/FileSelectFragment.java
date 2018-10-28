@@ -132,8 +132,11 @@ public class FileSelectFragment extends AOdiaFragment {
         Spinner spinner=(Spinner)findViewById(R.id.spinner);
 
         final File[] rootFolderList= getAOdiaActivity().getExternalFilesDirs(null);
-        String[] rootFolderName=new String[rootFolderList.length];
+        final ArrayList<File>rootFolder=new ArrayList<>();
+
+        String[] rootFolderName=new String[rootFolderList.length+1];
         for(int i=0;i<rootFolderList.length;i++){
+            rootFolder.add(rootFolderList[i]);
             if(rootFolderList[i]==null){
                 rootFolderName[i] = (i + 1) + ":使用不可";
                 continue;
@@ -144,6 +147,10 @@ public class FileSelectFragment extends AOdiaFragment {
                 rootFolderName[i] = (i + 1) + ":端末フォルダ";
             }
         }
+        rootFolder.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
+        rootFolderName[rootFolderName.length-1] = (rootFolderName.length) + ":ダウンロードフォルダ";
+
+
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getAOdiaActivity(),android.R.layout.simple_spinner_item,rootFolderName);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -151,8 +158,8 @@ public class FileSelectFragment extends AOdiaFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
-                if(rootFolderList[position]!=null) {
-                    tab1OpenFile(rootFolderList[position]);
+                if(rootFolder.get(position)!=null) {
+                    tab1OpenFile(rootFolder.get(position));
                 }else{
                     SdLog.toast("このフォルダは開けません");
                 }
@@ -209,6 +216,7 @@ public class FileSelectFragment extends AOdiaFragment {
             }
         }catch (FilePermException e){
             Toast.makeText(getAOdiaActivity(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();
+            getAOdiaActivity().storagePermission();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -459,8 +467,15 @@ public class FileSelectFragment extends AOdiaFragment {
             String filePath = file.getPath();
             if (filePath.endsWith("oud2")||filePath.endsWith("oud")) {
                 try {
+                    BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file) ));
+                    String version=br.readLine().split("=",-1)[1];
+                    double v=Double.parseDouble(version.substring(version.indexOf(".")+1));
+                    if(version.startsWith("OuDia.")||v<1.03){
+                        br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift_JIS"));
+                        br.readLine();
+                    }else{
+                    }
 
-                    ShiftJISBufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift_JIS"));
                     String line = br.readLine();
                     ArrayList<String> stationNameList = new ArrayList<>();
                     ArrayList<String> startStation = new ArrayList<>();
@@ -586,7 +601,7 @@ public class FileSelectFragment extends AOdiaFragment {
                                             @Override
                                             public void run() {
                                                 try {
-//                                                    ((AOdiaActivity) getAOdiaActivity()).onFileSelect(new File(getAOdiaActivity().getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud"));
+                                                    (getAOdiaActivity()).openFile(new File(getAOdiaActivity().getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud"));
                                                 }catch (Exception e){
                                                     e.printStackTrace();
                                                 }

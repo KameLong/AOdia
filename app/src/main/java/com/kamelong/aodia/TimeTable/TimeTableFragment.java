@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
@@ -34,17 +35,21 @@ public class TimeTableFragment extends AOdiaFragment {
 
     private Diagram diagram =null;
 
+    TimeTableSetting setting;
+
     public TimeTableFragment() {
         super();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        setting=new TimeTableSetting();
         try {//まずBundleを確認し、fileNum,diaNumber,directを更新する
             Bundle bundle = getArguments();
-            diaNum = bundle.getInt("diaNum");
-            fileNum=bundle.getInt("fileNum");
-            direction =  bundle.getInt("direction");
+            diaNum = bundle.getInt("diagramIndex",0);
+            fileNum=bundle.getInt("fileIndex",0);
+            direction =  bundle.getInt("direction",0);
+            editTrain=bundle.getInt("trainEdit",-1);
         }catch(Exception e){
             SdLog.log(e);
         }
@@ -93,67 +98,8 @@ public class TimeTableFragment extends AOdiaFragment {
                         }
 
                         SdLog.log("timeTableLongPress", diaFile.station.get(station).name);
-                        findViewById(R.id.bottomContents).setVisibility(View.VISIBLE);
-                        TrainTimeEditFragment fragment=new TrainTimeEditFragment();
-                        Bundle args=new Bundle();
-                        args.putInt("fileNumber",fileNum);
-                        args.putInt("diaNumber", diaNum);
-                        args.putInt("direction", direction);
-                        args.putInt("trainNumber", train);
-                        fragment.setArguments(args);
+                        openTrainEditFragment(train);
 
-                        FragmentManager fragmentManager=getAOdiaActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.bottomContents,fragment);
-                        fragmentTransaction.commit();
-                        if(editTrain>=0){
-                            ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
-                            ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
-                        }
-                        ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(train).setBackgroundColor(Color.rgb(255,255,200));
-                        ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(train).setBackgroundColor(Color.rgb(255,255,200));
-                        editTrain=train;
-
-                        fragment.setOnTrainChangeListener(new OnTrainChangeListener() {
-                            @Override
-                            public void trainChanged() {
-                                LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
-                                trainNameLinea.removeViewAt(train);
-                                trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,train)),train);
-                                LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
-                                trainTimeLinear.removeViewAt(train);
-                                trainTimeLinear.addView(new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,train),direction),train);
-                                if(editTrain>=0) {
-                                    ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
-                                    ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
-                                }
-                            }
-
-                            @Override
-                            public void trainReset() {
-                                LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
-                                trainNameLinea.removeAllViews();
-                                LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
-                                trainTimeLinear.removeAllViews();
-                                for (int i = 0; i < diaFile.diagram.get(diaNum).trains[direction].size(); i++) {
-                                    trainTimeLinear.addView(new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i),direction));
-                                    trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i)));
-                                }
-
-                            }
-                        });
-                        fragment.setOnFragmentCloseListener(new OnFragmentCloseListener() {
-                            @Override
-                            public void fragmentClose() {
-                                findViewById(R.id.bottomContents).setVisibility(View.GONE);
-                                if(editTrain>=0){
-                                    ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
-                                    ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
-                                }
-                                editTrain=-1;
-
-                            }
-                        });
 
 
                     }
@@ -210,19 +156,7 @@ public class TimeTableFragment extends AOdiaFragment {
                     public void trainChanged() {}
                     @Override
                     public void trainReset() {
-                            LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
-                            trainNameLinea.removeAllViews();
-                            LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
-                            trainTimeLinear.removeAllViews();
-                            for (int i = 0; i < diaFile.diagram.get(diaNum).trains[direction].size(); i++) {
-                                trainTimeLinear.addView(new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i),direction));
-                                trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i)));
-                            }
-                        StationNameView stationNameView = new StationNameView(getActivity(), diaFile, direction);
-                        LinearLayout stationNameLinea = (LinearLayout) findViewById(R.id.stationNameLinear);
-                        stationNameLinea.removeAllViews();
-                        stationNameLinea.addView(stationNameView);
-
+                        TimeTableFragment.this.trainReset();
                     }
                 });
                 dialog.show();
@@ -256,24 +190,33 @@ public class TimeTableFragment extends AOdiaFragment {
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        try {
+            diaFile = getAOdiaActivity().diaFiles.get(fileNum);
+            diagram =diaFile.diagram.get(diaNum);
+        }catch(Exception e){
+            e.printStackTrace();
+            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+        }
+        if(diaFile==null){
+            onDestroy();
+            return;
+        }
+        setting.create(this);
         init();
-        moveToTrainIndex(getAOdiaActivity().database.getPositionData(diaFile.filePath,diaNum,direction)[0]);
-
+        super.onViewCreated(view, savedInstanceState);
+        if(editTrain<0||editTrain>=diagram.trains[direction].size()) {
+            try {
+                moveToTrainIndex(getAOdiaActivity().database.getPositionData(diaFile.filePath, diaNum, direction)[0]);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }else {
+            openTrainEditFragment(editTrain);
+            moveToTrainIndex(editTrain);
+        }
     }
     private void init() {
         try {
-            try {
-                diaFile = getAOdiaActivity().diaFiles.get(fileNum);
-                diagram =diaFile.diagram.get(diaNum);
-            }catch(Exception e){
-                e.printStackTrace();
-                Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
-            }
-            if(diaFile==null){
-                onDestroy();
-                return;
-            }
             FrameLayout lineNameFrame = (FrameLayout) findViewById(R.id.lineNameFrame);
             LineNameView lineNameView = new LineNameView(getActivity(), diaFile, diaNum);
             lineNameFrame.removeAllViews();
@@ -358,7 +301,11 @@ public class TimeTableFragment extends AOdiaFragment {
     @Override
     public void onStop(){
         super.onStop();
-        getAOdiaActivity().database.updateLineData(diaFile.filePath,diaNum,direction,getNowTrainIndex());
+        try {
+            getAOdiaActivity().database.updateLineData(diaFile.filePath, diaNum, direction, getNowTrainIndex());
+        }catch (Exception e){
+
+        }
     }
     public void moveToTrainIndex(int trainIndex){
         if(trainIndex<0){
@@ -368,7 +315,11 @@ public class TimeTableFragment extends AOdiaFragment {
         if(trainIndex>trainTimeLinear.getChildCount()){
             trainIndex=trainTimeLinear.getChildCount()-1;
         }
-        scrollTo(((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize()*trainIndex,trainTimeLinear.getScrollY());
+        try {
+            scrollTo(((TrainTimeView) trainTimeLinear.getChildAt(0)).getXsize() * trainIndex, trainTimeLinear.getScrollY());
+        }catch (Exception e){
+            Toast.makeText(getAOdiaActivity(),"時刻表内に列車がありません",Toast.LENGTH_LONG).show();
+        }
     }
     public void sortTrain(int stationIndex){
         if(stationIndex>=0&&stationIndex< diaFile.getStationNum()){
@@ -376,6 +327,86 @@ public class TimeTableFragment extends AOdiaFragment {
             this.init();
         }
     }
+    public void openTrainEditFragment(final int trainIndex){
+        findViewById(R.id.bottomContents).setVisibility(View.VISIBLE);
+        TrainTimeEditFragment fragment=new TrainTimeEditFragment();
+        Bundle args=new Bundle();
+        args.putInt("fileNumber",fileNum);
+        args.putInt("diaNumber", diaNum);
+        args.putInt("direction", direction);
+        args.putInt("trainNumber", trainIndex);
+        fragment.setArguments(args);
+
+        FragmentManager fragmentManager=getAOdiaActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.bottomContents,fragment);
+        fragmentTransaction.commit();
+        if(editTrain>=0){
+            ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
+            ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
+        }
+        ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(trainIndex).setBackgroundColor(Color.rgb(255,255,200));
+        ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(trainIndex).setBackgroundColor(Color.rgb(255,255,200));
+        editTrain=trainIndex;
+
+        fragment.setOnTrainChangeListener(new OnTrainChangeListener() {
+            @Override
+            public void trainChanged() {
+                LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
+                trainNameLinea.removeViewAt(trainIndex);
+                trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,trainIndex)),trainIndex);
+                LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
+                trainTimeLinear.removeViewAt(trainIndex);
+                trainTimeLinear.addView(new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,trainIndex),direction),trainIndex);
+                if(editTrain>=0) {
+                    ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
+                    ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
+                }
+            }
+
+            @Override
+            public void trainReset() {
+                LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
+                trainNameLinea.removeAllViews();
+                LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
+                trainTimeLinear.removeAllViews();
+                for (int i = 0; i < diaFile.diagram.get(diaNum).trains[direction].size(); i++) {
+                    trainTimeLinear.addView(new TrainTimeView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i),direction));
+                    trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,i)));
+                }
+
+            }
+        });
+        fragment.setOnFragmentCloseListener(new OnFragmentCloseListener() {
+            @Override
+            public void fragmentClose() {
+                findViewById(R.id.bottomContents).setVisibility(View.GONE);
+                if(editTrain>=0){
+                    ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
+                    ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
+                }
+                editTrain=-1;
+            }
+        });
+    }
+
+    public String fragmentName(){
+        if(direction==0){
+            return diaFile.name+" "+diagram.name+" "+"下り時刻表";
+        }else{
+            return diaFile.name+" "+diagram.name+" "+"上り時刻表";
+        }
+    }
+    public void trainReset(){
+        diagram.reNewOperation();
+        init();
+        if(editTrain>=0){
+            if(editTrain>=0) {
+                ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
+                ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
+            }
+        }
 
 
+    }
 }

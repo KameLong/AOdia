@@ -25,6 +25,7 @@ public class DiagramFragment extends AOdiaFragment {
     public int diaNumber = 0;
     public DiaFile diaFile;
     Handler handler = new Handler();
+    private boolean autoScroll=false;
 
     /**
      * DiagramFragment内のタッチジェスチャー
@@ -247,7 +248,7 @@ public class DiagramFragment extends AOdiaFragment {
      */
     private void scrollTo() {
         try {
-            if (setting.autoScrollState == 3) {
+            if (autoScroll) {
 
                 FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
                 final int width = diagramFrame.getWidth();
@@ -320,6 +321,52 @@ public class DiagramFragment extends AOdiaFragment {
     public void openTrainEdit(Train train){
 
     }
+    public String fragmentName(){
+            return diaFile.name+" "+diaFile.diagram.get(diaNumber).name+" "+"ダイヤグラム";
+    }
+    public void fitVertical(){
+        FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
+        float frameSize=diagramFrame.getHeight()-40;
+        float nessTime=diaFile.getStationTime().get(diaFile.getStationNum()-1);
+        setting.scaleY=frameSize/nessTime;
+        setScale();
+        stationView.invalidate();
+
+    }
+    public void autoScroll(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // マルチスレッドにしたい処理 ここから
+                autoScroll=true;
+                while(autoScroll){//see stopAutoScroll()
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+
+                            scrollTo();
+                            diagramView.invalidate();
+                        }
+                    });
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        SdLog.log(e);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * オートスクロールを停止させる
+     */
+    public  void stopAutoScroll(){
+        autoScroll=false;
+    }
+
 
 }
 

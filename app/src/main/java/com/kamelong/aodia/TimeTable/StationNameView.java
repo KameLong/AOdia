@@ -15,6 +15,7 @@ public class StationNameView extends AOdiaDefaultView {
     public StationNameView(Context context,DiaFile diaFile,int direct){
         super(context);
         this.diaFile=diaFile;
+
         this.direct=direct;
     }
     public void onDraw(Canvas canvas){
@@ -83,12 +84,12 @@ public class StationNameView extends AOdiaDefaultView {
                 checkStation=0;
             }
             if(diaFile.station.get(checkStation).getBorder()){
-                canvas.drawLine(0, startLine-(int)(textPaint.getTextSize()*4/5),this.getWidth()-1,startLine-(int)(textPaint.getTextSize()*4/5),blackPaint);
-                startLine=startLine+(int)(textPaint.getTextSize()*1/6);
+                startLine=startLine+(int)(textPaint.getTextSize()*1/3);
+                canvas.drawLine(0, startLine,this.getWidth()-1,startLine,blackBPaint);
             }
         }
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("remark",false)){
+        if(spf.getBoolean("showRemark",true)){
             int startY = (int) (this.getHeight() - 9.3f * textSize);
             canvas.drawLine(0, startY, getWidth(), startY, blackBPaint);
             int startX=(getWidth()-textSize)/2;
@@ -152,14 +153,14 @@ public class StationNameView extends AOdiaDefaultView {
                 checkStation=0;
             }
             if(diaFile.station.get(checkStation).getBorder()){
-                startLine+=(textSize*1/6);
+                startLine+=(textSize*1/3);
             }
         }
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("remark",false)){
+        if(spf.getBoolean("showRemark",true)){
             startLine+=(int)(textSize*9.4f);
         }
-        startLine+=textSize/6;
+        startLine+=textSize/3;
         return startLine;
     }
     public int getStationFromY(int posY){
@@ -211,7 +212,7 @@ public class StationNameView extends AOdiaDefaultView {
                 checkStation=0;
             }
             if(diaFile.station.get(checkStation).getBorder()){
-                startLine+=(textSize*1/6);
+                startLine+=(textSize*1/3);
             }
             if(posY<startLine){
                 if(stationNumber<0){

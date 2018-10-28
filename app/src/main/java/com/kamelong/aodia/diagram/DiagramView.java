@@ -41,7 +41,7 @@ public class DiagramView extends AOdiaDefaultView{
      *
      * ダイヤグラム画面内を長押しすることで近くにあるダイヤ線の列車が強調表示に切り替わります
      */
-    private Train focsTrain=null;
+    private ArrayList<Train> focsTrain=new ArrayList<>();
     private float defaultLineSize=1;
 
     public DiaFile diaFile;
@@ -273,7 +273,7 @@ public class DiagramView extends AOdiaDefaultView{
                     for (int i = 0; i < diaFile.getTrainSize(diaNumber,direct); i++) {
                         //ダイヤ線色を指定
                         paint.setColor(diaFile.trainType.get(diaFile.getTrain(diaNumber,direct,i).type).diaColor.getAndroidColor());
-                        if (focsTrain != null) {
+                        if (focsTrain.size()!=0) {
                             //強調表示の列車があるときは半透明化
                             paint.setAlpha(100);
                         }
@@ -285,8 +285,9 @@ public class DiagramView extends AOdiaDefaultView{
                         }
 
                         //強調ダイヤ線時刻描画
-                        if (diaFile.getTrain(diaNumber,direct,i) == focsTrain) {
+                        if (focsTrain.contains(diaFile.getTrain(diaNumber,direct,i))) {
                             //強調表示の線は半透明ではない
+                            Train train=diaFile.getTrain(diaNumber,direct,i);
                             paint.setAlpha(255);
                             //線の太さを太くする
                             paint.setStrokeWidth(defaultLineSize * 3f);
@@ -294,11 +295,11 @@ public class DiagramView extends AOdiaDefaultView{
                             textPaint.setColor(diaFile.trainType.get(diaFile.getTrain(diaNumber,direct,i).type).diaColor.getAndroidColor());
                             textPaint.setAlpha(255);
                             for (int j = 0; j < diaFile.getStationNum(); j++) {
-                                if (focsTrain.arriveExist(j)) {
-                                    canvas.drawText(String.format("%02d", (focsTrain.getArrivalTime(j) / 60) % 60), (focsTrain.getArrivalTime(j) - 3 * 3600) * setting.scaleX *60 / 60,diaFile.getStationTime().get(j) * setting.scaleY + textPaint.getTextSize() *(-0.2f+direct*1.2f), textPaint);
+                                if (train.arriveExist(j)) {
+                                    canvas.drawText(String.format("%02d", (train.getArrivalTime(j) / 60) % 60), (train.getArrivalTime(j) - diaFile.diagramStartTime) * setting.scaleX *60 / 60,diaFile.getStationTime().get(j) * setting.scaleY + textPaint.getTextSize() *(-0.2f+direct*1.2f), textPaint);
                                 }
-                                if (focsTrain.departExist(j)) {
-                                    canvas.drawText(String.format("%02d", (focsTrain.getDepartureTime(j) / 60) % 60), (focsTrain.getDepartureTime(j) - 3 * 3600) * setting.scaleX *60 / 60 - textPaint.getTextSize() ,diaFile.getStationTime().get(j) * setting.scaleY + textPaint.getTextSize() *(1-direct*1.2f), textPaint);
+                                if (train.departExist(j)) {
+                                    canvas.drawText(String.format("%02d", (train.getDepartureTime(j) / 60) % 60), (train.getDepartureTime(j) - diaFile.diagramStartTime) * setting.scaleX *60 / 60 - textPaint.getTextSize() ,diaFile.getStationTime().get(j) * setting.scaleY + textPaint.getTextSize() *(1-direct*1.2f), textPaint);
 
                                 }
                             }
@@ -388,7 +389,7 @@ public class DiagramView extends AOdiaDefaultView{
         //以下太実線
         if(setting.verticalAxis ==7){
             for (int i = 0; i < 48; i++) {
-                canvas.drawLine(setting.scaleX *60 *60* (30 + 30 * i), 0, setting.scaleX *60 * (30 + 30 * i),axisHeight * setting.scaleY, paint);
+                canvas.drawLine(setting.scaleX *60 * (30 + 30 * i), 0, setting.scaleX *60 * (30 + 30 * i),axisHeight * setting.scaleY, paint);
             }
 
         }else {
@@ -513,7 +514,6 @@ public class DiagramView extends AOdiaDefaultView{
      * 列車番号・列車名を描画する
      * ダイヤ線の傾きに合わせて描画する
      * 上り列車、下り列車で描画する場所が違うので注意
-     * @param canvas
      */
     private void drawTrainNumber(Canvas canvas){
         for(int direct=0;direct<2;direct++){
@@ -538,7 +538,7 @@ public class DiagramView extends AOdiaDefaultView{
                     canvas.rotate((float) Math.toDegrees(rad),x1,y1);
                     //列車番号を描画
                     textPaint.setColor(diaFile.trainType.get(diaFile.getTrain(diaNumber,direct,i).type).diaColor.getAndroidColor());
-                    if(focsTrain==null||focsTrain==diaFile.getTrain(diaNumber,direct,i)){
+                    if(focsTrain.size()==0||focsTrain.contains(diaFile.getTrain(diaNumber,direct,i))){
                         textPaint.setAlpha(255);
                     }else{
                         textPaint.setAlpha(100);
@@ -602,8 +602,6 @@ public class DiagramView extends AOdiaDefaultView{
      * @see #focsTrain フォーカスする列車
      *
      * これらのパラメーターは、DiagramViewの左上を基準とした座標
-     * @param x
-     * @param y
      */
     public void showDetail(int x,int y) {
         try {
@@ -643,14 +641,26 @@ public class DiagramView extends AOdiaDefaultView{
                 }}
 
             if(minTrainNum < 0){
-                focsTrain=null;
+                focsTrain=new ArrayList<>();
                 this.invalidate();
                 return;
             }
-            if(focsTrain==diaFile.getTrain(diaNumber,minTrainDirect,minTrainNum)){
-                focsTrain=null;
-            }else {
-                focsTrain = diaFile.getTrain(diaNumber,minTrainDirect,minTrainNum);
+            if(!focsTrain.contains(diaFile.getTrain(diaNumber,minTrainDirect,minTrainNum))){
+                focsTrain=new ArrayList<>();
+                final Train t=diaFile.getTrain(diaNumber,minTrainDirect,minTrainNum);
+                focsTrain.add(t);
+                Train beforeT=diaFile.diagram.get(diaNumber).beforeOperation(t);
+                while(beforeT!=null) {
+                    focsTrain.add(beforeT);
+                    beforeT=diaFile.diagram.get(diaNumber).beforeOperation(beforeT);
+                }
+                Train afterT=diaFile.diagram.get(diaNumber).nextOperation(t);
+                while(afterT!=null) {
+                    focsTrain.add(afterT);
+                    afterT=diaFile.diagram.get(diaNumber).nextOperation(afterT);
+                }
+            }else{
+                focsTrain=new ArrayList<>();
             }
             this.invalidate();
 

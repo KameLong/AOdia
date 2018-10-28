@@ -9,7 +9,7 @@
         android:id="@+id/textView26"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ダイヤ名変更"
+        android:text="ダイヤ名"
         android:textColor="@android:color/black" />
 
     <LinearLayout
@@ -18,46 +18,33 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/diagramNameEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName" />
 
-        <Button
-            android:id="@+id/button15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="決定" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView29"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ダイヤ新規作成"
-        android:textColor="@android:color/black" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button16"
+            android:id="@+id/diaNameChangeSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="このダイヤをコピーして作成" />
+            android:text="ダイヤ名変更" />
 
         <Button
-            android:id="@+id/button17"
+            android:id="@+id/diagramCopySubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="空のダイヤを作成" />
+            android:text="このダイヤ複製する" />
+
     </LinearLayout>
 
     <Button
@@ -65,5 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:text="このダイヤを削除する" />
+        android:text="このダイヤを削除する"
+        android:visibility="invisible" />
 </LinearLayout>

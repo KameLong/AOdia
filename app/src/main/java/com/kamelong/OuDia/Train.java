@@ -3,14 +3,15 @@ package com.kamelong.OuDia;
 import com.kamelong.aodia.SdLog;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Train {
-    private DiaFile diaFile;
+    public DiaFile diaFile;
     public String name="";
     public String number="";
     public String count="";
-    public String remark;
+    public String remark="";
     public int type=0;
     public String operationName="";
     public boolean leaveYard=false;
@@ -116,7 +117,7 @@ public class Train {
     }
     private void setOuDiaTrack(String[] value){
         for(int i=0;i<value.length&&i<time.length;i++) {
-            int station=direction*(stationNum-1)*(1-2*direction)*i;
+            int station=direction*(stationNum-1)+(1-2*direction)*i;
 
             if (value[i].length() == 0) {
                 setStop(station, 0);
@@ -124,6 +125,19 @@ public class Train {
             }
             if (value[i].contains(";")) {
                 setStop(station, Integer.parseInt(value[i].split(";")[0]));
+                if(i==startStation()){
+                    if(value[i].split(";")[1].startsWith("2")){
+                        leaveYard=true;
+                        if(value[i].split(";")[1].contains("/")){
+                            operationName=value[i].split(";")[1].split("/")[1];
+                        }
+                    }
+                }
+                else{
+                    if(value[i].split(";")[1].startsWith("2")) {
+                        goYard = true;
+                    }
+                }
             } else {
                 setStop(station, Integer.valueOf(value[i]));
             }
@@ -173,6 +187,16 @@ public class Train {
         return 3600*hh+60*mm+ss;
 
     }
+    private static String timeIntToString(int time){
+        if(time<0)return"";
+        int ss=time%60;
+        time=time/60;
+        int mm=time%60;
+        time=time/60;
+        int hh=time%24;
+        return String.format("%02d", hh)  + String.format("%02d", mm) + String.format("%02d", ss);
+    }
+
     public void setDepartureTime(int station,long value){
         if(value<0){
             time[station]=time[station]&0xFFFFFFFFFF000000L;
@@ -332,9 +356,9 @@ public class Train {
             return getArrivalTime(station);
         }
         if(timeExist(station)){
-            return getDepartureTime(station);
+            return getDATime(station);
         }
-        if(getStopType(station)==1){
+        if(getStopType(station)==2||getStopType(station)==1){
             //通過時間を予測します
             int afterTime=-1;//後方の時刻あり駅の発車時間
             int beforeTime=-1;//後方の時刻あり駅の発車時間
@@ -436,6 +460,81 @@ public class Train {
                 time[i]=train.time[i];
             }
         }
+
+    }
+
+    public void saveToFile(FileWriter out){
+        try{
+            out.write("Ressya.\r\n");
+            if(direction==0){
+                out.write("Houkou=Kudari\r\n");
+            }else{
+                out.write("Houkou=Nobori\r\n");
+            }
+            out.write("Syubetsu="+type+"\r\n");
+            if(number.length()>0){
+                out.write("Ressyabangou="+number+"\r\n");
+            }
+            if(name.length()>0){
+                out.write("Ressyamei="+name+"\r\n");
+            }
+            if(count.length()>0){
+                out.write("Gousuu="+count+"\r\n");
+            }
+            out.write("EkiJikoku="+getEkijikokuOudia()+"\r\n");
+            out.write("RessyaTrack="+getTrackOudia()+"\r\n");
+            if(remark.length()>0){
+                out.write("Bikou="+remark+"\r\n");
+            }
+            out.write(".\r\n");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private String getEkijikokuOudia(){
+        StringBuilder result=new StringBuilder("");
+        for(int i=0;i<time.length;i++){
+
+            int station=i*(1-direction*2)+direction*(time.length-1);
+            if(getStopType(station)==0){
+                result.append(",");
+                continue;
+            }
+            result.append(getStopType(station));
+            if(arriveExist(station)||departExist(station)) {
+                result.append(";");
+            }
+            if(arriveExist(station)){
+                result.append(timeIntToString(getArrivalTime(station)));
+                result.append("/");
+            }
+            if(departExist(station)){
+                result.append(timeIntToString(getDepartureTime(station)));
+            }
+            if(i!=time.length-1) {
+                result.append(",");
+            }
+        }
+        return result.toString();
+    }
+    private String getTrackOudia(){
+        StringBuilder result=new StringBuilder("");
+        for(int i=0;i<time.length;i++){
+            int station=i*(1-direction*2)+direction*(time.length-1);
+            result.append(getStop(station));
+            if(station==startStation()&&leaveYard){
+                    result.append(";2/");
+                result.append(operationName);
+            }
+            if(station==endStation()&&goYard){
+                result.append(";2");
+            }
+            if(i!=time.length-1) {
+                result.append(",");
+            }
+        }
+        return result.toString();
 
     }
 

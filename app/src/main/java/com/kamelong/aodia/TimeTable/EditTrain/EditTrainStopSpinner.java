@@ -66,7 +66,12 @@ public class EditTrainStopSpinner extends AppCompatSpinner {
         canvas.drawLine(0,getHeight()-1,getWidth(),getHeight()-1, AOdiaDefaultView.blackPaint);
         String text=station.trackshortName.get(this.getSelectedItemPosition());
         if(this.getSelectedItemPosition()==0){
-                text=station.trackshortName.get(station.stopMain[train.direction]);
+            try {
+                text = station.trackshortName.get(station.stopMain[train.direction]);
+            }catch (Exception e){
+                text = station.trackshortName.get(0);
+
+            }
         }
         if(train.getStopType(stationIndex)==0||train.getStopType(stationIndex)==3){
             text="";

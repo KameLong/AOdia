@@ -43,16 +43,18 @@ public class LineNameView extends AOdiaDefaultView {
     public void onDraw(Canvas canvas){
         int startLine=(int)textPaint.getTextSize();
         textPaint.setColor(Color.BLACK);
-        canvas.drawText(diaFile.name, 5,startLine, textPaint);
+        canvas.drawText("運用番号", 5,startLine, textPaint);
         startLine=startLine+(int)textPaint.getTextSize();
-        canvas.drawText(diaFile.diagram.get(diaNum).name, 5,startLine, textPaint);
+        canvas.drawText("列車番号", 5,startLine, textPaint);
+        startLine=startLine+(int)textPaint.getTextSize();
+        canvas.drawText("列車種別", 5,startLine, textPaint);
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("trainName",false)){
-            canvas.drawLine(0,textPaint.getTextSize()*3.1f,getWidth(),textPaint.getTextSize()*3.1f,blackPaint);
+        if(spf.getBoolean("trainName",true)){
+            canvas.drawLine(0,textPaint.getTextSize()*3.3f,getWidth(),textPaint.getTextSize()*3.3f,blackPaint);
             int startX=(int)((getWidth()-textPaint.getTextSize())/2);
-            canvas.drawText("列",startX,textPaint.getTextSize()*4.2f,textPaint);
-            canvas.drawText("車",startX,textPaint.getTextSize()*5.5f,textPaint);
-            canvas.drawText("名",startX,textPaint.getTextSize()*6.8f,textPaint);
+            canvas.drawText("列",startX,textPaint.getTextSize()*4.4f,textPaint);
+            canvas.drawText("車",startX,textPaint.getTextSize()*5.7f,textPaint);
+            canvas.drawText("名",startX,textPaint.getTextSize()*7.0f,textPaint);
         }
     }
 
@@ -62,7 +64,7 @@ public class LineNameView extends AOdiaDefaultView {
      */
     protected int getYsize(){
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("trainName",false)){
+        if(spf.getBoolean("trainName",true)){
             return (int)(textPaint.getTextSize()*11.2f);
         }else{
             return (int)(textPaint.getTextSize()*3.2f);

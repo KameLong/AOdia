@@ -162,7 +162,7 @@ public class StationInfoDialog extends Dialog{
             downTimetable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-    //                activity.openStationTimeTable(fileNum, diaNum, 0, station);
+                    activity.openStationTimeTable(fileNum, diaNum, 0, diaFile.station.indexOf(station));
                     StationInfoDialog.this.dismiss();
                 }
             });
@@ -170,7 +170,7 @@ public class StationInfoDialog extends Dialog{
             upTimetable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-      //              activity.openStationTimeTable(fileNum, diaNum, 1, station);
+                    activity.openStationTimeTable(fileNum, diaNum, 1,diaFile.station.indexOf(station));
                     StationInfoDialog.this.dismiss();
                 }
             });

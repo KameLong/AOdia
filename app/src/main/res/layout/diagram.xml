@@ -85,12 +85,12 @@
             android:id="@+id/fabFit"
             android:layout_width="56dp"
             android:layout_height="56dp"
+            android:layout_gravity="center"
             android:clickable="true"
-            app:fabSize="normal"
-            app:elevation="0dp"
-            app:srcCompat="@drawable/ic_fill"
             app:backgroundTint="@android:color/holo_blue_light"
-            android:layout_gravity="center" />
+            app:elevation="0dp"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_fill" />
 
     </FrameLayout>
 

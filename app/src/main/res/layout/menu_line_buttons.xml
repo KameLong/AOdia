@@ -27,12 +27,13 @@
         android:visibility="visible" />
 
     <Button
+        android:id="@+id/saveButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:id="@+id/closeButton"
-        android:background="@drawable/menu_close"
-        android:minWidth="0dip"
+        android:layout_weight="0"
+        android:background="@android:drawable/ic_menu_save"
         android:minHeight="0dp"
+        android:minWidth="0dip"
         android:visibility="visible" />
 
     <TextView
@@ -40,5 +41,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/TitleView"
         android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/menu_close"
+        android:minHeight="0dp"
+        android:minWidth="0dip"
+        android:visibility="visible" />
 
 </LinearLayout>

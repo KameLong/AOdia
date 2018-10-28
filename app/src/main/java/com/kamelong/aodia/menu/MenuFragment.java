@@ -1,6 +1,5 @@
 package com.kamelong.aodia.menu;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -89,7 +88,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             newFile.setBackgroundColor(Color.TRANSPARENT);
             newFile.setGravity(Gravity.START);
             //fileOpenLayout.addView(openFile);
-            layout.addView(newFile);
+//            layout.addView(newFile);
             Button openFileIcon=new Button(activity);
             //openFileIcon.setBackgroundResource(R.drawable.menu_open_file);
             fileOpenLayout.addView(openFileIcon);
@@ -109,30 +108,14 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             saveFile.setText("　ファイルを保存する");
             saveFile.setBackgroundColor(Color.TRANSPARENT);
             saveFile.setGravity(Gravity.START);
-            //fileOpenLayout.addView(openFile);
             saveFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    activity.saveFile();
+//                   activity.openSaveDialog();
                 }
             });
 
-            layout.addView(saveFile);
-            /*
-            Button openEdit = new Button(activity);
-            openEdit.setText("　編集");
-            openEdit.setBackgroundColor(Color.TRANSPARENT);
-            openEdit.setGravity(Gravity.START);
-            //fileOpenLayout.addView(openFile);
-            openEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.openTrainEdit();
-                }
-            });
-
-            layout.addView(openEdit);
-            */
+//            layout.addView(saveFile);
             SearchView stationSearch=new SearchView(activity);
             stationSearch.setQueryHint("駅検索");
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -179,20 +162,23 @@ public class MenuFragment extends android.support.v4.app.Fragment {
 //                    activity.resetDetabase();
                 }
             });
-            layout.addView(resetButton);
+//            layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v2.3.0のヘルプを開く");
+            openHelp.setText("　v2.4.2のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    activity.openHelp();
+                    activity.openHelpFragment();
                 }
             });
             layout.addView(openHelp);
-            for (int i = 0; i < diaFiles.size(); i++) {
+            for (int i = 0; i < activity.diaFilesIndex.size(); i++) {
+                if(diaFiles.get(activity.diaFilesIndex.get(i))==null){
+                    continue;
+                }
                 LineMenu lineMenu=new LineMenu(activity,diaFiles.get(activity.diaFilesIndex.get(i)),i,i);
                 layout.addView(lineMenu);
             }
@@ -204,7 +190,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             openSetting.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                  //  activity.openSetting();
+                    activity.openSettingFragment();
                 }
             });
             layout.addView(openSetting);
