@@ -1,0 +1,120 @@
+package com.kamelong.aodia.EditStation;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.Station;
+import com.kamelong.OuDia.Train;
+import com.kamelong.aodia.AOdiaFragment;
+import com.kamelong.aodia.R;
+import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.TimeTable.TimeTableSetting;
+
+import java.util.ArrayList;
+
+public class EditStationFragment extends AOdiaFragment implements StationEditInterface{
+    int fileIndex = 0;
+    public ArrayList<Station> editStationList;
+    public ArrayList<Integer>editStationIndex;
+    public ArrayList<EditStationView> editStationViews=new ArrayList<>();
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        try {//まずBundleを確認し、fileNum,diaNumber,directを更新する
+            Bundle bundle = getArguments();
+            fileIndex = bundle.getInt("fileIndex", 0);
+        } catch (Exception e) {
+            SdLog.log(e);
+        }
+        //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
+        fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);
+        diaFile=getAOdiaActivity().diaFiles.get(fileIndex);
+
+        editStationList=new ArrayList<>();
+        editStationIndex=new ArrayList<>();
+        for(int i=0;i<diaFile.getStationNum();i++){
+            editStationList.add(new Station(diaFile.station.get(i)));
+            editStationIndex.add(i);
+
+        }
+        return fragmentContainer;
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view,savedInstanceState);
+        final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
+        for(int i=0;i<diaFile.getStationNum();i++){
+            EditStationView editStationView=new EditStationView(getContext(),editStationList.get(i),i);
+            editStationViews.add(editStationView);
+            editStationView.setStationEditInterface(this);
+            stationList.addView(editStationView,i+1);
+        }
+        findViewById(R.id.addButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewStation(0);
+            }
+        });
+        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                submitEditStation();
+            }
+        });
+
+    }
+
+    @Override
+    public void addNewStation(int stationIndex) {
+        final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
+
+        editStationList.add(stationIndex,new Station(diaFile));
+        EditStationView editStationView=new EditStationView(getContext(),editStationList.get(stationIndex),stationIndex);
+        editStationView.setStationEditInterface(this);
+        editStationViews.add(stationIndex,editStationView);
+        editStationIndex.add(stationIndex,-1);
+        stationList.addView(editStationView,stationIndex+1);
+        for(int i=stationIndex;i<editStationViews.size();i++){
+            editStationViews.get(i).renewStationIndex(i);
+        }
+
+
+    }
+
+    @Override
+    public void removeStation(int stationIndex) {
+        final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
+
+        editStationList.remove(stationIndex);
+        editStationViews.remove(stationIndex);
+        editStationIndex.remove(stationIndex);
+        stationList.removeViewAt(stationIndex+1);
+        for(int i=stationIndex;i<editStationViews.size();i++){
+            editStationViews.get(i).renewStationIndex(i);
+        }
+
+    }
+    public void submitEditStation(){
+        diaFile.station=editStationList;
+        for(Diagram diagram:diaFile.diagram){
+            for(Train train:diagram.trains[0]){
+                train.editStationSubmit(editStationIndex);
+            }
+            for(Train train:diagram.trains[1]){
+                train.editStationSubmit(editStationIndex);
+            }
+            diagram.reNewOperation();
+
+        }
+        diaFile.reCalcStationTime();
+
+        this.onDestroy();
+    }
+
+}

@@ -33,7 +33,13 @@ public class DiaFile {
         filePath=file.getPath();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         version=br.readLine().split("=",-1)[1];
-        double v=Double.parseDouble(version.substring(version.indexOf(".")+1));
+        double v=1.02;
+        try {
+            v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
         if(version.startsWith("OuDia.")||v<1.03){
             loadShiftJis(file);
         }else{
@@ -94,6 +100,7 @@ public class DiaFile {
     }
 
     public void reCalcStationTime(){
+        stationTime=new ArrayList<>();
         stationTime.add(0);
         for(int i=0;i<getStationNum()-1;i++){
             stationTime.add(stationTime.get(stationTime.size()-1)+getMinReqiredTime(i,i+1));

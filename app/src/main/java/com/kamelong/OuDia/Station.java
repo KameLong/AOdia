@@ -22,6 +22,17 @@ public class Station {
     public int[] stopMain=new int[]{1,2};
     public int brunchStationIndex=-1;
     public boolean border=false;
+    public Station(DiaFile diaFile){
+        this.diaFile=diaFile;
+        name="新規作成";
+        trackName.add("");
+        trackshortName.add("");
+        trackName.add("1番線");
+        trackName.add("2番線");
+        trackshortName.add("1");
+        trackshortName.add("2");
+
+    }
 
     /**
      *
@@ -95,6 +106,18 @@ public class Station {
             trackshortName.add("2");
         }
 
+    }
+    public Station(Station old){
+        diaFile=old.diaFile;
+        name=old.name;
+        timeTableStyle=old.timeTableStyle;
+        bigStation=old.bigStation;
+        trackName=new ArrayList<>(old.trackName);
+        trackshortName=new ArrayList<>(old.trackshortName);
+        stopMain[0]=old.stopMain[0];
+        stopMain[1]=old.stopMain[1];
+        brunchStationIndex=old.brunchStationIndex;
+        border=old.border;
     }
     private void setTimeTableStyle(String str){
         timeTableStyle=timeTableStyle&0b100100;

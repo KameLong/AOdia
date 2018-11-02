@@ -136,7 +136,7 @@ public class DiagramSetting {
 
         FloatingActionButton fabNumber = (FloatingActionButton) fragment.findViewById(R.id.fabNumber);
         TextView textName = (TextView) fragment.findViewById(R.id.textname);
-        TextView textNumber = (TextView) fragment.findViewById(R.id.textNumber);
+        TextView textNumber = (TextView) fragment.findViewById(R.id.stationIndex);
         if (numberState % 2 == 0) {
             textNumber.setVisibility(View.INVISIBLE);
         } else {

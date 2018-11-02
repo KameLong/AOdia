@@ -27,6 +27,7 @@ import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.SaveDialog;
 import com.kamelong.aodia.Diagram.DiagramFragment;
+import com.kamelong.aodia.EditStation.EditStationFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
@@ -253,32 +254,32 @@ public class AOdiaActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public TimeTableFragment openTimeTable(int fileIndex,int diagramIndex,int direction){
+    public TimeTableFragment openTimeTable(int menuIndex,int diagramIndex,int direction){
         TimeTableFragment fragment=new TimeTableFragment();
         Bundle args=new Bundle();
-        args.putInt("fileIndex",diaFilesIndex.get(fileIndex));
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
         args.putInt("diagramIndex", diagramIndex);
         args.putInt("direction", direction);
         fragment.setArguments(args);
         openFragment(fragment);
         SharedPreferences pref =getSharedPreferences(PREFERENCES_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor=pref.edit();
-        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(fileIndex)).filePath);
+        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(menuIndex)).filePath);
         editor.putInt("finalDiaNumber",diagramIndex);
         editor.putInt("finalDirection",direction);
         editor.apply();
         return fragment;
     }
-    public DiagramFragment openDiagram(int fileIndex,int diagramIndex){
+    public DiagramFragment openDiagram(int menuIndex,int diagramIndex){
         DiagramFragment fragment=new DiagramFragment();
         Bundle args=new Bundle();
-        args.putInt("fileNumber",diaFilesIndex.get(fileIndex));
+        args.putInt("fileNumber",diaFilesIndex.get(menuIndex));
         args.putInt("diaNumber", diagramIndex);
         fragment.setArguments(args);
         openFragment(fragment);
         SharedPreferences pref =getSharedPreferences(PREFERENCES_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor=pref.edit();
-        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(fileIndex)).filePath);
+        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(menuIndex)).filePath);
         editor.putInt("finalDiaNumber",diagramIndex);
         editor.putInt("finalDirection",2);
         editor.apply();
@@ -318,12 +319,20 @@ public class AOdiaActivity extends AppCompatActivity {
         args.putInt("station",stationIndex);
         fragment.setArguments(args);
         openFragment(fragment);
+    }
+    public void openStationEditFragment(int menuIndex){
+        EditStationFragment fragment=new EditStationFragment();
+        Bundle args=new Bundle();
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
+        fragment.setArguments(args);
+        openFragment(fragment);
 
     }
-    public void openStationTimeTableIndex(int fileIndex){
+
+    public void openStationTimeTableIndex(int menuIndex){
         StationInfoIndexFragment fragment=new StationInfoIndexFragment();
         Bundle args=new Bundle();
-        args.putInt("fileNum",diaFilesIndex.get(fileIndex));
+        args.putInt("fileNum",diaFilesIndex.get(menuIndex));
         fragment.setArguments(args);
         openFragment(fragment);
 
@@ -343,8 +352,6 @@ public class AOdiaActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
-
-
     }
     public void killDiaFile(int fileIndex,int menuIndex){
         diaFiles.set(diaFilesIndex.get(fileIndex),null);

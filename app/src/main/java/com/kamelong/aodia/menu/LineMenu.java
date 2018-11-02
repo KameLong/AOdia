@@ -122,10 +122,10 @@ public class LineMenu  extends LinearLayout{
             station.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    ((AOdiaActivity) context).openEditStation(fileNum);
+                    ((AOdiaActivity) context).openStationEditFragment(fileNum);
                 }
             });
-//            lineContLinear.addView(station);
+            lineContLinear.addView(station);
             Button trainType = new Button(context);
             trainType.setText("　種別編集");
             trainType.setGravity(Gravity.LEFT);
