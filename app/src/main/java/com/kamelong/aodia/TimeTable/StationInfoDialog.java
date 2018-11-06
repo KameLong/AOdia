@@ -199,7 +199,6 @@ public class StationInfoDialog extends Dialog{
                     station.setShowDepart(direct,b);
                 }
             });
-            initStop();
 
         }catch(Exception e){
             SdLog.log(e);
@@ -208,68 +207,6 @@ public class StationInfoDialog extends Dialog{
     }
     public void setOnTrainChangeListener(OnTrainChangeListener listener){
         trainChangeListener=listener;
-    }
-    public void initStop(){
-        LinearLayout stopNameLinear=findViewById(R.id.stopNameLinear);
-        LinearLayout stopShortNameLinear=findViewById(R.id.stopShortNameLinear);
-        stopNameLinear.removeAllViews();
-        stopShortNameLinear.removeAllViews();
-        for(int i=1;i<station.trackName.size();i++){
-            EditText editText1=new EditText(getContext());
-            editText1.setText(station.trackName.get(i));
-            stopNameLinear.addView(editText1);
-            EditText editText2=new EditText(getContext());
-            editText2.setText(station.trackshortName.get(i));
-            stopShortNameLinear.addView(editText2);
-        }
-        Button newStopButton=findViewById(R.id.addNewStop);
-        newStopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int stopNum=station.trackName.size();
-                station.trackName.add(stopNum+"番線");
-                station.trackshortName.add(stopNum+"");
-                initStop();
-            }
-        });
-        Spinner downMainStop=findViewById(R.id.downMainSpinner);
-        Spinner upMainStop=findViewById(R.id.upMainSpinner);
-        List<String> stopList=new ArrayList<>();
-        for(int i=1;i<station.trackName.size();i++){
-            stopList.add(station.trackName.get(i));
-        }
-        ArrayAdapter<String> downDataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, stopList);
-        downDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        downMainStop.setAdapter(downDataAdapter);
-        downMainStop.setSelection(station.stopMain[0]-1);
-        downMainStop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(station.stopMain[0]!=i+1) {
-                    station.stopMain[0] = i + 1;
-                    initStop();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-        ArrayAdapter<String> upDataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, stopList);
-        upDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        upMainStop.setAdapter(upDataAdapter);
-        upMainStop.setSelection(station.stopMain[1]-1);
-        upMainStop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(station.stopMain[1]!=i+1) {
-                    station.stopMain[1] = i + 1;
-                    initStop();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-
-
     }
 
 }

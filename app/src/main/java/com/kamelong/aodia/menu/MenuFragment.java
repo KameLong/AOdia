@@ -1,5 +1,7 @@
 package com.kamelong.aodia.menu;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -169,7 +171,9 @@ public class MenuFragment extends android.support.v4.app.Fragment {
 //            layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v2.5.1のヘルプを開く");
+            PackageManager pm = getContext().getPackageManager();
+                PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(), 0);
+            openHelp.setText("　v"+packageInfo.versionName+"のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {

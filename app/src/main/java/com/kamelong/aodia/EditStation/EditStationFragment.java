@@ -36,6 +36,11 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);
         diaFile=getAOdiaActivity().diaFiles.get(fileIndex);
+        if(diaFile==null){
+            Toast.makeText(getContext(),"ダイヤファイルが見つかりませんでした。",Toast.LENGTH_LONG).show();
+            getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
+            return fragmentContainer;
+        }
 
         editStationList=new ArrayList<>();
         editStationIndex=new ArrayList<>();
@@ -49,6 +54,9 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
+        if(diaFile==null){
+            return;
+        }
         final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
         for(int i=0;i<diaFile.getStationNum();i++){
             EditStationView editStationView=new EditStationView(getContext(),editStationList.get(i),i,editStationList);
@@ -65,6 +73,7 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view.requestFocus();
                 submitEditStation();
             }
         });
@@ -119,6 +128,22 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
 
     }
     public void submitEditStation(){
+        for(int i=0;i<editStationList.size();i++){
+            if(editStationList.get(i).name.length()==0){
+                Toast.makeText(getContext(),"駅index="+i+"　の駅に駅名が入力されていません",Toast.LENGTH_LONG).show();
+                return;
+            }
+            for(int j=1;j<editStationList.get(i).trackName.size();j++){
+                if(editStationList.get(i).trackName.get(j).length()==0){
+                    Toast.makeText(getContext(),editStationList.get(i).name+"駅の番線名が入力されていません",Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(editStationList.get(i).trackshortName.get(j).length()==0){
+                    Toast.makeText(getContext(),editStationList.get(i).name+"駅の番線略称が入力されていません",Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
         diaFile.station=editStationList;
         for(Diagram diagram:diaFile.diagram){
             for(Train train:diagram.trains[0]){

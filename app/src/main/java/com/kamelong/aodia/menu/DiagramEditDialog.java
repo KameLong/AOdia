@@ -33,6 +33,7 @@ public class DiagramEditDialog extends Dialog {
             public void onClick(View view) {
                 diaFile.diagram.get(diagramIndex).name=diagramName.getEditableText().toString();
                 DiagramEditDialog.this.dismiss();
+                ((AOdiaActivity)getContext()).menuFragment.createMenu();
             }
         });
         Button diagramCopy=findViewById(R.id.diagramCopySubmit);

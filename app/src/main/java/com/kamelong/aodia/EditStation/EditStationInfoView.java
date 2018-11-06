@@ -142,6 +142,10 @@ public class EditStationInfoView extends LinearLayout {
             editText1.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
+                    if(editText1.getEditableText().toString().length()==0){
+                        editText1.setText(station.trackName.get(editText1.getId()));
+                        return;
+                    }
                     station.trackName.set(editText1.getId(),editText1.getEditableText().toString());
 
                 }
@@ -153,6 +157,10 @@ public class EditStationInfoView extends LinearLayout {
             editText2.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
+                    if(editText2.getEditableText().toString().length()==0){
+                        editText2.setText(station.trackshortName.get(editText2.getId()));
+                        return;
+                    }
                     station.trackshortName.set(editText2.getId(),editText2.getEditableText().toString());
 
                 }

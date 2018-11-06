@@ -6,15 +6,15 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 229
+        versionCode 230
 
-        versionName "2.5.1"
+        versionName "2.5.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
             debuggable true  // debug の時デフォルト値として true になっているので本来書く必要は無いのだが説明の為
-            versionNameSuffix = 'a'
+            versionNameSuffix = ''
         }
         beta {
             versionNameSuffix = 'b'

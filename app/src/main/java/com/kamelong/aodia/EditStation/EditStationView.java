@@ -61,6 +61,10 @@ public class EditStationView extends LinearLayout {
             staitonNameEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
+                    if(staitonNameEdit.getEditableText().toString().length()==0){
+                        staitonNameEdit.setText(station.name);
+                        return;
+                    }
                     station.name=staitonNameEdit.getEditableText().toString();
                 }
             });

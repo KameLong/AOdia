@@ -50,7 +50,7 @@ public class AOdiaActivity extends AppCompatActivity {
     public ArrayList<AOdiaFragment>fragments=new ArrayList<>();
     public int fragmentIndex=0;
 
-    private  MenuFragment menuFragment=null;
+    public  MenuFragment menuFragment=null;
 
     public DrawerLayout drawerLayout=null;
     public static final String PREFERENCES_NAME="AOdia-Setting";
