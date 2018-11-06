@@ -38,11 +38,10 @@ public class Station {
      *
      * @param br readLineでEki.を得た後
      */
-    public Station(BufferedReader br,DiaFile diaFile){
+    public Station(BufferedReader br,DiaFile diaFile)throws Exception{
         this.diaFile=diaFile;
         trackName.add("");
         trackshortName.add("");
-        try {
             String line = br.readLine();
             while (!line.equals(".")){
                 if(line.equals("EkiTrack2Cont.")){
@@ -96,9 +95,6 @@ public class Station {
 
                 line=br.readLine();
             }
-        }catch (Exception e){
-         e.printStackTrace();
-        }
         if(trackName.size()==1){
             trackName.add("1番線");
             trackName.add("2番線");

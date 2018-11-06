@@ -331,6 +331,7 @@ public class DiagramFragment extends AOdiaFragment {
         setting.scaleY=frameSize/nessTime;
         setScale();
         stationView.invalidate();
+        diagramView.invalidate();
 
     }
     public void autoScroll(){

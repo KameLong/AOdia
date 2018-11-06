@@ -20,15 +20,14 @@
             android:text="番号"
             android:textColor="@android:color/black" />
 
-        <TextView
+
+        <EditText
             android:id="@+id/stationName"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:gravity="center_vertical"
-            android:paddingLeft="5dp"
-            android:text="駅名"
-            android:textColor="@android:color/black" />
+            android:ems="10"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/expandButton"

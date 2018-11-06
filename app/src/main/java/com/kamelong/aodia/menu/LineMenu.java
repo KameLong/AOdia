@@ -109,10 +109,19 @@ public class LineMenu  extends LinearLayout{
                 }
             });
             TextView titleButton = (TextView)v.findViewById(R.id.TitleView);
-            titleButton.setText(diaFile.filePath.substring(diaFile.filePath.lastIndexOf("/") + 1));
+            titleButton.setText(diaFile.name);
             titleButton.setBackgroundColor(Color.TRANSPARENT);
             titleButton.setGravity(Gravity.LEFT);
             titleButton.setGravity(Gravity.CENTER_VERTICAL);
+            titleButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EditLineDialog dialog=new EditLineDialog((AOdiaActivity)context,diaFile);
+                    dialog.show();
+                    ((AOdiaActivity) context).closeMenu();
+
+                }
+            });
             Button station = new Button(context);
             station.setText("　駅編集");
             station.setGravity(Gravity.LEFT);
@@ -122,7 +131,7 @@ public class LineMenu  extends LinearLayout{
             station.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((AOdiaActivity) context).openStationEditFragment(fileNum);
+                    ((AOdiaActivity) context).openEditStationFragment(fileNum);
                 }
             });
             lineContLinear.addView(station);
@@ -135,10 +144,10 @@ public class LineMenu  extends LinearLayout{
             trainType.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    ((AOdiaActivity) context).openEditTrainType(fileNum);
+                    ((AOdiaActivity) context).openEditTrainTypeFragment(fileNum);
                 }
             });
-//            lineContLinear.addView(trainType);
+            lineContLinear.addView(trainType);
             Button timetable = new Button(context);
             timetable.setText("　駅時刻表一覧");
             timetable.setGravity(Gravity.LEFT);

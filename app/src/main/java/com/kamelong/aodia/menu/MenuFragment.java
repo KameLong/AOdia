@@ -87,8 +87,20 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             newFile.setText("　新規作成");
             newFile.setBackgroundColor(Color.TRANSPARENT);
             newFile.setGravity(Gravity.START);
-            //fileOpenLayout.addView(openFile);
-//            layout.addView(newFile);
+            newFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    diaFiles.add(new DiaFile( activity.getExternalFilesDirs(null)[0].getPath()+"/newDia.oud2"));
+                    activity.diaFilesIndex.add(0,diaFiles.size()-1);
+                    activity.closeMenu();
+                    EditLineDialog dialog=new EditLineDialog(activity,diaFiles.get(diaFiles.size()-1));
+                    dialog.show();
+
+                }
+            });
+
+//            fileOpenLayout.addView(newFile);
+            layout.addView(newFile);
             Button openFileIcon=new Button(activity);
             //openFileIcon.setBackgroundResource(R.drawable.menu_open_file);
             fileOpenLayout.addView(openFileIcon);
@@ -101,19 +113,11 @@ public class MenuFragment extends android.support.v4.app.Fragment {
                 @Override
                 public void onClick(View view) {
                     activity.openFileSelectFragment();
+
                 }
             });
             layout.addView(openFile);
-            Button saveFile = new Button(activity);
-            saveFile.setText("　ファイルを保存する");
-            saveFile.setBackgroundColor(Color.TRANSPARENT);
-            saveFile.setGravity(Gravity.START);
-            saveFile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                   activity.openSaveDialog();
-                }
-            });
+
 
 //            layout.addView(saveFile);
             SearchView stationSearch=new SearchView(activity);
@@ -165,7 +169,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
 //            layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v2.4.2のヘルプを開く");
+            openHelp.setText("　v2.5.1のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {

@@ -1,11 +1,13 @@
 package com.kamelong.aodia.Diagram;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.preference.PreferenceManager;
 
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Diagram;
@@ -48,6 +50,7 @@ public class DiagramView extends AOdiaDefaultView{
     public Diagram timeTable;
     public int diaNumber=0;
     public ArrayList<Integer>stationTime;
+    private boolean onlySolid=false;
     DiagramView(Context context){
         super(context);
     }
@@ -60,6 +63,9 @@ public class DiagramView extends AOdiaDefaultView{
     }
     DiagramView(Context context, DiagramSetting s, DiaFile diafile, int diaNum){
         this(context);
+        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
+        onlySolid=spf.getBoolean("onlySolid",false);
+
         try {
             setting=s;
             this.diaFile=diafile;
@@ -304,20 +310,24 @@ public class DiagramView extends AOdiaDefaultView{
                                 }
                             }
                         }
-                        //指定線種に合わせてダイヤ線を描画
-                        switch ((diaFile.trainType.get(diaFile.getTrain(diaNumber,direct,i).type).lineStyle)) {
-                            case TrainType.LINESTYLE_NORMAL:
-                                canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
-                                break;
-                            case TrainType.LINESTYLE_DASH:
-                                drawDashLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
-                                break;
-                            case TrainType.LINESTYLE_DOT:
-                                drawDotLines(canvas, toArr(diagramPath[direct].get(i)), paint);
-                                break;
-                            case TrainType.LINESTYLE_CHAIN:
-                                drawChainLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
-                                break;
+                        if(onlySolid){
+                            canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
+                        }else {
+                            //指定線種に合わせてダイヤ線を描画
+                            switch ((diaFile.trainType.get(diaFile.getTrain(diaNumber, direct, i).type).lineStyle)) {
+                                case TrainType.LINESTYLE_NORMAL:
+                                    canvas.drawLines(toArr(diagramPath[direct].get(i)), paint);
+                                    break;
+                                case TrainType.LINESTYLE_DASH:
+                                    drawDashLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
+                                    break;
+                                case TrainType.LINESTYLE_DOT:
+                                    drawDotLines(canvas, toArr(diagramPath[direct].get(i)), paint);
+                                    break;
+                                case TrainType.LINESTYLE_CHAIN:
+                                    drawChainLines(canvas, toArr(diagramPath[direct].get(i)), 10, 10, paint);
+                                    break;
+                            }
                         }
                     }
                     if (setting.showTrainStop) {

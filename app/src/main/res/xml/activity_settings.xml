@@ -40,10 +40,10 @@
         android:enabled="true"
         >
         <CheckBoxPreference
-            android:key="onlySolid"
-            android:title="ダイヤグラム実線表示"
             android:defaultValue="false"
-            android:summary="ダイヤ線の点線を実線にかえパフォーマンスを上げます" />
+            android:key="onlySolid"
+            android:summary="ダイヤ線の点線を実線にかえパフォーマンスを上げます"
+            android:title="ダイヤグラム実線表示" />
     </PreferenceCategory>
 
     <PreferenceCategory

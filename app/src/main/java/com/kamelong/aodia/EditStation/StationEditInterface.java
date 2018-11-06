@@ -5,6 +5,7 @@ public interface StationEditInterface {
      *
      * @param stationIndex 追加する駅index
      */
-    public void addNewStation(int stationIndex);
-    public void removeStation(int stationIndex);
+    void addNewStation(int stationIndex);
+    void removeStation(int stationIndex);
+    void renewStationName(int stationIndex);
 }

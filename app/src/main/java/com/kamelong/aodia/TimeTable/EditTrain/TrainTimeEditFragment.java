@@ -135,7 +135,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
         final LinearLayout stopNumberLayout = (LinearLayout) findViewById(R.id.stopNumerLayout);
 
         for (int i = 0; i < diaFile.getStationNum(); i++) {
-            int stationNum = (1 - train.direction * 2) * i + train.direction * (diaFile.getStationNum() - 1);
+            final int stationNum = (1 - train.direction * 2) * i + train.direction * (diaFile.getStationNum() - 1);
             TextView textView = new StationNameTextView(getAOdiaActivity(), diaFile.station.get(stationNum).name, stationNum);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -226,6 +226,94 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             arrivalTimeLayout.addView(ariTime);
             if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
                 EditTimeView stopTime = new EditStopTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum) - train.getArrivalTime(stationNum), false);
+                stopTime.setOnTimeChangeListener(new OnTimeChangeListener() {
+                    @Override
+                    public void onTimeChanged(int station, int stopTime) {
+                        if(stopTime<0)return;
+                        int shiftTime=stopTime-(train.getDepartureTime(station)-train.getArrivalTime(station));
+                        int time=train.getDepartureTime(station);
+                        if(time>=0){
+                            time=time+shiftTime;
+                        }
+                        if(time<0){
+                            time+=24*3600;
+                        }
+                        time=time%(24*3600);
+                        train.setDepartureTime(station,time);
+                        if(train.direction==0){
+                            for(int i=station+1;i<diaFile.getStationNum();i++){
+                                int depTime=train.getDepartureTime(i);
+                                if(depTime>=0){
+                                    depTime=depTime+shiftTime;
+                                    if(depTime<0){
+                                        depTime+=24*3600;
+                                    }
+                                }
+                                depTime=depTime%(24*3600);
+                                train.setDepartureTime(i,depTime);
+                                int ariTime=train.getArrivalTime(i);
+                                if(ariTime>=0){
+                                    ariTime=ariTime+shiftTime;
+                                    if(ariTime<0){
+                                        ariTime+=24*3600;
+                                    }
+                                }
+                                ariTime=ariTime%(24*3600);
+                                train.setArrivalTime(i,ariTime);
+                            }
+                        }else{
+                            for(int i=0;i<station;i++){
+                                int depTime=train.getDepartureTime(i);
+                                if(depTime>=0){
+                                    depTime=depTime+shiftTime;
+                                    if (depTime < 0) {
+                                        depTime += 24 * 3600;
+                                    }
+                                }
+                                depTime=depTime%(24*3600);
+                                train.setDepartureTime(i,depTime);
+                                int ariTime=train.getArrivalTime(i);
+                                if(ariTime>=0){
+                                    ariTime=ariTime+shiftTime;
+                                    if(ariTime<0){
+                                        ariTime+=24*3600;
+                                    }
+                                }
+                                ariTime=ariTime%(24*3600);
+                                train.setArrivalTime(i,ariTime);
+                            }
+
+                        }
+                        for(int i=0;i<diaFile.getStationNum();i++){
+                            ((EditTimeView)departureTimeLayout.getChildAt(i)).setTime(train.getDepartureTime((diaFile.getStationNum()-1)*train.direction+i*(1-2*train.direction)));
+                            ((EditTimeView)arrivalTimeLayout.getChildAt(i)).setTime(train.getArrivalTime((diaFile.getStationNum()-1)*train.direction+i*(1-2*train.direction)));
+                        }
+
+                        nessTimeCreate();
+                        trainChange();
+                        final EditText operationName = (EditText) findViewById(R.id.operationName);
+                        operationName.setText(train.operationName);
+                        Button beforeButton = (Button) findViewById(R.id.beforeTrain);
+                        beforeTrain= diaFile.diagram.get(diaNumber).beforeOperation(train);
+                        if (beforeTrain == null) {
+                            beforeButton.setText("前運用無し");
+                            beforeButton.setEnabled(false);
+                        } else {
+                            beforeButton.setText(beforeTrain.number + "\n" + timeInt2String4(beforeTrain.getADTime(train.startStation())) + "着");
+                            beforeButton.setEnabled(true);
+                        }
+                        Button nextButton = (Button) findViewById(R.id.nextTrain);
+                        nextTrain = diaFile.diagram.get(diaNumber).nextOperation(train);
+                        if (nextTrain == null) {
+                            nextButton.setText("前運用無し");
+                            nextButton.setEnabled(false);
+                        } else {
+                            nextButton.setText(nextTrain.number + "\n" + timeInt2String4(nextTrain.getDATime(train.endStation())) + "発");
+                            nextButton.setEnabled(true);
+
+                        }
+                    }
+                });
                 stopTimeLayout.addView(stopTime);
             } else {
                 EditTimeView stopTime = new EditStopTimeView(getAOdiaActivity(), stationNum, -1, false);

@@ -29,6 +29,16 @@ public class DiaFile {
     //AOdia専用オプション
     public String filePath="";
     public boolean menuOpen=true;
+    public DiaFile(){
+        version="OuDiaSecond.1.05";
+        name="新しい路線";
+        trainType.add(new TrainType());
+        diagram.add(new Diagram(this));
+    }
+    public DiaFile(String filePath){
+        this();
+        this.filePath=filePath;
+    }
     public DiaFile(File file)throws Exception{
         filePath=file.getPath();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -54,8 +64,7 @@ public class DiaFile {
         String nouse=br.readLine();
         loadDiaFile(br);
     }
-    private void loadDiaFile(BufferedReader br){
-        try {
+    private void loadDiaFile(BufferedReader br)throws Exception{
             br.readLine();//Rosen.
             name=br.readLine().split("=",-1)[1];
             String line=br.readLine();
@@ -87,9 +96,6 @@ public class DiaFile {
                 line=br.readLine();
             }
 
-        }catch (IOException e){
-            e.printStackTrace();
-        }
     }
 
     public int getDiaNum(){
@@ -225,7 +231,7 @@ public class DiaFile {
             fos.write(0xbf);
             fos.close();
             FileWriter out=new FileWriter(fileName,true);
-            out.write("FileType=OuDiaSecond.1.04\r\n");
+            out.write("FileType=OuDiaSecond.1.05\r\n");
             out.write("Rosen.\r\n");
             out.write("Rosenmei="+name+"\r\n");
             for(Station s:station){
@@ -242,7 +248,7 @@ public class DiaFile {
             out.write("DiagramDgrYZahyouKyoriDefault=60\r\n");
             out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
             out.write(".\r\n");
-            out.write("DispProp.\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouVFont=PointTextHeight=9;Facename=@ＭＳ ゴシック\r\nDiaEkimeiFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaJikokuFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaRessyaFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nCommentFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaMojiColor=00000000\r\nDiaHaikeiColor=00FFFFFF\r\nDiaRessyaColor=00000000\r\nDiaJikuColor=00C0C0C0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00F0F0F0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00FFFFFF\r\nStdOpeTimeLowerColor=00E0E0FF\r\nStdOpeTimeHigherColor=00FFFFE0\r\nStdOpeTimeUndefColor=0080FFFF\r\nStdOpeTimeIllegalColor=00A0A0A0\r\nEkimeiLength=6\r\nJikokuhyouRessyaWidth=8\r\nAnySecondIncDec1=10\r\nAnySecondIncDec2=-10\r\nDisplayRessyamei=1\r\nDisplayOuterTerminalEkimeiOriginSide=0\r\nDisplayOuterTerminalEkimeiTerminalSide=0\r\nDiagramDisplayOuterTerminal=0\r\n.\r\nFileTypeAppComment=OuDiaSecond Ver. 1.04.03");
+            out.write("DispProp.\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouVFont=PointTextHeight=9;Facename=@ＭＳ ゴシック\r\nDiaEkimeiFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaJikokuFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaRessyaFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nCommentFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaMojiColor=00000000\r\nDiaHaikeiColor=00FFFFFF\r\nDiaRessyaColor=00000000\r\nDiaJikuColor=00C0C0C0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00F0F0F0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00FFFFFF\r\nStdOpeTimeLowerColor=00E0E0FF\r\nStdOpeTimeHigherColor=00FFFFE0\r\nStdOpeTimeUndefColor=0080FFFF\r\nStdOpeTimeIllegalColor=00A0A0A0\r\nEkimeiLength=6\r\nJikokuhyouRessyaWidth=8\r\nAnySecondIncDec1=10\r\nAnySecondIncDec2=-10\r\nDisplayRessyamei=1\r\nDisplayOuterTerminalEkimeiOriginSide=0\r\nDisplayOuterTerminalEkimeiTerminalSide=0\r\nDiagramDisplayOuterTerminal=0\r\n.\r\nFileTypeAppComment=AOdia v2.5.0");
             out.close();
 
         } catch (IOException e) {
@@ -253,6 +259,12 @@ public class DiaFile {
     public void copyDiagram(int diagramIndex,String diaName){
         diagram.add(new Diagram(diagram.get(diagramIndex)));
         diagram.get(diagram.size()-1).name=diaName;
+    }
+    public void addNewDiagram(){
+        diagram.add(new Diagram(this));
+    }
+    public void deleteDiagram(int diagramIndex){
+        diagram.remove(diagramIndex);
     }
 
 }

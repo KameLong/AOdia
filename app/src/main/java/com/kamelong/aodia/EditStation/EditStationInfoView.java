@@ -23,23 +23,17 @@ import java.util.List;
 
 public class EditStationInfoView extends LinearLayout {
     Station station=null;
-    public EditStationInfoView(Context context,final Station station){
+    ArrayList<Station>editStation;
+    public EditStationInfoView(Context context,final Station station,ArrayList<Station> editStation){
         super(context);
         this.station=station;
+        this.editStation=editStation;
         try{
             LayoutInflater.from(context).inflate(R.layout.edit_station, this);
         }catch (Exception e){
             SdLog.log(e);
         }
         try{
-            final EditText staitonNameEdit=(EditText)findViewById(R.id.stationNameEditText);
-            staitonNameEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    station.name=staitonNameEdit.getEditableText().toString();
-                }
-            });
-            staitonNameEdit.setText(station.name);
 
             ToggleButton arriveToggleDown=findViewById(R.id.arriveToggleDown);
             arriveToggleDown.setChecked((station.getTimeTableStyle(0)&0b010)!=0);
@@ -106,8 +100,8 @@ public class EditStationInfoView extends LinearLayout {
             List<String> stationList=new ArrayList<>();
             stationList.add("分岐無し");
 
-            for(int i=0;i<station.diaFile.station.size();i++){
-                stationList.add(i+"："+station.diaFile.station.get(i).name);
+            for(int i=0;i<editStation.size();i++){
+                stationList.add(i+"："+editStation.get(i).name);
             }
             ArrayAdapter<String> stationDataAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, stationList);
             stationDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

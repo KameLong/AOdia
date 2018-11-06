@@ -16,7 +16,7 @@ import com.kamelong.aodia.AOdiaDefaultView;
 
 public class EditTimeView extends AppCompatEditText {
     public String history="";
-    private OnTimeChangeListener onTimeChangeListener=null;
+    protected OnTimeChangeListener onTimeChangeListener=null;
     public int stationNum;
 
     public EditTimeView(Context context,int station,int time,boolean editable) {

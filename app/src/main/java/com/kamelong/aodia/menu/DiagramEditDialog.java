@@ -32,6 +32,7 @@ public class DiagramEditDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 diaFile.diagram.get(diagramIndex).name=diagramName.getEditableText().toString();
+                DiagramEditDialog.this.dismiss();
             }
         });
         Button diagramCopy=findViewById(R.id.diagramCopySubmit);
@@ -39,6 +40,15 @@ public class DiagramEditDialog extends Dialog {
             @Override
             public void onClick(View view) {
                 diaFile.copyDiagram(diagramIndex,diagramName.getEditableText().toString());
+                DiagramEditDialog.this.dismiss();
+            }
+        });
+        Button diagramDelete=findViewById(R.id.deleteButton);
+        diagramDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                diaFile.deleteDiagram(diagramIndex);
+                DiagramEditDialog.this.dismiss();
             }
         });
 

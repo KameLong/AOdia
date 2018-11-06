@@ -381,6 +381,11 @@ public class TimeTableFragment extends AOdiaFragment {
             @Override
             public void fragmentClose() {
                 findViewById(R.id.bottomContents).setVisibility(View.GONE);
+                if(!diagram.trains[direction].get(diagram.trains[direction].size()-1).isnull()){
+                    diagram.trains[direction].add(new Train(diaFile,direction));
+
+                }
+                trainReset();
                 if(editTrain>=0){
                     ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
                     ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));

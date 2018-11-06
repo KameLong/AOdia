@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.SaveDialog;
 import com.kamelong.aodia.Diagram.DiagramFragment;
 import com.kamelong.aodia.EditStation.EditStationFragment;
+import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
@@ -244,12 +246,18 @@ public class AOdiaActivity extends AppCompatActivity {
                     return;
                 }
             }
-            DiaFile diaFile = new DiaFile(file);
+            try {
+                DiaFile diaFile = new DiaFile(file);
             diaFiles.add(diaFile);
             diaFilesIndex.add(0,diaFiles.size()-1);
             database.addHistory(diaFile.filePath);
             database.addNewFileToLineData(diaFile.filePath,diaFile.getDiaNum());
             openTimeTable(0,0,0);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this,"エラー：このダイヤファイルを開く事ができませんでした。該当ファイルを、作者メールアドレス(kamelong.dev@gmail.com)に送信していただくと対応いたします。",Toast.LENGTH_LONG).show();
+
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -320,8 +328,16 @@ public class AOdiaActivity extends AppCompatActivity {
         fragment.setArguments(args);
         openFragment(fragment);
     }
-    public void openStationEditFragment(int menuIndex){
+    public void openEditStationFragment(int menuIndex){
         EditStationFragment fragment=new EditStationFragment();
+        Bundle args=new Bundle();
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
+        fragment.setArguments(args);
+        openFragment(fragment);
+
+    }
+    public void openEditTrainTypeFragment(int menuIndex){
+        EditTrainTypeFragment fragment=new EditTrainTypeFragment();
         Bundle args=new Bundle();
         args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
         fragment.setArguments(args);
@@ -382,7 +398,7 @@ public class AOdiaActivity extends AppCompatActivity {
      * 指定されたIndexのFragmentをkillする
      * @param index
      */
-    private void killFragment(int index){
+    public void killFragment(int index){
         if(index<0){
             return;
         }
@@ -409,9 +425,7 @@ public class AOdiaActivity extends AppCompatActivity {
         }
     }
     public void onCloseSetting(){
-        Intent intent=new Intent();
-        intent.setClassName(this,AOdiaActivity.class.getName());
-        startActivity(intent);
+        setting();
     }
     /**
      * 設定を反映させる

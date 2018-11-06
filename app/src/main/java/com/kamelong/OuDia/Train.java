@@ -51,9 +51,8 @@ public class Train {
             time[i]=train.time[i];
         }
     }
-    public Train(DiaFile diaFile,int direction,BufferedReader br){
+    public Train(DiaFile diaFile,int direction,BufferedReader br)throws Exception{
         this(diaFile,direction);
-        try {
             String line = br.readLine();
             while(!line.equals(".")){
                 String title=line.split("=",-1)[0];
@@ -86,9 +85,6 @@ public class Train {
                 }
                 line=br.readLine();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
     }
     private void setOuDiaTime(String[] value){
@@ -116,6 +112,9 @@ public class Train {
 
     }
     private void setOuDiaTrack(String[] value){
+        if(direction==1){
+            System.out.println("test");
+        }
         for(int i=0;i<value.length&&i<time.length;i++) {
             int station=direction*(stationNum-1)+(1-2*direction)*i;
 
@@ -125,11 +124,11 @@ public class Train {
             }
             if (value[i].contains(";")) {
                 setStop(station, Integer.parseInt(value[i].split(";")[0]));
-                if(i==startStation()){
-                    if(value[i].split(";")[1].startsWith("2")){
+                if(station==startStation()){
+                    if(value[i].split(";",-1)[1].startsWith("2")){
                         leaveYard=true;
                         if(value[i].split(";")[1].contains("/")){
-                            operationName=value[i].split(";")[1].split("/")[1];
+                            operationName=value[i].split(";")[1].split("/",-1)[1];
                         }
                     }
                 }
@@ -566,8 +565,16 @@ public class Train {
         if(!editStation.contains(startStation())){
             leaveYard=false;
         }
+
         time=newTime;
         stationNum=time.length;
+    }
+    public boolean isnull(){
+        for(int i=0;i<time.length;i++)
+        {
+            if(time[i]!=0)return false;
+        }
+        return true;
     }
 
 

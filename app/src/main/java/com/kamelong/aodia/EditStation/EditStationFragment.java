@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Station;
@@ -50,7 +51,7 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         super.onViewCreated(view,savedInstanceState);
         final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
         for(int i=0;i<diaFile.getStationNum();i++){
-            EditStationView editStationView=new EditStationView(getContext(),editStationList.get(i),i);
+            EditStationView editStationView=new EditStationView(getContext(),editStationList.get(i),i,editStationList);
             editStationViews.add(editStationView);
             editStationView.setStationEditInterface(this);
             stationList.addView(editStationView,i+1);
@@ -67,6 +68,7 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
                 submitEditStation();
             }
         });
+        Toast.makeText(getContext(),"駅編集を反映させる為には、「駅編集完了」ボタンを押してください",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -75,14 +77,19 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         final LinearLayout stationList=(LinearLayout) findViewById(R.id.stationList);
 
         editStationList.add(stationIndex,new Station(diaFile));
-        EditStationView editStationView=new EditStationView(getContext(),editStationList.get(stationIndex),stationIndex);
+        EditStationView editStationView=new EditStationView(getContext(),editStationList.get(stationIndex),stationIndex,editStationList);
         editStationView.setStationEditInterface(this);
         editStationViews.add(stationIndex,editStationView);
         editStationIndex.add(stationIndex,-1);
         stationList.addView(editStationView,stationIndex+1);
-        for(int i=stationIndex;i<editStationViews.size();i++){
+        for(int i=0;i<editStationList.size();i++){
             editStationViews.get(i).renewStationIndex(i);
+            if(editStationList.get(i).brunchStationIndex>=stationIndex){
+                editStationList.get(i).brunchStationIndex++;
+            }
+            editStationViews.get(i).closeInfo();
         }
+
 
 
     }
@@ -95,9 +102,20 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         editStationViews.remove(stationIndex);
         editStationIndex.remove(stationIndex);
         stationList.removeViewAt(stationIndex+1);
-        for(int i=stationIndex;i<editStationViews.size();i++){
+        for(int i=0;i<editStationList.size();i++){
             editStationViews.get(i).renewStationIndex(i);
+            editStationViews.get(i).closeInfo();
+            if(editStationList.get(i).brunchStationIndex==stationIndex){
+                editStationList.get(i).brunchStationIndex=-1;
+            }
+            if(editStationList.get(i).brunchStationIndex>stationIndex){
+                editStationList.get(i).brunchStationIndex--;
+            }
+
         }
+    }
+    @Override
+    public void renewStationName(int stationIndex){
 
     }
     public void submitEditStation(){
@@ -113,8 +131,12 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
 
         }
         diaFile.reCalcStationTime();
-
-        this.onDestroy();
+        getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
     }
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
 
 }
