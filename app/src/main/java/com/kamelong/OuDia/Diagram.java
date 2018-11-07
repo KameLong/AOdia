@@ -8,11 +8,18 @@ public class Diagram {
     public String name="";
     public ArrayList<Train>[] trains=new ArrayList[2];
     public DiaFile diaFile;
-    public Diagram(DiaFile diaFile,BufferedReader br){
+    public Diagram(DiaFile diaFile){
+        this.diaFile=diaFile;
+        name="新しいダイヤ";
+        trains[0]=new ArrayList<>();
+        trains[0].add(new Train(diaFile,0));
+        trains[1]=new ArrayList<>();
+        trains[1].add(new Train(diaFile,1));
+    }
+    public Diagram(DiaFile diaFile,BufferedReader br)throws Exception{
         this.diaFile=diaFile;
         trains[0]=new ArrayList<>();
         trains[1]=new ArrayList<>();
-        try{
             String line=br.readLine();
             while(!line.equals(".")){
                 if(line.startsWith("DiaName")){
@@ -37,9 +44,6 @@ public class Diagram {
                 line=br.readLine();
             }
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
     }
     public Diagram(Diagram old){
         diaFile=old.diaFile;
@@ -337,10 +341,14 @@ public class Diagram {
     public void deleteTrain(Train train){
         int direction=train.direction;
         trains[direction].remove(train);
+        if(trains[direction].size()==0){
+            trains[direction].add(new Train(diaFile,direction));
+        }
     }
 
     public Train nextOperation(Train train){
         int endStation=train.endStation();
+        if(endStation<0)return null;
         int endTime=train.getADTime(endStation);
         if(endTime<0)return null;
         Train bestTrain=null;
@@ -431,6 +439,16 @@ public class Diagram {
     }
 
     public void reNewOperation(){
+        for(Train t:trains[0]) {
+            if(!t.leaveYard){
+                t.operationName="";
+            }
+        }
+        for(Train t:trains[1]) {
+            if(!t.leaveYard){
+                t.operationName="";
+            }
+        }
         for(Train t:trains[0]) {
             if(t.leaveYard){
                 Train train=t;

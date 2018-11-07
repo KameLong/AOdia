@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
@@ -194,11 +195,12 @@ public class TimeTableFragment extends AOdiaFragment {
             diaFile = getAOdiaActivity().diaFiles.get(fileNum);
             diagram =diaFile.diagram.get(diaNum);
         }catch(Exception e){
-            e.printStackTrace();
-            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
+            SdLog.log(e);
+            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG).show();
         }
         if(diaFile==null){
-            onDestroy();
+            Toast.makeText(getActivity(),"ダイヤファイルが見つかりませんでした",Toast.LENGTH_LONG).show();
+            getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
             return;
         }
         setting.create(this);
@@ -353,6 +355,9 @@ public class TimeTableFragment extends AOdiaFragment {
             @Override
             public void trainChanged() {
                 LinearLayout trainNameLinea = (LinearLayout) findViewById(R.id.trainNameLinear);
+                if(trainIndex<0||trainIndex>=trainNameLinea.getChildCount()){
+                    return;
+                }
                 trainNameLinea.removeViewAt(trainIndex);
                 trainNameLinea.addView(new TrainNameView(getActivity(), diaFile, diaFile.getTrain(diaNum,direction,trainIndex)),trainIndex);
                 LinearLayout trainTimeLinear = (LinearLayout) findViewById(R.id.trainTimeLinear);
@@ -381,6 +386,11 @@ public class TimeTableFragment extends AOdiaFragment {
             @Override
             public void fragmentClose() {
                 findViewById(R.id.bottomContents).setVisibility(View.GONE);
+                if(!diagram.trains[direction].get(diagram.trains[direction].size()-1).isnull()){
+                    diagram.trains[direction].add(new Train(diaFile,direction));
+
+                }
+                trainReset();
                 if(editTrain>=0){
                     ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
                     ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));

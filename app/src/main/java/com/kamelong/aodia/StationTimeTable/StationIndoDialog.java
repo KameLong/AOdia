@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kamelong.OuDia.DiaFile;
@@ -118,7 +119,7 @@ public class StationIndoDialog extends Dialog{
                     }
                 });
             }else{
-                sortButton.setVisibility(View.INVISIBLE);
+                sortButton.setVisibility(View.GONE);
             }
             Button downTimetable = (Button) findViewById(R.id.downTimeTableButton);
             downTimetable.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +137,8 @@ public class StationIndoDialog extends Dialog{
                     StationIndoDialog.this.dismiss();
                 }
             });
+            LinearLayout showStop=findViewById(R.id.showStop);
+            showStop.setVisibility(View.GONE);
         }catch(Exception e){
             SdLog.log(e);
         }

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Diagram;
@@ -177,10 +178,18 @@ public class DiagramFragment extends AOdiaFragment {
             Bundle bundle = getArguments();
             diaNumber = bundle.getInt("diaNumber");
             diaFile = getAOdiaActivity().diaFiles.get(bundle.getInt("fileNumber"));
+            if(diaFile.getDiaNum()<=diaNumber){
+                throw new Exception();
+            }
 
         } catch (Exception e) {
+            Toast.makeText(getContext(),"ダイヤを開けませんでした。ダイヤの削除を行った可能性があります。",Toast.LENGTH_LONG).show();
             SdLog.log(e);
+            onDestroy();
+            getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
+
         }
+
         fragmentContainer = inflater.inflate(R.layout.diagram, container, false);
 
         return fragmentContainer;
@@ -195,9 +204,9 @@ public class DiagramFragment extends AOdiaFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        try {
         setting = new DiagramSetting(getAOdiaActivity(), this, diaFile, diaNumber);
         setting.create(this);
-        try {
             FrameLayout stationFrame = view.findViewById(R.id.station);
             FrameLayout timeFrame = view.findViewById(R.id.time);
             FrameLayout diaFrame = view.findViewById(R.id.diagramFrame);
@@ -331,6 +340,7 @@ public class DiagramFragment extends AOdiaFragment {
         setting.scaleY=frameSize/nessTime;
         setScale();
         stationView.invalidate();
+        diagramView.invalidate();
 
     }
     public void autoScroll(){

@@ -157,13 +157,13 @@
             android:textSize="16dp"
             android:layout_alignParentBottom="false"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/textNumber" />
+            android:layout_below="@+id/stationIndex" />
 
         <TextView
             android:text="2502M"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textNumber"
+            android:id="@+id/stationIndex"
             android:textSize="16dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="9dp" />

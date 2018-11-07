@@ -74,13 +74,13 @@ public class DiagramSetting {
         this.diaFile = diaFile;
         if(diaFile==null)return;
         //デフォルトscaleはTrainNumに依存する
-        if (diaFile.getTrainSize(diaNumber, 0) > 100) {
-            scaleX = 0.1f;
-            scaleY = 0.3f;
-        } else {
-            scaleX = 0.05f;
-            scaleY = 0.3f;
-        }
+            if (diaFile.getTrainSize(diaNumber, 0) > 100) {
+                scaleX = 0.1f;
+                scaleY = 0.3f;
+            } else {
+                scaleX = 0.05f;
+                scaleY = 0.3f;
+            }
     }
     public void setDefault(int[] value){
         scrollX=value[0];
@@ -136,7 +136,7 @@ public class DiagramSetting {
 
         FloatingActionButton fabNumber = (FloatingActionButton) fragment.findViewById(R.id.fabNumber);
         TextView textName = (TextView) fragment.findViewById(R.id.textname);
-        TextView textNumber = (TextView) fragment.findViewById(R.id.textNumber);
+        TextView textNumber = (TextView) fragment.findViewById(R.id.stationIndex);
         if (numberState % 2 == 0) {
             textNumber.setVisibility(View.INVISIBLE);
         } else {

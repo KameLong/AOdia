@@ -81,6 +81,7 @@ public class SdLog {
     }
     public static void log(Exception e){
         e.printStackTrace();
+//        Toast.makeText(activity,e.getMessage(),Toast.LENGTH_SHORT).show();
         if(!able){
             return;
         }

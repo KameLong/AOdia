@@ -19,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.SaveDialog;
 import com.kamelong.aodia.Diagram.DiagramFragment;
+import com.kamelong.aodia.EditStation.EditStationFragment;
+import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
@@ -47,7 +50,7 @@ public class AOdiaActivity extends AppCompatActivity {
     public ArrayList<AOdiaFragment>fragments=new ArrayList<>();
     public int fragmentIndex=0;
 
-    private  MenuFragment menuFragment=null;
+    public  MenuFragment menuFragment=null;
 
     public DrawerLayout drawerLayout=null;
     public static final String PREFERENCES_NAME="AOdia-Setting";
@@ -243,42 +246,48 @@ public class AOdiaActivity extends AppCompatActivity {
                     return;
                 }
             }
-            DiaFile diaFile = new DiaFile(file);
+            try {
+                DiaFile diaFile = new DiaFile(file);
             diaFiles.add(diaFile);
             diaFilesIndex.add(0,diaFiles.size()-1);
             database.addHistory(diaFile.filePath);
             database.addNewFileToLineData(diaFile.filePath,diaFile.getDiaNum());
             openTimeTable(0,0,0);
+            }catch (Exception e){
+                e.printStackTrace();
+                Toast.makeText(this,"エラー：このダイヤファイルを開く事ができませんでした。該当ファイルを、作者メールアドレス(kamelong.dev@gmail.com)に送信していただくと対応いたします。",Toast.LENGTH_LONG).show();
+
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    public TimeTableFragment openTimeTable(int fileIndex,int diagramIndex,int direction){
+    public TimeTableFragment openTimeTable(int menuIndex,int diagramIndex,int direction){
         TimeTableFragment fragment=new TimeTableFragment();
         Bundle args=new Bundle();
-        args.putInt("fileIndex",diaFilesIndex.get(fileIndex));
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
         args.putInt("diagramIndex", diagramIndex);
         args.putInt("direction", direction);
         fragment.setArguments(args);
         openFragment(fragment);
         SharedPreferences pref =getSharedPreferences(PREFERENCES_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor=pref.edit();
-        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(fileIndex)).filePath);
+        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(menuIndex)).filePath);
         editor.putInt("finalDiaNumber",diagramIndex);
         editor.putInt("finalDirection",direction);
         editor.apply();
         return fragment;
     }
-    public DiagramFragment openDiagram(int fileIndex,int diagramIndex){
+    public DiagramFragment openDiagram(int menuIndex,int diagramIndex){
         DiagramFragment fragment=new DiagramFragment();
         Bundle args=new Bundle();
-        args.putInt("fileNumber",diaFilesIndex.get(fileIndex));
+        args.putInt("fileNumber",diaFilesIndex.get(menuIndex));
         args.putInt("diaNumber", diagramIndex);
         fragment.setArguments(args);
         openFragment(fragment);
         SharedPreferences pref =getSharedPreferences(PREFERENCES_NAME,MODE_PRIVATE);
         SharedPreferences.Editor editor=pref.edit();
-        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(fileIndex)).filePath);
+        editor.putString("finalFilePath",diaFiles.get(diaFilesIndex.get(menuIndex)).filePath);
         editor.putInt("finalDiaNumber",diagramIndex);
         editor.putInt("finalDirection",2);
         editor.apply();
@@ -318,12 +327,28 @@ public class AOdiaActivity extends AppCompatActivity {
         args.putInt("station",stationIndex);
         fragment.setArguments(args);
         openFragment(fragment);
+    }
+    public void openEditStationFragment(int menuIndex){
+        EditStationFragment fragment=new EditStationFragment();
+        Bundle args=new Bundle();
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
+        fragment.setArguments(args);
+        openFragment(fragment);
 
     }
-    public void openStationTimeTableIndex(int fileIndex){
+    public void openEditTrainTypeFragment(int menuIndex){
+        EditTrainTypeFragment fragment=new EditTrainTypeFragment();
+        Bundle args=new Bundle();
+        args.putInt("fileIndex",diaFilesIndex.get(menuIndex));
+        fragment.setArguments(args);
+        openFragment(fragment);
+
+    }
+
+    public void openStationTimeTableIndex(int menuIndex){
         StationInfoIndexFragment fragment=new StationInfoIndexFragment();
         Bundle args=new Bundle();
-        args.putInt("fileNum",diaFilesIndex.get(fileIndex));
+        args.putInt("fileNum",diaFilesIndex.get(menuIndex));
         fragment.setArguments(args);
         openFragment(fragment);
 
@@ -343,8 +368,6 @@ public class AOdiaActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
         fragmentTransaction.commit();
-
-
     }
     public void killDiaFile(int fileIndex,int menuIndex){
         diaFiles.set(diaFilesIndex.get(fileIndex),null);
@@ -375,7 +398,7 @@ public class AOdiaActivity extends AppCompatActivity {
      * 指定されたIndexのFragmentをkillする
      * @param index
      */
-    private void killFragment(int index){
+    public void killFragment(int index){
         if(index<0){
             return;
         }
@@ -402,9 +425,7 @@ public class AOdiaActivity extends AppCompatActivity {
         }
     }
     public void onCloseSetting(){
-        Intent intent=new Intent();
-        intent.setClassName(this,AOdiaActivity.class.getName());
-        startActivity(intent);
+        setting();
     }
     /**
      * 設定を反映させる

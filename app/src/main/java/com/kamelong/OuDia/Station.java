@@ -1,5 +1,9 @@
 package com.kamelong.OuDia;
 
+import android.widget.Toast;
+
+import com.kamelong.aodia.SdLog;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -22,79 +26,117 @@ public class Station {
     public int[] stopMain=new int[]{1,2};
     public int brunchStationIndex=-1;
     public boolean border=false;
+    public Station(DiaFile diaFile){
+        this.diaFile=diaFile;
+        name="新規作成";
+        trackName.add("");
+        trackshortName.add("");
+        trackName.add("1番線");
+        trackName.add("2番線");
+        trackshortName.add("1");
+        trackshortName.add("2");
+
+    }
 
     /**
      *
      * @param br readLineでEki.を得た後
      */
-    public Station(BufferedReader br,DiaFile diaFile){
+    public Station(BufferedReader br,DiaFile diaFile)throws Exception{
         this.diaFile=diaFile;
         trackName.add("");
         trackshortName.add("");
-        try {
-            String line = br.readLine();
-            while (!line.equals(".")){
-                if(line.equals("EkiTrack2Cont.")){
-                    while(!line.equals(".")){
-                        if(line.equals("EkiTrack2.")){
-                            while(!line.equals(".")) {
-                                if(line.split("=",-1)[0].equals("TrackName")){
-                                    trackName.add(line.split("=",-1)[1]);
+        String line = br.readLine();
+        while (!line.equals(".")){
+            if(line.equals("EkiTrack2Cont.")){
+                while(!line.equals(".")){
+                    if(line.equals("EkiTrack2.")){
+                        while(!line.equals(".")) {
+                            if(line.split("=",-1)[0].equals("TrackName")){
+                                trackName.add(line.split("=",-1)[1]);
+                                if(trackName.get(trackName.size()-1).length()==0){
+                                    trackName.set(trackName.size()-1,trackName.size()-1+"番線");
                                 }
-                                if(line.split("=",-1)[0].equals("TrackRyakusyou")){
-                                    trackshortName.add(line.split("=",-1)[1]);
-                                }
-                                line=br.readLine();
                             }
+                            if(line.split("=",-1)[0].equals("TrackRyakusyou")){
+                                trackshortName.add(line.split("=",-1)[1]);
+                                if(trackshortName.get(trackshortName.size()-1).length()==0){
+                                    trackshortName.set(trackshortName.size()-1,trackshortName.size()-1+"");
+                                }
+                            }
+                            line=br.readLine();
                         }
-                        line=br.readLine();
                     }
+                    line=br.readLine();
                 }
-                String title=line.split("=",-1)[0];
-                if(title.equals("Ekimei")){
-                    name=line.split("=",-1)[1];
-                }
-                if(title.equals("Ekijikokukeisiki")){
-                    setTimeTableStyle(line.split("=",-1)[1]);
-                }
-                if(title.equals("Ekikibo")){
-                    if(line.split("=",-1)[1].equals("Ekikibo_Syuyou")){
-                        bigStation =true;
-                    }else{
-                        bigStation =false;
-                    }
-                }
-                if(title.equals("JikokuhyouTrackDisplayKudari")){
-                    timeTableStyle=timeTableStyle|0b000100;
-                }
-                if(title.equals("JikokuhyouTrackDisplayNobori")){
-                    timeTableStyle=timeTableStyle|0b100000;
-                }
-                if(title.equals("BrunchCoreEkiIndex")){
-                    brunchStationIndex=Integer.parseInt(line.split("=",-1)[1]);
-                }
-                if(title.equals("Kyoukaisen")){
-                    border=line.split("=",-1)[1].equals("1");
-                }
-                if(title.equals("DownMain")){
-                    stopMain[0]=Integer.parseInt(line.split("=",-1)[1]);
-                }
-                if(title.equals("UpMain")){
-                    stopMain[1]=Integer.parseInt(line.split("=",-1)[1]);
-                }
-
-                line=br.readLine();
             }
-        }catch (Exception e){
-         e.printStackTrace();
+            String title=line.split("=",-1)[0];
+            if(title.equals("Ekimei")){
+                name=line.split("=",-1)[1];
+            }
+            if(title.equals("Ekijikokukeisiki")){
+                setTimeTableStyle(line.split("=",-1)[1]);
+            }
+            if(title.equals("Ekikibo")){
+                if(line.split("=",-1)[1].equals("Ekikibo_Syuyou")){
+                    bigStation =true;
+                }else{
+                    bigStation =false;
+                }
+            }
+            if(title.equals("JikokuhyouTrackDisplayKudari")){
+                timeTableStyle=timeTableStyle|0b000100;
+            }
+            if(title.equals("JikokuhyouTrackDisplayNobori")){
+                timeTableStyle=timeTableStyle|0b100000;
+            }
+            if(title.equals("BrunchCoreEkiIndex")){
+                brunchStationIndex=Integer.parseInt(line.split("=",-1)[1]);
+            }
+            if(title.equals("Kyoukaisen")){
+                border=line.split("=",-1)[1].equals("1");
+            }
+            if(title.equals("DownMain")){
+                stopMain[0]=Integer.parseInt(line.split("=",-1)[1]);
+            }
+            if(title.equals("UpMain")){
+                stopMain[1]=Integer.parseInt(line.split("=",-1)[1]);
+            }
+
+            line=br.readLine();
         }
+        //ここから駅データに不正がないかチェック
         if(trackName.size()==1){
             trackName.add("1番線");
             trackName.add("2番線");
             trackshortName.add("1");
             trackshortName.add("2");
         }
+        for(int i=0;i<2;i++) {
+            if (trackName.size() <= stopMain[i]) {
+                stopMain[i]=i+1;
+            }
+            if (trackName.size() <= stopMain[i]) {
+                stopMain[i]=1;
+            }
+        }
+        for(int i=trackshortName.size();i<trackName.size();i++){
+            trackshortName.add(i+"");
 
+        }
+
+    }
+    public Station(Station old){
+        diaFile=old.diaFile;
+        name=old.name;
+        timeTableStyle=old.timeTableStyle;
+        bigStation=old.bigStation;
+        trackName=new ArrayList<>(old.trackName);
+        trackshortName=new ArrayList<>(old.trackshortName);
+        stopMain[0]=old.stopMain[0];
+        stopMain[1]=old.stopMain[1];
+        brunchStationIndex=old.brunchStationIndex;
+        border=old.border;
     }
     private void setTimeTableStyle(String str){
         timeTableStyle=timeTableStyle&0b100100;
@@ -117,8 +159,8 @@ public class Station {
             case "Jikokukeisiki_KudariHatsuChaku":
                 timeTableStyle=timeTableStyle|0b001011;
                 break;
-                default:
-                    timeTableStyle=timeTableStyle|0b001001;
+            default:
+                timeTableStyle=timeTableStyle|0b001001;
         }
     }
 
@@ -208,9 +250,9 @@ public class Station {
                 case 0b011001:
                     style="Jikokukeisiki_NoboriHatsuchaku";
                     break;
-                    default:
-                        style="Jikokukeisiki_Hatsu";
-                        break;
+                default:
+                    style="Jikokukeisiki_Hatsu";
+                    break;
 
             }
             out.write("Ekijikokukeisiki="+style+"\r\n");

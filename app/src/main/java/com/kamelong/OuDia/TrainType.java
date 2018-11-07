@@ -18,44 +18,53 @@ public class TrainType {
     public static final int LINESTYLE_DASH=1;
     public static final int LINESTYLE_DOT=2;
     public static final int LINESTYLE_CHAIN=3;
-    public TrainType(BufferedReader br){
-        try{
-            String line=br.readLine();
-            while (!line.equals(".")) {
-                String title=line.split("=",-1)[0];
-                String value=line.split("=",-1)[1];
-                switch (title){
-                    case "Syubetsumei":
-                        name=value;
-                        break;
-                    case "Ryakusyou":
-                        shortName=value;
-                        break;
-                    case  "JikokuhyouMojiColor":
-                        textColor.setOuDiaColor(value);
-                        break;
-                    case "JikokuhyouBackColor":
-                        break;
-                    case "DiagramSenColor":
-                        diaColor.setOuDiaColor(value);
-                        break;
-                    case "DiagramSenStyle":
-                        break;
-                    case "StopMarkDrawType":
-                        stopmark=value.equals("EStopMarkDrawType_DrawOnStop");
-                        break;
+    public TrainType(){
+        name="新規種別";
+    };
+    public TrainType(BufferedReader br)throws Exception{
+        String line=br.readLine();
+        while (!line.equals(".")) {
+            String title=line.split("=",-1)[0];
+            String value=line.split("=",-1)[1];
+            switch (title){
+                case "Syubetsumei":
+                    name=value;
+                    break;
+                case "Ryakusyou":
+                    shortName=value;
+                    break;
+                case  "JikokuhyouMojiColor":
+                    textColor.setOuDiaColor(value);
+                    break;
+                case "JikokuhyouBackColor":
+                    break;
+                case "DiagramSenColor":
+                    diaColor.setOuDiaColor(value);
+                    break;
+                case "DiagramSenStyle":
+                    switch (value){
+                        case"SenStyle_Jissen":
+                            lineStyle=0;
+                            break;
+                        case "SenStyle_Hasen":
+                            lineStyle=1;
+                            break;
+                        case "SenStyle_Tensen":
+                            lineStyle=2;
+                            break;
+                        case "SenStyle_Ittensasen":
+                            lineStyle=3;
+                            break;
+                    }
+                    break;
+                case "StopMarkDrawType":
+                    stopmark=value.equals("EStopMarkDrawType_DrawOnStop");
+                    break;
+                case "DiagramSenIsBold":
+                    bold=value.equals("1");
 
-
-
-
-
-                }
-                line=br.readLine();
             }
-
-
-            }catch(Exception e){
-            e.printStackTrace();
+            line=br.readLine();
         }
     }
     public void saveToFile(FileWriter out){
