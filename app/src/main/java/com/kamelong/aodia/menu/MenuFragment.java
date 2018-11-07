@@ -43,7 +43,6 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-
 /**
  * メニューを表示するFragment.
  * LinearLayout内にButtonを配置することでメニューを構成する
