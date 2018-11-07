@@ -9,4 +9,6 @@
 
     <dimen name="small_margin">10dp</dimen>
     <dimen name="normal_margin">15dp</dimen>
+        <dimen name="margin200">200dp</dimen>
+    <dimen name="staff_height">20dp</dimen>
 </resources>

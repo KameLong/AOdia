@@ -39,30 +39,30 @@ public class CommentFragment extends AOdiaFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        LinearLayout main=new LinearLayout(getActivity());
+        LinearLayout main=new LinearLayout(getAOdiaActivity());
 
         try {
 
             Bundle bundle = getArguments();
-            fileNum=bundle.getInt("fileNum");
+            fileNum=bundle.getInt("fileIndex");
             diaFile=getAOdiaActivity().diaFiles.get(fileNum);
         }catch(Exception e){
-            Toast.makeText(getActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
             SdLog.log(e);
         }
         try {
 
             main.setOrientation(LinearLayout.VERTICAL);
-            ScrollView scrollView=new ScrollView(getActivity());
-            TextView text = new TextView(getActivity());
-            text.setText(diaFile.getComment());
+            ScrollView scrollView=new ScrollView(getAOdiaActivity());
+            TextView text = new TextView(getAOdiaActivity());
             text.setTextColor(Color.BLACK);
             scrollView.addView(text);
             LinearLayout.LayoutParams mlp=new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            text.setText(diaFile.comment);
            mlp.setMargins(10, 10, 10, 10);
             main.addView(scrollView,mlp);
         }catch(Exception e){
-            Toast.makeText(getActivity(), "Error(CommentFragment-onCreateView-E2)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-onCreateView-E2)", Toast.LENGTH_SHORT).show();
             SdLog.log(e);
         }
         return main;
@@ -72,23 +72,23 @@ public class CommentFragment extends AOdiaFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
-    @Override
+//    @Override
     public String fragmentName(){
         try {
-            return "コメント\n" + diaFile.getLineName();
+            return "コメント\n"+diaFile.name;
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }
     }
-    @Override
+//    @Override
     public String fragmentHash() {
         try {
-            return "comment-" + diaFile.getFilePath();
+            return "comment-" + diaFile.filePath;
         }catch(Exception e){
             SdLog.log(e);
-            Toast.makeText(getActivity(), "Error(CommentFragment-fragmentHash-E1)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-fragmentHash-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }
     }

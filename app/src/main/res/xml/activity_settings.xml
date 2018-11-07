@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="全体設定">
+
+   <PreferenceCategory android:title="全体設定">
         <EditTextPreference
             android:key="textsize2"
             android:title="文字サイズ"
@@ -18,32 +19,21 @@
         android:enabled="true"
         >
         <EditTextPreference
-            android:key="lineTimetableWidth"
-            android:title="路線時刻表の列車の幅：？文字（半角）"
-            android:inputType="number"
-            android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
             android:defaultValue="4"
-            android:maxLength="1">
-        </EditTextPreference>
+            android:inputType="number"
+            android:key="lineTimetableWidth"
+            android:maxLength="1"
+            android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
+            android:title="路線時刻表の列車の幅：？文字（半角）"/>
         <CheckBoxPreference
             android:key="secondSystem"
-            android:title="秒単位時刻"
-            android:summary="時刻表が秒単位になります" />
+            android:summary="時刻表が秒単位になります"
+            android:title="秒単位時刻" />
         <CheckBoxPreference
             android:key="showPass"
             android:title="駅通過時刻"
             android:defaultValue="true"
             android:summary="通過時刻をグレーの文字で表示します" />
-        <CheckBoxPreference
-            android:key="trainName"
-            android:title="列車名"
-            android:defaultValue="true"
-            android:summary="列車名と号数を表示します" />
-        <CheckBoxPreference
-            android:key="remark"
-            android:title="備考"
-            android:defaultValue="true"
-            android:summary="備考を表示します" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="ダイヤグラム設定"
@@ -80,6 +70,6 @@
             android:enabled="true"
             android:key="001"
             android:summary="有料オプションです"
-            android:title="（100円）ファイル保存機能を解禁する" />
+            android:title="（300円）OuDiaSecond形式でのファイル保存機能を解禁する" />
     </PreferenceCategory>
 </PreferenceScreen>

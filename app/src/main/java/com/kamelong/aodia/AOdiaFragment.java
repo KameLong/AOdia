@@ -1,66 +1,38 @@
 package com.kamelong.aodia;
 
-import android.app.Fragment;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.OuDia.DiaFile;
 
-import static android.content.Context.MODE_PRIVATE;
+public class AOdiaFragment extends Fragment {
+    protected View fragmentContainer= null;
 
-/**
- * AOdia内のタブとして使われるFragment
- * 画面分割を可能とする
- */
-
-public abstract class AOdiaFragment extends Fragment implements AOdiaFragmentInterface{
-
-    protected View fragmentContainer=null;
-    public AOdiaDiaFile diaFile=null;
-    protected AOdiaActivity activity=null;
-
-
-        @Override
-    public void onStart(){
-        super.onStart();
-        ((TextView)getActivity().findViewById(R.id.titleView)).setText(fragmentName());
-
-
-    }
-    @Override
-    public void onStop(){
-
-        super.onStop();
-    }
-
-    protected View findViewById(int id){
+    public DiaFile diaFile=null;
+    public  View findViewById(int id){
         return fragmentContainer.findViewById(id);
     }
-    @Override
-    public String fragmentName() {
+    public AOdiaActivity getAOdiaActivity(){
+        return (AOdiaActivity)getActivity();
+    }
+    public String fragmentName(){
         return "";
+    }
+    public String fragmentHash() {
+        return "help";
+    }
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        try {
+            ((TextView) getActivity().findViewById(R.id.titleView)).setText(fragmentName());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public String fragmentHash() {
-        return "";
-    }
-    @Override
-    public Fragment getFragment(){
-        return this;
-    }
-    @Override
-    public AOdiaDiaFile getDiaFile(){
-        return diaFile;
-    }
-    protected AOdiaActivity getAOdiaActivity(){
-        return (AOdiaActivity) getActivity();
-    }
 
 
 }

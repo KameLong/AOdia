@@ -1,11 +1,16 @@
 package com.kamelong.aodia;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import static android.support.v7.preference.Preference.*;
+
 /*
  *     This file is part of AOdia.
 
@@ -31,12 +36,15 @@ AOdia is free software: you can redistribute it and/or modify
  * PreferenceFragmentを継承したクラス
  * 個々で定義したPreferenceのリソースを設定します
  */
-public class SettingFragment extends android.preference.PreferenceFragment implements AOdiaFragmentInterface{
-    private Payment payment;
+public class SettingFragment extends PreferenceFragmentCompat {
+    Payment payment;
+        @Override
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        payment=((AOdiaActivity)getActivity()).getPayment();
+        payment=((AOdiaActivity)getActivity()).payment;
 
         addPreferencesFromResource(R.xml.activity_settings);
 
@@ -76,30 +84,9 @@ public class SettingFragment extends android.preference.PreferenceFragment imple
     public void onStop(){
         try {
             ((AOdiaActivity)getActivity()).onCloseSetting();
-            //Intent intent = new Intent();
-            //intent.setClass(getActivity(), getActivity().getClass());
-            //getActivity().startActivity(intent);
         }catch(Exception e){
             SdLog.log(e);
         }
         super.onStop();
-    }
-
-    @Override
-    public String fragmentName() {
-        return "設定";
-    }
-
-    @Override
-    public String fragmentHash() {
-        return "setting";
-    }
-    @Override
-    public Fragment getFragment(){
-        return this;
-    }
-    @Override
-    public AOdiaDiaFile getDiaFile(){
-        return null;
     }
 }

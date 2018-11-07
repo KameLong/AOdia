@@ -1,6 +1,5 @@
 package com.kamelong.aodia;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -12,7 +11,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kamelong.aodia.web.UrlOpenDialog;
 
 /**
  * ヘルプを表示するためのFragment
@@ -81,7 +79,7 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.com/aodia/help-v2.2.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.4.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -97,13 +95,13 @@ public class HelpFragment extends AOdiaFragment {
             return;
         }
         if(url.endsWith("oud")||url.endsWith("oud2")) {
-            UrlOpenDialog dialog=new UrlOpenDialog(getActivity(),url,helpView.getUrl());
+          //  UrlOpenDialog dialog=new UrlOpenDialog(getAodiaActivity(),url,helpView.getUrl());
         }
 
     }
     @Override
     public String fragmentName(){
-        return "AOdiaヘルプv2.2";
+        return "AOdiaヘルプv2.4";
     }
     @Override
     public String fragmentHash() {

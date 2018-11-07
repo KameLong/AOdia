@@ -46,15 +46,16 @@ public class MenuButton extends Button {
         super(context);
         try {
             this.setBackgroundColor(Color.TRANSPARENT);
-            //this.setTextColor(Color.rgb(0,51,204));
             setGravity(Gravity.LEFT);
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if(fragmentNumber==3){
-                        ((AOdiaActivity) context).openOperationFragment(fileNumber,diaNumber,0);
-                    }else {
-                        ((AOdiaActivity) context).openDiaOrTimeFragment(fileNumber, diaNumber, fragmentNumber);
+//                        ((AOdiaActivity) context).openOperationFragment(fileNumber,diaNumber,0);
+                    }else if(fragmentNumber==2){
+                        ((AOdiaActivity)context).openDiagram(fileNumber,diaNumber);
+                    }else{
+                        ((AOdiaActivity)context).openTimeTable(fileNumber,diaNumber,fragmentNumber);
                     }
                 }
             });

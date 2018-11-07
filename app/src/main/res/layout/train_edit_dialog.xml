@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dip"
+    android:orientation="vertical">
+
+    <TextView
+        android:text=""
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stationNameView"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:text="駅"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/beforeStationButton"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:background="@android:drawable/btn_default" />
+
+        <Button
+            android:text="駅"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/afterStationButton"
+            android:layout_weight="1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="right|center_vertical"
+            android:background="@android:drawable/btn_default" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <Button
+            android:id="@+id/downTimeTableButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_default"
+            android:text="この駅にて列車を分割する" />
+
+        <Button
+            android:id="@+id/combineTrainButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/downTimeTableButton"
+            android:background="@android:drawable/btn_default"
+            android:text="この駅にて列車を結合する" />
+
+        <Button
+            android:id="@+id/insertTrainButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_marginTop="30dp"
+            android:layout_toEndOf="@+id/beforeStationButton"
+            android:layout_toLeftOf="@+id/afterStationButton"
+            android:layout_toRightOf="@+id/beforeStationButton"
+            android:background="@android:drawable/btn_default"
+            android:text="列車を挿入する" />
+
+        <Button
+            android:id="@+id/copyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_toEndOf="@+id/beforeStationButton"
+            android:layout_toLeftOf="@+id/afterStationButton"
+            android:layout_toRightOf="@+id/beforeStationButton"
+            android:background="@android:drawable/btn_default"
+            android:text="この列車をコピーする" />
+
+        <Button
+            android:id="@+id/deleteBotton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:layout_toEndOf="@+id/beforeStationButton"
+            android:layout_toLeftOf="@+id/afterStationButton"
+            android:layout_toRightOf="@+id/beforeStationButton"
+            android:background="@android:drawable/btn_default"
+            android:text="この列車を削除する" />
+    </LinearLayout>
+
+</LinearLayout>
