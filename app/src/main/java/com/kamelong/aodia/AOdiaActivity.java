@@ -26,16 +26,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bluelinelabs.logansquare.LoganSquare;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kamelong.GTFS.GTFS;
 import com.kamelong.JPTI.JPTI;
 import com.kamelong.OuDia.OuDiaFile;
 import com.kamelong.aodia.AOdiaIO.FileSelectFragment;
 import com.kamelong.aodia.AOdiaIO.ProgressDialog;
+import com.kamelong.aodia.databaseNewService.EditServiceFragment;
 import com.kamelong.aodia.detabase.DBHelper;
 import com.kamelong.aodia.detabase.SQLData;
 import com.kamelong.aodia.diadata.AOdiaOperation;
+import com.kamelong.aodia.diadata.AOdiaService;
 import com.kamelong.aodia.diagram.DiagramFragment;
 import com.kamelong.aodia.diagram.TrainSelectDiagramFragment;
 import com.kamelong.aodia.menu.MenuFragment;
@@ -87,11 +87,24 @@ AOdia is free software: you can redistribute it and/or modify
  * アクティビティーはアプリ起動中は破棄されないため、アプリ起動中に失われたくないデータは全てアクティビティーが保持する。
  */
 public class AOdiaActivity extends AppCompatActivity {
-    private static ObjectMapper objectMapper = new ObjectMapper();
+
     private Payment payment;
     public Payment getPayment(){
         return payment;
     }
+    public ArrayList<AOdiaService>serviceList=new ArrayList<>();
+    public AOdiaService getService(int index){
+        if(serviceList.size()==0){
+            return null;
+        }
+        if(index>=0&&index<serviceList.size()){
+            return serviceList.get(index);
+        }
+        return serviceList.get(0);
+    }
+
+    public ArrayList<Integer>serviceIndex=new ArrayList<>();
+
     /**
      * ダイヤデータを保持する。
      * ダイヤファイルをクローズするとArrayListの順番を詰めずに空白にする
@@ -185,6 +198,18 @@ public class AOdiaActivity extends AppCompatActivity {
         );
 
         createSample();//sample.oudを作成する
+
+        serviceList.add(new AOdiaService());
+        AOdiaFragment fragment=new EditServiceFragment();
+        Bundle args=new Bundle();
+        args.putInt("serviceID",0);
+        args.putInt("calendarID",1);
+        fragment.setArguments(args);
+        fragmentTransaction.replace(R.id.container, fragment);
+        if(true) {
+            return;
+        }
+
         // ファイル関連付けで開くことをできるようにする
         if(Intent.ACTION_VIEW.equals(getIntent().getAction())) {
             String fname[] = String.valueOf(getIntent().getData()).split("//");
