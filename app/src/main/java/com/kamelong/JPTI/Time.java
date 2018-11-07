@@ -102,7 +102,7 @@ protected  Time(){}
         return json;
 
     }
-    private static int timeString2Int(String time){
+    private int timeString2Int(String time){
         if(time==null||time.length()==0){
             return -1;
         }
@@ -113,12 +113,12 @@ protected  Time(){}
         ss=Integer.parseInt(time.split(":",-1)[2]);
         }
         hh=hh%24;
-        if(hh<3){
+        if(hh<jpti.diagramStartHour){
             hh+=24;
         }
         return hh*3600+mm*60+ss;
     }
-    private static String timeInt2String(int time){
+    private String timeInt2String(int time){
         int ss=time%60;
         time=time/60;
         int mm=time%60;
