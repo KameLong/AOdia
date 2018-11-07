@@ -1,18 +1,26 @@
 package com.kamelong.aodia.menu;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
+import com.kamelong.aodia.ReSizeAnimation;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+
+import java.util.ArrayList;
 
 /**
  * Created by kame on 2017/01/24.
@@ -44,13 +52,13 @@ AOdia is free software: you can redistribute it and/or modify
  * 全てのボタンは１つのLinearLayout内に含まれる
  */
 public class LineMenu  extends LinearLayout{
-    LinearLayout lineButtonLinear;
-    LinearLayout lineContLinear;
+    private LinearLayout lineButtonLinear;
+    private LinearLayout lineContLinear;
 
     private int fileNum;
     private int menuIndex;
 //    private View container;
-    public LineMenu(final Context context, final DiaFile diaFile, int index, int mMenuIndex){
+    public LineMenu(final Context context, final AOdiaDiaFile diaFile, int index, int mMenuIndex){
         this(context);
         fileNum=index;
         menuIndex=mMenuIndex;
@@ -65,13 +73,13 @@ public class LineMenu  extends LinearLayout{
             findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getContext()).killDiaFile(fileNum,menuIndex);
+                    ((AOdiaActivity)getContext()).killDiaFile(fileNum,menuIndex);
                 }
             });
             findViewById(R.id.upButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity)getContext()).upDiaFile(menuIndex);
+                    ((AOdiaActivity)getContext()).upDiaFile(menuIndex);
 
                 }
             });
@@ -107,7 +115,7 @@ public class LineMenu  extends LinearLayout{
             timetable.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).openStationTimeTableIndex(fileNum);
+                    ((AOdiaActivity) context).openStationTimeTableIndex(fileNum);
                 }
             });
             lineContLinear.addView(timetable);
@@ -139,10 +147,19 @@ public class LineMenu  extends LinearLayout{
                 diagramButton.diaNumber = i;
                 diagramButton.fragmentNumber = 2;
 
+
+                MenuButton operationButton = new MenuButton(context);
+                operationButton.setText("　　運用");
+                operationButton.fileNumber=fileNum;
+                operationButton.diaNumber = i;
+                operationButton.fragmentNumber = 3;
+
+
                 lineContLinear.addView(diaTitle);
                 lineContLinear.addView(downButton);
                 lineContLinear.addView(upButton);
                 lineContLinear.addView(diagramButton);
+                lineContLinear.addView(operationButton);
 
             }
             Button comment = new Button(context);
@@ -154,7 +171,7 @@ public class LineMenu  extends LinearLayout{
             comment.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ((MainActivity) context).openComment(fileNum);
+                    ((AOdiaActivity) context).openComment(fileNum);
                 }
             });
             lineContLinear.addView(comment);
@@ -174,12 +191,19 @@ public class LineMenu  extends LinearLayout{
     private void closeMenu(){
         findViewById(R.id.hidden).setVisibility(GONE);
         findViewById(R.id.expand).setVisibility(VISIBLE);
-        lineContLinear.setVisibility(GONE);
+        final ReSizeAnimation closeAnimation = new ReSizeAnimation(lineContLinear,  -1);
+        closeAnimation.setDuration(300);
+        lineContLinear.startAnimation(closeAnimation);
+
     }
     private void openMenu(){
         findViewById(R.id.hidden).setVisibility(VISIBLE);
         findViewById(R.id.expand).setVisibility(GONE);
-        lineContLinear.setVisibility(VISIBLE);
+        // ビューを開くアニメーションを生成
+        final ReSizeAnimation expandAnimation = new ReSizeAnimation(lineContLinear,1);
+        expandAnimation.setDuration(300);
+        lineContLinear.startAnimation(expandAnimation);
+
 
     }
 

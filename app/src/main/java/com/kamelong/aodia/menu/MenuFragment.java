@@ -11,12 +11,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.file.SearchFileDialog;
-import com.kamelong.aodia.oudia.DiaFile;
+import com.kamelong.aodia.diadata.AOdiaDiaFile;
+import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,16 +51,16 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class MenuFragment extends Fragment {
     private LinearLayout layout;
-    private ArrayList<DiaFile>diaFiles;
+    private ArrayList<AOdiaDiaFile>diaFiles;
     private ArrayList<Integer>diaFilesIndex;
-    private MainActivity activity;
+    private AOdiaActivity activity;
 
     // 初期フォルダ
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-        activity=(MainActivity) getActivity();
+        activity=(AOdiaActivity) getActivity();
         diaFiles=activity.diaFiles;
             diaFilesIndex=activity.diaFilesIndex;
             return inflater.inflate(R.layout.menu, container, false);
@@ -102,6 +102,34 @@ public class MenuFragment extends Fragment {
                 }
             });
             layout.addView(openFile);
+            Button saveFile = new Button(activity);
+            saveFile.setText("　ファイルを保存する");
+            saveFile.setBackgroundColor(Color.TRANSPARENT);
+            saveFile.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            saveFile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.saveFile();
+                }
+            });
+
+            layout.addView(saveFile);
+            /*
+            Button openEdit = new Button(activity);
+            openEdit.setText("　編集");
+            openEdit.setBackgroundColor(Color.TRANSPARENT);
+            openEdit.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            openEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.openTrainEdit();
+                }
+            });
+
+            layout.addView(openEdit);
+            */
             SearchView stationSearch=new SearchView(activity);
             stationSearch.setQueryHint("駅検索");
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -151,7 +179,7 @@ public class MenuFragment extends Fragment {
             layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
-            openHelp.setText("　v1.1.12のヘルプを開く");
+            openHelp.setText("　v2.2.9のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
             openHelp.setOnClickListener(new View.OnClickListener() {
@@ -165,6 +193,19 @@ public class MenuFragment extends Fragment {
                 LineMenu lineMenu=new LineMenu(activity,diaFiles.get(diaFilesIndex.get(i)),diaFilesIndex.get(i),i);
                 layout.addView(lineMenu);
             }
+            Button openSetting = new Button(activity);
+            openSetting.setText("　設定");
+            openSetting.setBackgroundColor(Color.TRANSPARENT);
+            openSetting.setGravity(Gravity.START);
+            //fileOpenLayout.addView(openFile);
+            openSetting.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    activity.openSetting();
+                }
+            });
+            layout.addView(openSetting);
+
         }catch(Exception e){
             SdLog.log(e);
         }

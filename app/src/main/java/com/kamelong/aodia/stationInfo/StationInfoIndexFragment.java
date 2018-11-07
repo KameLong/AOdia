@@ -1,19 +1,15 @@
 package com.kamelong.aodia.stationInfo;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
+import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.oudia.DiaFile;
 
 /**
  * Created by kame on 2017/02/02.
@@ -39,10 +35,10 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-public class StationInfoIndexFragment extends KLFragment {
-    int fileNum = 0;
-    MainActivity activity;
-    View contentView;
+public class StationInfoIndexFragment extends AOdiaFragment {
+    private int fileNum = 0;
+    private AOdiaActivity activity;
+    private View contentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +50,7 @@ public class StationInfoIndexFragment extends KLFragment {
         }catch(Exception e){
             SdLog.log(e);
         }
-        activity=(MainActivity)getActivity();
+        activity=(AOdiaActivity)getActivity();
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
         diaFile=activity.diaFiles.get(fileNum);
         if(diaFile==null){
@@ -69,7 +65,7 @@ public class StationInfoIndexFragment extends KLFragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             LinearLayout stationLayout = (LinearLayout)findViewById(R.id.stationList);
-            for (int station = 0; station < diaFile.getStationNum(); station++) {
+            for (int station = 0; station < diaFile.getStation().getStationNum(); station++) {
                 StationTimetableIndexStation stationView = new StationTimetableIndexStation(getActivity(),diaFile,fileNum,station);
                 stationLayout.addView(stationView);
 
@@ -80,9 +76,14 @@ public class StationInfoIndexFragment extends KLFragment {
     }
     @Override
     public String fragmentName(){
-        return "駅時刻表一覧　"+diaFile.getLineName();
+        return "駅時刻表一覧\n"+diaFile.getLineName();
     }
-    public View findViewById(int id){
+    @Override
+    public String fragmentHash(){
+        return "StationInfoIndex-"+diaFile.getFilePath();
+    }
+
+    protected View findViewById(int id){
         return contentView.findViewById(id);
     }
 }

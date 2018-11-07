@@ -1,16 +1,8 @@
 package com.kamelong.aodia;
 
-import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.app.Fragment;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,22 +11,11 @@ import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.kamelong.aodia.web.UrlOpenDialog;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
- * Created by kame on 2016/12/20.
+ * ヘルプを表示するためのFragment
  */
 /*
  *     This file is part of AOdia.
@@ -61,23 +42,18 @@ AOdia is free software: you can redistribute it and/or modify
  * こちらが全く知らないところで使われていたりするのは、ちょっと気分悪いですよね。
  * まあ、強制はできないので、皆さんの良識におまかせします。
  */
-public class HelpFragment extends KLFragment {
+public class HelpFragment extends AOdiaFragment {
     public HelpFragment() {
         super();
     }
 
-    WebView helpView;
-    Handler handler;
+    private WebView helpView;
+    private Handler handler;
 
-    // ダウンロード変数
-    DownloadManager dl_manager;
-    DownloadManager.Query query;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+        WebView.setWebContentsDebuggingEnabled(true);
         handler=new Handler();
         helpView = new WebView(getActivity());
         helpView.setWebViewClient(new WebViewClient(){
@@ -105,8 +81,7 @@ public class HelpFragment extends KLFragment {
                 return false;
             }
         });
-//        helpView.loadUrl("http://kamelong.com/OuDiaDataBase/");
-        helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.2.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -115,10 +90,6 @@ public class HelpFragment extends KLFragment {
                 oudiaUrlLoad(url);
             }
         });
-
-
-
-//        helpView.loadUrl("http://kamelong.com/aodia/help-v1.1.html");
         return helpView;
     }
     private void oudiaUrlLoad(String url){
@@ -130,5 +101,12 @@ public class HelpFragment extends KLFragment {
         }
 
     }
-
+    @Override
+    public String fragmentName(){
+        return "AOdiaヘルプv2.2";
+    }
+    @Override
+    public String fragmentHash() {
+        return "help";
+    }
 }

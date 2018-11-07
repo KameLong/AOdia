@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class DiagramSetting {
      * @see #nameFrag
      * @see #numberFrag
      */
-    public int numberState=0;
+    private int numberState=0;
     public boolean nameFrag;
     public  boolean numberFrag;
 
@@ -95,7 +95,7 @@ public class DiagramSetting {
 
     public DiagramSetting(Context c) {
         //初期設定
-        context = (MainActivity) c;
+        context = (AOdiaActivity) c;
         downFrag = true;
         upFrag = true;
         stopFrag = false;
@@ -123,7 +123,7 @@ public class DiagramSetting {
      * 保存された詳細設定のデータを読み込む
      * @see #saveChange()
      */
-    public void loadChange(){
+    private void loadChange(){
         try {
             SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(context);
             downFrag = spf.getBoolean("DiagramSetting.downFrag", downFrag);

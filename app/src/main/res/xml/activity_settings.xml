@@ -2,10 +2,6 @@
 <PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="全体設定">
-        <CheckBoxPreference
-            android:key="fixedMenu"
-            android:title="メニューの固定"
-            android:summary="左端にメニューが固定されます（タブレット推奨）" />
         <EditTextPreference
             android:key="textsize2"
             android:title="文字サイズ"
@@ -14,22 +10,6 @@
             android:dialogTitle="文字サイズ入力"
             android:defaultValue="30"
             android:maxLength="2">
-        </EditTextPreference>
-        <EditTextPreference
-            android:key="height"
-            android:title="画面分割縦座標"
-            android:inputType="number"
-            android:summary="左上のウインドウの高さを入力してください(px)"
-            android:defaultValue="960"
-            android:maxLength="4">
-        </EditTextPreference>
-        <EditTextPreference
-            android:key="width"
-            android:title="画面分割横座標"
-            android:inputType="number"
-            android:summary="左上のウインドウの幅を入力してください(px)"
-            android:defaultValue="540"
-            android:maxLength="4">
         </EditTextPreference>
 
     </PreferenceCategory>
@@ -96,10 +76,10 @@
         android:enabled="true"
         >
         <CheckBoxPreference
-            android:key="item001"
-            android:title="（100円）複数ファイルのオープンを解禁する"
             android:defaultValue="false"
             android:enabled="true"
-            android:summary="有料オプションです" />
+            android:key="001"
+            android:summary="有料オプションです"
+            android:title="（100円）ファイル保存機能を解禁する" />
     </PreferenceCategory>
 </PreferenceScreen>

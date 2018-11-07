@@ -46,35 +46,37 @@ AOdia is free software: you can redistribute it and/or modify
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DETABASE_NAME="aodia.db";
-    public static final int DETABASE_VERSION=2;
-    public static final String ID="_id";
+    private static final int DETABASE_VERSION=2;
+    private static final String ID="_id";
 
-    public static final String FILE_PATH="filePath";
-    public static final String DIA_NUM="diaNum";
-    public static final String DOWN_SCROLL_X="downScrollX";
-    public static final String DOWN_SCROLL_Y="downScrollY";
-    public static final String UP_SCROLL_X="upScrollX";
-    public static final String UP_SCROLL_Y="upScrollY";
-    public static final String DIA_SCROLL_X="diaScrollX";
-    public static final String DIA_SCROLL_Y="diaScrollY";
-    public static final String DIA_SCALE_X="diaScaleX";
-    public static final String DIA_SCALE_Y="diaScaleY";
+    private static final String FILE_PATH="filePath";
+    private static final String DIA_NUM="diaNum";
+    private static final String DOWN_SCROLL_X="downScrollX";
+    private static final String DOWN_SCROLL_Y="downScrollY";
+    private static final String UP_SCROLL_X="upScrollX";
+    private static final String UP_SCROLL_Y="upScrollY";
+    private static final String DIA_SCROLL_X="diaScrollX";
+    private static final String DIA_SCROLL_Y="diaScrollY";
+    private static final String DIA_SCALE_X="diaScaleX";
+    private static final String DIA_SCALE_Y="diaScaleY";
 
-    public static final String WINDOW_DATA="windowData";
+    private static final String WINDOW_DATA="windowData";
     public static final String WINDOW_TYPE="windowType";
-    public static final String STATION_ID="stationID";
-    public static final String STATION_NAME="stationName";
+    private static final String STATION_ID="stationID";
+    private static final String STATION_NAME="stationName";
 
+    private static final String OPEN_NUM="openNum";
 
-    public static final String TABLE_LINEDATA="lineData";
-    public static final String TABLE_APP_DATA="appData";
-    public static final String TABLE_HISTORY="history";
-    public static final String TABLE_PREVIEW="preview";
-    public static final String TABLE_WINDOW="window";
-    public static final String TABLE_WINDOW_TYPE="windowType";
+    private static final String TABLE_LINEDATA="lineData";
+    private static final String TABLE_APP_DATA="appData";
+    private static final String TABLE_HISTORY="history";
+    private static final String TABLE_PREVIEW="preview";
+    private static final String TABLE_WINDOW="window";
+    private static final String TABLE_WINDOW_TYPE="windowType";
+    private static final String TABLE_FILE_RANKING="fileRanking";
 
-    public static final String TABLE_SAME_STATION="sameStation";
-    public static final String TABLE_STATION="stationList";
+    private static final String TABLE_SAME_STATION="sameStation";
+    private static final String TABLE_STATION="stationList";
     public DBHelper(Context context){
 
         super(context,DETABASE_NAME,null,DETABASE_VERSION);
@@ -90,6 +92,7 @@ public class DBHelper extends SQLiteOpenHelper {
             各ファイル各ダイヤの上り下り、ダイヤグラムに対するデータが入っている
             それぞれに対し、現在のスクロール位置
             ダイヤグラムに対しては拡大縮小率も保存する
+            from ver1
             */
             db.execSQL(
                     "create table "+TABLE_LINEDATA+" ("
@@ -108,6 +111,8 @@ public class DBHelper extends SQLiteOpenHelper {
             table app dataのテーブルには
             最後に開いたファイル名、ダイヤ、上り時刻表か下り時刻表かダイヤグラムのどれを開いたかを記録する
             directは下り時刻表=0、上り時刻表=1、ダイヤグラム=2
+            from ver1
+            no use ver3
              */
             db.execSQL(
                     "create table "+TABLE_APP_DATA+" ("
@@ -123,12 +128,25 @@ public class DBHelper extends SQLiteOpenHelper {
                     "create table "+TABLE_HISTORY+"("
                             +ID+" integer primary key autoincrement not null, "
                             +FILE_PATH+ " text)");
+            /*
+            オープンしたファイルの使用回数を保存する。
+             */
+            db.execSQL("create table "+TABLE_FILE_RANKING+
+                    "("+ID+" integer primary key autoincrement not null, "
+                    +FILE_PATH+ " text, "+OPEN_NUM+" integer)");
+
+            /*
+             * from ver1
+             * no use ver3
+             */
             db.execSQL(
                     "create table "+TABLE_PREVIEW+" ("
                             +ID+" integer primary key autoincrement not null, "
                             +FILE_PATH+ " text)");
             /*
             Fragmentを表示するそれぞれのFrameについて、どのFragmentが表示されていたかを保存する
+            from ver1
+            no use ver3
              */
 
             db.execSQL(
@@ -136,15 +154,11 @@ public class DBHelper extends SQLiteOpenHelper {
                             +ID+" integer , "
                             +WINDOW_DATA+ " text)");
 
-            //v1.0.5追記、このテーブルは使用を中止しようと考えています
-            db.execSQL(
-                    "create table "+TABLE_WINDOW_TYPE+" ("
-                            +ID+" integer primary key autoincrement not null, "
-                            +WINDOW_TYPE+ " text)");
             /*
             同一駅データを保存する
             今後の　乗り継ぎ検索　に向けてのテーブル
             現在使用されていない
+            from ver1
              */
             db.execSQL(
                     "create table "+TABLE_SAME_STATION+" ("
@@ -154,6 +168,8 @@ public class DBHelper extends SQLiteOpenHelper {
                             +FILE_PATH+ " text)");
             /*
             駅とファイルパスを対応させる
+            from ver2
+
              */
             db.execSQL(
                     "create table "+TABLE_STATION+" ("
@@ -169,19 +185,22 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        if(i==1) {
-            db.execSQL(
-                    "create table " + TABLE_STATION + " ("
-                            + ID + " integer primary key autoincrement not null, "
-                            + STATION_NAME + " text, "
-                            + FILE_PATH + " text)");
+        switch(i){
+            case 1:
+                db.execSQL(
+                        "create table " + TABLE_STATION + " ("
+                                + ID + " integer primary key autoincrement not null, "
+                                + STATION_NAME + " text, "
+                                + FILE_PATH + " text)");
+            case 2:
+                try {
+                    db.execSQL("drop table" + TABLE_WINDOW_TYPE);
+                }catch(Exception e){
+                    SdLog.log("データベースの削除に失敗しました");
+                    SdLog.log(e);
+                }
         }
-
-
     }
-
-
-
     /**
      * 直近に開いたファイルを保存する
      * @param filePath　直近に開いたファイル
@@ -194,13 +213,14 @@ public class DBHelper extends SQLiteOpenHelper {
      * @see #getRecentDirect()
      * これらはsetRecentFileで保存したデータを読み込むためのメソッド
      */
+    /*
     public  void setRecentFile(final String filePath,final int diaNum,final int direct){
         if(filePath.startsWith("http")){
             return;
         }
         try {
             String[] filePathSplit = filePath.split("/");
-            if (filePathSplit.length > 3 && filePathSplit[filePathSplit.length - 1].equals("sample.oud")) {
+            if (filePathSplit.length > 2 && filePathSplit[filePathSplit.length - 1].equals("sample.oud")) {
                 return;
             }
             getWritableDatabase().delete(TABLE_APP_DATA, null, null);
@@ -215,12 +235,14 @@ public class DBHelper extends SQLiteOpenHelper {
             SdLog.log(e);
         }
     }
+    */
 
     /**
      * 直近に開いたファイルを取得する
      * @return ファイルパス
      * @see #setRecentFile(String, int, int)
      */
+    /*
     public String getRecentFilePath(){
         try {
             Cursor cursor = getReadableDatabase().rawQuery("select * from " + TABLE_APP_DATA + " where " + ID + " =?" + ";", new String[]{"1"});
@@ -231,12 +253,14 @@ public class DBHelper extends SQLiteOpenHelper {
             return"";
         }
     }
+    */
 
     /**
      * 直近に開いたダイヤインデックスを取得する
      * @return ダイヤインデックス(int)
      * @see #setRecentFile(String, int, int)
      */
+    /*
     public int getRecentDiaNum(){
         try {
             Cursor cursor = getReadableDatabase().rawQuery("select * from " + TABLE_APP_DATA + " where " + ID + " =?" + ";", new String[]{"1"});
@@ -247,12 +271,14 @@ public class DBHelper extends SQLiteOpenHelper {
             return 0;
         }
     }
+    */
 
     /**
      * 直近に開いた方向を取得する
      * @return (下り時刻表=0、上り時刻表=1、ダイヤグラム=2)
      * @see #setRecentFile(String, int, int)
      */
+    /*
     public int getRecentDirect(){
         try {
             Cursor cursor = getReadableDatabase().query(TABLE_APP_DATA,
@@ -266,7 +292,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return 0;
         }
     }
-
+    */
     /**
      * line dataに新しいファイルを追加する。
      * もしすでに同じファイルパスが登録されている場合、
@@ -421,10 +447,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * ファイル履歴を追加する。
+     * ファイルを開いた際の行為
+     *
+     * １、ファイル履歴を追加する。
      * ファイルを開いた際にファイルパスを使って呼び出す。
      * データベースに同名のファイルが記録されている場合はそれを削除したのち
      * 引数のファイルが追加される。
+     *
+     * ２、開いたファイルランキングを更新する
      * @param filePath
      * @see #getHistory()
      */
@@ -437,40 +467,80 @@ public class DBHelper extends SQLiteOpenHelper {
         }catch(Exception e){
             e.printStackTrace();
         }
+        try {
+            int openNum= fileOpenedNum(filePath);
+            if(openNum==0){
+                ContentValues value=new ContentValues();
+                value.put(OPEN_NUM,1);
+                value.put(FILE_PATH,filePath);
+                getWritableDatabase().insert(TABLE_FILE_RANKING, null, value);
+            }else{
+                //既にファイルが登録されているので更新
+                openNum++;
+                ContentValues value=new ContentValues();
+                value.put(OPEN_NUM,openNum);
+                getWritableDatabase().update(TABLE_FILE_RANKING,value,FILE_PATH+" = ?",new String[]{filePath});
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    /**
+     これまでにファイルが開かれた回数
+     */
+    public int fileOpenedNum(String filePath) {
+        Cursor cursor=null;
+        try {
+            cursor = getReadableDatabase().query(TABLE_FILE_RANKING, new String[]{OPEN_NUM}, FILE_PATH + " = ?", new String[]{filePath}, null, null, null);
+            if (cursor.getCount() <= 0) {
+                return 0;
+            } else {
+                cursor.moveToFirst();
+                return cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+        return 0;
     }
 
-    /**
-     * ファイル履歴を取得する。
-     *
-     * @return 過去最大10件分の履歴をファイルパスの文字列にして返す。
-     * @see #addHistory(String)
-     */
-    public String[] getHistory(){
-        String[] result;
-        Cursor c = getReadableDatabase().rawQuery("select * from "+TABLE_HISTORY+" ORDER BY "+ID+" DESC"+";",null);
-        if(c.getCount()>10){
-            result=new String[10];
-        }else{
-            result=new String[c.getCount()];
+        /**
+         * ファイル履歴を取得する。
+         *
+         * @return 過去最大10件分の履歴をファイルパスの文字列にして返す。
+         * @see #addHistory(String)
+         */
+        public String[] getHistory(){
+            String[] result;
+            Cursor c = getReadableDatabase().rawQuery("select * from "+TABLE_HISTORY+" ORDER BY "+ID+" DESC"+";",null);
+            if(c.getCount()>10){
+                result=new String[10];
+            }else{
+                result=new String[c.getCount()];
+            }
+            c.moveToFirst();
+            int i=0;
+            while(!c.isAfterLast()&&i<10){
+                result[i]=c.getString(1);
+                i++;
+                c.moveToNext();
+            }
+            c.close();
+            return result;
         }
-        c.moveToFirst();
-        int i=0;
-        while(!c.isAfterLast()&&i<10){
-            result[i]=c.getString(1);
-            i++;
-            c.moveToNext();
-        }
-        c.close();
-        return result;
-    }
 
-    /**
-     * 今開いているファイルをすべて記録する
-     * 複数ファイル読み込みに対応するために用意された
-     * アプリが終了されるときに呼び出される
-     * @param filePaths
-     * @see #getFilePaths()
-     */
+        /**
+         * 今開いているファイルをすべて記録する
+         * 複数ファイル読み込みに対応するために用意された
+         * アプリが終了されるときに呼び出される
+         * @param filePaths
+         * @see #getFilePaths()
+         */
+    /*
     public void addFilePaths(String[] filePaths){
         getWritableDatabase().delete(TABLE_PREVIEW,null,null);
 
@@ -480,11 +550,13 @@ public class DBHelper extends SQLiteOpenHelper {
             getWritableDatabase().insert(TABLE_PREVIEW,null,values);
         }
     }
-    /**
-     *　前回開いていたファイルを読み込む
-     * 　前回の復元の操作を行ったときに呼び出される
-     *
-     */
+    */
+        /**
+         *　前回開いていたファイルを読み込む
+         * 　前回の復元の操作を行ったときに呼び出される
+         *
+         */
+    /*
     public String[] getFilePaths(){
         Cursor c = getReadableDatabase().rawQuery("select * from "+TABLE_PREVIEW+";",null);
         String[] result=new String[c.getCount()];
@@ -496,21 +568,23 @@ public class DBHelper extends SQLiteOpenHelper {
         c.close();
         return result;
     }
-    public static final String LINE_TIME_TABLE="LineTimeTable";
-    public static final String DIAGRAM="Diagram";
-    public static final String STATION_TIME_TABLE="StationTimeTable";
-    public static final String STATION_TIME_INDEX="StationTimeIndex";
-    public static final String COMMENT="comment";
-    public static final String HELP="help";
-    public static final int WINDOW_NUM=5;
+       */
+        public static final String LINE_TIME_TABLE="LineTimeTable";
+        public static final String DIAGRAM="Diagram";
+        public static final String STATION_TIME_TABLE="StationTimeTable";
+        public static final String STATION_TIME_INDEX="StationTimeIndex";
+        public static final String COMMENT="comment";
+        public static final String HELP="help";
+        public static final int WINDOW_NUM=5;
 
-    /**
-     * 開いていた画面の記録（v1.0以降の多い画面用)
-     * @param windows サイズ５の文字列配列。
-     *                それぞれの文字列は識別子をハイフンで繋がれたもの
-     *                識別子については別記する
-     * @see #readWindows()
-     */
+        /**
+         * 開いていた画面の記録（v1.0以降の多い画面用)
+         * @param windows サイズ５の文字列配列。
+         *                それぞれの文字列は識別子をハイフンで繋がれたもの
+         *                識別子については別記する
+         * @see #readWindows()
+         */
+    /*
     public void saveWindows(String[] windows){
         try {
             getWritableDatabase().delete(TABLE_WINDOW, null, null);
@@ -525,11 +599,13 @@ public class DBHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
+    */
 
-    /**
-     * @see #readWindows()  readWindowsで保存したFragment識別子を読み込む
-     * @return
-     */
+        /**
+         * @see #readWindows()  readWindowsで保存したFragment識別子を読み込む
+         * @return
+         */
+    /*
     public String[] readWindows(){
         try {
             String[] result = new String[WINDOW_NUM];
@@ -545,14 +621,15 @@ public class DBHelper extends SQLiteOpenHelper {
             return new String[]{"","","","",""};
         }
     }
+    */
 
-    /**
-     * TABLE_STATIONに新しい駅データを付け加える。
-     * 駅名とそのファイルパスをセットにして追加する。
-     * @param stationName
-     * @param filePath
-     */
-    public void addStation(ArrayList<String> stationName, String filePath){
+        /**
+         * TABLE_STATIONに新しい駅データを付け加える。
+         * 駅名とそのファイルパスをセットにして追加する。
+         * @param stationName
+         * @param filePath
+         */
+        private void addStation(ArrayList<String> stationName, String filePath){
         try {
             getWritableDatabase().delete(TABLE_STATION, FILE_PATH + "=?", new String[]{filePath});
             for(int i=0;i<stationName.size();i++) {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 
@@ -36,10 +36,10 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimeTableTrainView extends LinearLayout implements View.OnClickListener {
-    int fileNum=0;
-    int diaNum=0;
-    int direct=0;
-    int trainNum=0;
+    private int fileNum=0;
+    private int diaNum=0;
+    private int direct=0;
+    private int trainNum=0;
     public StationTimeTableTrainView(Context context) {
         super(context);
         View layout = LayoutInflater.from(context).inflate(R.layout.station_timetable_train, this);
@@ -73,6 +73,6 @@ public class StationTimeTableTrainView extends LinearLayout implements View.OnCl
         if(fileNum<0){
             return;
         }
-        ((MainActivity)getContext()).openLineTimeTable(fileNum,diaNum,direct,trainNum);
+        ((AOdiaActivity)getContext()).openLineTimeTable(fileNum,diaNum,direct,trainNum);
     }
 }

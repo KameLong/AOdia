@@ -1,14 +1,13 @@
 package com.kamelong.aodia.web;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 
 import java.io.File;
 
@@ -17,7 +16,7 @@ import java.io.File;
  */
 
 public class UrlOpenDialog {
-    AlertDialog dialog=null;
+    private AlertDialog dialog=null;
     public UrlOpenDialog(final @NonNull Context context,final String url,final String originURL) {
         final AlertDialog.Builder builder = new AlertDialog.Builder( context);
 
@@ -27,7 +26,7 @@ public class UrlOpenDialog {
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialog.dismiss();
                 dialog=null;
-                ((MainActivity)context).onUrlSelect(new File(url));
+                //((AOdiaActivity)context).onUrlSelect(new File(url));
             }
         });
         builder.setNeutralButton("chromeからダウンロードする", new DialogInterface.OnClickListener() {

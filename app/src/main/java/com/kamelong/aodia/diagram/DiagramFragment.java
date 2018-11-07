@@ -1,5 +1,6 @@
 package com.kamelong.aodia.diagram;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.GestureDetector;
@@ -10,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.detabase.DBHelper;
-import com.kamelong.aodia.KLFragment;
-import com.kamelong.aodia.MainActivity;
+import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
+
+import static android.content.Context.MODE_PRIVATE;
 /*
  *     This file is part of AOdia.
 AOdia is free software: you can redistribute it and/or modify
@@ -60,26 +63,26 @@ AOdia is free software: you can redistribute it and/or modify
  * @author KameLong
  *
  */
-public class DiagramFragment extends KLFragment {
+public class DiagramFragment extends AOdiaFragment {
     /**
      * このFragment全体のView
      */
-    private View fragmentContainer=null;
+    protected View fragmentContainer=null;
 
     /**
      * このFragment内に内包されるView
      */
-    private StationView stationView;
-    private TimeView timeView;
-    private DiagramView diagramView;
+    protected StationView stationView;
+    protected TimeView timeView;
+    protected DiagramView diagramView;
 
     /**
      * スクロール量、拡大サイズの保持に用いられる
      */
-    private float scrollX;
-    private float scrollY;
-    private float scaleX;
-    private float scaleY;
+    protected float scrollX;
+    protected float scrollY;
+    protected float scaleX;
+    protected float scaleY;
     /**
      * ダイヤ詳細設定のデータ
      */
@@ -87,16 +90,16 @@ public class DiagramFragment extends KLFragment {
     /**
      * このFragmentで開いているデータについての情報
      */
-    private int fileNum=0;
-    public int diaNumber=0;
-    Handler handler = new Handler(); // (1)
+    protected int fileNum=0;
+    protected int diaNumber=0;
+    protected Handler handler = new Handler(); // (1)
     private boolean autoScroll=false;
 
 
     /**
      * DiagramFragment内のタッチジェスチャー
      */
-    final GestureDetector gesture = new GestureDetector(getActivity(),
+    private final GestureDetector gesture = new GestureDetector(getActivity(),
             new GestureDetector.SimpleOnGestureListener() {
                 private boolean pinchFragX=false;
                 private boolean pinchFragY=false;
@@ -124,14 +127,9 @@ public class DiagramFragment extends KLFragment {
                 }
                 @Override
                 public void onLongPress(MotionEvent motionEvent) {
+                    longPress(motionEvent);
 
-                    //長押ししたときはDiagramViewのfocusTrainを指定する
-                    int x=(int)motionEvent.getX();
-                    int y=(int)motionEvent.getY();
 
-                    if(x>stationView.getWidth()&&y>timeView.getHeight()){
-                        diagramView.showDetail((int )motionEvent.getX()+(int)scrollX-stationView.getWidth(),(int )motionEvent.getY()+(int)scrollY-timeView.getHeight());
-                    }
                 }
 
                 @Override
@@ -259,7 +257,7 @@ public class DiagramFragment extends KLFragment {
         super.onViewCreated(view, savedInstanceState);
         try{
             try {
-                diaFile = ((MainActivity) getActivity()).diaFiles.get(fileNum);
+                diaFile = ((AOdiaActivity) getActivity()).diaFiles.get(fileNum);
             }catch(Exception e){
                 SdLog.log(e);
                 Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG);
@@ -293,7 +291,7 @@ public class DiagramFragment extends KLFragment {
 
 
             //デフォルトscaleはTrainNumに依存する
-            if (diaFile.getTrainNum(0, 0) < 100) {
+            if (diaFile.getTimeTable(0, 0).getTrainNum() < 100) {
                 scaleX = 10;
                 scaleY = 20;
             } else {
@@ -354,7 +352,7 @@ public class DiagramFragment extends KLFragment {
                 FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
                 final int width = diagramFrame.getWidth();
                 int nowTime = (int) (System.currentTimeMillis() % (24 * 60 * 60 * 1000)) / 1000;//システムの時間
-                nowTime = nowTime - diaFile.getDiagramStartTime() + 9 * 60 * 60;//時差
+                nowTime = nowTime - diaFile.getService().getDiagramStartTime() + 9 * 60 * 60;//時差
                 if (nowTime < 0) {
                     nowTime = nowTime + 24 * 60 * 60;
                 }
@@ -435,9 +433,14 @@ public class DiagramFragment extends KLFragment {
     public void onStop(){
         try {
             setting.saveChange();
+            SharedPreferences preference=getActivity().getSharedPreferences("AOdiaPreference",MODE_PRIVATE);
+            SharedPreferences.Editor editor = preference.edit();
+            editor.putString("RecentFilePath",diaFile.getFilePath());
+            editor.putInt("RecentDiaNum",diaNumber);
+            editor.putInt("RecentDirect",2);
+            editor.apply();
             DBHelper db = new DBHelper(getActivity());
             db.updateLineData(diaFile.getFilePath(), diaNumber,(int)scrollX,(int)scrollY,(int)(scaleX*100f),(int)(scaleY*100f));
-            db.setRecentFile(diaFile.getFilePath(),diaNumber,2);
         }catch(Exception e){
             SdLog.log(e);
         }finally {
@@ -517,7 +520,7 @@ public class DiagramFragment extends KLFragment {
     public void fitVertical(){
         FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
         float frameSize=diagramFrame.getHeight()-40;
-        float nessTime=diaFile.getStationTime().get(diaFile.getStationNum()-1);
+        float nessTime=diaFile.getStation().getStationTime().get(diaFile.getStation().getStationNum()-1);
         scaleY=frameSize/nessTime*60;
         setScale();
         stationView.invalidate();
@@ -532,7 +535,32 @@ public class DiagramFragment extends KLFragment {
         return null;
     }
     @Override
-    public String fragmentName(){
-        return "ダイヤグラム　"+diaFile.getDiaName(diaNumber)+"　"+diaFile.getLineName();
+    public String fragmentName() {
+        try {
+            return "ダイヤグラム　" + diaFile.getDiaName(diaNumber) + "\n" + diaFile.getLineName();
+        }catch(Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
+    @Override
+    public String fragmentHash(){
+        try{
+            return "Diagram-"+diaFile.getFilePath()+"-"+diaNumber;
+        }catch (Exception e){
+            Toast.makeText(getActivity(),"error-DiagramFragment-fragmentHash-E1",Toast.LENGTH_SHORT).show();
+            return "";
+        }
+    }
+    protected void longPress(MotionEvent event){
+        //長押ししたときはDiagramViewのfocusTrainを指定する
+        int x=(int)event.getX();
+        int y=(int)event.getY();
+
+        if(x>stationView.getWidth()&&y>timeView.getHeight()){
+            diagramView.showDetail((int )event.getX()+(int)scrollX-stationView.getWidth(),(int )event.getY()+(int)scrollY-timeView.getHeight());
+        }
+
+    }
+
 }

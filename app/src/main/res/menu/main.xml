@@ -7,21 +7,4 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_change_window_size"
-        android:icon="@drawable/change_window_size"
-        android:title="test"
-        android:visible="false"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_shrinking"
-        android:icon="@drawable/shrinking"
-        android:title="test"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_split_window"
-        android:icon="@drawable/four_display"
-        android:title="test"
-        app:showAsAction="always" />
-
 </menu>
