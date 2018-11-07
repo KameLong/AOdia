@@ -17,6 +17,7 @@ import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SdLog;
 import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
+import com.kamelong.aodia.detabase.AOdiaDetabase;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -165,10 +166,11 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             resetButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    activity.resetDetabase();
+                    activity.deleteDatabase("aodia.db");
+                    activity.database=new AOdiaDetabase(activity);
                 }
             });
-//            layout.addView(resetButton);
+            layout.addView(resetButton);
 
             Button openHelp = new Button(activity);
             PackageManager pm = getContext().getPackageManager();

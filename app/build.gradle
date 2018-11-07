@@ -6,9 +6,9 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 230
+        versionCode 231
 
-        versionName "2.5.2"
+        versionName "2.5.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

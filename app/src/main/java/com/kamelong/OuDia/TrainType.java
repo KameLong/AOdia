@@ -42,10 +42,27 @@ public class TrainType {
                     diaColor.setOuDiaColor(value);
                     break;
                 case "DiagramSenStyle":
+                    switch (value){
+                        case"SenStyle_Jissen":
+                            lineStyle=0;
+                            break;
+                        case "SenStyle_Hasen":
+                            lineStyle=1;
+                            break;
+                        case "SenStyle_Tensen":
+                            lineStyle=2;
+                            break;
+                        case "SenStyle_Ittensasen":
+                            lineStyle=3;
+                            break;
+                    }
                     break;
                 case "StopMarkDrawType":
                     stopmark=value.equals("EStopMarkDrawType_DrawOnStop");
                     break;
+                case "DiagramSenIsBold":
+                    bold=value.equals("1");
+
             }
             line=br.readLine();
         }
