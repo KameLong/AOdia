@@ -1,6 +1,8 @@
 package com.kamelong.aodia.AOdiaIO;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -440,7 +442,7 @@ public class FileSelectFragment extends AOdiaFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = layoutInflater.inflate(R.layout.file_select_file_list, parent, false);
 
             ((TextView) convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
@@ -457,6 +459,26 @@ public class FileSelectFragment extends AOdiaFragment {
                     ) {
                 ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.dia_icon);
+                ImageView deleteButton=convertView.findViewById(R.id.deleteButton);
+                deleteButton.setVisibility(View.VISIBLE);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("ファイル削除")
+                                .setMessage(fileList.get(position).getName()+"を削除します")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        fileList.get(position).delete();
+                                        initTab1();
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                    }
+                });
             }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,11 +9,15 @@
         android:id="@+id/fileIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         app:srcCompat="@android:drawable/ic_menu_help" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/deleteButton"
+        android:layout_toRightOf="@+id/fileIcon"
         android:orientation="vertical">
 
         <TextView
@@ -24,6 +28,7 @@
             android:text="TextView"
             android:textColor="@android:color/black"
             android:textSize="16dp" />
+
         <TextView
             android:id="@+id/stationName"
             android:layout_width="match_parent"
@@ -35,4 +40,13 @@
 
     </LinearLayout>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/deleteButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+</RelativeLayout>
