@@ -256,7 +256,7 @@ public class Train {
         return (int)((time[station]&0x00FF000000000000L)>>>48);
     }
     public void setStopType(int station,long value){
-        if(value<0||value>15){
+        if(value<0||value>3){
             return;
         }
         time[station]=time[station]&0xF0FFFFFFFFFFFFFFL;
