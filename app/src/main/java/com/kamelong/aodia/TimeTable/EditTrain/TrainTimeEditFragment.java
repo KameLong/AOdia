@@ -157,11 +157,11 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     public void onTimeChanged(int station, int time) {
                         train.setDepartureTime(station, time);
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
-                        ((EditTimeView) departureTimeLayout.getChildAt(stationNum + 2)).setTime(train.getDepartureTime(station));
+                        ((EditTimeView) departureTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station));
                         if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum + 2)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum )).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum + 2)).setTime(-1);
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum )).setTime(-1);
                         }
                         nessTimeCreate();
                         trainChange();
@@ -197,11 +197,11 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                         train.setArrivalTime(station, time);
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
 
-                        ((EditTimeView) arrivalTimeLayout.getChildAt(stationNum + 2)).setTime(train.getArrivalTime(station));
+                        ((EditTimeView) arrivalTimeLayout.getChildAt(stationNum )).setTime(train.getArrivalTime(station));
                         if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum + 2)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum + 2)).setTime(-1);
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(-1);
                         }
                         nessTimeCreate();
                         trainChange();
