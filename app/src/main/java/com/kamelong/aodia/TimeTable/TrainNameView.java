@@ -19,6 +19,7 @@ public class TrainNameView extends AOdiaDefaultView {
     private boolean showTrainName=true;
     private int textWidth=5;
 
+    
     TrainNameView(Context context){
         super(context);
     }
