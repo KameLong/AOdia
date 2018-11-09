@@ -6,6 +6,7 @@ import com.kamelong.aodia.SdLog;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Station {
@@ -226,8 +227,7 @@ public class Station {
             }
         }
     }
-    public void saveToFile(FileWriter out){
-        try{
+    public void saveToFile(FileWriter out) throws Exception {
             out.write("Eki.\r\n");
             out.write("Ekimei="+name+"\r\n");
             String style="";
@@ -279,9 +279,6 @@ public class Station {
 
             out.write(".\r\n");
             out.write(".\r\n");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
 }

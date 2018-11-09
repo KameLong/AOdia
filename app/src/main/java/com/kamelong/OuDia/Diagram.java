@@ -2,6 +2,7 @@ package com.kamelong.OuDia;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Diagram {
@@ -471,8 +472,7 @@ public class Diagram {
         }
 
     }
-    public void saveToFile(FileWriter out){
-        try{
+    public void saveToFile(FileWriter out) throws Exception {
             out.write("Dia.\r\n");
             out.write("DiaName="+name+"\r\n");
             out.write("Kudari.\r\n");
@@ -486,10 +486,6 @@ public class Diagram {
             }
             out.write(".\r\n");
             out.write(".\r\n");
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
 }

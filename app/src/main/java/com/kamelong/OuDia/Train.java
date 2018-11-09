@@ -4,6 +4,7 @@ import com.kamelong.aodia.SdLog;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Train {
@@ -462,8 +463,7 @@ public class Train {
 
     }
 
-    public void saveToFile(FileWriter out){
-        try{
+    public void saveToFile(FileWriter out) throws Exception {
             out.write("Ressya.\r\n");
             if(direction==0){
                 out.write("Houkou=Kudari\r\n");
@@ -487,9 +487,6 @@ public class Train {
             }
             out.write(".\r\n");
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
     private String getEkijikokuOudia(){
         StringBuilder result=new StringBuilder("");

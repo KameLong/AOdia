@@ -4,6 +4,7 @@ import com.kamelong.tool.Color;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class TrainType {
     public String name="";
@@ -67,8 +68,7 @@ public class TrainType {
             line=br.readLine();
         }
     }
-    public void saveToFile(FileWriter out){
-        try{
+    public void saveToFile(FileWriter out) throws Exception {
             out.write("Ressyasyubetsu.\r\n");
             out.write("Syubetsumei="+name+"\r\n");
             out.write("Ryakusyou="+shortName+"\r\n");
@@ -95,9 +95,6 @@ public class TrainType {
                 out.write("StopMarkDrawType=EStopMarkDrawType_DrawOnStop\r\n");
             }
             out.write(".\r\n");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
     }
 
 }

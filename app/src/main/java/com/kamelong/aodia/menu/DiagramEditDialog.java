@@ -14,8 +14,10 @@ import com.kamelong.aodia.R;
 public class DiagramEditDialog extends Dialog {
     DiaFile diaFile;
     int diagramIndex=0;
+    AOdiaActivity activity;
     public DiagramEditDialog(AOdiaActivity activity, DiaFile diafile, int diagramIndex){
         super(activity);
+        this.activity=activity;
         this.diaFile=diafile;
         this.diagramIndex=diagramIndex;
 
@@ -33,7 +35,7 @@ public class DiagramEditDialog extends Dialog {
             public void onClick(View view) {
                 diaFile.diagram.get(diagramIndex).name=diagramName.getEditableText().toString();
                 DiagramEditDialog.this.dismiss();
-                ((AOdiaActivity)getContext()).menuFragment.createMenu();
+                activity.menuFragment.createMenu();
             }
         });
         Button diagramCopy=findViewById(R.id.diagramCopySubmit);

@@ -469,7 +469,11 @@ public class FileSelectFragment extends AOdiaFragment {
                 try {
                     BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file) ));
                     String version=br.readLine().split("=",-1)[1];
-                    double v=Double.parseDouble(version.substring(version.indexOf(".")+1));
+                    double v=1.02;
+                    try {
+                        v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
+                    }catch (Exception e){
+                    }
                     if(version.startsWith("OuDia.")||v<1.03){
                         br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift_JIS"));
                         br.readLine();

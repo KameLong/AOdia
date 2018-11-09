@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.R;
@@ -45,8 +46,12 @@ public class SaveDialog extends Dialog{
                     saveAlart.setVisibility(View.VISIBLE);
 
                 }else{
-                    diaFile.saveToFile(fileName);
-                    SaveDialog.this.dismiss();
+                    try {
+                        diaFile.saveToFile(fileName);
+                        SaveDialog.this.dismiss();
+                    }catch (Exception e){
+                        Toast.makeText(getContext(),"不明なエラーが発生したため、保存を中止します。作者に連絡をお願いいたします。\n詳細:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -55,8 +60,12 @@ public class SaveDialog extends Dialog{
             @Override
             public void onClick(View view) {
                 String fileName=directoryName+saveFileName.getEditableText().toString();
+                try {
                     diaFile.saveToFile(fileName);
                     SaveDialog.this.dismiss();
+                }catch (Exception e){
+                    Toast.makeText(getContext(),"不明なエラーが発生したため、保存を中止します。作者に連絡をお願いいたします。\n詳細:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         });
 
