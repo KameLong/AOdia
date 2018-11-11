@@ -89,7 +89,7 @@ public class TrainType {
                     break;
             }
             if (bold){
-                out.write("DiagramSenIsBold=1");
+                out.write("DiagramSenIsBold=1\r\n");
             }
             if(stopmark){
                 out.write("StopMarkDrawType=EStopMarkDrawType_DrawOnStop\r\n");
