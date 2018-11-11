@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.widget.Toast;
 
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaDefaultView;
@@ -60,6 +61,10 @@ public class StationView extends AOdiaDefaultView {
         return (int)(textPaint.getTextSize()*5)+2;
     }
     protected int getYsize(){
+        if(stationTime.size()!=diaFile.getStationNum()){
+            Toast.makeText(getContext(), "原因不明のエラーです。駅数が変更された可能性があります。StationView.java", Toast.LENGTH_SHORT).show();
+            return 1000;
+        }
         return (int)(stationTime.get(diaFile.getStationNum()-1)* setting.scaleY+(int)textPaint.getTextSize()+4);
     }
 

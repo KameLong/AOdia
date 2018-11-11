@@ -88,10 +88,10 @@ public class DiagramSetting {
         scaleX=value[2]/100.0f;
         scaleY=value[3]/100.0f;
         if(scaleX<0.01){
-            scaleX=0.01f;
+            scaleX=0.1f;
         }
         if(scaleY<0.05){
-            scaleY=0.05f;
+            scaleY=0.2f;
         }
     }
 

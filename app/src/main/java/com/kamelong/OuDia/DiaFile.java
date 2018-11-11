@@ -166,9 +166,10 @@ public class DiaFile {
         int result=360000;
         for(int i=0;i<getDiaNum();i++){
             if(diagram.get(i).name.equals("基準運転時分")){
+                result=360000;
                 for(int train=0;train<getTrainSize(i,0);train++){
                     int value=getTrain(i,0,train).getRequiredTime(startStation,endStation);
-                    if(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1){
+                    if(value>0&&(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1)){
                         value+=120;
                     }
                     if(value>0&&result>value){
@@ -177,7 +178,7 @@ public class DiaFile {
                 }
                 for(int train=0;train<getTrainSize(i,1);train++){
                     int value=this.getTrain(i,1,train).getRequiredTime(startStation,endStation);
-                    if(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1){
+                    if(value>0&&(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1)){
                         value+=120;
                     }
 
@@ -188,7 +189,8 @@ public class DiaFile {
                 if(result==360000){
                     result=120;
                 }
-                return result;            }
+                return result;
+            }
         }
         for(int i=0;i<getDiaNum();i++){
 
