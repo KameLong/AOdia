@@ -1,6 +1,8 @@
 package com.kamelong.aodia.AOdiaIO;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -61,6 +63,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class FileSelectFragment extends AOdiaFragment {
     private Handler handler=new Handler();
     boolean tab2searchOpen=true;
+    public String currentDirectoryPath="";
 
     public FileSelectFragment() {
         super();
@@ -150,6 +153,8 @@ public class FileSelectFragment extends AOdiaFragment {
         rootFolder.add(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS));
         rootFolderName[rootFolderName.length-1] = (rootFolderName.length) + ":ダウンロードフォルダ";
 
+        System.out.println(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS));
 
         ArrayAdapter<String>adapter=new ArrayAdapter<>(getAOdiaActivity(),android.R.layout.simple_spinner_item,rootFolderName);
 
@@ -159,7 +164,7 @@ public class FileSelectFragment extends AOdiaFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position,long id) {
                 if(rootFolder.get(position)!=null) {
-                    tab1OpenFile(rootFolder.get(position));
+                    tab1OpenFile(rootFolder.get(position).getPath());
                 }else{
                     SdLog.toast("このフォルダは開けません");
                 }
@@ -169,7 +174,7 @@ public class FileSelectFragment extends AOdiaFragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        tab1OpenFile(rootFolderList[0]);//初期設定
+        tab1OpenFile(rootFolderList[0].getPath());//初期設定
 
 
 
@@ -178,11 +183,13 @@ public class FileSelectFragment extends AOdiaFragment {
     /**
      * フォルダ内内ファイルリストを作成する
      * このメソッドを呼び出すとtab内のListViewを更新する。
-     * @param file 表示したいフォルダ
+     * @param directorypath 表示したいディレクトリ
      */
-    private void tab1OpenFile(File file){
+    private void tab1OpenFile(String directorypath){
         try {
             System.out.println("tab1Open");
+            currentDirectoryPath=directorypath;
+            File file=new File(directorypath);
             if (file.isDirectory()) {
                 final ListView fileListView = (ListView) findViewById(R.id.fileList);
                 final FileListAdapter adapter = new FileListAdapter(getAOdiaActivity(), file.getPath());
@@ -194,16 +201,16 @@ public class FileSelectFragment extends AOdiaFragment {
                 fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         try {
-                            tab1OpenFile(adapter.getItem(position));
+                            tab1OpenFile(adapter.getItem(position).getPath());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 });
             } else if (file.exists()) {
-                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2") || file.getName().endsWith("jpti")) {
+                if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2")) {
                     try{
-                        ((AOdiaActivity) getAOdiaActivity()).openFile(file);
+                        getAOdiaActivity().openFile(file);
                     }catch (Exception e){
                         System.out.println("AOdia専用の処理です");
                         e.printStackTrace();
@@ -440,7 +447,7 @@ public class FileSelectFragment extends AOdiaFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = layoutInflater.inflate(R.layout.file_select_file_list, parent, false);
 
             ((TextView) convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
@@ -457,6 +464,29 @@ public class FileSelectFragment extends AOdiaFragment {
                     ) {
                 ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
                 fileIcon.setImageResource(R.drawable.dia_icon);
+                ImageView deleteButton=convertView.findViewById(R.id.deleteButton);
+                deleteButton.setVisibility(View.VISIBLE);
+                deleteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        System.out.println(fileList.get(position).getPath());
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("ファイル削除")
+                                .setMessage(fileList.get(position).getName()+"を削除します")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(!fileList.get(position).delete()){
+                                            Toast.makeText(getContext(),"ファイルを削除できませんでした",Toast.LENGTH_LONG).show();
+                                        }
+                                        tab1OpenFile(currentDirectoryPath);
+
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+                    }
+                });
             }
 
 

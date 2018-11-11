@@ -291,7 +291,6 @@ public class DiagramFragment extends AOdiaFragment {
             }
             final int mScrollX = (int) setting.scrollX;
             final int mScrollY = (int) setting.scrollY;
-            System.out.println(mScrollX);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
