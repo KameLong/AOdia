@@ -724,6 +724,7 @@ public class DiagramView extends AOdiaDefaultView{
      */
 
     protected int getYsize(){
+        if(diaFile.getStationNum()==0)return 1000;
         return (int)(diaFile.getStationTime().get(diaFile.getStationNum()-1)* setting.scaleY+(int)textPaint.getTextSize()+4);
     }
 

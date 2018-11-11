@@ -28,6 +28,7 @@ public class StationView extends AOdiaDefaultView {
     @Override
     public void onDraw(Canvas canvas){
         super.onDraw(canvas);
+        if(diaFile.getStationNum()==0)return;
         final float defaultLineSize=getResources().getDisplayMetrics().densityDpi / 160f;
 
 
@@ -61,10 +62,7 @@ public class StationView extends AOdiaDefaultView {
         return (int)(textPaint.getTextSize()*5)+2;
     }
     protected int getYsize(){
-        if(stationTime.size()!=diaFile.getStationNum()){
-            Toast.makeText(getContext(), "原因不明のエラーです。駅数が変更された可能性があります。StationView.java", Toast.LENGTH_SHORT).show();
-            return 1000;
-        }
+        if(diaFile.getStationNum()==0)return 1000;
         return (int)(stationTime.get(diaFile.getStationNum()-1)* setting.scaleY+(int)textPaint.getTextSize()+4);
     }
 
