@@ -48,7 +48,7 @@ public class CommentFragment extends AOdiaFragment {
             diaFile=getAOdiaActivity().diaFiles.get(fileNum);
         }catch(Exception e){
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-onCreateView-E1)", Toast.LENGTH_SHORT).show();
-            SdLog.log(e);
+            SDlog.log(e);
         }
         try {
 
@@ -63,7 +63,7 @@ public class CommentFragment extends AOdiaFragment {
             main.addView(scrollView,mlp);
         }catch(Exception e){
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-onCreateView-E2)", Toast.LENGTH_SHORT).show();
-            SdLog.log(e);
+            SDlog.log(e);
         }
         return main;
     }
@@ -77,7 +77,7 @@ public class CommentFragment extends AOdiaFragment {
         try {
             return "コメント\n"+diaFile.name;
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-fragmentName-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }
@@ -87,7 +87,7 @@ public class CommentFragment extends AOdiaFragment {
         try {
             return "comment-" + diaFile.filePath;
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
             Toast.makeText(getAOdiaActivity(), "Error(CommentFragment-fragmentHash-E1)", Toast.LENGTH_SHORT).show();
             return "";
         }

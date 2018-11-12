@@ -2,14 +2,12 @@ package com.kamelong.aodia;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -19,8 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kamelong.OuDia.DiaFile;
@@ -72,7 +68,7 @@ public class AOdiaActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         payment=new Payment(this);
-        SdLog.setActivity(this);
+        SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
         setting();
         drawerLayout=findViewById(R.id.drawer_layout);
@@ -421,7 +417,7 @@ public class AOdiaActivity extends AppCompatActivity {
                 selectFragment(fragments.get(fragmentIndex));
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     public void onCloseSetting(){

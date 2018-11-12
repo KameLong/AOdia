@@ -1,11 +1,8 @@
 package com.kamelong.aodia.TimeTable.EditTrain;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,9 +19,8 @@ import android.widget.ToggleButton;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaActivity;
-import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +53,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             diaFile = getAOdiaActivity().diaFiles.get(fileNum);
             train = diaFile.getTrain(diaNumber, direction, trainNum);
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
         fragmentContainer = inflater.inflate(R.layout.train_edit_view, container, false);

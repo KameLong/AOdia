@@ -1,12 +1,7 @@
 package com.kamelong.OuDia;
 
-import android.widget.Toast;
-
-import com.kamelong.aodia.SdLog;
-
 import java.io.BufferedReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Station {

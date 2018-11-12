@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.kamelong.aodia.AOdiaActivity;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 /**
  * Created by kame on 2017/01/24.
@@ -60,7 +60,7 @@ public class MenuButton extends Button {
                 }
             });
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
 
         }
     }

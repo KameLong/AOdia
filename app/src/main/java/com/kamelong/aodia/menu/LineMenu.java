@@ -15,7 +15,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 /**
  * Created by kame on 2017/01/24.
@@ -233,7 +233,7 @@ public class LineMenu  extends LinearLayout{
                 closeMenu();
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     public LineMenu(Context context){

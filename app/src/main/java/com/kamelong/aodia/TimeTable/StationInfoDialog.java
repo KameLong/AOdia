@@ -5,13 +5,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -19,11 +14,8 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.aodia.TimeTable.EditTrain.OnTrainChangeListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by kame on 2017/01/28.
@@ -201,7 +193,7 @@ public class StationInfoDialog extends Dialog{
             });
 
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }

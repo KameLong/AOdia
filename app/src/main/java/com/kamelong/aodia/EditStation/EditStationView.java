@@ -7,11 +7,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.StationTimeTable.StationTimetableIndexDia;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 
@@ -72,7 +70,7 @@ public class EditStationView extends LinearLayout {
 
 
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     public void setStationEditInterface(StationEditInterface listener){

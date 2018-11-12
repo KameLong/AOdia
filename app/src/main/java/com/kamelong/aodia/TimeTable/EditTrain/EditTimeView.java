@@ -98,5 +98,24 @@ public class EditTimeView extends AppCompatEditText {
     public void setOnTimeChangeListener(OnTimeChangeListener listener){
         onTimeChangeListener=listener;
     }
+    protected int timeString2Int(String time){
+        int hh=0;
+        int mm=0;
+        int ss=0;
+        switch (time.length()){
+            case 5:
+                hh=Integer.parseInt(time.substring(0,1));
+                mm=Integer.parseInt(time.substring(1,3));
+                ss=Integer.parseInt(time.substring(3,5));
+                return hh*3600+mm*60+ss;
+            case 6:
+                hh=Integer.parseInt(time.substring(0,2));
+                mm=Integer.parseInt(time.substring(2,4));
+                ss=Integer.parseInt(time.substring(4,6));
+                return hh*3600+mm*60+ss;
+
+        }
+        return -1;
+    }
 
 }

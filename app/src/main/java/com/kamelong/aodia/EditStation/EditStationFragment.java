@@ -12,8 +12,7 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
-import com.kamelong.aodia.TimeTable.TimeTableSetting;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 
@@ -31,7 +30,7 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
             Bundle bundle = getArguments();
             fileIndex = bundle.getInt("fileIndex", 0);
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);

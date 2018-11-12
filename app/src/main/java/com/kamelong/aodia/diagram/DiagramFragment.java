@@ -11,11 +11,10 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.kamelong.OuDia.DiaFile;
-import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 public class DiagramFragment extends AOdiaFragment {
     public StationView stationView;
@@ -123,7 +122,7 @@ public class DiagramFragment extends AOdiaFragment {
                         try {
                             Thread.sleep(20);
                         } catch (InterruptedException e) {
-                            SdLog.log(e);
+                            SDlog.log(e);
                         }
                         setScale();
                         diagramView.scrollBy((int) scrolldx, (int) scrolldy);
@@ -155,7 +154,7 @@ public class DiagramFragment extends AOdiaFragment {
 
                                         Thread.sleep(16);
                                     } catch (Exception e) {
-                                        SdLog.log(e);
+                                        SDlog.log(e);
                                         fling = false;
                                     }
                                 }
@@ -184,7 +183,7 @@ public class DiagramFragment extends AOdiaFragment {
 
         } catch (Exception e) {
             Toast.makeText(getContext(),"ダイヤを開けませんでした。ダイヤの削除を行った可能性があります。",Toast.LENGTH_LONG).show();
-            SdLog.log(e);
+            SDlog.log(e);
             onDestroy();
             getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
 
@@ -223,7 +222,7 @@ public class DiagramFragment extends AOdiaFragment {
             scrollTo();
 
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -300,13 +299,13 @@ public class DiagramFragment extends AOdiaFragment {
                         stationView.scrollTo(0, mScrollY);
                         timeView.scrollTo(mScrollX, 0);
                     } catch (Exception e) {
-                        SdLog.log(e);
+                        SDlog.log(e);
                     }
                     return;
                 }
             });
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 
@@ -362,7 +361,7 @@ public class DiagramFragment extends AOdiaFragment {
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
-                        SdLog.log(e);
+                        SDlog.log(e);
                     }
                 }
             }

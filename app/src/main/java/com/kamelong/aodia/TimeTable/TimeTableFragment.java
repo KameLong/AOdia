@@ -17,10 +17,9 @@ import android.widget.Toast;
 
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
-import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.aodia.TimeTable.EditTrain.OnFragmentCloseListener;
 import com.kamelong.aodia.TimeTable.EditTrain.OnTrainChangeListener;
 import com.kamelong.aodia.TimeTable.EditTrain.TrainTimeEditFragment;
@@ -52,7 +51,7 @@ public class TimeTableFragment extends AOdiaFragment {
             direction =  bundle.getInt("direction",0);
             editTrain=bundle.getInt("trainEdit",-1);
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.time_table, container, false);
@@ -86,8 +85,8 @@ public class TimeTableFragment extends AOdiaFragment {
                         int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
                         int station=((StationNameView)((LinearLayout)findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
                         final int train=timeTablex/(((LinearLayout)findViewById(R.id.trainTimeLinear)).getChildAt(0).getWidth());
-                        SdLog.log("timeTableLongPress", station);
-                        SdLog.log("timeTableLongPress", train);
+                        SDlog.log("timeTableLongPress", station);
+                        SDlog.log("timeTableLongPress", train);
                         if(train<0){
                             return;
                         }
@@ -98,7 +97,7 @@ public class TimeTableFragment extends AOdiaFragment {
                             return;
                         }
 
-                        SdLog.log("timeTableLongPress", diaFile.station.get(station).name);
+                        SDlog.log("timeTableLongPress", diaFile.station.get(station).name);
                         openTrainEditFragment(train);
 
 
@@ -123,7 +122,7 @@ public class TimeTableFragment extends AOdiaFragment {
                                         Thread.sleep(16);
                                     } catch (Exception e) {
                                         fling=false;
-                                        SdLog.log(e);
+                                        SDlog.log(e);
                                     }
                                 }
                             }
@@ -195,7 +194,7 @@ public class TimeTableFragment extends AOdiaFragment {
             diaFile = getAOdiaActivity().diaFiles.get(fileNum);
             diagram =diaFile.diagram.get(diaNum);
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
             Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG).show();
         }
         if(diaFile==null){
@@ -243,7 +242,7 @@ public class TimeTableFragment extends AOdiaFragment {
                 trainTimeLinear.addView(trainTimeViews[i]);
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     private void scrollBy(int dx, int dy) {
@@ -281,12 +280,12 @@ public class TimeTableFragment extends AOdiaFragment {
                         stationNameLinear.scrollTo(0, mscrollY);
                         return;
                     }catch(Exception e){
-                        SdLog.log(e);
+                        SDlog.log(e);
                     }
                 }
             });
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
             fling=false;
         }
         onStop();

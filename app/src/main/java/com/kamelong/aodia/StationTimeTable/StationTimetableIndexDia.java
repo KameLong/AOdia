@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 /**
  * Created by kame on 2017/02/03.
@@ -58,7 +58,7 @@ public class StationTimetableIndexDia extends LinearLayout {
             });
 
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }

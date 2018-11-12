@@ -38,9 +38,9 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-public class SdLog {
+public class SDlog {
     private static boolean able=false;
-    private static Activity activity;
+    public static Activity activity;
 
 
     public static void setActivity(Activity a){

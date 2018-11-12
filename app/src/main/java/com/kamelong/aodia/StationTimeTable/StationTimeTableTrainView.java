@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 
 /**
@@ -65,7 +65,7 @@ public class StationTimeTableTrainView extends LinearLayout implements View.OnCl
             gotoView.setTextColor(color);
             addView.setTextColor(color);
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
 
         }
     }

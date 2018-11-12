@@ -1,10 +1,9 @@
 package com.kamelong.OuDia;
 
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Train {
@@ -379,7 +378,7 @@ public class Train {
                 }
             }
             if(afterTime<0){
-                SdLog.log("予測時間","afterTime");
+                SDlog.log("予測時間","afterTime");
                 //対象駅より先の駅で駅時刻が存在する駅がなかった
                 return -1;
             }
@@ -416,7 +415,7 @@ public class Train {
         for(int i=startStation();i<endStation();i++){
             if(timeExist(i)){
                 if(getDepartureTime(i)-time<-12*60*60||getDepartureTime(i)-time>12*60*60){
-                    SdLog.log("doubleDay");
+                    SDlog.log("doubleDay");
                     return true;
                 }
                 time=getDepartureTime(i);

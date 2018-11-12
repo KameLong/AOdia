@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 public class SearchFileDialog implements OnItemClickListener
 {
@@ -112,7 +112,7 @@ public class SearchFileDialog implements OnItemClickListener
             }
             return result;
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
             return new String[]{"", ""};
         }
     }

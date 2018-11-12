@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 public class TrainNameView extends AOdiaDefaultView {
     private DiaFile diaFile;
@@ -102,7 +102,7 @@ public class TrainNameView extends AOdiaDefaultView {
 
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
 

@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,8 +106,8 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
                             +FILE_PATH+ " text)");
 
         }catch(Exception e){
-            SdLog.log("データベースの作成に失敗しました");
-            SdLog.log(e);
+            SDlog.log("データベースの作成に失敗しました");
+            SDlog.log(e);
         }
     }
 
@@ -157,7 +157,7 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
             }
         }
         catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
 
         }
         finally {

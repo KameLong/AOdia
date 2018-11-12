@@ -15,7 +15,7 @@ import android.widget.SearchView;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
 
@@ -63,7 +63,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
         diaFiles= activity.diaFiles;
             return inflater.inflate(R.layout.menu, container, false);
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         return new View(activity);
     }
@@ -74,7 +74,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             layout=(LinearLayout) activity.findViewById(R.id.menu_layout);
             createMenu();
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 
@@ -127,7 +127,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             stationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String stationName) {
-                    SdLog.log("検索");
+                    SDlog.log("検索");
                     SearchFileDialog.OnFileSelectListener test=new SearchFileDialog.OnFileSelectListener() {
                         @Override
                         public void onFileSelect(File file) {
@@ -173,7 +173,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
 
             Button openHelp = new Button(activity);
             PackageManager pm = getContext().getPackageManager();
-                PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(), 0);
+            PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(), 0);
             openHelp.setText("　v"+packageInfo.versionName+"のヘルプを開く");
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
@@ -205,7 +205,7 @@ public class MenuFragment extends android.support.v4.app.Fragment {
             layout.addView(openSetting);
 
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 

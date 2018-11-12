@@ -1,10 +1,10 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.aodia.SDlog;
 import com.kamelong.tool.Color;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 public class TrainType {
     public String name="";
@@ -63,7 +63,11 @@ public class TrainType {
                     break;
                 case "DiagramSenIsBold":
                     bold=value.equals("1");
-
+                    if(value.equals("1.")){
+                        bold=true;
+                        SDlog.toast("ファイルが一部壊れていたため、修正して読み込みました。再度保存し直す事を推奨します。");
+                        return;
+                    }
             }
             line=br.readLine();
         }

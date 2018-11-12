@@ -11,7 +11,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 public class TrainTimeView extends AOdiaDefaultView {
     public DiaFile diaFile=null;
@@ -359,7 +359,7 @@ public class TrainTimeView extends AOdiaDefaultView {
             }
             return time;
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         return "○";
     }
@@ -398,7 +398,7 @@ public class TrainTimeView extends AOdiaDefaultView {
             }
             return time;
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         return "○";
     }
@@ -451,7 +451,7 @@ public class TrainTimeView extends AOdiaDefaultView {
 
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     private boolean charIsEng(char c){

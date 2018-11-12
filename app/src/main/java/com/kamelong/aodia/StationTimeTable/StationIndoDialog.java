@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
 
 /**
@@ -140,7 +140,7 @@ public class StationIndoDialog extends Dialog{
             LinearLayout showStop=findViewById(R.id.showStop);
             showStop.setVisibility(View.GONE);
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }

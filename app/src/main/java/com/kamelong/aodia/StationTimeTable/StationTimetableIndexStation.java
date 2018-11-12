@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 
 /**
@@ -46,7 +46,7 @@ public class StationTimetableIndexStation extends LinearLayout {
                 diaList.addView(stationTimetableIndexDia);
             }
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 

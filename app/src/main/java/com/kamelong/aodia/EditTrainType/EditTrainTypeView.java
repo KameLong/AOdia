@@ -9,13 +9,11 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
-import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.tool.Color;
 
 public class EditTrainTypeView extends LinearLayout{
@@ -126,7 +124,7 @@ public class EditTrainTypeView extends LinearLayout{
 
 
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 }

@@ -1,18 +1,14 @@
 package com.kamelong.aodia.StationTimeTable;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 
 /**
@@ -51,7 +47,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
             Bundle bundle = getArguments();
             fileNum=bundle.getInt("fileNum");
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
         diaFile=getAOdiaActivity().diaFiles.get(fileNum);
@@ -73,7 +69,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
 
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     @Override

@@ -7,14 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaFragment;
-import com.kamelong.aodia.EditStation.EditStationView;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
-
-import java.util.ArrayList;
+import com.kamelong.aodia.SDlog;
 
 public class EditTrainTypeFragment extends AOdiaFragment {
     int fileIndex = 0;
@@ -25,7 +21,7 @@ public class EditTrainTypeFragment extends AOdiaFragment {
             Bundle bundle = getArguments();
             fileIndex = bundle.getInt("fileIndex", 0);
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.edit_traintype_fragment, container, false);

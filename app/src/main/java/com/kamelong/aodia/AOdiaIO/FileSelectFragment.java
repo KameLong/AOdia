@@ -23,10 +23,9 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 import com.kamelong.tool.ShiftJISBufferedReader;
 
 import org.json.JSONArray;
@@ -42,17 +41,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -166,7 +160,7 @@ public class FileSelectFragment extends AOdiaFragment {
                 if(rootFolder.get(position)!=null) {
                     tab1OpenFile(rootFolder.get(position).getPath());
                 }else{
-                    SdLog.toast("このフォルダは開けません");
+                    SDlog.toast("このフォルダは開けません");
                 }
             }
 

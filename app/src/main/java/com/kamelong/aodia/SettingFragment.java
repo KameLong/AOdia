@@ -4,12 +4,6 @@ import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import static android.support.v7.preference.Preference.*;
 
 /*
  *     This file is part of AOdia.
@@ -70,7 +64,7 @@ public class SettingFragment extends PreferenceFragmentCompat {
                     });
 
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }
@@ -85,7 +79,7 @@ public class SettingFragment extends PreferenceFragmentCompat {
         try {
             ((AOdiaActivity)getActivity()).onCloseSetting();
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         super.onStop();
     }

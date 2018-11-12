@@ -11,12 +11,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class EditStationInfoView extends LinearLayout {
         try{
             LayoutInflater.from(context).inflate(R.layout.edit_station, this);
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
         try{
 
@@ -126,7 +125,7 @@ public class EditStationInfoView extends LinearLayout {
             });
 
         }catch (Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
     public void initStop(){

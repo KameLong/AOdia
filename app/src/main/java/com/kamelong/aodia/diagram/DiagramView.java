@@ -14,7 +14,7 @@ import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SdLog;
+import com.kamelong.aodia.SDlog;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -78,7 +78,7 @@ public class DiagramView extends AOdiaDefaultView{
 
 
         } catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }
@@ -208,7 +208,7 @@ public class DiagramView extends AOdiaDefaultView{
                                 stopMark[direct].add(trainPath.get(trainPath.size() - 3));
                             }
                         }catch(Exception e){
-                            SdLog.log(e);
+                            SDlog.log(e);
                         }
                     }
                 }
@@ -342,7 +342,7 @@ public class DiagramView extends AOdiaDefaultView{
                 }
             }
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 
@@ -367,7 +367,7 @@ public class DiagramView extends AOdiaDefaultView{
             //列車番号を描画
             drawTrainNumber(canvas);
         } catch (Exception e) {
-            SdLog.log(e);
+            SDlog.log(e);
         }
     }
 
@@ -675,7 +675,7 @@ public class DiagramView extends AOdiaDefaultView{
             this.invalidate();
 
         }catch(Exception e){
-            SdLog.log(e);
+            SDlog.log(e);
         }
 
     }
