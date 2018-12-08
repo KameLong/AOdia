@@ -332,13 +332,18 @@ public class DiagramFragment extends AOdiaFragment {
             return diaFile.name+" "+diaFile.diagram.get(diaNumber).name+" "+"ダイヤグラム";
     }
     public void fitVertical(){
-        FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
-        float frameSize=diagramFrame.getHeight()-40;
-        float nessTime=diaFile.getStationTime().get(diaFile.getStationNum()-1);
-        setting.scaleY=frameSize/nessTime;
-        setScale();
-        stationView.invalidate();
-        diagramView.invalidate();
+        try {
+            FrameLayout diagramFrame = (FrameLayout) findViewById(R.id.diagramFrame);
+            float frameSize = diagramFrame.getHeight() - 40;
+            float nessTime = diaFile.getStationTime().get(diaFile.getStationNum() - 1);
+            setting.scaleY = frameSize / nessTime;
+            setScale();
+            stationView.invalidate();
+            diagramView.invalidate();
+        }catch (Exception e){
+            SDlog.log(e);
+            SDlog.toast("原因不明のエラーが発生しました");
+        }
 
     }
     public void autoScroll(){

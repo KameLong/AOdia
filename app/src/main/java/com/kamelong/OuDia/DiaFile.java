@@ -64,6 +64,32 @@ public class DiaFile {
         System.out.println("読み込み終了");
 
     }
+    public DiaFile(DiaFile[] diaList,int includeStationIndex){
+        boolean stationConnect=false;
+        ArrayList<Integer>[] stationIndexList=new ArrayList[2];
+        stationIndexList[0]=new ArrayList<>();
+        stationIndexList[1]=new ArrayList<>();
+        for(int i=0;i<diaList[0].getStationNum()&&i<includeStationIndex;i++){
+            station.add(new Station(diaList[0].station.get(i)));
+        }
+        if(diaList[0].getStationNum()>includeStationIndex){
+            if(diaList[0].station.get(includeStationIndex).name.equals(diaList[1].station.get(0).name)){
+                stationConnect=true;
+            }else{
+                stationConnect=false;
+                station.add(new Station(diaList[0].station.get(includeStationIndex)));
+            }
+        }
+        for(int i=0;i<diaList[1].getStationNum();i++){
+            station.add(new Station(diaList[1].station.get(i)));
+        }
+        for(int i=includeStationIndex+1;i<diaList[0].getStationNum();i++){
+            station.add(new Station(diaList[0].station.get(i)));
+        }
+
+
+
+    }
     private void loadShiftJis(File file)throws Exception{
         BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
         String nouse=br.readLine();
@@ -94,6 +120,9 @@ public class DiaFile {
                         diagramStartTime+=Integer.parseInt(value.substring(1,3));
                         diagramStartTime=diagramStartTime*60;
                     }
+                }
+                if(line.startsWith("AOdiaFilePath=")){
+                    filePath=line.split("=")[1];
                 }
                 if(line.startsWith("Comment=")){
                     comment=line.split("=",-1)[1].replace("\\n","\n");
@@ -228,7 +257,7 @@ public class DiaFile {
 
         return result;
     }
-    public void saveToFile(String fileName) throws Exception {
+    public void saveToFile(String fileName,boolean saveFilePath) throws Exception {
             FileOutputStream fos = new FileOutputStream(fileName);
 
             //BOM付与
@@ -252,8 +281,12 @@ public class DiaFile {
 
             out.write("KitenJikoku="+diagramStartTime/3600+String.format("%02d",(diagramStartTime/60)%60)+"\r\n");
             out.write("DiagramDgrYZahyouKyoriDefault=60\r\n");
+            if(saveFilePath) {
+                out.write("AOdiaFilePath=" + filePath + "\r\n");
+            }
             out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
             out.write(".\r\n");
+
             out.write("DispProp.\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック;Bold=1;Itaric=1\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nJikokuhyouVFont=PointTextHeight=9;Facename=@ＭＳ ゴシック\r\nDiaEkimeiFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaJikokuFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaRessyaFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nCommentFont=PointTextHeight=9;Facename=ＭＳ ゴシック\r\nDiaMojiColor=00000000\r\nDiaHaikeiColor=00FFFFFF\r\nDiaRessyaColor=00000000\r\nDiaJikuColor=00C0C0C0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00F0F0F0\r\nJikokuhyouBackColor=00FFFFFF\r\nJikokuhyouBackColor=00FFFFFF\r\nStdOpeTimeLowerColor=00E0E0FF\r\nStdOpeTimeHigherColor=00FFFFE0\r\nStdOpeTimeUndefColor=0080FFFF\r\nStdOpeTimeIllegalColor=00A0A0A0\r\nEkimeiLength=6\r\nJikokuhyouRessyaWidth=8\r\nAnySecondIncDec1=10\r\nAnySecondIncDec2=-10\r\nDisplayRessyamei=1\r\nDisplayOuterTerminalEkimeiOriginSide=0\r\nDisplayOuterTerminalEkimeiTerminalSide=0\r\nDiagramDisplayOuterTerminal=0\r\n.\r\nFileTypeAppComment=AOdia v");
         PackageInfo packageInfo = SDlog.activity.getPackageManager().getPackageInfo(SDlog.activity.getPackageName(), 0);
         out.write(packageInfo.versionName+"");

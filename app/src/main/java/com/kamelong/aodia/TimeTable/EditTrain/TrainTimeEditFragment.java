@@ -67,6 +67,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             Toast.makeText(getContext(),"原因不明のエラーが発生しました。列車が見つかりません。(TrainTimeEditFragment onViewCreated)",Toast.LENGTH_LONG).show();
             return;
         }
+        try {
             final EditText trainName = ((EditText) findViewById(R.id.trainName));
             trainName.setText(train.name);
             trainName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -155,9 +156,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
                         ((EditTimeView) departureTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station));
                         if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum )).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
-                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum )).setTime(-1);
+                            ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(-1);
                         }
                         nessTimeCreate();
                         trainChange();
@@ -193,7 +194,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                         train.setArrivalTime(station, time);
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
 
-                        ((EditTimeView) arrivalTimeLayout.getChildAt(stationNum )).setTime(train.getArrivalTime(station));
+                        ((EditTimeView) arrivalTimeLayout.getChildAt(stationNum)).setTime(train.getArrivalTime(station));
                         if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
                             ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
@@ -405,7 +406,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                 }
             });
 
-
+        }catch (Exception e){
+            SDlog.log(e);
+            SDlog.toast("原因不明のエラーが発生しました。"+e.getMessage());
+        }
     }
 
     private void nessTimeCreate() {

@@ -25,13 +25,21 @@ public class EditTrainTypeFragment extends AOdiaFragment {
         }
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.edit_traintype_fragment, container, false);
-        diaFile = getAOdiaActivity().diaFiles.get(fileIndex);
+        try {
+            diaFile = getAOdiaActivity().diaFiles.get(fileIndex);
+        }catch (Exception e){
+            SDlog.log(e);
+        }
         return fragmentContainer;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(diaFile==null){
+            getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
+            return;
+        }
         final LinearLayout typeListLinear=(LinearLayout) findViewById(R.id.typeListLinear);
         for(int i=0;i<diaFile.trainType.size();i++){
             typeListLinear.addView(new EditTrainTypeView(getAOdiaActivity(),diaFile.trainType.get(i)));

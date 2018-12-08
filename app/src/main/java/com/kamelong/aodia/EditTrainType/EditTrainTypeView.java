@@ -1,6 +1,7 @@
 package com.kamelong.aodia.EditTrainType;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
+import com.azeesoft.lib.colorpicker.Stools;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.SDlog;
@@ -43,16 +45,24 @@ public class EditTrainTypeView extends LinearLayout{
             textColor.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ColorPickerDialog dialog=ColorPickerDialog.createColorPickerDialog(context);
-                    dialog.setLastColor(trainType.textColor.getAndroidColor());
-                    dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-                        @Override
-                        public void onColorPicked(int color, String hexVal) {
-                            trainType.textColor=new Color(color);
-                            textColor.setBackgroundColor(trainType.textColor.getAndroidColor());
-                        }
-                    });
-                    dialog.show();
+                    try {
+                        ColorPickerDialog dialog = ColorPickerDialog.createColorPickerDialog(context);
+                        dialog.setLastColor(trainType.textColor.getAndroidColor());
+                        dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+                            @Override
+                            public void onColorPicked(int color, String hexVal) {
+                                trainType.textColor = new Color(color);
+                                textColor.setBackgroundColor(trainType.textColor.getAndroidColor());
+                            }
+                        });
+                        dialog.show();
+                    }catch (Exception e){
+                        SDlog.log(e);
+                        SDlog.toast("色選択時にエラーが発生しました");
+                        SharedPreferences sharedPreferences=context.getSharedPreferences("colpick", Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putString("lastColor","#ffffffff").apply();
+
+                    }
                 }
             });
             final Button diaColor=findViewById(R.id.diaColor);
@@ -60,16 +70,23 @@ public class EditTrainTypeView extends LinearLayout{
             diaColor.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ColorPickerDialog dialog=ColorPickerDialog.createColorPickerDialog(context);
-                    dialog.setLastColor(trainType.diaColor.getAndroidColor());
-                    dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-                        @Override
-                        public void onColorPicked(int color, String hexVal) {
-                            trainType.diaColor=new Color(color);
-                            diaColor.setBackgroundColor(trainType.diaColor.getAndroidColor());
-                        }
-                    });
-                    dialog.show();
+                    try {
+                        ColorPickerDialog dialog = ColorPickerDialog.createColorPickerDialog(context);
+                        dialog.setLastColor(trainType.diaColor.getAndroidColor());
+                        dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
+                            @Override
+                            public void onColorPicked(int color, String hexVal) {
+                                trainType.diaColor = new Color(color);
+                                diaColor.setBackgroundColor(trainType.diaColor.getAndroidColor());
+                            }
+                        });
+                        dialog.show();
+                    }catch (Exception e){
+                        SDlog.log(e);
+                        SDlog.toast("色選択時にエラーが発生しました");
+                        SharedPreferences sharedPreferences=context.getSharedPreferences("colpick", Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putString("lastColor","#ffffffff").apply();
+                    }
                 }
             });
             RadioGroup diaStyle=findViewById(R.id.diaStyleRadio);

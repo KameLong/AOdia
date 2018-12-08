@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -104,29 +105,13 @@ public class AOdiaActivity extends AppCompatActivity {
         /**
          * 直前に開いていたファイルを復元します。
          */
+
+
         SharedPreferences pref =getSharedPreferences(PREFERENCES_NAME,MODE_PRIVATE);
         String filePath=pref.getString("finalFilePath","");
         int diaNumber=pref.getInt("finalDiaNumber",0);
         int direction=pref.getInt("finalDirection",0);
-        if(filePath.length()!=0){
-            try{
-                File file=new File(filePath);
-                if(file.exists()){
-                    openFile(file);
-                }else{
-                    throw new Exception("file is not Exist");
-                }
-                if(direction<2){
-                    openTimeTable(0,diaNumber,direction);
-                }else{
-                    openDiagram(0,diaNumber);
-                }
-            }catch (Exception e){
-                openHelpFragment();
-            }
-        }else{
-            openHelpFragment();
-        }
+
         Button backButton=findViewById(R.id.backFragment);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,12 +150,44 @@ public class AOdiaActivity extends AppCompatActivity {
             }
         });
 
+        if(filePath.length()!=0){
+            try{
 
+                for(int i=0;i<diaFilesIndex.size();i++){
+                    if(diaFiles.get(diaFilesIndex.get(i)).filePath.equals(filePath)){
+                        if(direction<2){
+                            openTimeTable(0,diaNumber,direction);
+                        }else{
+                            openDiagram(0,diaNumber);
+                        }
+                        return;
+                    }
+                }
+                File file=new File(filePath);
+                if(file.exists()){
+                    openFile(file);
+                }else{
+                    throw new Exception("file is not Exist");
+                }
+                if(direction<2){
+                    openTimeTable(0,diaNumber,direction);
+                }else{
+                    openDiagram(0,diaNumber);
+                }
+            }catch (Exception e){
+                openHelpFragment();
+            }
+        }else{
+            openHelpFragment();
+        }
     }
     @Override
     public void onDestroy(){
         payment.close();
         super.onDestroy();
+    }
+    public void onPause(){
+        super.onPause();
     }
     public void onStop(){
         super.onStop();
