@@ -79,7 +79,7 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.com/aodia/help-v2.5.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.6.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -101,7 +101,7 @@ public class HelpFragment extends AOdiaFragment {
     }
     @Override
     public String fragmentName(){
-        return "AOdiaヘルプv2.5";
+        return "AOdiaヘルプv2.6";
     }
     @Override
     public String fragmentHash() {

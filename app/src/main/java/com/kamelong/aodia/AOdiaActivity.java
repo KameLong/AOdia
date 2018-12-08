@@ -1,7 +1,9 @@
 package com.kamelong.aodia;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -211,6 +213,26 @@ public class AOdiaActivity extends AppCompatActivity {
         }
     }
     private void openFragment(AOdiaFragment fragment){
+        if(fragments.size()>1&&fragments.get(fragmentIndex).fragmentName().equals("駅編集")){
+            new AlertDialog.Builder(this)
+                    .setTitle("駅編集反映確認")
+                    .setMessage("駅編集作業を破棄しますか？")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            killFragment(fragmentIndex);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            SDlog.toast("駅編集完了ボタンを押してください。");
+
+                        }
+                    })
+                    .show();
+            return;
+        }
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -211,7 +211,7 @@ public class FileSelectFragment extends AOdiaFragment {
                     Toast.makeText(getAOdiaActivity(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getAOdiaActivity(), "このファイルは開けません", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getAOdiaActivity(), "このファイルは削除された可能性があります。", Toast.LENGTH_SHORT).show();
             }
         }catch (FilePermException e){
             Toast.makeText(getAOdiaActivity(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();
@@ -353,7 +353,12 @@ public class FileSelectFragment extends AOdiaFragment {
        openKeepButton.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               //getAOdiaActivity().openKeepFile();
+               File keep=new File(getContext().getFilesDir()+"/keep.oud2");
+               if(keep.exists()){
+                   getAOdiaActivity().openFile(keep);
+               }else{
+                   SDlog.toast("KEEPに保存されているファイルがありません");
+               }
            }
        });
         final ListView fileListView = (ListView) findViewById(R.id.HistoryList);
@@ -503,7 +508,7 @@ public class FileSelectFragment extends AOdiaFragment {
                         System.out.println(fileList.get(position).getPath());
                         new AlertDialog.Builder(getActivity())
                                 .setTitle("ファイル削除")
-                                .setMessage(fileList.get(position).getName()+"を削除します")
+                                .setMessage(fileList.get(position).getName()+"のダイヤデータを削除します")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

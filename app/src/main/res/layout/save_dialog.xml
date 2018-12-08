@@ -1,35 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="330dp"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="20dp">
 
     <TextView
+        android:id="@+id/textView18"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="保存ファイル名"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1"
+        android:text="ファイル保存メニュー"
+        android:textColor="@android:color/black"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="有料オプション"
         android:textColor="@android:color/black" />
 
-    <EditText
-        android:id="@+id/saveFileName"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="保存フォルダ名"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/saveFileDirectory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/homeDirectory"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_weight="0"
+            android:background="@drawable/ic_action_name" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="保存ファイル名"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/saveFileName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="保存" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView17"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName" />
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:text="全ユーザー向け"
+        android:textColor="@android:color/black" />
 
     <Button
-        android:id="@+id/saveButton"
-        android:layout_width="100dp"
+        android:id="@+id/saveKeep"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="保存" />
+        android:text="ファイル名を指定せず、KEEPに保存する" />
 
     <LinearLayout
         android:id="@+id/saveAlart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:visibility="invisible">
@@ -42,6 +131,16 @@
             上書き保存しますか？"
             android:textAlignment="center"
             android:textColor="#FF0000" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="KEEPに保存できるのは一つまでです。
+            上書き保存しますか？"
+            android:textAlignment="center"
+            android:textColor="#FF0000"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/saveOverrideButton"

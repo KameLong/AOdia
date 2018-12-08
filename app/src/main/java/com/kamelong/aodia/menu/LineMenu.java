@@ -64,14 +64,6 @@ public class LineMenu  extends LinearLayout{
             lineContLinear.setOrientation(VERTICAL);
             View v= ((Activity)getContext()).getLayoutInflater().inflate(R.layout.menu_line_buttons, lineButtonLinear);
             addView(lineButtonLinear);
-            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-            if(spf.getBoolean("001",false)){
-                findViewById(R.id.saveButton).setVisibility(VISIBLE);
-            }else{
-                findViewById(R.id.saveButton).setVisibility(GONE);
-
-            }
-
             findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {

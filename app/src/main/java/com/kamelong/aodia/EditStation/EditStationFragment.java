@@ -1,5 +1,7 @@
 package com.kamelong.aodia.EditStation;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
     public ArrayList<Station> editStationList;
     public ArrayList<Integer>editStationIndex;
     public ArrayList<EditStationView> editStationViews=new ArrayList<>();
+    boolean frag=true;
 
 
     @Override
@@ -34,11 +37,14 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         }
         //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
         fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);
+        try{
         diaFile=getAOdiaActivity().diaFiles.get(fileIndex);
         if(diaFile==null){
             Toast.makeText(getContext(),"ダイヤファイルが見つかりませんでした。",Toast.LENGTH_LONG).show();
             getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
             return fragmentContainer;
+        }}catch (Exception e){
+            SDlog.log(e);
         }
 
         editStationList=new ArrayList<>();
@@ -157,9 +163,16 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         diaFile.reCalcStationTime();
         getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
     }
+
+
+
     @Override
     public void onStop(){
         super.onStop();
+    }
+    @Override
+    public String fragmentName(){
+        return "駅編集";
     }
 
 
