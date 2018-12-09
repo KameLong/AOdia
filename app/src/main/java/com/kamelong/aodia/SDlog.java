@@ -81,7 +81,11 @@ public class SDlog {
     }
     public static void log(Exception e){
         e.printStackTrace();
-        Toast.makeText(activity,"エラーが発生しました。\n"+e.getMessage(),Toast.LENGTH_SHORT).show();
+        try {
+            Toast.makeText(activity, "エラーが発生しました。\n" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }catch (Exception w){
+
+        }
         if(!able){
             return;
         }

@@ -248,7 +248,6 @@ public class Station {
                 default:
                     style="Jikokukeisiki_Hatsu";
                     break;
-
             }
             out.write("Ekijikokukeisiki="+style+"\r\n");
             if(bigStation){
