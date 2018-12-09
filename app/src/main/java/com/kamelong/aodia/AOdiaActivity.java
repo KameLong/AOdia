@@ -213,7 +213,7 @@ public class AOdiaActivity extends AppCompatActivity {
         }
     }
     private void openFragment(AOdiaFragment fragment){
-        if(fragments.size()>1&&fragments.get(fragmentIndex).fragmentName().equals("駅編集")){
+        if(fragments.size()>1&&fragments.size()>fragmentIndex&&fragments.get(fragmentIndex).fragmentName().equals("駅編集")){
             new AlertDialog.Builder(this)
                     .setTitle("駅編集反映確認")
                     .setMessage("駅編集作業を破棄しますか？")

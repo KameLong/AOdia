@@ -62,7 +62,7 @@ public class SaveDialog extends Dialog{
 
                 }else{
                     try {
-                        diaFile.saveToFile(fileName,false);
+                        diaFile.saveToFile(fileName,true);
                         SaveDialog.this.dismiss();
                     }catch (Exception e){
                         Toast.makeText(getContext(),"不明なエラーが発生したため、保存を中止します。作者に連絡をお願いいたします。\n詳細:\n"+e.getMessage(), Toast.LENGTH_LONG).show();

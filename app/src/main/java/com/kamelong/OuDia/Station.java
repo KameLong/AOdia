@@ -249,10 +249,10 @@ public class Station {
                     style="Jikokukeisiki_Hatsu";
                     break;
             }
-            if((timeTableStyle&0b000100)==0){
+            if((timeTableStyle&0b000100)!=0){
                 out.write("JikokuhyouTrackDisplayKudari=1\r\n");
             }
-        if((timeTableStyle&0b100000)==0){
+        if((timeTableStyle&0b100000)!=0){
             out.write("JikokuhyouTrackDisplayNobori=1\r\n");
         }
             out.write("Ekijikokukeisiki="+style+"\r\n");
