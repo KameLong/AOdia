@@ -25,6 +25,76 @@
                 android:layout_height="match_parent">
 
                 <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/layout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/small_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ルートフォルダ選択"
+                            android:textColor="@android:color/black" />
+
+                        <Spinner
+                            android:id="@+id/spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.86" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/pathView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/layout1"
+                        android:layout_marginLeft="@dimen/small_margin"
+                        android:layout_marginRight="@dimen/small_margin"
+                        android:text="TextView"
+                        android:textColor="@android:color/black" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/layout1"
+                            android:layout_marginLeft="20dp"
+                            android:text="フォルダ内検索\nファイル名・駅名検索"
+                            android:textColor="@android:color/black" />
+
+                        <SearchView
+                            android:id="@+id/stationSearch"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/pathView"
+                            android:layout_marginRight="10dp"
+                            android:queryHint="ファイル名・駅名検索(フォルダ内)" />
+                    </LinearLayout>
+
+                    <ListView
+                        android:id="@+id/fileList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/stationSearch"
+                        android:layout_margin="@dimen/small_margin" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -59,50 +129,6 @@
 
                     <ListView
                         android:id="@+id/HistoryList"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/small_margin" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/small_margin"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ルートフォルダ選択"
-                            android:textColor="@android:color/black" />
-
-                        <Spinner
-                            android:id="@+id/spinner"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.86" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/pathView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/small_margin"
-                        android:layout_marginRight="@dimen/small_margin"
-                        android:text="TextView"
-                        android:textColor="@android:color/black" />
-
-                    <ListView
-                        android:id="@+id/fileList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/small_margin" />
