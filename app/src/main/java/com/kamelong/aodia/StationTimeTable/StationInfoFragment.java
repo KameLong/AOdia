@@ -340,13 +340,17 @@ public class StationInfoFragment extends AOdiaFragment {
         textView.setText(result);
     }
     public String fragmentName(){
-        String directS="";
-        if(direct==0){
-            directS="下り";
-        }else{
-            directS="上り";
+        try {
+            String directS = "";
+            if (direct == 0) {
+                directS = "下り";
+            } else {
+                directS = "上り";
+            }
+            return "駅時刻表　" + diaFile.station.get(station).name + "　" + directS + diaFile.name;
+        }catch (Exception e){
+            return "駅時刻表";
         }
-        return "駅時刻表　"+diaFile.station.get(station).name+"　"+directS+diaFile.name;
     }
     public View findViewById(int id){
         return contentView.findViewById(id);
