@@ -255,6 +255,7 @@ public class AOdiaActivity extends AppCompatActivity {
     private void selectFragment(AOdiaFragment fragment){
         //もしメニューが開いていたら閉じる
         closeMenu();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);

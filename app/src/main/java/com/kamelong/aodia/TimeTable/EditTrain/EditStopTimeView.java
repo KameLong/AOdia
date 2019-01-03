@@ -20,7 +20,7 @@ public class EditStopTimeView extends EditTimeView {
 
         InputFilter[] filters = new InputFilter[1];
             filters[0] = new InputFilter.LengthFilter(5);
-        setFilters(filters);
+        this.setFilters(filters);
         setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
