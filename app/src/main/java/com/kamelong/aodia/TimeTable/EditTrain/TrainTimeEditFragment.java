@@ -153,13 +153,18 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     @Override
                     public void onTimeChanged(int station, int time) {
                         train.setDepartureTime(station, time);
+                        if(train.getStopType(station)==0||train.getStopType(station)==3){
+                            train.setStopType(station,1);
+
+                        }
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
                         ((EditTimeView) departureTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station));
-                        if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
+                        if (train.departExist(station) && train.arriveExist(station)) {
                             ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
                             ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(-1);
                         }
+                        ((EditStopTypeSpinner)stopTypeLayout.getChildAt(stationNum)).setSelection(train.getStopType(station));
                         nessTimeCreate();
                         trainChange();
                         final EditText operationName = (EditText) findViewById(R.id.operationName);
@@ -176,7 +181,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                         Button nextButton = (Button) findViewById(R.id.nextTrain);
                         nextTrain = diaFile.diagram.get(diaNumber).nextOperation(train);
                         if (nextTrain == null) {
-                            nextButton.setText("前運用無し");
+                            nextButton.setText("次運用無し");
                             nextButton.setEnabled(false);
                         } else {
                             nextButton.setText(nextTrain.number + "\n" + timeInt2String4(nextTrain.getDATime(train.endStation())) + "発");
@@ -192,10 +197,16 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     @Override
                     public void onTimeChanged(int station, int time) {
                         train.setArrivalTime(station, time);
+                        if(train.getStopType(station)==0||train.getStopType(station)==3){
+                            train.setStopType(station,1);
+
+                        }
+
                         int stationNum = (1 - train.direction * 2) * station + train.direction * (diaFile.getStationNum() - 1);
+                        ((EditStopTypeSpinner)stopTypeLayout.getChildAt(stationNum)).setSelection(train.getStopType(station));
 
                         ((EditTimeView) arrivalTimeLayout.getChildAt(stationNum)).setTime(train.getArrivalTime(station));
-                        if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
+                        if (train.departExist(station) && train.arriveExist(station)) {
                             ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(train.getDepartureTime(station) - train.getArrivalTime(station));
                         } else {
                             ((EditTimeView) stopTimeLayout.getChildAt(stationNum)).setTime(-1);
@@ -226,12 +237,17 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     }
                 });
                 arrivalTimeLayout.addView(ariTime);
+                EditTimeView stopTime=null;
                 if (train.departExist(stationNum) && train.arriveExist(stationNum)) {
-                    EditTimeView stopTime = new EditStopTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum) - train.getArrivalTime(stationNum), false);
-                    stopTime.setOnTimeChangeListener(new OnTimeChangeListener() {
-                        @Override
-                        public void onTimeChanged(int station, int stopTime) {
-                            if (stopTime < 0) return;
+                    stopTime = new EditStopTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum) - train.getArrivalTime(stationNum), true);
+                } else {
+                     stopTime= new EditStopTimeView(getAOdiaActivity(), stationNum, -1, true);
+                }
+                stopTime.setOnTimeChangeListener(new OnTimeChangeListener(){
+                    @Override
+                    public void onTimeChanged(int station, int stopTime){
+                        if (stopTime < 0) return;
+                        if(train.departExist(station)&&train.arriveExist(station)){
                             int shiftTime = stopTime - (train.getDepartureTime(station) - train.getArrivalTime(station));
                             int time = train.getDepartureTime(station);
                             if (time >= 0) {
@@ -286,41 +302,42 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                                 }
 
                             }
-                            for (int i = 0; i < diaFile.getStationNum(); i++) {
-                                ((EditTimeView) departureTimeLayout.getChildAt(i)).setTime(train.getDepartureTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
-                                ((EditTimeView) arrivalTimeLayout.getChildAt(i)).setTime(train.getArrivalTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
-                            }
-
-                            nessTimeCreate();
-                            trainChange();
-                            final EditText operationName = (EditText) findViewById(R.id.operationName);
-                            operationName.setText(train.operationName);
-                            Button beforeButton = (Button) findViewById(R.id.beforeTrain);
-                            beforeTrain = diaFile.diagram.get(diaNumber).beforeOperation(train);
-                            if (beforeTrain == null) {
-                                beforeButton.setText("前運用無し");
-                                beforeButton.setEnabled(false);
-                            } else {
-                                beforeButton.setText(beforeTrain.number + "\n" + timeInt2String4(beforeTrain.getADTime(train.startStation())) + "着");
-                                beforeButton.setEnabled(true);
-                            }
-                            Button nextButton = (Button) findViewById(R.id.nextTrain);
-                            nextTrain = diaFile.diagram.get(diaNumber).nextOperation(train);
-                            if (nextTrain == null) {
-                                nextButton.setText("前運用無し");
-                                nextButton.setEnabled(false);
-                            } else {
-                                nextButton.setText(nextTrain.number + "\n" + timeInt2String4(nextTrain.getDATime(train.endStation())) + "発");
-                                nextButton.setEnabled(true);
-
-                            }
+                        }else if(train.departExist(station)){
+                            train.setArrivalTime(station,train.getDepartureTime(station)-stopTime);
+                        }else if(train.arriveExist(station)){
+                            train.setDepartureTime(station,train.getArrivalTime(station)+stopTime);
                         }
-                    });
-                    stopTimeLayout.addView(stopTime);
-                } else {
-                    EditTimeView stopTime = new EditStopTimeView(getAOdiaActivity(), stationNum, -1, false);
-                    stopTimeLayout.addView(stopTime);
-                }
+                        for (int i = 0; i < diaFile.getStationNum(); i++) {
+                            ((EditTimeView) departureTimeLayout.getChildAt(i)).setTime(train.getDepartureTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
+                            ((EditTimeView) arrivalTimeLayout.getChildAt(i)).setTime(train.getArrivalTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
+                        }
+
+                        nessTimeCreate();
+                        trainChange();
+                        final EditText operationName = (EditText) findViewById(R.id.operationName);
+                        operationName.setText(train.operationName);
+                        Button beforeButton = (Button) findViewById(R.id.beforeTrain);
+                        beforeTrain = diaFile.diagram.get(diaNumber).beforeOperation(train);
+                        if (beforeTrain == null) {
+                            beforeButton.setText("前運用無し");
+                            beforeButton.setEnabled(false);
+                        } else {
+                            beforeButton.setText(beforeTrain.number + "\n" + timeInt2String4(beforeTrain.getADTime(train.startStation())) + "着");
+                            beforeButton.setEnabled(true);
+                        }
+                        Button nextButton = (Button) findViewById(R.id.nextTrain);
+                        nextTrain = diaFile.diagram.get(diaNumber).nextOperation(train);
+                        if (nextTrain == null) {
+                            nextButton.setText("前運用無し");
+                            nextButton.setEnabled(false);
+                        } else {
+                            nextButton.setText(nextTrain.number + "\n" + timeInt2String4(nextTrain.getDATime(train.endStation())) + "発");
+                            nextButton.setEnabled(true);
+
+                        }
+                    }
+                });
+                stopTimeLayout.addView(stopTime);
                 EditTrainStopSpinner stopView = new EditTrainStopSpinner(getAOdiaActivity(), stationNum, diaFile, train);
                 stopNumberLayout.addView(stopView);
                 stopView.setOnTrainChangeListener(trainChangeListener);
@@ -414,37 +431,119 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
 
     private void nessTimeCreate() {
         final LinearLayout betweenStationTimeLayout = ((LinearLayout) findViewById(R.id.betweenStationTimeLayout));
+        for(int i=0;i<betweenStationTimeLayout.getChildCount();i++){
+            betweenStationTimeLayout.getChildAt(i).clearFocus();
+        }
         betweenStationTimeLayout.removeAllViews();
         int size = 0;
         int depTime = -1;
+        EditBetweenTimeView nessTime=null;
         for (int i = 0; i < diaFile.getStationNum(); i++) {
+            nessTime=null;
             int stationNum = (1 - train.direction * 2) * i + train.direction * (diaFile.getStationNum() - 1);
             size++;
             if (train.arriveExist(stationNum)) {
                 if (depTime >= 0) {
-                    EditTimeView nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, train.getArrivalTime(stationNum) - depTime, false, size);
-                    betweenStationTimeLayout.addView(nessTime);
+                    nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, train.getArrivalTime(stationNum) - depTime, true, size);
                 }
                 depTime = -1;
                 size = 0;
             }
             if (train.departExist(stationNum)) {
                 if (depTime >= 0) {
-                    EditTimeView nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum) - depTime, false, size);
-                    betweenStationTimeLayout.addView(nessTime);
+                    nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum) - depTime, true, size);
                 } else {
                     if (size != 0) {
-                        EditTimeView nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, -1, false, size - 1);
-                        betweenStationTimeLayout.addView(nessTime);
+                        nessTime = new EditBetweenTimeView(getAOdiaActivity(), stationNum, -1, false, size - 1);
                     }
                 }
                 depTime = train.getDepartureTime(stationNum);
                 size = 0;
             }
+            if(nessTime!=null) {
+                nessTime.setOnTimeChangeListener(new OnTimeChangeListener() {
+                    @Override
+                    public void onTimeChanged(int station, int time) {
+                        if(train.direction==0){
+                            //下り列車
+                            int baseTime=train.getADTime(station);
+                            for(int i=station-1;i>=0;i--){
+                                if(train.timeExist(i)){
+                                    baseTime=baseTime-train.getDATime(i);
+                                    break;
+                                }
+                            }
+                            int shiftTime=time-baseTime;
+                            for (int i = station ; i < diaFile.getStationNum(); i++) {
+                                int depTime = train.getDepartureTime(i);
+                                if (depTime >= 0) {
+                                    depTime = depTime + shiftTime;
+                                    if (depTime < 0) {
+                                        depTime += 24 * 3600;
+                                    }
+                                }
+                                depTime = depTime % (24 * 3600);
+                                train.setDepartureTime(i, depTime);
+                                int ariTime = train.getArrivalTime(i);
+                                if (ariTime >= 0) {
+                                    ariTime = ariTime + shiftTime;
+                                    if (ariTime < 0) {
+                                        ariTime += 24 * 3600;
+                                    }
+                                }
+                                ariTime = ariTime % (24 * 3600);
+                                train.setArrivalTime(i, ariTime);
+                            }
 
+                        }else{
+                            //上り列車
+                            int baseTime=train.getADTime(station);
+                            for(int i=station+1;i<train.stationNum;i++){
+                                if(train.timeExist(i)){
+                                    baseTime=baseTime-train.getDATime(i);
+                                    break;
+                                }
+                            }
+                            int shiftTime=time-baseTime;
+                            for (int i = 0; i <= station; i++) {
+                                int depTime = train.getDepartureTime(i);
+                                if (depTime >= 0) {
+                                    depTime = depTime + shiftTime;
+                                    if (depTime < 0) {
+                                        depTime += 24 * 3600;
+                                    }
+                                }
+                                depTime = depTime % (24 * 3600);
+                                train.setDepartureTime(i, depTime);
+                                int ariTime = train.getArrivalTime(i);
+                                if (ariTime >= 0) {
+                                    ariTime = ariTime + shiftTime;
+                                    if (ariTime < 0) {
+                                        ariTime += 24 * 3600;
+                                    }
+                                }
+                                ariTime = ariTime % (24 * 3600);
+                                train.setArrivalTime(i, ariTime);
+                            }
+
+                        }
+                        final LinearLayout departureTimeLayout = (LinearLayout) findViewById(R.id.departureTimeLayout);
+                        final LinearLayout arrivalTimeLayout = (LinearLayout) findViewById(R.id.arrivalTimeLayout);
+
+                        for (int i = 0; i < diaFile.getStationNum(); i++) {
+                            ((EditTimeView) departureTimeLayout.getChildAt(i)).setTime(train.getDepartureTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
+                            ((EditTimeView) arrivalTimeLayout.getChildAt(i)).setTime(train.getArrivalTime((diaFile.getStationNum() - 1) * train.direction + i * (1 - 2 * train.direction)));
+                        }
+
+                    }
+
+                });
+                betweenStationTimeLayout.addView(nessTime);
+
+            }
 
         }
-        EditTimeView nessTime = new EditBetweenTimeView(getAOdiaActivity(), diaFile.getStationNum(), -1, false, size);
+        nessTime = new EditBetweenTimeView(getAOdiaActivity(), diaFile.getStationNum(), -1, false, size);
         betweenStationTimeLayout.addView(nessTime);
     }
 

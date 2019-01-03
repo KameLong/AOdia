@@ -120,8 +120,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:text="所要時間"
+                    android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="11dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -171,6 +172,7 @@
                     android:layout_height="20dp"
                     android:layout_weight="0"
                     android:text="駅名"
+                    android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="15dp" />
 
@@ -205,8 +207,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:text="着発番線"
+                    android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="9dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -229,6 +232,7 @@
                     android:layout_height="20dp"
                     android:layout_weight="0"
                     android:text="到着時間"
+                    android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="15dp" />
 
@@ -263,8 +267,9 @@
                     android:layout_height="20dp"
                     android:layout_weight="0"
                     android:text="停車時間"
+                    android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="11dp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -288,7 +293,6 @@
                 android:background="#000000" />
 
             <LinearLayout
-                android:id="@+id/stopTypeLayout"
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -297,13 +301,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:text="停車種別"
+                    android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="9dp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="#000000" />
+
+                <LinearLayout
+                    android:id="@+id/stopTypeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"></LinearLayout>
 
             </LinearLayout>
 
@@ -322,6 +333,7 @@
                     android:layout_height="20dp"
                     android:layout_weight="0"
                     android:text="発車時間"
+                    android:textAlignment="center"
                     android:textColor="#000000"
                     android:textSize="15dp" />
 

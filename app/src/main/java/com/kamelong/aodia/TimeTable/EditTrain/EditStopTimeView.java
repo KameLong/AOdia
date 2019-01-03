@@ -38,10 +38,11 @@ public class EditStopTimeView extends EditTimeView {
                         return;
                     }
                     int time= timeString2Int(text);
+                    setText(timeInt2String(time));
 
                     if(time<0){
                         setText(history);
-                        Toast.makeText(getContext(),"入力文字列は時刻ではありません",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"入力文字列は時刻ではありません2",Toast.LENGTH_LONG).show();
 
                     }else{
                         if(onTimeChangeListener!=null) {
@@ -70,6 +71,13 @@ public class EditStopTimeView extends EditTimeView {
         int mm=0;
         int ss=0;
         switch (time.length()){
+            case 1:
+                ss=Integer.parseInt(time);
+                return ss;
+            case 2:
+                ss=Integer.parseInt(time);
+                return ss;
+
             case 3:
                 mm=Integer.parseInt(time.substring(0,1));
                 ss=Integer.parseInt(time.substring(1,3));
