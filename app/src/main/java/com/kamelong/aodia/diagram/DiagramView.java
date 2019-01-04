@@ -125,7 +125,7 @@ public class DiagramView extends AOdiaDefaultView{
                         if (train.departExist(j - (1 - 2 * direct))) {
                             //一つ前の駅にも発時刻が存在する場合　最小所要時間を考慮
                             if (!train.arriveExist(j)&&
-                                    Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 60 < train.getArrivalTime(j) - train.getDepartureTime(j - (1 - 2 * direct))) {
+                                    Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 60 <= train.getDepartureTime(j) - train.getDepartureTime(j - (1 - 2 * direct))) {
                                 //最小所要時間以上かかっているので最小所要時間を適用
                                 trainPath.add(train.getADTime(j - (1 - 2 * direct)) + Math.abs(stationTime.get(j) - stationTime.get(j - (1 - 2 * direct))) + 30 - diaFile.diagramStartTime);
                             } else {

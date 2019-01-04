@@ -255,6 +255,7 @@ public class AOdiaActivity extends AppCompatActivity {
     private void selectFragment(AOdiaFragment fragment){
         //もしメニューが開いていたら閉じる
         closeMenu();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
@@ -408,7 +409,8 @@ public class AOdiaActivity extends AppCompatActivity {
         diaFiles.set(diaFilesIndex.get(fileIndex),null);
         diaFilesIndex.remove(menuIndex);
         for(int i=0;i<fragments.size();i++){
-            if(fragments.get(i).diaFile==null){
+            if(!diaFiles.contains(fragments.get(i).diaFile)){
+                getSupportFragmentManager().beginTransaction().remove(fragments.get(i)).commit();
                 fragments.remove(i);
                 if(i<fragmentIndex){
                     fragmentIndex--;

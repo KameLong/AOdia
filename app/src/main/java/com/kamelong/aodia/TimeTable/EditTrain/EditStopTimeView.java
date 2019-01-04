@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaDefaultView;
+import com.kamelong.aodia.SDlog;
 
 public class EditStopTimeView extends EditTimeView {
 
@@ -20,7 +21,7 @@ public class EditStopTimeView extends EditTimeView {
 
         InputFilter[] filters = new InputFilter[1];
             filters[0] = new InputFilter.LengthFilter(5);
-        setFilters(filters);
+        this.setFilters(filters);
         setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
@@ -38,10 +39,11 @@ public class EditStopTimeView extends EditTimeView {
                         return;
                     }
                     int time= timeString2Int(text);
+                    setText(timeInt2String(time));
 
                     if(time<0){
                         setText(history);
-                        Toast.makeText(getContext(),"入力文字列は時刻ではありません",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),"入力文字列は時刻ではありません2",Toast.LENGTH_LONG).show();
 
                     }else{
                         if(onTimeChangeListener!=null) {
@@ -67,18 +69,29 @@ public class EditStopTimeView extends EditTimeView {
         }
     }
     protected int timeString2Int(String time){
-        int mm=0;
-        int ss=0;
-        switch (time.length()){
-            case 3:
-                mm=Integer.parseInt(time.substring(0,1));
-                ss=Integer.parseInt(time.substring(1,3));
-                return mm*60+ss;
-            case 4:
-                mm=Integer.parseInt(time.substring(0,2));
-                ss=Integer.parseInt(time.substring(2,4));
-                return mm*60+ss;
+        try {
+            int mm = 0;
+            int ss = 0;
+            switch (time.length()) {
+                case 1:
+                    ss = Integer.parseInt(time);
+                    return ss;
+                case 2:
+                    ss = Integer.parseInt(time);
+                    return ss;
 
+                case 3:
+                    mm = Integer.parseInt(time.substring(0, 1));
+                    ss = Integer.parseInt(time.substring(1, 3));
+                    return mm * 60 + ss;
+                case 4:
+                    mm = Integer.parseInt(time.substring(0, 2));
+                    ss = Integer.parseInt(time.substring(2, 4));
+                    return mm * 60 + ss;
+
+            }
+        }catch (Exception e){
+            SDlog.log(e);
         }
         return -1;
     }
