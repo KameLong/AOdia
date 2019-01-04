@@ -409,7 +409,8 @@ public class AOdiaActivity extends AppCompatActivity {
         diaFiles.set(diaFilesIndex.get(fileIndex),null);
         diaFilesIndex.remove(menuIndex);
         for(int i=0;i<fragments.size();i++){
-            if(fragments.get(i).diaFile==null){
+            if(!diaFiles.contains(fragments.get(i).diaFile)){
+                getSupportFragmentManager().beginTransaction().remove(fragments.get(i)).commit();
                 fragments.remove(i);
                 if(i<fragmentIndex){
                     fragmentIndex--;

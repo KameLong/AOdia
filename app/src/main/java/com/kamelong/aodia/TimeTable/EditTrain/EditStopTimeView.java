@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaDefaultView;
+import com.kamelong.aodia.SDlog;
 
 public class EditStopTimeView extends EditTimeView {
 
@@ -68,25 +69,29 @@ public class EditStopTimeView extends EditTimeView {
         }
     }
     protected int timeString2Int(String time){
-        int mm=0;
-        int ss=0;
-        switch (time.length()){
-            case 1:
-                ss=Integer.parseInt(time);
-                return ss;
-            case 2:
-                ss=Integer.parseInt(time);
-                return ss;
+        try {
+            int mm = 0;
+            int ss = 0;
+            switch (time.length()) {
+                case 1:
+                    ss = Integer.parseInt(time);
+                    return ss;
+                case 2:
+                    ss = Integer.parseInt(time);
+                    return ss;
 
-            case 3:
-                mm=Integer.parseInt(time.substring(0,1));
-                ss=Integer.parseInt(time.substring(1,3));
-                return mm*60+ss;
-            case 4:
-                mm=Integer.parseInt(time.substring(0,2));
-                ss=Integer.parseInt(time.substring(2,4));
-                return mm*60+ss;
+                case 3:
+                    mm = Integer.parseInt(time.substring(0, 1));
+                    ss = Integer.parseInt(time.substring(1, 3));
+                    return mm * 60 + ss;
+                case 4:
+                    mm = Integer.parseInt(time.substring(0, 2));
+                    ss = Integer.parseInt(time.substring(2, 4));
+                    return mm * 60 + ss;
 
+            }
+        }catch (Exception e){
+            SDlog.log(e);
         }
         return -1;
     }

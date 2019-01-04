@@ -79,12 +79,13 @@ public class TimeTableFragment extends AOdiaFragment {
                     @Override
                     public void onLongPress(MotionEvent motionEvent) {
 
+                        try {
                         int y=(int)motionEvent.getY();
                         int x=(int)motionEvent.getX();
                         int timeTabley=y+findViewById(R.id.trainTimeLinear).getScrollY()-findViewById(R.id.trainNameLinear).getHeight();
                         int timeTablex=x+findViewById(R.id.trainTimeLinear).getScrollX()-findViewById(R.id.stationNameLinear).getWidth();
                         int station=((StationNameView)((LinearLayout)findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
-                        final int train=timeTablex/(((LinearLayout)findViewById(R.id.trainTimeLinear)).getChildAt(0).getWidth());
+                            final int train = timeTablex / (((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(0).getWidth());
                         SDlog.log("timeTableLongPress", station);
                         SDlog.log("timeTableLongPress", train);
                         if(train<0){
@@ -99,6 +100,9 @@ public class TimeTableFragment extends AOdiaFragment {
 
                         SDlog.log("timeTableLongPress", diaFile.station.get(station).name);
                         openTrainEditFragment(train);
+                        }catch (Exception e){
+                            SDlog.log(e);
+                        }
 
 
 
@@ -400,10 +404,14 @@ public class TimeTableFragment extends AOdiaFragment {
     }
 
     public String fragmentName(){
-        if(direction==0){
-            return diaFile.name+" "+diagram.name+" "+"下り時刻表";
-        }else{
-            return diaFile.name+" "+diagram.name+" "+"上り時刻表";
+        try {
+            if (direction == 0) {
+                return diaFile.name + " " + diagram.name + " " + "下り時刻表";
+            } else {
+                return diaFile.name + " " + diagram.name + " " + "上り時刻表";
+            }
+        }catch (Exception e){
+            return "";
         }
     }
     public void trainReset(){
