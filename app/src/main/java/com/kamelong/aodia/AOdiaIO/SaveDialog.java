@@ -35,7 +35,7 @@ public class SaveDialog extends Dialog{
         setContentView(R.layout.save_dialog);
 
         final EditText saveFileName=findViewById(R.id.saveFileName);
-        directoryName=diaFile.filePath.substring(0,diaFile.filePath.lastIndexOf("/"));
+        directoryName=diaFile.filePath.substring(0,diaFile.filePath.lastIndexOf("/")+1);
         final EditText saveFileDirectory= ((EditText)findViewById(R.id.saveFileDirectory));
         saveFileDirectory.setText(directoryName);
         findViewById(R.id.homeDirectory).setOnClickListener(new View.OnClickListener() {

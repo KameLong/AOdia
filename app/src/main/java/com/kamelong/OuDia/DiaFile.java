@@ -211,7 +211,7 @@ public class DiaFile {
                 }
                 for(int train=0;train<getTrainSize(i,1);train++){
                     int value=this.getTrain(i,1,train).getRequiredTime(startStation,endStation);
-                    if(value>0&&(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1)){
+                    if(value>0&&(getTrain(i,1,train).getStop(startStation)!=1||getTrain(i,1,train).getStop(endStation)!=1)){
                         value+=120;
                     }
 

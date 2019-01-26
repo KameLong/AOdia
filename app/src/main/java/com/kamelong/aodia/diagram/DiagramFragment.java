@@ -204,8 +204,8 @@ public class DiagramFragment extends AOdiaFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-        setting = new DiagramSetting(getAOdiaActivity(), this, diaFile, diaNumber);
-        setting.create(this);
+            setting = new DiagramSetting(getAOdiaActivity(), this, diaFile, diaNumber);
+            setting.create(this);
             FrameLayout stationFrame = view.findViewById(R.id.station);
             FrameLayout timeFrame = view.findViewById(R.id.time);
             FrameLayout diaFrame = view.findViewById(R.id.diagramFrame);
@@ -323,13 +323,21 @@ public class DiagramFragment extends AOdiaFragment {
     @Override
     public void onStop(){
         super.onStop();
-        getAOdiaActivity().database.updateLineData(diaFile.filePath,diaNumber,(int)setting.scrollX,(int)setting.scrollY,(int)(setting.scaleX*100),(int)(setting.scaleY*100));
+        if(diaFile==null){
+            return;
+        }
+        try{
+            getAOdiaActivity().database.updateLineData(diaFile.filePath, diaNumber, (int) setting.scrollX, (int) setting.scrollY, (int) (setting.scaleX * 100), (int) (setting.scaleY * 100));
+        }catch (Exception e){
+            SDlog.log(e);
+        }
+
     }
     public void openTrainEdit(Train train){
 
     }
     public String fragmentName(){
-            return diaFile.name+" "+diaFile.diagram.get(diaNumber).name+" "+"ダイヤグラム";
+        return diaFile.name+" "+diaFile.diagram.get(diaNumber).name+" "+"ダイヤグラム";
     }
     public void fitVertical(){
         try {
