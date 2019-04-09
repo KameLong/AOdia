@@ -24,6 +24,7 @@ public class EditTrainStopSpinner extends AppCompatSpinner {
     public Station station;
     public Train train;
     public OnTrainChangeListener listener;
+    public static final int HEIGHT=30;
     public EditTrainStopSpinner(Context context, final int stationIndex, DiaFile diaFile, final Train train) {
         super(context);
         this.stationIndex=stationIndex;
@@ -39,7 +40,7 @@ public class EditTrainStopSpinner extends AppCompatSpinner {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.setAdapter(dataAdapter);
         setSelection(train.getStop(stationIndex));
-        this.setMinimumHeight((int)(24*context.getResources().getDisplayMetrics().density));
+        this.setMinimumHeight((int)(HEIGHT*context.getResources().getDisplayMetrics().density));
         setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

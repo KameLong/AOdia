@@ -37,7 +37,7 @@ public class SimpleOudia {
     private void loadShiftJis(File file)throws Exception{
         BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
         String nouse=br.readLine();
-        loadDiaFile(br);
+        loadDiaFile(br);//version info
     }
     private void loadDiaFile(BufferedReader br)throws Exception{
         br.readLine();//Rosen.
@@ -49,11 +49,13 @@ public class SimpleOudia {
                 stationName.add(line.split("=",-1)[1]);
             }
             if(line.equals("Ressyasyubetsu.")){
+                br.close();
                 return;
             }
             line=br.readLine();
         }
 
+        br.close();
     }
 
 }

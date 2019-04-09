@@ -11,6 +11,7 @@ import com.kamelong.aodia.AOdiaDefaultView;
 
 public class StationNameTextView extends AppCompatTextView{
     public int stationNumber;
+    public static final int HEIGHT=30;
     public StationNameTextView(Context context,String text,int station){
         super(context);
         stationNumber=station;
@@ -25,7 +26,7 @@ public class StationNameTextView extends AppCompatTextView{
 
         setGravity(Gravity.CENTER);
 
-        setHeight((int)(24*context.getResources().getDisplayMetrics().density));
+        setHeight((int)(HEIGHT*context.getResources().getDisplayMetrics().density));
 
     }
     @Override

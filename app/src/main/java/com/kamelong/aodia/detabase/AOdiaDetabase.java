@@ -427,4 +427,21 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
 
     }
 
+    public ArrayList<String>searchFileFromStation(String stationName,String directoy,boolean approximateMatch){
+        if(approximateMatch){
+           return  searchFileFromStation(stationName,directoy);
+        }
+        ArrayList<String>result=new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + STATION_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
+            c.moveToNext();
+        }
+        return result;
+
+    }
 }

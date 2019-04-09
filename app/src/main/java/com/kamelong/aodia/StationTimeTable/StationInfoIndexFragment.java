@@ -49,7 +49,7 @@ public class StationInfoIndexFragment extends AOdiaFragment {
         }catch(Exception e){
             SDlog.log(e);
         }
-        contentView=inflater.inflate(R.layout.station_timetable_index, container, false);
+        contentView=inflater.inflate(R.layout.station_timetable_index_fragment, container, false);
         diaFile=getAOdiaActivity().diaFiles.get(fileNum);
         if(diaFile==null){
             onDestroy();
@@ -62,10 +62,11 @@ public class StationInfoIndexFragment extends AOdiaFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            LinearLayout stationLayout = (LinearLayout)findViewById(R.id.stationList);
+            LinearLayout stationListLayout = (LinearLayout)findViewById(R.id.stationList);
             for (int station = 0; station < diaFile.getStationNum(); station++) {
                 StationTimetableIndexStation stationView = new StationTimetableIndexStation(getAOdiaActivity(),diaFile,fileNum,station);
-                stationLayout.addView(stationView);
+                stationListLayout.addView(stationView);
+
 
             }
         }catch(Exception e){

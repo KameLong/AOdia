@@ -35,26 +35,33 @@ public class EditStationFragment extends AOdiaFragment implements StationEditInt
         } catch (Exception e) {
             SDlog.log(e);
         }
-        //Fragmentのレイアウトxmlファイルを指定し、メインのViewをfragmentContainerに代入する（つまり消すな）
-        fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);
-        try{
-        diaFile=getAOdiaActivity().diaFiles.get(fileIndex);
-        if(diaFile==null){
-            Toast.makeText(getContext(),"ダイヤファイルが見つかりませんでした。",Toast.LENGTH_LONG).show();
-            getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
+        try {
+            fragmentContainer = inflater.inflate(R.layout.edit_station_fragment, container, false);
+            try {
+                diaFile = getAOdiaActivity().diaFiles.get(fileIndex);
+                if (diaFile == null) {
+                    Toast.makeText(getContext(), "ダイヤファイルが見つかりませんでした。", Toast.LENGTH_LONG).show();
+                    getAOdiaActivity().killFragment(getAOdiaActivity().fragmentIndex);
+                    return fragmentContainer;
+                }
+            } catch (Exception e) {
+                SDlog.log(e);
+            }
+
+            editStationList = new ArrayList<>();
+            editStationIndex = new ArrayList<>();
+            for (int i = 0; i < diaFile.getStationNum(); i++) {
+                editStationList.add(new Station(diaFile.station.get(i)));
+                editStationIndex.add(i);
+
+            }
             return fragmentContainer;
-        }}catch (Exception e){
+        }catch (Exception e){
             SDlog.log(e);
+            SDlog.toast("駅編集の際にエラーが発生しました");
+            getFragmentManager().beginTransaction().remove(this).commit();
+            return fragmentContainer;
         }
-
-        editStationList=new ArrayList<>();
-        editStationIndex=new ArrayList<>();
-        for(int i=0;i<diaFile.getStationNum();i++){
-            editStationList.add(new Station(diaFile.station.get(i)));
-            editStationIndex.add(i);
-
-        }
-        return fragmentContainer;
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){

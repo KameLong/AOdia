@@ -371,6 +371,30 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:editable="true"
+                    android:text="備考："
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/remarkEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="true"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
                 <ToggleButton
                     android:id="@+id/leaveYard"
                     android:layout_width="wrap_content"
@@ -397,6 +421,7 @@
                     android:id="@+id/operationName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:editable="false"
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="textPersonName"
