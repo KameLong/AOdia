@@ -16,7 +16,7 @@ import com.kamelong.aodia.AOdiaDefaultView;
 public class EditBetweenTimeView extends EditStopTimeView {
     public EditBetweenTimeView(Context context,int station,int time,boolean editable, int lNum) {
         super(context,station,time,editable);
-        this.setHeight((int)(24*lNum*context.getResources().getDisplayMetrics().density));
+        this.setHeight((int)(HEIGHT*lNum*context.getResources().getDisplayMetrics().density));
     }
 
 }

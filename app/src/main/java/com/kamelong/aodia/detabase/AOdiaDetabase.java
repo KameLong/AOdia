@@ -23,10 +23,12 @@ import java.util.Arrays;
  */
 public class AOdiaDetabase extends SQLiteOpenHelper {
     public static final String DETABASE_NAME="aodia.db";
-    public static final int DETABASE_VERSION=2;
+    public static final int DETABASE_VERSION=3;
     public static final String ID="_id";
 
+    public static final String DIRECTORY_PATH="directoryPath";
     public static final String FILE_PATH="filePath";
+    public static final String FILE_NAME="fileName";
     public static final String DIA_NUM="diaNum";
     public static final String DOWN_SCROLL_X="downScrollX";
     public static final String DOWN_SCROLL_Y="downScrollY";
@@ -100,10 +102,13 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
             駅とファイルパスを対応させる
              */
             db.execSQL(
-                    "create table "+TABLE_STATION+" ("
-                            +ID+" integer primary key autoincrement not null, "
-                            +STATION_NAME+" text, "
-                            +FILE_PATH+ " text)");
+                    "create table " + TABLE_STATION + " ("
+                            + ID + " integer primary key autoincrement not null, "
+                            + STATION_NAME + " text, "
+                            + DIRECTORY_PATH + " text, "
+                            +FILE_NAME+" text)");
+
+
 
         }catch(Exception e){
             SDlog.log("データベースの作成に失敗しました");
@@ -113,15 +118,18 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        if(i==1) {
+        if(i<3){
+            try {
+                db.execSQL(
+                        "drop table " + TABLE_STATION);
+            }catch (Exception e){}
             db.execSQL(
                     "create table " + TABLE_STATION + " ("
                             + ID + " integer primary key autoincrement not null, "
                             + STATION_NAME + " text, "
-                            + FILE_PATH + " text)");
+                            + DIRECTORY_PATH + " text, "
+                            +FILE_NAME+" text)");
         }
-
-
     }
 
 
@@ -322,32 +330,118 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * @param filePath
      */
     public void addStation(ArrayList<String> stationName, String filePath){
-        try {
-            getWritableDatabase().delete(TABLE_STATION, FILE_PATH + "=?", new String[]{filePath});
+            String directory=filePath.substring(0,filePath.lastIndexOf("/"));
+            String name=filePath.substring(filePath.lastIndexOf("/")+1);
+            getWritableDatabase().delete(TABLE_STATION, DIRECTORY_PATH + "=? and "+FILE_NAME+"=?", new String[]{directory,name});
             for(int i=0;i<stationName.size();i++) {
                 ContentValues values = new ContentValues();
-                values.put(FILE_PATH, filePath);
+                values.put(DIRECTORY_PATH, directory);
+                values.put(FILE_NAME, name);
+                values.put(STATION_NAME, stationName.get(i));
+                getWritableDatabase().insert(TABLE_STATION, null, values);
+            }
+    }
+    /**
+     * TABLE_STATIONに新しい駅データを付け加える。
+     * 駅名とそのファイルパスをセットにして追加する。
+     * @param stationName
+     * @param filePath
+     */
+    public void addStation(ArrayList<String>[] stationName, String[] filePath){
+        getWritableDatabase().beginTransaction();
+        try {
+            for (int i = 0; i < stationName.length; i++) {
+                addStation(stationName[i], filePath[i]);
+            }
+            getWritableDatabase().setTransactionSuccessful();
+        }
+        catch(Exception e){
+         e.printStackTrace();
+    }finally {
+        getWritableDatabase().endTransaction();
+        getWritableDatabase().close();
+    }
+
+        /*
+                try {
+            String directory=filePath.substring(0,filePath.lastIndexOf("/"));
+            String name=filePath.substring(filePath.lastIndexOf("/")+1);
+            getWritableDatabase().delete(TABLE_STATION, DIRECTORY_PATH + "=? and "+FILE_NAME+"=?", new String[]{directory,name});
+            for(int i=0;i<stationName.size();i++) {
+                ContentValues values = new ContentValues();
+                values.put(DIRECTORY_PATH, directory);
+                values.put(FILE_NAME, name);
                 values.put(STATION_NAME, stationName.get(i));
                 getWritableDatabase().insert(TABLE_STATION, null, values);
             }
         }catch(Exception e){
             e.printStackTrace();
         }
+         */
     }
+
     public void addStation(String[] stationName, String filePath){
         addStation(new ArrayList<String>(Arrays.asList(stationName)),filePath);
     }
-    public ArrayList<String>searchStationPath(String stationName){
+    public ArrayList<String>searchFileFromStation(String stationName,String directoy){
         ArrayList<String>result=new ArrayList<>();
-        Cursor c = getReadableDatabase().rawQuery("select * from " + TABLE_STATION + " where " + STATION_NAME + "=?", new String[]{stationName});
+        Cursor c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + FILE_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
         c.moveToFirst();
         for(int i=0;i<c.getCount();i++){
-            result.add(c.getString(2));//3列目がファイルパス
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
             c.moveToNext();
-
         }
+        c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + STATION_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
+            c.moveToNext();
+        }
+        stationName="%"+stationName+"%";
+        c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + FILE_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
+            c.moveToNext();
+        }
+        c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + STATION_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
+            c.moveToNext();
+        }
+        c.close();
         return result;
 
     }
 
+    public ArrayList<String>searchFileFromStation(String stationName,String directoy,boolean approximateMatch){
+        if(approximateMatch){
+           return  searchFileFromStation(stationName,directoy);
+        }
+        ArrayList<String>result=new ArrayList<>();
+        Cursor c = getReadableDatabase().rawQuery("select "+FILE_NAME+" from " + TABLE_STATION + " where " + STATION_NAME + " like ? and "+DIRECTORY_PATH+" like ?", new String[]{stationName,directoy});
+        c.moveToFirst();
+        for(int i=0;i<c.getCount();i++){
+            String name=c.getString(0);
+            if(!result.contains(name)){
+                result.add(name);
+            }
+            c.moveToNext();
+        }
+        return result;
+
+    }
 }

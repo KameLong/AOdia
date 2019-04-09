@@ -108,6 +108,16 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     }
                 }
             });
+            final EditText remarkEdit=(EditText)findViewById(R.id.remarkEdit);
+            remarkEdit.setText(train.remark);
+            remarkEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean b) {
+                    if(!b){
+                        train.remark=remarkEdit.getEditableText().toString();
+                    }
+                }
+            });
 
             Spinner typeSpinner = (Spinner) findViewById(R.id.typeSpinner);
             List<String> typeList = new ArrayList<String>();

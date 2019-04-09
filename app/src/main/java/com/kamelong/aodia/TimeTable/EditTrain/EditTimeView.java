@@ -18,6 +18,7 @@ public class EditTimeView extends AppCompatEditText {
     public String history="";
     protected OnTimeChangeListener onTimeChangeListener=null;
     public int stationNum;
+    protected static final int HEIGHT=30;
 
     public EditTimeView(Context context,int station,int time,boolean editable) {
         super(context);
@@ -71,7 +72,7 @@ public class EditTimeView extends AppCompatEditText {
                 }
             }
         });
-        this.setHeight((int)(24*context.getResources().getDisplayMetrics().density));
+        this.setHeight((int)(HEIGHT*context.getResources().getDisplayMetrics().density));
     }
     protected String timeInt2String(int time){
         if(time<0)return"";

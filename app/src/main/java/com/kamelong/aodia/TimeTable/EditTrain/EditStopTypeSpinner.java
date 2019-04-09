@@ -17,11 +17,13 @@ import com.kamelong.aodia.AOdiaDefaultView;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class EditStopTypeSpinner extends AppCompatSpinner {
 
     public int stationIndex;
     public Train train;
     public OnTrainChangeListener listener;
+    protected static final int HEIGHT=30;
     public EditStopTypeSpinner(Context context, final int stationIndex,final Train train) {
         super(context);
         this.stationIndex=stationIndex;
@@ -38,7 +40,7 @@ public class EditStopTypeSpinner extends AppCompatSpinner {
         dataAdapter.setDropDownViewResource( android.R.layout.simple_spinner_item);
         this.setAdapter(dataAdapter);
         this.setSelection(train.getStopType(stationIndex));
-        this.setMinimumHeight((int)(24*context.getResources().getDisplayMetrics().density));
+        this.setMinimumHeight((int)(HEIGHT*context.getResources().getDisplayMetrics().density));
         setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
