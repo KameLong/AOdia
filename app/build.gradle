@@ -5,9 +5,9 @@ android {
     defaultConfig {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
-        targetSdkVersion 27
-        versionCode 249
-        versionName "2.6.6"
+        targetSdkVersion 28
+        versionCode 251
+        versionName "2.7.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
