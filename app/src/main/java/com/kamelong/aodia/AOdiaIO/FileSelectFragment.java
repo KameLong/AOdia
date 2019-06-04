@@ -182,6 +182,9 @@ public class FileSelectFragment extends AOdiaFragment {
                         String[]filePath=new String[files.length];
                         ArrayList<String>[] stationList=new ArrayList[files.length];
                         for(int i=0;i<files.length;i++){
+                            if(!files[i].isFile()){
+                                continue;
+                            }
                             SimpleOudia simpleOudia=new SimpleOudia(files[i]);
                             filePath[i]=files[i].getPath();
                             stationList[i]=simpleOudia.stationName;

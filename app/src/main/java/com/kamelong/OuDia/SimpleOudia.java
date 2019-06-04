@@ -14,8 +14,8 @@ public class SimpleOudia {
     public ArrayList<String>stationName=new ArrayList<>();
 
     public SimpleOudia(File file)throws Exception{
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String version = br.readLine().split("=", -1)[1];
             double v = 1.02;
             try {
@@ -30,32 +30,41 @@ public class SimpleOudia {
                 loadDiaFile(br);
             }
         }catch(Exception e){
+            SDlog.log(e);
             SDlog.log("ファイルの読み込みに失敗しました。"+file.getPath());
+        }finally {
+            br.close();
         }
 
     }
     private void loadShiftJis(File file)throws Exception{
         BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
-        String nouse=br.readLine();
-        loadDiaFile(br);//version info
+        try {
+            String nouse = br.readLine();
+            loadDiaFile(br);//version info
+        }catch (Exception e){
+            throw e;
+        }finally {
+            br.close();
+        }
     }
     private void loadDiaFile(BufferedReader br)throws Exception{
-        br.readLine();//Rosen.
-        name=br.readLine().split("=",-1)[1];
-        String line=br.readLine();
-        while(line!=null){
-            if(line.equals("Eki.")){
-                line=br.readLine();
-                stationName.add(line.split("=",-1)[1]);
-            }
-            if(line.equals("Ressyasyubetsu.")){
-                br.close();
-                return;
-            }
+        String line="";
+            br.readLine();//Rosen.
+            name=br.readLine().split("=",-1)[1];
             line=br.readLine();
-        }
+            while (line != null) {
+                if (line.equals("Eki.")) {
+                    line = br.readLine();
+                    stationName.add(line.split("=", -1)[1]);
+                }
+                if (line.equals("Ressyasyubetsu.")) {
+                    br.close();
+                    return;
+                }
+                line = br.readLine();
+            }
 
-        br.close();
     }
 
 }
