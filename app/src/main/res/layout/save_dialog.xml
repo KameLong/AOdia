@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="有料オプション"
+        android:text="有料オプション→作者就活終了記念セール
+        5/6まで有料オプション未購入でも無料試用できます"
         android:textColor="@android:color/black" />
 
     <LinearLayout

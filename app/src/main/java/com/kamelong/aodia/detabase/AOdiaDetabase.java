@@ -348,7 +348,10 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * @param filePath
      */
     public void addStation(ArrayList<String>[] stationName, String[] filePath){
-        getWritableDatabase().beginTransaction();
+        if(filePath.length>0){
+            String directory=filePath[0].substring(0,filePath[0].lastIndexOf("/"));
+            getWritableDatabase().delete(TABLE_STATION, DIRECTORY_PATH + "=?" , new String[]{directory});
+        }
         try {
             for (int i = 0; i < stationName.length; i++) {
                 addStation(stationName[i], filePath[i]);

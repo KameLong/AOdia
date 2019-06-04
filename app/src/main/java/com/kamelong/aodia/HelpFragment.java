@@ -79,7 +79,7 @@ public class HelpFragment extends AOdiaFragment {
                 return false;
             }
         });
-        helpView.loadUrl("http://kamelong.com/aodia/help-v2.6.html");
+        helpView.loadUrl("http://kamelong.com/aodia/help-v2.7.html");
 
         helpView.setDownloadListener(new DownloadListener() {
             @Override
@@ -91,17 +91,12 @@ public class HelpFragment extends AOdiaFragment {
         return helpView;
     }
     private void oudiaUrlLoad(String url){
-        if(1==1) {
-            return;
-        }
-        if(url.endsWith("oud")||url.endsWith("oud2")) {
-          //  UrlOpenDialog dialog=new UrlOpenDialog(getAodiaActivity(),url,helpView.getUrl());
-        }
+        return;
 
     }
     @Override
     public String fragmentName(){
-        return "AOdiaヘルプv2.6";
+        return "AOdiaヘルプv2.7";
     }
     @Override
     public String fragmentHash() {
