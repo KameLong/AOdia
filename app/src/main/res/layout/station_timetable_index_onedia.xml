@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="120dp"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
     android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:gravity="center_vertical">
+    android:paddingRight="5dp">
 
     <TextView
-        android:text="平日："
+        android:id="@+id/diaName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/diaName"
-        android:layout_weight="1"
+        android:layout_weight="0"
+        android:maxLines="2"
+        android:minLines="1"
+        android:text="平日"
         android:textColor="#000"
         android:textSize="18dp" />
 
-    <Button
-        android:text="上り"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/upButton"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:minHeight="0dp"
-        android:minWidth="0dip"
-        android:background="@android:drawable/btn_default_small" />
+        android:gravity="right"
+        android:orientation="horizontal">
 
-    <Button
-        android:text="下り"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/downButton"
-        android:layout_weight="1"
-        android:minHeight="0dip"
-        android:minWidth="0dip"
-        android:background="@android:drawable/btn_default_small" />
+        <Button
+            android:id="@+id/downButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:drawable/btn_default_small"
+            android:minWidth="0dip"
+            android:minHeight="0dip"
+            android:text="下り" />
+
+        <Button
+            android:id="@+id/upButton"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@android:drawable/btn_default_small"
+            android:minWidth="0dip"
+            android:minHeight="0dp"
+            android:text="上り" />
+
+    </LinearLayout>
+
 </LinearLayout>

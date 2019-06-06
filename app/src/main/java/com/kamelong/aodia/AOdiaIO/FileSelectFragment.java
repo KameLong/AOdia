@@ -18,11 +18,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kamelong.OuDia.SimpleOudia;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.SDlog;
@@ -167,6 +169,74 @@ public class FileSelectFragment extends AOdiaFragment {
             }
         });
         tab1OpenFile(rootFolderList[0].getPath());//初期設定
+
+        //検索システム
+        SearchView searchView=(SearchView) findViewById(R.id.stationSearch);
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    File directory = new File(currentDirectoryPath);
+                    try {
+                        File[] files = directory.listFiles();
+                        String[]filePath=new String[files.length];
+                        ArrayList<String>[] stationList=new ArrayList[files.length];
+                        for(int i=0;i<files.length;i++){
+                            if(!files[i].isFile()){
+                                continue;
+                            }
+                            SimpleOudia simpleOudia=new SimpleOudia(files[i]);
+                            filePath[i]=files[i].getPath();
+                            stationList[i]=simpleOudia.stationName;
+                        }
+                        getAOdiaActivity().database.addStation(stationList,filePath);
+                    }catch (Exception e){
+                        SDlog.log(e);
+                    }
+                }else{
+                    tab1OpenFile(currentDirectoryPath);
+                }
+            }
+        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(s.length()==0){
+                    tab1OpenFile(currentDirectoryPath);
+                    return false;
+                }
+                try {
+                    final ListView fileListView = (ListView) findViewById(R.id.fileList);
+                    ArrayList<String> pathList = getAOdiaActivity().database.searchFileFromStation(s, currentDirectoryPath);
+                    String[] pathList2=new String[pathList.size()];
+                    for (int i = 0; i < pathList.size(); i++) {
+                        pathList2[i]=currentDirectoryPath + "/" + pathList.get(i);
+                    }
+                    final FileListAdapter adapter = new FileListAdapter(getAOdiaActivity(), pathList2);
+
+                    fileListView.setAdapter(adapter);
+
+                    fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            try {
+                                tab1OpenFile(adapter.getItem(position).getPath());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }catch (Exception e){
+                    SDlog.log(e);
+                }
+
+                return false;
+            }
+        });
 
 
 
@@ -537,56 +607,20 @@ public class FileSelectFragment extends AOdiaFragment {
         }
 
         private String stationName(File file) {
-            String filePath = file.getPath();
-            if (file.isFile()&&(filePath.endsWith("oud2")||filePath.endsWith("oud"))) {
-                try {
-                    BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream(file) ));
-                    String version=br.readLine().split("=",-1)[1];
-                    double v=1.02;
-                    try {
-                        v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
-                    }catch (Exception e){
-                    }
-                    if(version.startsWith("OuDia.")||v<1.03){
-                        br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift_JIS"));
-                        br.readLine();
-                    }else{
-                    }
+            if(!file.isFile())return "";
+            if(file.getName().endsWith("oud")||file.getName().endsWith("oud2")){
 
-                    String line = br.readLine();
-                    ArrayList<String> stationNameList = new ArrayList<>();
-                    ArrayList<String> startStation = new ArrayList<>();
-                    ArrayList<String> endStation = new ArrayList<>();
-                    while (line != null) {
-                        if (line.equals("Eki.")) {
-                            while (!line.equals(".")) {
-                                String title = line.split("=", -1)[0];
-                                if (title.equals("Ekimei")) {
-                                    if (stationNameList.size() == 0) {
-                                        startStation.add(line.split("=", -1)[1]);
-                                    }
-                                    stationNameList.add(line.split("=", -1)[1]);
-                                }
-                                if (title.equals("BrunchCoreEkiIndex")) {
-                                    int branchStation = Integer.valueOf(line.split("=", -1)[1]);
-                                    if (branchStation < stationNameList.size()) {
-
-                                    }
-                                }
-                                line = br.readLine();
-
-                            }
-                        }
-                        line = br.readLine();
-
-                    }
-                    endStation.add(stationNameList.get(stationNameList.size() - 1));
-                    return startStation.get(0) + "～" + endStation.get(0);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+            try {
+                SimpleOudia diaFile = new SimpleOudia(file);
+                if(diaFile.stationName.size()<2){
+                    return "";
                 }
+                return diaFile.stationName.get(0) + "～" + diaFile.stationName.get(diaFile.stationName.size() - 1);
+            }catch (Exception e){
+                SDlog.log(e);
             }
+            }
+
             return "";
         }
     }

@@ -119,7 +119,7 @@ public class SaveDialog extends Dialog{
         });
 
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("001",false)){
+        if(spf.getBoolean("001",false)||(System.currentTimeMillis()<1557154800)){
             findViewById(R.id.saveFileDirectory).setEnabled(true);
             findViewById(R.id.saveFileName).setEnabled(true);
             findViewById(R.id.saveButton).setEnabled(true);

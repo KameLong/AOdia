@@ -415,13 +415,14 @@ public class TimeTableFragment extends AOdiaFragment {
         }
     }
     public void trainReset(){
+        if(diagram==null){
+            return;
+        }
         diagram.reNewOperation();
         init();
         if(editTrain>=0){
-            if(editTrain>=0) {
                 ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
                 ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 200));
-            }
         }
 
 
