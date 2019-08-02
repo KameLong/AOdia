@@ -377,11 +377,11 @@ public class FileSelectFragment extends AOdiaFragment {
                                     @Override
                                     public void run() {
                                         try {
-                                            if(!json.has("data")){
-                                                json.put("data",new JSONArray());
+                                            if(!json.has("lineData")){
+                                                json.put("lineData",new JSONArray());
                                             }
-                                            tab2Result(json.getJSONArray("data"));
-                                            ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + json.getJSONArray("data").length() + "件です");
+                                            tab2Result(json.getJSONArray("lineData"));
+                                            ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + json.getJSONArray("lineData").length() + "件です");
                                         }catch (JSONException e){
                                             //
                                             tab2Result(new JSONArray());
@@ -681,7 +681,7 @@ public class FileSelectFragment extends AOdiaFragment {
                     @Override
                     public void onClick(View view) {
                         try {
-                            final String url = "https://kamelong.com/OuDiaDataBase/download.cgi?name="+jsonArray.get(position).getString("url")+"&title="+jsonArray.get(position).getString("lineName")+".oud";
+                            final String url = "https://kamelong.com/OuDiaDataBase/files/"+jsonArray.get(position).getString("url");
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {

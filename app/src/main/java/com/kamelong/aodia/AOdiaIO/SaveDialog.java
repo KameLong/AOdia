@@ -50,28 +50,6 @@ public class SaveDialog extends Dialog{
 
         final LinearLayout saveAlart=findViewById(R.id.saveAlart);
 
-        Button keepButton=findViewById(R.id.saveKeep);
-        keepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String fileName=getContext().getFilesDir().getPath()+"/keep.oud2";
-                File file=new File(fileName);
-                if(file.exists()){
-                    findViewById(R.id.textView19).setVisibility(View.GONE);
-                    saveAlart.setVisibility(View.VISIBLE);
-
-                }else{
-                    try {
-                        diaFile.saveToFile(fileName,true);
-                        SaveDialog.this.dismiss();
-                    }catch (Exception e){
-                        Toast.makeText(getContext(),"不明なエラーが発生したため、保存を中止します。作者に連絡をお願いいたします。\n詳細:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-
-
-            }
-        });
         Button saveButton=findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +57,6 @@ public class SaveDialog extends Dialog{
                 String fileName=saveFileDirectory.getEditableText().toString()+"/"+saveFileName.getEditableText().toString();
                 File file=new File(fileName);
                 if(file.exists()){
-                    findViewById(R.id.textView14).setVisibility(View.GONE);
                     saveAlart.setVisibility(View.VISIBLE);
 
                 }else{
@@ -97,55 +74,17 @@ public class SaveDialog extends Dialog{
             @Override
             public void onClick(View view) {
                 String fileName=directoryName+saveFileName.getEditableText().toString();
-                if(findViewById(R.id.textView19).getVisibility()==View.GONE){
-                    fileName=getContext().getFilesDir().getPath()+"/keep.oud2";
-                    try {
-                        diaFile.saveToFile(fileName,true);
-                        SaveDialog.this.dismiss();
-                        SDlog.toast("KEEPに保存しました。「ファイルを開く」→「履歴」タブよりKEEPに保存したファイルを読み込めるようになります。");
-                    }catch (Exception e){
-                        Toast.makeText(getContext(),"不明なエラーが発生したため、保存を中止します。作者に連絡をお願いいたします。\n詳細:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }else{
                     try {
                         diaFile.saveToFile(fileName,false);
                         SaveDialog.this.dismiss();
                     }catch (Exception e){
                         Toast.makeText(getContext(),"このフォルダにはファイルを保存できません。他のフォルダを選んでください。", Toast.LENGTH_LONG).show();
                     }
-
-                }
             }
         });
-
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(spf.getBoolean("001",false)||(System.currentTimeMillis()<1557154800)){
             findViewById(R.id.saveFileDirectory).setEnabled(true);
             findViewById(R.id.saveFileName).setEnabled(true);
             findViewById(R.id.saveButton).setEnabled(true);
-        }else{
-            findViewById(R.id.saveFileDirectory).setEnabled(false);
-            findViewById(R.id.saveFileName).setEnabled(false);
-            findViewById(R.id.saveButton).setEnabled(false);
-            findViewById(R.id.layout1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SDlog.toast("有料オプションを購入した場合、任意のファイル名に保存することが可能となります。購入方法は「設定」をご覧ください");
-                }
-            });
-            findViewById(R.id.saveFileName).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SDlog.toast("有料オプションを購入した場合、任意のファイル名に保存することが可能となります。購入方法は「設定」をご覧ください");
-                }
-            });
-            findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SDlog.toast("有料オプションを購入した場合、任意のファイル名に保存することが可能となります。購入方法は「設定」をご覧ください");
-                }
-            });
-        }
 
     }
 }

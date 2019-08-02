@@ -61,15 +61,4 @@
             android:defaultValue="true"
             android:summary="当駅どまりの列車を表示します" />
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="有料オプション購入"
-        android:enabled="true"
-        >
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:enabled="true"
-            android:key="001"
-            android:summary="有料オプションです"
-            android:title="（300円）OuDiaSecond形式でのファイル保存機能を解禁する" />
-    </PreferenceCategory>
 </PreferenceScreen>

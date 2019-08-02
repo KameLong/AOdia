@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Train {
+    public static long count2=0;
     public static final int DEPART = 0;
     public static final int ARRIVE = 1;
     public static final int STOP_TYPE_NOSERVICE = 0;
@@ -244,6 +245,7 @@ public class Train {
     }
 
     public int getArrivalTime(int station) {
+
         if ((time[station] & 0x0000800000000000L) == 0) {
             return -1;
         }
@@ -280,14 +282,20 @@ public class Train {
     }
 
     public boolean timeExist(int station) {
+        count2++;
+
         return (time[station] & 0x0000800000800000L) != 0;
     }
 
     public boolean departExist(int station) {
+        count2++;
+
         return (time[station] & 0x0000000000800000L) != 0;
     }
 
     public boolean arriveExist(int station) {
+        count2++;
+
         return (time[station] & 0x0000800000000000L) != 0;
     }
 
@@ -369,6 +377,7 @@ public class Train {
     }
 
     public int getPredictionTime(int station, int AD) {
+
         if (AD == 1 && arriveExist(station)) {
             return getArrivalTime(station);
         }

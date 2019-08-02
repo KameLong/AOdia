@@ -9,6 +9,7 @@ public class Diagram {
     public String name="";
     public ArrayList<Train>[] trains=new ArrayList[2];
     public DiaFile diaFile;
+
     public Diagram(DiaFile diaFile){
         this.diaFile=diaFile;
         name="新しいダイヤ";
@@ -63,6 +64,8 @@ public class Diagram {
      * @param stationNumber 並び替え基準駅
      */
     public void sortTrain(int direction,int stationNumber){
+        long startTime=System.currentTimeMillis();
+        long startCount=Train.count2;
         Train[] trainList=trains[direction].toArray(new Train[0]);
 
         //ソートする前の順番を格納したクラス
@@ -215,6 +218,12 @@ public class Diagram {
             trainAfter.add(trainList[sortAfter.get(i)]);
         }
         trains[direction]=trainAfter;
+        long endTime=System.currentTimeMillis();
+        long endCount=Train.count2;
+
+        System.out.println("sortTime:"+(endTime-startTime));
+        System.out.println("count:"+(endCount-startCount));
+
     }
 
     private void addTrainInSort1(ArrayList<Integer> sortBefore, ArrayList<Integer> sortAfter, Train[] trains, int station[]){
@@ -248,7 +257,7 @@ public class Diagram {
             }
         }
     }
-    private void addTrainInSort2(ArrayList<Integer> sortBefore, ArrayList<Integer> sortAfter, Train[] trains, int station[]){
+    private void addTrainInSort2(ArrayList<Integer> sortBefore, ArrayList<Integer> sortAfter, Train[] trains, int[] station){
         for (int i = 0; i < sortBefore.size(); i++) {
             int baseTime = trains[sortBefore.get(i)].getDepartureTime(station[0]);
             if (baseTime < 0||trains[sortBefore.get(i)].checkDoubleDay()) {

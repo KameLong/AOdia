@@ -333,6 +333,7 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * @param filePath
      */
     public void addStation(SQLiteDatabase db,ArrayList<String> stationName, String filePath) {
+        try{
         String directory = filePath.substring(0, filePath.lastIndexOf("/"));
         String name = filePath.substring(filePath.lastIndexOf("/") + 1);
         db.delete(TABLE_STATION, DIRECTORY_PATH + "=? and " + FILE_NAME + "=?", new String[]{directory, name});
@@ -342,6 +343,9 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
             values.put(FILE_NAME, name);
             values.put(STATION_NAME, stationName.get(i));
             db.insert(TABLE_STATION, null, values);
+        }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

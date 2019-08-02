@@ -16,15 +16,6 @@
         android:textColor="@android:color/black"
         android:textSize="20dp" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="有料オプション→作者就活終了記念セール
-        5/6まで有料オプション未購入でも無料試用できます"
-        android:textColor="@android:color/black" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -99,21 +90,6 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:text="全ユーザー向け"
-        android:textColor="@android:color/black" />
-
-    <Button
-        android:id="@+id/saveKeep"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ファイル名を指定せず、KEEPに保存する" />
-
     <LinearLayout
         android:id="@+id/saveAlart"
         android:layout_width="match_parent"
@@ -131,16 +107,6 @@
             上書き保存しますか？"
             android:textAlignment="center"
             android:textColor="#FF0000" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="KEEPに保存できるのは一つまでです。
-            上書き保存しますか？"
-            android:textAlignment="center"
-            android:textColor="#FF0000"
-            android:visibility="visible" />
 
         <Button
             android:id="@+id/saveOverrideButton"
