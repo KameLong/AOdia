@@ -1,7 +1,6 @@
 package com.kamelong.OuDia;
 
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 
 import com.kamelong.aodia.SDlog;
 import com.kamelong.tool.ShiftJISBufferedReader;
@@ -9,41 +8,90 @@ import com.kamelong.tool.ShiftJISBufferedReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+/**
+ * 一つの路線ファイルを表す。
+ */
 public class DiaFile {
 
-
+    /**
+     * ダイヤ一覧
+     */
     public ArrayList<Diagram>diagram=new ArrayList<>();
+    /**
+     * 駅一覧
+     */
     public ArrayList<Station>station=new ArrayList<>();
+    /**
+     * 列車種別一覧
+     */
     public ArrayList<TrainType>trainType=new ArrayList<>();
-
+    /**
+     * 路線名
+     */
     public String name="";
+    /**
+     * OuDiaバージョン
+     */
     public String version="";
+    /**
+     * コメント
+     */
     public String comment="";
+    /**
+     * その他AOdiaで使わないパラメーター
+     */
+    public HashMap<String,String> parameterRosen =new HashMap<>();
+    public HashMap<String,String> parameterDispProp =new HashMap<>();
 
+    /**
+     * 駅間の所要時間
+     */
     private ArrayList<Integer>stationTime=new ArrayList<>();
+    /**
+     * ダイヤグラム開始時間
+     */
     public int diagramStartTime=3600*3;
 
 
     //AOdia専用オプション
+    /**
+     * ファイル保存パス
+     */
     public String filePath="";
+    /**
+     * このファイルのメニューあ開いているか？
+     */
     public boolean menuOpen=true;
+
+    /**
+     * 新規に空路線を生成する
+     */
     public DiaFile(){
-        version="OuDiaSecond.1.05";
+        version="OuDiaSecond.1.06";
         name="新しい路線";
         trainType.add(new TrainType());
         diagram.add(new Diagram(this));
     }
+
+    /**
+     * 指定ファイルパスに新規ダイヤファイルを生成する
+     */
     public DiaFile(String filePath){
         this();
         this.filePath=filePath;
     }
+
+    /**
+     * ファイルからダイヤを開く
+     * @param file　入力ファイル
+     * @throws Exception ファイルが読み込めなかった時に返す
+     */
     public DiaFile(File file)throws Exception{
         filePath=file.getPath();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -56,14 +104,21 @@ public class DiaFile {
         }
 
         if(version.startsWith("OuDia.")||v<1.03){
+            //Shift-Jisのファイル
             loadShiftJis(file);
         }else{
+            //utf-8のファイル
             loadDiaFile(br);
         }
+        //最小所要時間を計算する
         reCalcStationTime();
         System.out.println("読み込み終了");
 
     }
+    /**
+     *    ２つのダイヤファイルを結合して新しいダイヤファイルを作る
+     *    todo
+     */
     public DiaFile(DiaFile[] diaList,int includeStationIndex){
         boolean stationConnect=false;
         ArrayList<Integer>[] stationIndexList=new ArrayList[2];
@@ -90,24 +145,39 @@ public class DiaFile {
 
 
     }
+
+    /**
+     * Shift-JISで書かれたファイルを読み込む
+     */
     private void loadShiftJis(File file)throws Exception{
         BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
-        String nouse=br.readLine();
+        version=br.readLine().split("=",-1)[1];
         loadDiaFile(br);
     }
+
+    /**
+     * ダイヤファイルを読み込む
+     * @param br 入力ファイル
+     * @throws Exception 読み込み失敗
+     */
     private void loadDiaFile(BufferedReader br)throws Exception{
-            br.readLine();//Rosen.
+            if(!br.readLine().equals("Rosen.")){
+                throw new Exception("Rosen is not found");
+            }
             name=br.readLine().split("=",-1)[1];
             String line=br.readLine();
             while(line!=null){
                 if(line.equals("Eki.")){
                     station.add(new Station(br,this));
+                    continue;
                 }
                 if(line.equals("Ressyasyubetsu.")){
                     trainType.add(new TrainType(br));
+                    continue;
                 }
                 if(line.equals("Dia.")){
                     diagram.add(new Diagram(this,br));
+                    continue;
                 }
                 if(line.startsWith("KitenJikoku=")){
                     String value=line.split("=")[1];
@@ -120,16 +190,34 @@ public class DiaFile {
                         diagramStartTime+=Integer.parseInt(value.substring(1,3));
                         diagramStartTime=diagramStartTime*60;
                     }
+                    continue;
+                }
+                if(line.startsWith("DispProp.")){
+                    readDispProp(br);
                 }
                 if(line.startsWith("AOdiaFilePath=")){
                     filePath=line.split("=")[1];
+                    continue;
                 }
                 if(line.startsWith("Comment=")){
                     comment=line.split("=",-1)[1].replace("\\n","\n");
+                    continue;
+                }
+                if(line.contains("=")){
+                    parameterRosen.put(line.substring(0,line.indexOf("=")),line.substring(line.indexOf("=")+1));
                 }
                 line=br.readLine();
             }
 
+    }
+    private void readDispProp(BufferedReader br)throws Exception {
+        String line = br.readLine();
+        while (!line.equals(".")){
+            if(line.contains("=")){
+                parameterDispProp.put(line.substring(0,line.indexOf("=")),line.substring(line.indexOf("=")+1));
+            }
+            line=br.readLine();
+        }
     }
 
     public int getDiaNum(){
@@ -266,7 +354,7 @@ public class DiaFile {
             fos.write(0xbf);
             fos.close();
             FileWriter out=new FileWriter(fileName,true);
-            out.write("FileType=OuDiaSecond.1.05\r\n");
+            out.write("FileType=OuDiaSecond.1.06\r\n");
             out.write("Rosen.\r\n");
             out.write("Rosenmei="+name+"\r\n");
             for(Station s:station){
