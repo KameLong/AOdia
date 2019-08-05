@@ -1,0 +1,9 @@
+- CentDetRosen
+ - CentDedEki list
+ - CentDedRessyasyubetsu
+ - CentDedDia
+ - 路線名
+ - 起点時刻
+ - ダイヤグラムの既定の駅間幅。
+ - コメント
+ - 運用機能の有効無効
