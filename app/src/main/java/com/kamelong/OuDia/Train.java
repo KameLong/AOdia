@@ -10,39 +10,61 @@ public class Train {
     public static long count2=0;
     public static final int DEPART = 0;
     public static final int ARRIVE = 1;
-    public static final int STOP_TYPE_NOSERVICE = 0;
-    public static final int STOP_TYPE_STOP = 1;
-    public static final int STOP_TYPE_PASS = 2;
-    public static final int STOP_TYPE_NOVIA = 3;
+    public static final int BOUND_OUT=0;
+    public static final int BOUND_IN=1;
+
     public DiaFile diaFile;
-    public String name = "";
-    public String number = "";
-    public String count = "";
-    public String remark = "";
-    public int type = 0;
-    public String operationName = "";
-    public boolean leaveYard = false;
-    public boolean goYard = false;
-    public int direction = 0;
-    public int stationNum = 0;
     /**
-     * 1-24bit departure
-     * 25-48bit arrive
-     * 49-56bit stopNumber
-     * 57-60bit stopType
+     この列車の列車方向を示します。
+
+     コンストラクタで決まります。
      */
-    public long[] time;
+    public int direction = BOUND_OUT;
+
+
+    /**
+     * 列車種別のindex
+     */
+    public int type = 0;
+    /**
+     * 列車番号
+     */
+    public String number = "";
+    /**
+     * 列車名
+     */
+    public String name = "";
+    /**
+     * 列車号数
+     */
+    public String count = "";
+    /**
+     * 備考
+     */
+    public String remark = "";
+    /**
+     この列車から次の列車への接続を、種別変更とみなすかどうか
+     この列車と次の列車が同方向、この列車の末端作業が次列車接続(なし)の場合に、
+     この値がtrueなら、時刻表ビューが表示モードの時、同一行に表示します
+     */
+    public Boolean typeChange=false;
+
+    /**
+     この列車の各駅の時刻。
+     要素数は、『駅』(DiaFile.stations) の数に等しくなります。
+     添え字は『駅index』です。
+     初期状態では、要素数は 0 となります。
+     */
+    public ArrayList<StationTime> stationTimes=new ArrayList<>();
+
+
 
 
     public Train(DiaFile diaFile, int direction) {
         this.diaFile = diaFile;
         this.direction = direction;
-        this.stationNum = diaFile.getStationNum();
-        time = new long[stationNum];
-        for (int i = 0; i < time.length; i++) {
-            time[i] = 0;
-        }
     }
+
 
     public Train(Train train) {
         this(train.diaFile, train.direction);
@@ -51,8 +73,47 @@ public class Train {
         count = train.count;
         remark = train.remark;
         type = train.type;
-        for (int i = 0; i < stationNum; i++) {
-            time[i] = train.time[i];
+        stationTimes=new ArrayList<>();
+        try {
+            for (int i = 0; i < train.stationTimes.size(); i++) {
+                stationTimes.add(train.stationTimes.get(i).clone());
+            }
+            if(stationTimes.size()!=diaFile.getStationNum()){
+                throw new Exception("Invalid station size");
+            }
+        }catch (Exception e){
+            SDlog.log(e);
+            for(int i=0;i<diaFile.getStationNum();i++){
+                stationTimes.add(new StationTime());
+            }
+        }
+    }
+    public void setValue(String title,String value){
+        switch (title) {
+            case "Syubetsu":
+                type = Integer.parseInt(value);
+                break;
+            case "Ressyabangou":
+                number = value;
+                break;
+            case "Ressyamei":
+                name = value;
+                break;
+            case "Gousuu":
+                count = value;
+                break;
+            case "EkiJikoku":
+                setOuDiaTime(value.split(",", -1));
+                break;
+            case "RessyaTrack":
+                setOuDiaTrack(value.split(",", -1));
+                break;
+            case "Bikou":
+                remark = value;
+                break;
+        }
+        if(title.startsWith("Operation")){
+            //運用処理　未実装
         }
     }
 
@@ -83,9 +144,6 @@ public class Train {
                     break;
                 case "Bikou":
                     remark = value;
-                    break;
-                case "OperationNumber":
-                    operationName = value;
                     break;
             }
             line = br.readLine();

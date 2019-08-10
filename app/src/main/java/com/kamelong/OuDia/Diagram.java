@@ -1,12 +1,48 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.tool.Color;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Diagram {
+    public static final int TIMETABLE_BACKCOLOR_NUM = 4;
+    /**
+     ダイヤの名称です。
+     （例） "平日ダイヤ" など
+     CentDedRosen に包含される CentDedDia では、
+     この属性は一意でなくてはなりません。
+     */
     public String name="";
+    /**
+     時刻表画面における基本背景色のIndexです
+     単色時、種別色時の空行、縦縞・横縞・市松模様時
+     および、基準運転時分機能有効時に用います。
+     範囲は0以上JIKOKUHYOUCOLOR_COUNT未満です。
+     */
+    public int mainBackColorIndex=0;
+    /**
+     時刻表画面における補助背景色のIndexです
+     縦縞・横縞・市松模様時に用います。
+     範囲は0以上JIKOKUHYOUCOLOR_COUNT未満です。
+     */
+    public int subBackColorIndex=0;
+    /**
+     時刻表画面における背景色パターンのIndexです
+     0:単色
+     1:種別色
+     2:縦縞
+     3:横縞
+     4:市松模様
+     */
+    public int timeTableBackPatternIndex=0;
+    /**
+     * ダイヤふくまれる列車
+     * [0]下り時刻表
+     * [1]上り時刻表
+     */
     public ArrayList<Train>[] trains=new ArrayList[2];
     public DiaFile diaFile;
 
@@ -18,45 +54,23 @@ public class Diagram {
         trains[1]=new ArrayList<>();
         trains[1].add(new Train(diaFile,1));
     }
-    public Diagram(DiaFile diaFile,BufferedReader br)throws Exception{
-        this.diaFile=diaFile;
-        trains[0]=new ArrayList<>();
-        trains[1]=new ArrayList<>();
-            String line=br.readLine();
-            while(!line.equals(".")){
-                if(line.startsWith("DiaName")){
-                    name=line.split("=",-1)[1];
-                }
-                if(line.equals("Kudari.")){
-                    while(!line.equals(".")){
-                        if(line.equals("Ressya.")){
-                            trains[0].add(new Train(diaFile,0,br));
-                        }
-                        line=br.readLine();
-                    }
-                }
-                if(line.equals("Nobori.")){
-                    while(!line.equals(".")){
-                        if(line.equals("Ressya.")){
-                            trains[1].add(new Train(diaFile,1,br));
-                        }
-                        line=br.readLine();
-                    }
-                }
-                line=br.readLine();
-            }
-
-    }
-    public Diagram(Diagram old){
-        diaFile=old.diaFile;
-        name=old.name;
-        for(int direction=0;direction<2;direction++){
-            trains[direction]=new ArrayList<>();
-            for(Train t:old.trains[direction]){
-                trains[direction].add(new Train(t));
-            }
+    public void setValue(String title,String value){
+        switch (title){
+            case "DiaName":
+                name=value;
+                break;
+            case "MainBackColorIndex":
+                mainBackColorIndex=Integer.parseInt(value);
+                break;
+            case "SubBackColorIndex":
+                subBackColorIndex=Integer.parseInt(value);
+                break;
+            case "BackPatternIndex":
+                timeTableBackPatternIndex=Integer.parseInt(value);
+                break;
         }
     }
+
     /**
      * 時刻表を並び替える。
      * 並び替えに関しては、基準駅の通過時刻をもとに並び替えた後
@@ -212,7 +226,7 @@ public class Diagram {
             }
         }
 
-            sortAfter.addAll(sortBefore);
+        sortAfter.addAll(sortBefore);
         ArrayList<Train> trainAfter=new ArrayList<>();
         for(int i=0;i<sortAfter.size();i++){
             trainAfter.add(trainList[sortAfter.get(i)]);
@@ -482,19 +496,24 @@ public class Diagram {
 
     }
     public void saveToFile(FileWriter out) throws Exception {
-            out.write("Dia.\r\n");
-            out.write("DiaName="+name+"\r\n");
-            out.write("Kudari.\r\n");
-            for(Train t:trains[0]){
-                t.saveToFile(out);
-            }
-            out.write(".\r\n");
-            out.write("Nobori.\r\n");
-            for(Train t:trains[1]){
-                t.saveToFile(out);
-            }
-            out.write(".\r\n");
-            out.write(".\r\n");
+        out.write("Dia.\r\n");
+        out.write("DiaName="+name+"\r\n");
+        out.write("MainBackColorIndex"+mainBackColorIndex+"\r\n");
+        out.write("SubBackColorIndex"+subBackColorIndex+"\r\n");
+        out.write("BackPatternIndex"+timeTableBackPatternIndex+"\r\n");
+
+
+        out.write("Kudari.\r\n");
+        for(Train t:trains[0]){
+            t.saveToFile(out);
+        }
+        out.write(".\r\n");
+        out.write("Nobori.\r\n");
+        for(Train t:trains[1]){
+            t.saveToFile(out);
+        }
+        out.write(".\r\n");
+        out.write(".\r\n");
     }
 
 }

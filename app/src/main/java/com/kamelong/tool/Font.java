@@ -49,6 +49,13 @@ public class Font {
         bold=json.getInt(BOLD,0)==1;
         itaric=json.getInt(ITARIC,0)==1;
     }
+    public Font(String value){
+        //todo
+    }
+    public String getOuDiaString(){
+        //todo
+        return "";
+    }
     private Font(String name, int height, boolean bold, boolean itaric){
         this.name=name;
         this.height=height;

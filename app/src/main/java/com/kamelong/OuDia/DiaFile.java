@@ -3,6 +3,8 @@ package com.kamelong.OuDia;
 import android.content.pm.PackageInfo;
 
 import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.Color;
+import com.kamelong.tool.Font;
 import com.kamelong.tool.ShiftJISBufferedReader;
 
 import java.io.BufferedReader;
@@ -14,16 +16,51 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * 一つの路線ファイルを表す。
  */
 public class DiaFile {
+    /**
+     * 路線名
+     */
+    public String name="";
 
     /**
-     * ダイヤ一覧
+     * ダイヤグラム開始時間
      */
-    public ArrayList<Diagram>diagram=new ArrayList<>();
+    public int diagramStartTime=3600*3;
+    /**
+     ダイヤグラムの既定の駅間幅。
+
+     列車設定のない駅間の、ダイヤグラムビュー上での
+     縦方向の幅を『ダイヤグラムエンティティY座標』単位(秒)で指定します。
+
+     既定値は 60 です。
+     */
+    public int stationSpaceDefault =60;
+
+    /**
+     * コメント
+     */
+    public String comment="";
+    /**
+     運用機能の有効無効
+     路線ファイルのプロパティで変更できます
+     0:運用機能は無効です。
+     1:運用機能は簡易モードです。
+     列車の接続のみを行い、運用番号は設定しません。
+     2:運用機能は通常モードです
+     規定値は0です
+     */
+    public int operationStyle=0;
+    /**
+     ダイヤの別名です。
+     （例） "北行" など
+     */
+    public String[] diaNameDefault={"下り時刻表","上り時刻表"};
+
     /**
      * 駅一覧
      */
@@ -33,17 +70,19 @@ public class DiaFile {
      */
     public ArrayList<TrainType>trainType=new ArrayList<>();
     /**
-     * 路線名
+     * ダイヤ一覧
      */
-    public String name="";
+    public ArrayList<Diagram>diagram=new ArrayList<>();
+
+
     /**
      * OuDiaバージョン
      */
     public String version="";
-    /**
-     * コメント
-     */
-    public String comment="";
+
+
+
+
     /**
      * その他AOdiaで使わないパラメーター
      */
@@ -54,11 +93,98 @@ public class DiaFile {
      * 駅間の所要時間
      */
     private ArrayList<Integer>stationTime=new ArrayList<>();
+    //DispProp
     /**
-     * ダイヤグラム開始時間
+     * 時刻表フォント
      */
-    public int diagramStartTime=3600*3;
+    public ArrayList<Font>timeTableFont=new ArrayList<>();
+    /**
+     * 時刻表Vフォント
+     * 縦書きに使う？
+     */
+    public Font timeTableVFont=new Font();
+    /**
+     * ダイヤ駅名フォント
+     */
+    public Font diaStationNameFont=new Font();
+    /**
+     * ダイヤ時刻フォント
+     */
+    public Font diaTimeFont=new Font();
 
+    /**
+     * ダイヤ列車フォント
+     */
+    public Font diaTrainFont=new Font();
+    /**
+     * コメントフォント
+     */
+    public Font commentFont=new Font();
+    /**
+     * ダイヤ文字色
+     */
+    public Color diaTextColor =new Color();
+    /**
+     * ダイヤ背景色
+     */
+    public Color diaBackColor=new Color();
+    /**
+     * ダイヤ列車色
+     */
+    public Color diaTrainColor=new Color();
+    /**
+     * ダイヤ軸色
+     */
+    public Color diaAxicsColor=new Color();
+    /**
+     * 時刻表背景色
+     */
+    public ArrayList<Color>timeTableBackColor=new ArrayList<>();
+    /**
+     * StdOpeTimeLowerColor
+     */
+    public Color stdOpeTimeLowerColor=new Color();
+    /**
+     * StdOpeTimeHigherColor
+     */
+    public Color stdOpeTimeHigherColor=new Color();
+    /**
+     * StdOpeTimeUndefColor
+     */
+    public Color stdOpeTimeUndefColor=new Color();
+    /**
+     * StdOpeTimeIllegalColor
+     */
+    public Color stdOpeTimeIllegalColor=new Color();
+    /**
+     * 駅名の長さ
+     */
+    public int stationNameWidth=6;
+    /**
+     * 時刻用列車幅
+     */
+    public int trainWidth=5;
+    /**
+     * 秒単位移動量
+     * 二つある
+     */
+    public int[] secondShift={5,15};
+    /**
+     * 列車名欄表示
+     */
+    public boolean showTrainName=true;
+    /**
+     * 路線外終着駅を起点側に表示する
+     */
+    public boolean showOuterTerminalOrigin=false;
+    /**
+     * 路線外終着駅を終点側に表示する
+     */
+    public boolean showOuterTerminalTerminal=false;
+    /**
+     * 路線外終着駅を表示するか
+     */
+    public boolean showOuterTerminal=false;
 
     //AOdia専用オプション
     /**
@@ -162,62 +288,194 @@ public class DiaFile {
      * @throws Exception 読み込み失敗
      */
     private void loadDiaFile(BufferedReader br)throws Exception{
-            if(!br.readLine().equals("Rosen.")){
-                throw new Exception("Rosen is not found");
+        int direction=0;
+        station=new ArrayList<>();
+        trainType=new ArrayList<>();
+        diagram=new ArrayList<>();
+        String property="";
+        Stack<String> propertyStack=new Stack<>();
+        String line=br.readLine();
+        Station tempStation=new Station(this);
+        StationTrack tempTrack=new StationTrack();
+        OuterTerminal tempOuterTerminal=new OuterTerminal();
+        TrainType tempType=new TrainType();
+        Diagram tempDia=new Diagram(this);
+        Train tempTrain=new Train(this,0);
+        while(line!=null){
+            if(line.equals(".")){
+                //読み込みプロパティ終了
+                property=propertyStack.pop();
+            }else if(line.endsWith(".")){
+                property=line.substring(0,line.length()-1);
+                switch(property){
+                    case "Eki":
+                        tempStation=new Station(this);
+                        station.add(tempStation);
+                        break;
+                    case "EkiTrack2":
+                        tempTrack=new StationTrack();
+                        tempStation.tracks.add(tempTrack);
+                        break;
+                    case "OuterTerminal":
+                        tempOuterTerminal=new OuterTerminal();
+                        tempStation.outerTerminals.add(tempOuterTerminal);
+                        break;
+                    case "Ressyasyubetsu":
+                        tempType=new TrainType();
+                        trainType.add(tempType);
+                        break;
+                    case "Dia":
+                        tempDia=new Diagram(this);
+                        diagram.add(tempDia);
+                        break;
+                    case "Kudari":
+                        direction=0;
+                        break;
+                    case "Nobori":
+                        direction=1;
+                    case "Ressya":
+                        tempTrain=new Train(this,direction);
+                        tempDia.trains[direction].add(tempTrain);
+                }
             }
-            name=br.readLine().split("=",-1)[1];
-            String line=br.readLine();
-            while(line!=null){
-                if(line.equals("Eki.")){
-                    station.add(new Station(br,this));
-                    continue;
+            if(line.contains("=")){
+                String title=line.substring(0,line.indexOf("="));
+                String value=line.substring(line.indexOf("=")+1);
+                switch(property){
+                    case "Eki":
+                        tempStation.setValue(title,value);
+                        break;
+                    case "EkiTrack2":
+                        tempTrack.setValue(title,value);
+                        break;
+                    case "OuterTerminal":
+                        tempOuterTerminal.setValue(title,value);
+                        break;
+                    case "Ressyasyubetsu":
+                        tempType.setValue(title,value);
+                        break;
+                    case "Dia":
+                        tempDia.setValue(title,value);
+                        break;
+                    case "Ressya":
+                        tempTrain.setValue(title,value);
+                        break;
+                    case "Rosen":
+                        this.setValue(title,value);
+                        break;
+                    case "DispProp":
+                        this.setValue(title,value);
+                        break;
                 }
-                if(line.equals("Ressyasyubetsu.")){
-                    trainType.add(new TrainType(br));
-                    continue;
-                }
-                if(line.equals("Dia.")){
-                    diagram.add(new Diagram(this,br));
-                    continue;
-                }
-                if(line.startsWith("KitenJikoku=")){
-                    String value=line.split("=")[1];
-                    if(value.length()==4){
-                        diagramStartTime=Integer.parseInt(value.substring(0,2))*60;
-                        diagramStartTime+=Integer.parseInt(value.substring(2,4));
-                        diagramStartTime=diagramStartTime*60;
-                    }else{
-                        diagramStartTime=Integer.parseInt(value.substring(0,1))*60;
-                        diagramStartTime+=Integer.parseInt(value.substring(1,3));
-                        diagramStartTime=diagramStartTime*60;
-                    }
-                    continue;
-                }
-                if(line.startsWith("DispProp.")){
-                    readDispProp(br);
-                }
-                if(line.startsWith("AOdiaFilePath=")){
-                    filePath=line.split("=")[1];
-                    continue;
-                }
-                if(line.startsWith("Comment=")){
-                    comment=line.split("=",-1)[1].replace("\\n","\n");
-                    continue;
-                }
-                if(line.contains("=")){
-                    parameterRosen.put(line.substring(0,line.indexOf("=")),line.substring(line.indexOf("=")+1));
-                }
-                line=br.readLine();
             }
 
-    }
-    private void readDispProp(BufferedReader br)throws Exception {
-        String line = br.readLine();
-        while (!line.equals(".")){
-            if(line.contains("=")){
-                parameterDispProp.put(line.substring(0,line.indexOf("=")),line.substring(line.indexOf("=")+1));
-            }
             line=br.readLine();
+        }
+    }
+    private void setValue(String title,String value){
+        switch(title){
+            case "Rosenmei":
+                name=value;
+                break;
+            case "KudariDiaAlias":
+                if(value.length()!=0){
+                    diaNameDefault[0]=value;
+                }
+                break;
+            case "NoboriDiaAlias":
+                if(value.length()!=0){
+                    diaNameDefault[1]=value;
+                }
+                break;
+            case "KitenJikoku":
+                switch(value.length()){
+                    case 3:
+                        diagramStartTime=3600*Integer.parseInt(value.substring(0,1))+60*Integer.parseInt(value.substring(1,3));
+                        break;
+                    case 4:
+                        diagramStartTime=3600*Integer.parseInt(value.substring(0,2))+60*Integer.parseInt(value.substring(2,4));
+                        break;
+                    default:
+                        diagramStartTime=60*Integer.parseInt(value);
+                }
+                break;
+            case "EnableOperation":
+                operationStyle=Integer.parseInt(value);
+                break;
+            case "Comment":
+                comment=value.replace("\\n","\n");
+                break;
+            case "JikokuhyouFont":
+                timeTableFont.add(new Font(value));
+                break;
+            case "JikokuhyouVFont":
+                timeTableVFont=new Font(value);
+                break;
+            case "DiaEkimeiFont":
+                diaStationNameFont=new Font(value);
+                break;
+            case "DiaJikokuFont":
+                diaTimeFont=new Font(value);
+                break;
+            case "DiaRessyaFont":
+                diaTrainFont=new Font(value);
+                break;
+            case "CommentFont":
+                commentFont=new Font(value);
+                break;
+            case "DiaMojiColor":
+                diaTextColor.setOuDiaColor(value);
+                break;
+            case "DiaHaikeiColor":
+                diaBackColor.setOuDiaColor(value);
+                break;
+            case "DiaRessyaColor":
+                diaTrainColor.setOuDiaColor(value);
+                break;
+            case "DiaJikuColor":
+                diaAxicsColor.setOuDiaColor(value);
+                break;
+            case "JikokuhyouBackColor":
+                Color color=new Color();
+                color.setOuDiaColor(value);
+                timeTableBackColor.add(color);
+                break;
+            case "StdOpeTimeLowerColor":
+                stdOpeTimeLowerColor.setOuDiaColor(value);
+                break;
+            case "StdOpeTimeHigherColor":
+                stdOpeTimeHigherColor.setOuDiaColor(value);
+                break;
+            case "StdOpeTimeUndefColor":
+                stdOpeTimeUndefColor.setOuDiaColor(value);
+                break;
+            case "StdOpeTimeIllegalColor":
+                stdOpeTimeIllegalColor.setOuDiaColor(value);
+                break;
+            case "EkimeiLength":
+                stationNameWidth=Integer.parseInt(value);
+                break;
+            case "JikokuhyouRessyaWidth":
+                trainWidth=Integer.parseInt(value);
+                break;
+            case "AnySecondIncDec1":
+                secondShift[0]=Integer.parseInt(value);
+                break;
+            case "AnySecondIncDec2":
+                secondShift[1]=Integer.parseInt(value);
+                break;
+            case "DisplayRessyamei":
+                showTrainName=value.equals("1");
+                break;
+            case "DisplayOuterTerminalEkimeiOriginSide":
+                showOuterTerminalOrigin=value.equals("1");
+                break;
+            case "DisplayOuterTerminalEkimeiTerminalSide":
+                showOuterTerminalTerminal=value.equals("1");
+                break;
+            case "DiagramDisplayOuterTerminal":
+                showOuterTerminal=value.equals("1");
+                break;
         }
     }
 
@@ -227,7 +485,6 @@ public class DiaFile {
     public int getStationNum(){
         return station.size();
     }
-
     public void reCalcStationTime(){
         stationTime=new ArrayList<>();
         stationTime.add(0);
@@ -347,52 +604,78 @@ public class DiaFile {
         return result;
     }
     public void saveToFile(String fileName,boolean saveFilePath) throws Exception {
-            FileOutputStream fos = new FileOutputStream(fileName);
+        FileOutputStream fos = new FileOutputStream(fileName);
 
-            //BOM付与
-            fos.write(0xef);
-            fos.write(0xbb);
-            fos.write(0xbf);
-            fos.close();
-            FileWriter out=new FileWriter(fileName,true);
-            out.write("FileType=OuDiaSecond.1.06\r\n");
-            out.write("Rosen.\r\n");
-            out.write("Rosenmei="+name+"\r\n");
-            for(Station s:station){
-                s.saveToFile(out);
-            }
-            for(TrainType type:trainType){
-                type.saveToFile(out);
-            }
-            for(Diagram dia:diagram){
-                dia.saveToFile(out);
-            }
-
-            out.write("KitenJikoku="+diagramStartTime/3600+String.format("%02d",(diagramStartTime/60)%60)+"\r\n");
-            out.write("DiagramDgrYZahyouKyoriDefault=60\r\n");
-            if(saveFilePath) {
-                out.write("AOdiaFilePath=" + filePath + "\r\n");
-            }
-            out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
-            for(Map.Entry<String,String> value :parameterRosen.entrySet()){
-                out.write(value.getKey()+"="+value.getValue()+"\r\n");
-            }
-            out.write(".\r\n");
-
-            out.write("DispProp.\r\n");
-        for(Map.Entry<String,String> value :parameterDispProp.entrySet()){
-            out.write(value.getKey()+"="+value.getValue()+"\r\n");
+        //BOM付与
+        fos.write(0xef);
+        fos.write(0xbb);
+        fos.write(0xbf);
+        fos.close();
+        FileWriter out=new FileWriter(fileName,true);
+        out.write("FileType=OuDiaSecond.1.06\r\n");
+        out.write("Rosen.\r\n");
+        out.write("Rosenmei="+name+"\r\n");
+        out.write("KudariDiaAlias="+diaNameDefault[0]+"\r\n");
+        out.write("NoboriDiaAlias="+diaNameDefault[1]+"\r\n");
+        for(Station s:station){
+            s.saveToFile(out);
+        }
+        for(TrainType type:trainType){
+            type.saveToFile(out);
+        }
+        for(Diagram dia:diagram){
+            dia.saveToFile(out);
         }
 
+        out.write("KitenJikoku="+diagramStartTime/3600+String.format("%02d",(diagramStartTime/60)%60)+"\r\n");
+        out.write("DiagramDgrYZahyouKyoriDefault="+ stationSpaceDefault +"\r\n");
+        out.write("EnableOperation="+operationStyle+"\r\n");
+        if(saveFilePath) {
+            out.write("AOdiaFilePath=" + filePath + "\r\n");
+        }
+        out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
+        for(Map.Entry<String,String> value :parameterRosen.entrySet()){
+            out.write(value.getKey()+"="+value.getValue()+"\r\n");
+        }
+        out.write(".\r\n");
+
+        out.write("DispProp.\r\n");
+        for(Font font:timeTableFont){
+            out.write("JikokuhyouFont="+font.getOuDiaString()+"\r\n");
+        }
+        out.write("JikokuhyouVFont="+timeTableVFont.getOuDiaString()+"\r\n");
+        out.write("DiaEkimeiFont="+diaStationNameFont.getOuDiaString()+"\r\n");
+        out.write("DiaJikokuFont="+diaTimeFont.getOuDiaString()+"\r\n");
+        out.write("DiaRessyaFont="+diaTrainFont.getOuDiaString()+"\r\n");
+        out.write("CommentFont="+commentFont.getOuDiaString()+"\r\n");
+        out.write("DiaMojiColor="+diaTextColor.getOudiaString()+"\r\n");
+        out.write("DiaHaikeiColor="+diaBackColor.getOudiaString()+"\r\n");
+        out.write("DiaRessyaColorr="+diaTrainColor.getOudiaString()+"\r\n");
+        out.write("DiaJikuColor="+diaAxicsColor.getOudiaString()+"\r\n");
+        for(Color color :timeTableBackColor){
+            out.write("JikokuhyouBackColor="+color.getOudiaString()+"\r\n");
+        }
+        out.write("StdOpeTimeLowerColor="+stdOpeTimeLowerColor.getOudiaString()+"\r\n");
+        out.write("StdOpeTimeHigherColor="+stdOpeTimeHigherColor.getOudiaString()+"\r\n");
+        out.write("StdOpeTimeUndefColor="+stdOpeTimeUndefColor.getOudiaString()+"\r\n");
+        out.write("StdOpeTimeIllegalColor="+stdOpeTimeIllegalColor.getOudiaString()+"\r\n");
+        out.write("EkimeiLength="+(stationNameWidth+"\r\n");
+        out.write("JikokuhyouRessyaWidth="+trainWidth+"\r\n");
+        out.write("AnySecondIncDec1="+secondShift[0]+"\r\n");
+        out.write("AnySecondIncDec2="+secondShift[1]+"\r\n");
+        out.write("DisplayRessyamei="+(showTrainName?"1":"0")+"\r\n");
+        out.write("DisplayOuterTerminalEkimeiOriginSide="+(showOuterTerminalOrigin?"1":"0")+"\r\n");
+        out.write("DisplayOuterTerminalEkimeiTerminalSide="+(showOuterTerminalTerminal?"1":"0")+"\r\n");
+        out.write("EDiagramDisplayOuterTerminal="+(showOuterTerminal?"1":"0")+"\r\n");
         out.write(".\r\n");
         PackageInfo packageInfo = SDlog.activity.getPackageManager().getPackageInfo(SDlog.activity.getPackageName(), 0);
         out.write("FileTypeAppComment=AOdia v"+packageInfo.versionName+"\r\n");
-            out.close();
+        out.close();
 
 
     }
     public void copyDiagram(int diagramIndex,String diaName){
-        diagram.add(new Diagram(diagram.get(diagramIndex)));
+        diagram.add((Diagram) diagram.get(diagramIndex).clone());
         diagram.get(diagram.size()-1).name=diaName;
     }
     public void addNewDiagram(){
