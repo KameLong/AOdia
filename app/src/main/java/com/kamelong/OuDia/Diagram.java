@@ -5,9 +5,10 @@ import com.kamelong.tool.Color;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Diagram {
+public class Diagram implements Cloneable{
     public static final int TIMETABLE_BACKCOLOR_NUM = 4;
     /**
      ダイヤの名称です。
@@ -39,13 +40,16 @@ public class Diagram {
      */
     public int timeTableBackPatternIndex=0;
     /**
-     * ダイヤふくまれる列車
+     * ダイヤにふくまれる列車
      * [0]下り時刻表
      * [1]上り時刻表
      */
     public ArrayList<Train>[] trains=new ArrayList[2];
     public DiaFile diaFile;
 
+    public Diagram(){
+
+    }
     public Diagram(DiaFile diaFile){
         this.diaFile=diaFile;
         name="新しいダイヤ";
@@ -348,7 +352,7 @@ public class Diagram {
         int direction=train.direction;
         for(int i=0;i<trains[direction].size();i++){
             if(trains[direction].get(i)==train){
-                trains[direction].add(i+1,new Train(train));
+                trains[direction].add(i+1,train.clone());
                 return;
             }
         }
@@ -495,25 +499,51 @@ public class Diagram {
         }
 
     }
-    public void saveToFile(FileWriter out) throws Exception {
-        out.write("Dia.\r\n");
-        out.write("DiaName="+name+"\r\n");
-        out.write("MainBackColorIndex"+mainBackColorIndex+"\r\n");
-        out.write("SubBackColorIndex"+subBackColorIndex+"\r\n");
-        out.write("BackPatternIndex"+timeTableBackPatternIndex+"\r\n");
-
-
-        out.write("Kudari.\r\n");
+    public void saveToFile(PrintWriter out) throws Exception {
+        out.println("Dia.");
+        out.println("DiaName="+name);
+        out.println("MainBackColorIndex"+mainBackColorIndex);
+        out.println("SubBackColorIndex"+subBackColorIndex);
+        out.println("BackPatternIndex"+timeTableBackPatternIndex);
+        out.println("Kudari.");
         for(Train t:trains[0]){
             t.saveToFile(out);
         }
-        out.write(".\r\n");
-        out.write("Nobori.\r\n");
+        out.println(".");
+        out.println("Nobori.");
         for(Train t:trains[1]){
             t.saveToFile(out);
         }
-        out.write(".\r\n");
-        out.write(".\r\n");
+        out.println(".");
+        out.println(".");
+    }
+    public void saveToOuDiaFile(PrintWriter out) throws Exception {
+        out.println("Dia.");
+        out.println("DiaName="+name);
+        out.write("Kudari.");
+        for(Train t:trains[0]){
+            t.saveToFile(out);
+        }
+        out.write(".");
+        out.write("Nobori.");
+        for(Train t:trains[1]){
+            t.saveToFile(out);
+        }
+        out.write(".");
+        out.write(".");
+    }
+    @Override
+    public Diagram clone() throws CloneNotSupportedException {
+        Diagram result=(Diagram) super.clone();
+        result.trains[0]=new ArrayList<>();
+        for(Train train :trains[0]){
+            result.trains[0].add((Train)train.clone());
+        }
+        result.trains[1]=new ArrayList<>();
+        for(Train train :trains[1]){
+            result.trains[1].add((Train)train.clone());
+        }
+        return result;
     }
 
 }

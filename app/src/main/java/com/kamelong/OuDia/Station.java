@@ -2,6 +2,7 @@ package com.kamelong.OuDia;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Deque;
 
@@ -124,7 +125,7 @@ public class Station {
 
      これらの要素は、駅編集及びより上位の編集が行われるたびに更新されます。
      */
-    public int brunchLoopPosition;
+    int brunchLoopPosition;
     Deque<Integer> stationIndexBrunchOriginSide;
     Deque<Integer> stationIndexLoop;
     Deque<Integer> stationIndexBrunchTerminalSide;
@@ -200,24 +201,18 @@ public class Station {
      * 通常時刻表で番線を表示するか
      */
     public boolean omitTrack=false;
-
-
-
-
     public Station(DiaFile diaFile){
-        this.diaFile=diaFile;
         name="新規作成";
-
         tracks.add(new StationTrack("1番線","1"));
         tracks.add(new StationTrack("2番線","2"));
 
 
     }
-
     /**
      * OuDiaファイル1行の情報を読み取ります
      * @param title
-     * @param value
+     *    this.diaFile=diaFile;
+        n@param value
      */
     public void setValue(String title, String value){
         switch (title){
@@ -300,8 +295,6 @@ public class Station {
                 break;
         }
     }
-
-
     /**
      * oudiaファイルの文字列形式からtimetableStyleを読み込みます
      * @param str
@@ -382,6 +375,33 @@ public class Station {
                 return "Jikokukeisiki_Hatsu";
         }
     }
+    private String getTimeTableStyleOuDia(){
+        int result=0;
+        if(showArrival[1]){
+            result+=8;
+        }
+        if(showDeparture[1]){
+            result+=4;
+        }
+        if(showArrival[0]){
+            result+=2;
+        }
+        if(showDeparture[0]){
+            result+=1;
+        }
+        switch (result){
+            case 5:
+                return "Jikokukeisiki_Hatsu";
+            case 15:
+                return "Jikokukeisiki_Hatsuchaku";
+            case 6:
+                return "Jikokukeisiki_KudariChaku";
+            case 9:
+                return "Jikokukeisiki_NoboriChaku";
+            default:
+                return "Jikokukeisiki_Hatsu";
+        }
+    }
 
     /**
      * oudiaファイルの文字列形式からDiagramRessyajouhouHyoujiを読み込みます
@@ -398,7 +418,11 @@ public class Station {
         }
     }
 
-
+    /**
+     * OuDia2ndで廃止されたborder変数ですが、
+     * 2ndの形式からborder情報を復元します
+     * @return
+     */
     public boolean getBorder(){
         if(border)return true;
         if(brunchCoreStationIndex!=-1&&brunchCoreStationIndex>diaFile.station.indexOf(this))return true;
@@ -420,89 +444,123 @@ public class Station {
     public String getOuterTerminalStationName(int index){
         return outerTerminals.get(index).outerTerminalName;
     }
-    public void setOuterTerminalStationName(int index,String name){
-        outerTerminals.get(index).outerTerminalName=name;
-    }
 
-
-
-    public void saveToFile(FileWriter out) throws Exception {
-        out.write("Eki.\r\n");
-
-        out.write("Ekimei="+name+"\r\n");
+    /**
+     * oudia2nd形式で保存します
+     * @param out
+     * @throws Exception
+     */
+    public void saveToFile(PrintWriter out) throws Exception {
+        out.println("Eki.");
+        out.println("Ekimei="+name);
         if(shortName.length()!=0){
-            out.write("EkimeiJikokuRyaku="+shortName+"\r\n");
+            out.println("EkimeiJikokuRyaku="+shortName);
         }
-        out.write("Ekijikokukeisiki="+getTimeTableStyle()+"\r\n");
+        out.println("Ekijikokukeisiki="+getTimeTableStyle());
         if(bigStation){
-            out.write("Ekikibo=Ekikibo_Syuyou\r\n");
+            out.println("Ekikibo=Ekikibo_Syuyou");
         }
         switch(showDiagramInfo[0]){
             case 1:
-                out.write("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Anytime\r\n");
+                out.println("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Anytime");
                 break;
             case 2:
-                out.write("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Not\r\n");
+                out.println("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Not");
                 break;
         }
         switch(showDiagramInfo[1]){
             case 1:
-                out.write("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Anytime\r\n");
+                out.println("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Anytime");
                 break;
             case 2:
-                out.write("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Not\r\n");
+                out.println("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Not");
                 break;
         }
-        out.write("DownMain="+stopMain[0]+"\r\n");
-        out.write("UpMain="+stopMain[1]+"\r\n");
-        out.write("EkiTrack2Cont.");
+        out.println("DownMain="+stopMain[0]);
+        out.println("UpMain="+stopMain[1]);
+        out.println("EkiTrack2Cont.");
         for(int i=0;i<tracks.size();i++){
             tracks.get(i).saveToFile(out);
         }
-        out.write(".");
-        out.write("OuterTerminal.");
+        out.println(".");
+        out.println("OuterTerminal.");
         for(int i=0;i<outerTerminals.size();i++){
             outerTerminals.get(i).saveToFile(out);
         }
-        out.write(".");
+        out.println(".");
 
         if(showDiagramTrack) {
-            out.write("DiagramTrackDisplay=1\r\n");
+            out.println("DiagramTrackDisplay=1");
         }
         if(brunchCoreStationIndex>=0){
-            out.write("BrunchCoreEkiIndex="+brunchCoreStationIndex+"\r\n");
+            out.println("BrunchCoreEkiIndex="+brunchCoreStationIndex);
         }
         if(brunchOpposite){
-            out.write("BrunchOpposite=1\r\n");
+            out.println("BrunchOpposite=1");
         }
         if(loopOriginStationIndex>=0){
-            out.write("LoopOriginEkiIndex="+loopOriginStationIndex+"\r\n");
+            out.println("LoopOriginEkiIndex="+loopOriginStationIndex);
         }
         if(loopOpposite){
-            out.write("LoopOpposite=1\r\n");
+            out.println("LoopOpposite=1");
         }
         if(showtrack[0]){
-            out.write("JikokuhyouTrackDisplayKudari=1\r\n");
+            out.println("JikokuhyouTrackDisplayKudari=1");
         }
         if(showtrack[1]){
-            out.write("JikokuhyouTrackDisplayNobori=1\r\n");
+            out.println("JikokuhyouTrackDisplayNobori=1");
         }
         if(showDiagramTrack){
-            out.write("DiagramTrackDisplay=1\r\n");
+            out.println("DiagramTrackDisplay=1");
         }
         if(nextStationDistance>0){
-            out.write("NextEkiDistance="+nextStationDistance+"\r\n");
+            out.println("NextEkiDistance="+nextStationDistance);
         }
         if(omitTrack){
-            out.write("JikokuhyouTrackOmit=1\r\n");
+            out.println("JikokuhyouTrackOmit=1");
         }
         //todo "JikokuhyouOperationOrigin";
         //todo "JikokuhyouOperationTerminal";
-        out.write("JikokuhyouJikokuDisplayKudari="+boolean2String(showArrivalCustom[0])+","+boolean2String(showDepatureCustom[0])+"\r\n");
-        out.write("JikokuhyouJikokuDisplayNobori="+boolean2String(showArrivalCustom[1])+","+boolean2String(showDepatureCustom[1])+"\r\n");
-        out.write("JikokuhyouSyubetsuChangeDisplayKudari="+showTrainNumberCustom[0]+","+showTrainOperationCustom[0]+","+showTrainTypeCustom[0]+","+showTrainNameCustom[0]+"\r\n");
-        out.write("JikokuhyouSyubetsuChangeDisplayNobori="+showTrainNumberCustom[1]+","+showTrainOperationCustom[1]+","+showTrainTypeCustom[1]+","+showTrainNameCustom[1]+"\r\n");
-        out.write(".\r\n");
+        out.println("JikokuhyouJikokuDisplayKudari="+boolean2String(showArrivalCustom[0])+","+boolean2String(showDepatureCustom[0]));
+        out.println("JikokuhyouJikokuDisplayNobori="+boolean2String(showArrivalCustom[1])+","+boolean2String(showDepatureCustom[1]));
+        out.println("JikokuhyouSyubetsuChangeDisplayKudari="+showTrainNumberCustom[0]+","+showTrainOperationCustom[0]+","+showTrainTypeCustom[0]+","+showTrainNameCustom[0]);
+        out.println("JikokuhyouSyubetsuChangeDisplayNobori="+showTrainNumberCustom[1]+","+showTrainOperationCustom[1]+","+showTrainTypeCustom[1]+","+showTrainNameCustom[1]);
+        out.println(".");
+    }
+
+    /**
+     * oudia形式で保存します
+     * @param out
+     * @throws Exception
+     */
+    public void saveToOuDiaFile(PrintWriter out) throws Exception {
+        out.println("Eki.");
+        out.println("Ekimei="+name);
+        out.println("Ekijikokukeisiki="+getTimeTableStyleOuDia());
+        if(bigStation){
+            out.println("Ekikibo=Ekikibo_Syuyou");
+        }
+        if(getBorder()){
+            out.println("Kyoukaisen=1");
+
+        }
+        switch(showDiagramInfo[0]){
+            case 1:
+                out.println("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Anytime");
+                break;
+            case 2:
+                out.println("DiagramRessyajouhouHyoujiKudari=DiagramRessyajouhouHyouji_Not");
+                break;
+        }
+        switch(showDiagramInfo[1]){
+            case 1:
+                out.println("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Anytime");
+                break;
+            case 2:
+                out.println("DiagramRessyajouhouHyoujiNobori=DiagramRessyajouhouHyouji_Not");
+                break;
+        }
+        out.println(".");
     }
 
     /**
@@ -515,6 +573,33 @@ public class Station {
         }else{
             return "0";
         }
+    }
+
+    @Override
+    public Station clone() throws CloneNotSupportedException {
+        Station result=(Station)super.clone();
+        result.showArrival=showArrival.clone();
+        result.showArrivalCustom=showArrivalCustom.clone();
+        result.showDeparture=showDeparture.clone();
+        result.showDepatureCustom=showDepatureCustom.clone();
+        result.showDiagramInfo=showDiagramInfo.clone();
+        result.showtrack=showtrack.clone();
+        result.showTrainNameCustom=showTrainNameCustom.clone();
+        result.showTrainNumberCustom=showTrainNumberCustom.clone();
+        result.showTrainOperationCustom=showTrainOperationCustom.clone();
+        result.showTrainTypeCustom=showTrainTypeCustom.clone();
+        result.stationOperationNum=stationOperationNum.clone();
+        result.stopMain=stopMain.clone();
+        result.timeTableStyle=timeTableStyle.clone();
+        result.outerTerminals=new ArrayList<>();
+        for(OuterTerminal terminal:outerTerminals){
+            result.outerTerminals.add(terminal.clone());
+        }
+        result.tracks=new ArrayList<>();
+        for(StationTrack track:tracks){
+            result.tracks.add(track.clone());
+        }
+        return result;
     }
 
 

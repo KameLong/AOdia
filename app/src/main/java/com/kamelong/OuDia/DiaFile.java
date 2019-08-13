@@ -8,11 +8,14 @@ import com.kamelong.tool.Font;
 import com.kamelong.tool.ShiftJISBufferedReader;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,26 +76,11 @@ public class DiaFile {
      * ダイヤ一覧
      */
     public ArrayList<Diagram>diagram=new ArrayList<>();
-
-
     /**
      * OuDiaバージョン
      */
     public String version="";
 
-
-
-
-    /**
-     * その他AOdiaで使わないパラメーター
-     */
-    public HashMap<String,String> parameterRosen =new HashMap<>();
-    public HashMap<String,String> parameterDispProp =new HashMap<>();
-
-    /**
-     * 駅間の所要時間
-     */
-    private ArrayList<Integer>stationTime=new ArrayList<>();
     //DispProp
     /**
      * 時刻表フォント
@@ -186,32 +174,11 @@ public class DiaFile {
      */
     public boolean showOuterTerminal=false;
 
-    //AOdia専用オプション
     /**
-     * ファイル保存パス
-     */
-    public String filePath="";
-    /**
-     * このファイルのメニューあ開いているか？
-     */
-    public boolean menuOpen=true;
-
-    /**
-     * 新規に空路線を生成する
+     * デフォルトコンストラクタ
      */
     public DiaFile(){
-        version="OuDiaSecond.1.06";
-        name="新しい路線";
-        trainType.add(new TrainType());
-        diagram.add(new Diagram(this));
-    }
 
-    /**
-     * 指定ファイルパスに新規ダイヤファイルを生成する
-     */
-    public DiaFile(String filePath){
-        this();
-        this.filePath=filePath;
     }
 
     /**
@@ -220,7 +187,6 @@ public class DiaFile {
      * @throws Exception ファイルが読み込めなかった時に返す
      */
     public DiaFile(File file)throws Exception{
-        filePath=file.getPath();
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         version=br.readLine().split("=",-1)[1];
         double v=1.02;
@@ -237,39 +203,7 @@ public class DiaFile {
             //utf-8のファイル
             loadDiaFile(br);
         }
-        //最小所要時間を計算する
-        reCalcStationTime();
         System.out.println("読み込み終了");
-
-    }
-    /**
-     *    ２つのダイヤファイルを結合して新しいダイヤファイルを作る
-     *    todo
-     */
-    public DiaFile(DiaFile[] diaList,int includeStationIndex){
-        boolean stationConnect=false;
-        ArrayList<Integer>[] stationIndexList=new ArrayList[2];
-        stationIndexList[0]=new ArrayList<>();
-        stationIndexList[1]=new ArrayList<>();
-        for(int i=0;i<diaList[0].getStationNum()&&i<includeStationIndex;i++){
-            station.add(new Station(diaList[0].station.get(i)));
-        }
-        if(diaList[0].getStationNum()>includeStationIndex){
-            if(diaList[0].station.get(includeStationIndex).name.equals(diaList[1].station.get(0).name)){
-                stationConnect=true;
-            }else{
-                stationConnect=false;
-                station.add(new Station(diaList[0].station.get(includeStationIndex)));
-            }
-        }
-        for(int i=0;i<diaList[1].getStationNum();i++){
-            station.add(new Station(diaList[1].station.get(i)));
-        }
-        for(int i=includeStationIndex+1;i<diaList[0].getStationNum();i++){
-            station.add(new Station(diaList[0].station.get(i)));
-        }
-
-
 
     }
 
@@ -485,138 +419,25 @@ public class DiaFile {
     public int getStationNum(){
         return station.size();
     }
-    public void reCalcStationTime(){
-        stationTime=new ArrayList<>();
-        stationTime.add(0);
-        for(int i=0;i<getStationNum()-1;i++){
-            stationTime.add(stationTime.get(stationTime.size()-1)+getMinReqiredTime(i,i+1));
-        }
-    }
-    /**
-     * 最小所要時間のリストを返します。
-     * 最小所要時間は別スレッドで計算されている場合がありますので、
-     * 計算が終了するまで、スレッドを待機させます。
-     * @return
-     */
-    public ArrayList<Integer> getStationTime(){
-        while(stationTime.size()<getStationNum()){
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        return stationTime;
-    }
-
-    /**
-     * 最小所要時間を計算する。
-     * この関数は処理の完了までにかなりの時間がかかると予想されます。
-     */
-    protected void calcMinReqiredTime(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                stationTime.add(0);
-                for(int i=0;i<getStationNum()-1;i++){
-                    stationTime.add(stationTime.get(stationTime.size()-1)+getMinReqiredTime(i,i+1));
-                }
-            }
-        }).start();
-    }
     public Train getTrain(int diagramIndex,int direction,int trainIndex){
         return diagram.get(diagramIndex).trains[direction].get(trainIndex);
     }
     public int getTrainSize(int diagramIndex,int direction){
         return diagram.get(diagramIndex).trains[direction].size();
     }
-    /**
-     *  駅間最小所要時間を返す。
-     *  startStatioin endStationの両方に止まる列車のうち、
-     *  所要時間（着時刻-発時刻)の最も短いものを秒単位で返す。
-     *  ただし、駅間所要時間が90秒より短いときは90秒を返す。
-     *
-     *  startStation endStationは便宜上区別しているが、順不同である。
-     * @param startStation
-     * @param endStation
-     * @return time(second)
-     */
-    public int getMinReqiredTime(int startStation,int endStation){
-        int result=360000;
-        for(int i=0;i<getDiaNum();i++){
-            if(diagram.get(i).name.equals("基準運転時分")){
-                result=360000;
-                for(int train=0;train<getTrainSize(i,0);train++){
-                    int value=getTrain(i,0,train).getRequiredTime(startStation,endStation);
-                    if(value>0&&(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1)){
-                        value+=120;
-                    }
-                    if(value>0&&result>value){
-                        result=value;
-                    }
-                }
-                for(int train=0;train<getTrainSize(i,1);train++){
-                    int value=this.getTrain(i,1,train).getRequiredTime(startStation,endStation);
-                    if(value>0&&(getTrain(i,1,train).getStop(startStation)!=1||getTrain(i,1,train).getStop(endStation)!=1)){
-                        value+=120;
-                    }
-
-                    if(value>0&&result>value){
-                        result=value;
-                    }
-                }
-                if(result==360000){
-                    result=120;
-                }
-                return result;
-            }
-        }
-        for(int i=0;i<getDiaNum();i++){
-
-            for(int train=0;train<getTrainSize(i,0);train++){
-                int value=getTrain(i,0,train).getRequiredTime(startStation,endStation);
-                if(value>0&&(getTrain(i,0,train).getStop(startStation)!=1||getTrain(i,0,train).getStop(endStation)!=1)){
-                    value+=120;
-                }
-
-                if(value>0&&result>value){
-                    result=value;
-                }
-            }
-            for(int train=0;train<getTrainSize(i,1);train++){
-                int value=getTrain(i,1,train).getRequiredTime(startStation,endStation);
-                if(value>0&&(getTrain(i,1,train).getStop(startStation)!=1||getTrain(i,1,train).getStop(endStation)!=1)){
-                    value+=120;
-                }
-
-                if(value>0&&result>value){
-                    result=value;
-                }
-            }
-        }
-        if(result==360000){
-            result=120;
-        }
-        if(result<90){
-            result=90;
-        }
-
-        return result;
-    }
     public void saveToFile(String fileName,boolean saveFilePath) throws Exception {
         FileOutputStream fos = new FileOutputStream(fileName);
-
         //BOM付与
         fos.write(0xef);
         fos.write(0xbb);
         fos.write(0xbf);
         fos.close();
-        FileWriter out=new FileWriter(fileName,true);
-        out.write("FileType=OuDiaSecond.1.06\r\n");
-        out.write("Rosen.\r\n");
-        out.write("Rosenmei="+name+"\r\n");
-        out.write("KudariDiaAlias="+diaNameDefault[0]+"\r\n");
-        out.write("NoboriDiaAlias="+diaNameDefault[1]+"\r\n");
+        PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(fos)));
+        out.println("FileType=OuDiaSecond.1.06");
+        out.println("Rosen.");
+        out.println("Rosenmei="+name);
+        out.println("KudariDiaAlias="+diaNameDefault[0]);
+        out.println("NoboriDiaAlias="+diaNameDefault[1]);
         for(Station s:station){
             s.saveToFile(out);
         }
@@ -627,62 +448,87 @@ public class DiaFile {
             dia.saveToFile(out);
         }
 
-        out.write("KitenJikoku="+diagramStartTime/3600+String.format("%02d",(diagramStartTime/60)%60)+"\r\n");
-        out.write("DiagramDgrYZahyouKyoriDefault="+ stationSpaceDefault +"\r\n");
-        out.write("EnableOperation="+operationStyle+"\r\n");
-        if(saveFilePath) {
-            out.write("AOdiaFilePath=" + filePath + "\r\n");
-        }
-        out.write("Comment="+comment.replace("\n","\\n")+"\r\n");
-        for(Map.Entry<String,String> value :parameterRosen.entrySet()){
-            out.write(value.getKey()+"="+value.getValue()+"\r\n");
-        }
-        out.write(".\r\n");
+        out.println("KitenJikoku="+(diagramStartTime/3600)+String.format("%02d",(diagramStartTime/60)%60));
+        out.println("DiagramDgrYZahyouKyoriDefault="+ stationSpaceDefault );
+        out.println("EnableOperation="+operationStyle);
+        out.println("Comment="+comment.replace("\n","\\n"));
+        out.println(".");
 
-        out.write("DispProp.\r\n");
+        out.println("DispProp.");
         for(Font font:timeTableFont){
-            out.write("JikokuhyouFont="+font.getOuDiaString()+"\r\n");
+            out.println("JikokuhyouFont="+font.getOuDiaString());
         }
-        out.write("JikokuhyouVFont="+timeTableVFont.getOuDiaString()+"\r\n");
-        out.write("DiaEkimeiFont="+diaStationNameFont.getOuDiaString()+"\r\n");
-        out.write("DiaJikokuFont="+diaTimeFont.getOuDiaString()+"\r\n");
-        out.write("DiaRessyaFont="+diaTrainFont.getOuDiaString()+"\r\n");
-        out.write("CommentFont="+commentFont.getOuDiaString()+"\r\n");
-        out.write("DiaMojiColor="+diaTextColor.getOudiaString()+"\r\n");
-        out.write("DiaHaikeiColor="+diaBackColor.getOudiaString()+"\r\n");
-        out.write("DiaRessyaColorr="+diaTrainColor.getOudiaString()+"\r\n");
-        out.write("DiaJikuColor="+diaAxicsColor.getOudiaString()+"\r\n");
+        out.println("JikokuhyouVFont="+timeTableVFont.getOuDiaString());
+        out.println("DiaEkimeiFont="+diaStationNameFont.getOuDiaString());
+        out.println("DiaJikokuFont="+diaTimeFont.getOuDiaString());
+        out.println("DiaRessyaFont="+diaTrainFont.getOuDiaString());
+        out.println("CommentFont="+commentFont.getOuDiaString());
+        out.println("DiaMojiColor="+diaTextColor.getOudiaString());
+        out.println("DiaHaikeiColor="+diaBackColor.getOudiaString());
+        out.println("DiaRessyaColorr="+diaTrainColor.getOudiaString());
+        out.println("DiaJikuColor="+diaAxicsColor.getOudiaString());
         for(Color color :timeTableBackColor){
-            out.write("JikokuhyouBackColor="+color.getOudiaString()+"\r\n");
+            out.println("JikokuhyouBackColor="+color.getOudiaString());
         }
-        out.write("StdOpeTimeLowerColor="+stdOpeTimeLowerColor.getOudiaString()+"\r\n");
-        out.write("StdOpeTimeHigherColor="+stdOpeTimeHigherColor.getOudiaString()+"\r\n");
-        out.write("StdOpeTimeUndefColor="+stdOpeTimeUndefColor.getOudiaString()+"\r\n");
-        out.write("StdOpeTimeIllegalColor="+stdOpeTimeIllegalColor.getOudiaString()+"\r\n");
-        out.write("EkimeiLength="+(stationNameWidth+"\r\n");
-        out.write("JikokuhyouRessyaWidth="+trainWidth+"\r\n");
-        out.write("AnySecondIncDec1="+secondShift[0]+"\r\n");
-        out.write("AnySecondIncDec2="+secondShift[1]+"\r\n");
-        out.write("DisplayRessyamei="+(showTrainName?"1":"0")+"\r\n");
-        out.write("DisplayOuterTerminalEkimeiOriginSide="+(showOuterTerminalOrigin?"1":"0")+"\r\n");
-        out.write("DisplayOuterTerminalEkimeiTerminalSide="+(showOuterTerminalTerminal?"1":"0")+"\r\n");
-        out.write("EDiagramDisplayOuterTerminal="+(showOuterTerminal?"1":"0")+"\r\n");
-        out.write(".\r\n");
+        out.println("StdOpeTimeLowerColor="+stdOpeTimeLowerColor.getOudiaString());
+        out.println("StdOpeTimeHigherColor="+stdOpeTimeHigherColor.getOudiaString());
+        out.println("StdOpeTimeUndefColor="+stdOpeTimeUndefColor.getOudiaString());
+        out.println("StdOpeTimeIllegalColor="+stdOpeTimeIllegalColor.getOudiaString());
+        out.println("EkimeiLength="+(stationNameWidth));
+        out.println("JikokuhyouRessyaWidth="+trainWidth);
+        out.println("AnySecondIncDec1="+secondShift[0]);
+        out.println("AnySecondIncDec2="+secondShift[1]);
+        out.println("DisplayRessyamei="+(showTrainName?"1":"0"));
+        out.println("DisplayOuterTerminalEkimeiOriginSide="+(showOuterTerminalOrigin?"1":"0"));
+        out.println("DisplayOuterTerminalEkimeiTerminalSide="+(showOuterTerminalTerminal?"1":"0"));
+        out.println("EDiagramDisplayOuterTerminal="+(showOuterTerminal?"1":"0"));
+        out.println(".");
         PackageInfo packageInfo = SDlog.activity.getPackageManager().getPackageInfo(SDlog.activity.getPackageName(), 0);
-        out.write("FileTypeAppComment=AOdia v"+packageInfo.versionName+"\r\n");
+        out.println("FileTypeAppComment=AOdia v"+packageInfo.versionName);
         out.close();
+    }
+    public void saveToOuDiaFile(String fileName) throws Exception {
+        PrintWriter out = new PrintWriter
+                (new BufferedWriter(new OutputStreamWriter
+                        (new FileOutputStream(new File(fileName)),"Shift-JIS")));
+        out.println("FileType=OuDia.1.02");
+        out.println("Rosen.");
+        out.println("Rosenmei="+name);
+        for(Station s:station){
+            s.saveToOuDiaFile(out);
+        }
+        for(TrainType type:trainType){
+            type.saveToOuDiaFile(out);
+        }
+        for(Diagram dia:diagram){
+            dia.saveToOuDiaFile(out);
+        }
 
+        out.println("KitenJikoku="+(diagramStartTime/3600)+String.format("%02d",(diagramStartTime/60)%60));
+        out.println("DiagramDgrYZahyouKyoriDefault="+ stationSpaceDefault );
+        out.println("Comment="+comment.replace("\n","\\n"));
+        out.println(".");
 
+        out.println("DispProp.");
+        for(Font font:timeTableFont){
+            out.println("JikokuhyouFont="+font.getOuDiaString());
+        }
+        out.println("JikokuhyouVFont="+timeTableVFont.getOuDiaString());
+        out.println("DiaEkimeiFont="+diaStationNameFont.getOuDiaString());
+        out.println("DiaJikokuFont="+diaTimeFont.getOuDiaString());
+        out.println("DiaRessyaFont="+diaTrainFont.getOuDiaString());
+        out.println("CommentFont="+commentFont.getOuDiaString());
+        out.println("DiaMojiColor="+diaTextColor.getOudiaString());
+        out.println("DiaHaikeiColor="+diaBackColor.getOudiaString());
+        out.println("DiaRessyaColorr="+diaTrainColor.getOudiaString());
+        out.println("DiaJikuColor="+diaAxicsColor.getOudiaString());
+        out.println("EkimeiLength="+(stationNameWidth));
+        out.println("JikokuhyouRessyaWidth="+trainWidth);
+        out.println(".");
+        PackageInfo packageInfo = SDlog.activity.getPackageManager().getPackageInfo(SDlog.activity.getPackageName(), 0);
+        out.println("FileTypeAppComment=AOdia v"+packageInfo.versionName);
+        out.close();
     }
-    public void copyDiagram(int diagramIndex,String diaName){
-        diagram.add((Diagram) diagram.get(diagramIndex).clone());
-        diagram.get(diagram.size()-1).name=diaName;
-    }
-    public void addNewDiagram(){
-        diagram.add(new Diagram(this));
-    }
-    public void deleteDiagram(int diagramIndex){
-        diagram.remove(diagramIndex);
-    }
+
 
 }

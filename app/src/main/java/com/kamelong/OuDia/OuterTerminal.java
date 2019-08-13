@@ -2,12 +2,13 @@ package com.kamelong.OuDia;
 
 
 import java.io.FileWriter;
+import java.io.PrintWriter;
 
 /**
  * 路線外発着駅
  */
 
-class OuterTerminal {
+public class OuterTerminal {
     /**
      路線外発着駅名です。
      作業設定画面で用います。
@@ -58,11 +59,16 @@ class OuterTerminal {
      * @param out
      * @throws Exception
      */
-    public void saveToFile(FileWriter out)throws Exception{
-        out.write("OuterTerminal.");
-        out.write("OuterTerminalEkimei="+outerTerminalDiaName+"\r\n");
-        out.write("OuterTerminalJikokuRyaku="+ outerTerminalTimeTableName +"\r\n");
-        out.write("OuterTerminalDiaRyaku="+outerTerminalDiaName+"\r\n");
-        out.write(".");
+    public void saveToFile(PrintWriter out)throws Exception{
+        out.println("OuterTerminal.");
+        out.println("OuterTerminalEkimei="+outerTerminalDiaName);
+        out.println("OuterTerminalJikokuRyaku="+ outerTerminalTimeTableName);
+        out.println("OuterTerminalDiaRyaku="+outerTerminalDiaName);
+        out.println(".");
     }
+    @Override
+    public OuterTerminal clone() throws CloneNotSupportedException {
+        return (OuterTerminal)super.clone();
+    }
+
 }

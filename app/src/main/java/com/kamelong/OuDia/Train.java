@@ -4,9 +4,10 @@ import com.kamelong.aodia.SDlog;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
-public class Train {
+public class Train implements Cloneable{
     public static long count2=0;
     public static final int DEPART = 0;
     public static final int ARRIVE = 1;
@@ -57,36 +58,9 @@ public class Train {
      */
     public ArrayList<StationTime> stationTimes=new ArrayList<>();
 
-
-
-
     public Train(DiaFile diaFile, int direction) {
         this.diaFile = diaFile;
         this.direction = direction;
-    }
-
-
-    public Train(Train train) {
-        this(train.diaFile, train.direction);
-        name = train.name;
-        number = train.number;
-        count = train.count;
-        remark = train.remark;
-        type = train.type;
-        stationTimes=new ArrayList<>();
-        try {
-            for (int i = 0; i < train.stationTimes.size(); i++) {
-                stationTimes.add(train.stationTimes.get(i).clone());
-            }
-            if(stationTimes.size()!=diaFile.getStationNum()){
-                throw new Exception("Invalid station size");
-            }
-        }catch (Exception e){
-            SDlog.log(e);
-            for(int i=0;i<diaFile.getStationNum();i++){
-                stationTimes.add(new StationTime());
-            }
-        }
     }
     public void setValue(String title,String value){
         switch (title) {
@@ -117,120 +91,25 @@ public class Train {
         }
     }
 
-    public Train(DiaFile diaFile, int direction, BufferedReader br) throws Exception {
-        this(diaFile, direction);
-        String line = br.readLine();
-        while (!line.equals(".")) {
-            String title = line.split("=", -1)[0];
-            String value = line.split("=", -1)[1];
-            switch (title) {
-                case "Syubetsu":
-                    type = Integer.parseInt(value);
-                    break;
-                case "Ressyabangou":
-                    number = value;
-                    break;
-                case "Ressyamei":
-                    name = value;
-                    break;
-                case "Gousuu":
-                    count = value;
-                    break;
-                case "EkiJikoku":
-                    setOuDiaTime(value.split(",", -1));
-                    break;
-                case "RessyaTrack":
-                    setOuDiaTrack(value.split(",", -1));
-                    break;
-                case "Bikou":
-                    remark = value;
-                    break;
-            }
-            line = br.readLine();
+    /**
+     * Ekijikoku行の読み込みを行う
+     * @param value
+     */
+    private void setOuDiaTime(String[] value) {
+        stationTimes=new ArrayList<>();
+        for(int i=0;i<diaFile.getStationNum();i++){
+            stationTimes.add(new StationTime());
         }
-
+        for (int i = 0; i < value.length && i < diaFile.getStationNum(); i++) {
+            int station = direction * (diaFile.getStationNum() - 1) + (1 - 2 * direction) * i;
+            stationTimes.get(station).setStationTime(value[i]);
+        }
     }
 
     /**
-     * 文字列形式の時刻を秒の数値に変える
-     *
-     * @param sTime
-     * @return
+     * OuDia2ndの番線行の読み込みを行う。
+     * @param value
      */
-    public static int timeStringToInt(String sTime) {
-        int hh = 0;
-        int mm = 0;
-        int ss = 0;
-        switch (sTime.length()) {
-            case 3:
-                hh = Integer.parseInt(sTime.substring(0, 1));
-                mm = Integer.parseInt(sTime.substring(1, 3));
-                break;
-            case 4:
-                hh = Integer.parseInt(sTime.substring(0, 2));
-                mm = Integer.parseInt(sTime.substring(2, 4));
-                break;
-            case 5:
-                hh = Integer.parseInt(sTime.substring(0, 1));
-                mm = Integer.parseInt(sTime.substring(1, 3));
-                ss = Integer.parseInt(sTime.substring(3, 5));
-                break;
-            case 6:
-                hh = Integer.parseInt(sTime.substring(0, 2));
-                mm = Integer.parseInt(sTime.substring(2, 4));
-                ss = Integer.parseInt(sTime.substring(4, 6));
-                break;
-            default:
-                return -1;
-        }
-        if (hh > 23 || hh < 0) {
-            return -1;
-        }
-        if (mm > 59 || mm < 0) {
-            return -1;
-        }
-        if (ss > 59 || ss < 0) {
-            return -1;
-        }
-        return 3600 * hh + 60 * mm + ss;
-
-    }
-
-    private static String timeIntToString(int time) {
-        if (time < 0) return "";
-        int ss = time % 60;
-        time = time / 60;
-        int mm = time % 60;
-        time = time / 60;
-        int hh = time % 24;
-        return String.format("%02d", hh) + String.format("%02d", mm) + String.format("%02d", ss);
-    }
-
-    private void setOuDiaTime(String[] value) {
-        for (int i = 0; i < value.length && i < time.length; i++) {
-            int station = direction * (stationNum - 1) + (1 - 2 * direction) * i;
-            if (value[i].length() == 0) {
-                setStopType(station, 0);
-                continue;
-            }
-            if (!value[i].contains(";")) {
-                setStopType(station, Integer.parseInt(value[i]));
-                continue;
-            }
-            setStopType(station, Integer.parseInt(value[i].split(";", -1)[0]));
-            String str = value[i].split(";", -1)[1];
-            if (str.contains("/")) {
-                setArrivalTime(station, timeStringToInt(str.split("/", -1)[0]));
-                if (str.split("/", -1)[1].length() != 0) {
-                    setDepartureTime(station, timeStringToInt(str.split("/", -1)[1]));
-                }
-            } else {
-                setDepartureTime(station, timeStringToInt(str));
-            }
-        }
-
-    }
-
     private void setOuDiaTrack(String[] value) {
         if (direction == 1) {
             System.out.println("test");
@@ -260,6 +139,94 @@ public class Train {
                 setStop(station, Integer.valueOf(value[i]));
             }
         }
+    }
+    public void saveToFile(PrintWriter out) throws Exception {
+        out.println("Ressya.");
+        if (direction == 0) {
+            out.println("Houkou=Kudari");
+        } else {
+            out.println("Houkou=Nobori");
+        }
+        out.println("Syubetsu=" + type );
+        if (number.length() > 0) {
+            out.println("Ressyabangou=" + number );
+        }
+        if (name.length() > 0) {
+            out.println("Ressyamei=" + name );
+        }
+        if (count.length() > 0) {
+            out.println("Gousuu=" + count );
+        }
+        out.println("EkiJikoku=" + getEkijikokuOudia(true));
+        out.println("RessyaTrack=" + getTrackOudia() );
+        if (remark.length() > 0) {
+            out.println("Bikou=" + remark );
+        }
+        out.println(".");
+
+    }
+    public void saveToOuDiaFile(PrintWriter out) throws Exception {
+        out.println("Ressya.");
+        if (direction == 0) {
+            out.println("Houkou=Kudari");
+        } else {
+            out.println("Houkou=Nobori");
+        }
+        out.println("Syubetsu=" + type );
+        if (number.length() > 0) {
+            out.println("Ressyabangou=" + number );
+        }
+        if (name.length() > 0) {
+            out.println("Ressyamei=" + name );
+        }
+        if (count.length() > 0) {
+            out.println("Gousuu=" + count );
+        }
+        out.println("EkiJikoku=" + getEkijikokuOudia(false));
+        if (remark.length() > 0) {
+            out.println("Bikou=" + remark );
+        }
+        out.println(".");
+
+    }
+
+    /**
+     * OuDia形式の駅時刻行を作成します。
+     * @param secondFrag trueの時oudia2nd形式に対応します。
+     * @return
+     */
+    protected String getEkijikokuOudia(boolean secondFrag) {
+        StringBuilder result = new StringBuilder("");
+        for (int i = 0; i < stationTimes.size(); i++) {
+            int station = getStationIndex(i);
+            result.append(stationTimes.get(station).getOuDiaString(secondFrag));
+            result.append(",");
+        }
+        return result.toString();
+    }
+
+
+    /**
+     * 上り下りの時刻表駅順から、路線駅順を返します。
+     * 下りの時は時刻表駅順は路線駅順と同じ
+     * 上りの時は時刻表駅順は路線駅順の逆になります。
+     */
+    public int getStationIndex(int index){
+        if(direction==0){
+            return index;
+        }else{
+            return stationTimes.size()-index-1;
+        }
+    }
+
+    @Override
+    public Train clone() throws CloneNotSupportedException {
+        Train result=(Train)super.clone();
+        result.stationTimes=new ArrayList<>();
+        for(StationTime time:stationTimes){
+            result.stationTimes.add(time.clone());
+        }
+        return result;
     }
 
     public void setDepartureTime(int station, long value) {
@@ -559,78 +526,6 @@ public class Train {
 
     }
 
-    public void saveToFile(FileWriter out) throws Exception {
-        out.write("Ressya.\r\n");
-        if (direction == 0) {
-            out.write("Houkou=Kudari\r\n");
-        } else {
-            out.write("Houkou=Nobori\r\n");
-        }
-        out.write("Syubetsu=" + type + "\r\n");
-        if (number.length() > 0) {
-            out.write("Ressyabangou=" + number + "\r\n");
-        }
-        if (name.length() > 0) {
-            out.write("Ressyamei=" + name + "\r\n");
-        }
-        if (count.length() > 0) {
-            out.write("Gousuu=" + count + "\r\n");
-        }
-        out.write("EkiJikoku=" + getEkijikokuOudia() + "\r\n");
-        out.write("RessyaTrack=" + getTrackOudia() + "\r\n");
-        if (remark.length() > 0) {
-            out.write("Bikou=" + remark + "\r\n");
-        }
-        out.write(".\r\n");
-
-    }
-
-    private String getEkijikokuOudia() {
-        StringBuilder result = new StringBuilder("");
-        for (int i = 0; i < time.length; i++) {
-
-            int station = i * (1 - direction * 2) + direction * (time.length - 1);
-            if (getStopType(station) == 0) {
-                result.append(",");
-                continue;
-            }
-            result.append(getStopType(station));
-            if (arriveExist(station) || departExist(station)) {
-                result.append(";");
-            }
-            if (arriveExist(station)) {
-                result.append(timeIntToString(getArrivalTime(station)));
-                result.append("/");
-            }
-            if (departExist(station)) {
-                result.append(timeIntToString(getDepartureTime(station)));
-            }
-            if (i != time.length - 1) {
-                result.append(",");
-            }
-        }
-        return result.toString();
-    }
-
-    private String getTrackOudia() {
-        StringBuilder result = new StringBuilder("");
-        for (int i = 0; i < time.length; i++) {
-            int station = i * (1 - direction * 2) + direction * (time.length - 1);
-            result.append(getStop(station));
-            if (station == startStation() && leaveYard) {
-                result.append(";2/");
-                result.append(operationName);
-            }
-            if (station == endStation() && goYard) {
-                result.append(";2");
-            }
-            if (i != time.length - 1) {
-                result.append(",");
-            }
-        }
-        return result.toString();
-
-    }
 
     public void editStationSubmit(ArrayList<Integer> editStation) {
         long[] newTime = new long[editStation.size()];
@@ -666,8 +561,8 @@ public class Train {
     }
 
     public boolean isnull() {
-        for (int i = 0; i < time.length; i++) {
-            if (time[i] != 0) return false;
+        for (int i = 0; i <diaFile.getStationNum(); i++) {
+            if (stationTimes.get(i).stopType!=0) return false;
         }
         return true;
     }

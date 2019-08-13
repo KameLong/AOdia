@@ -6,6 +6,9 @@ package com.kamelong.tool;
  */
 
 public class Color {
+    public static final Color BLACK=new Color("#000000");
+    public static final Color WHITE=new Color("#FFFFFF");
+
     private int alpha=255;
     private int red=0;
     private int green=0;

@@ -48,8 +48,104 @@ public class StationTime {
         return other;
     }
 
+    public void setStationTime(String value){
+        if (value.length() == 0) {
+            stopType=0;
+            return;
+        }
+        if (!value.contains(";")) {
+            stopType=Integer.parseInt(value);
+            return;
+        }
+        stopType=Integer.parseInt(value.split(";", -1)[0]);
+        value=value.split(";",-1)[1];
+        if(value.contains("$")){
+            stopTrack=Integer.parseInt(value.split("$",-1)[1]);
+            value=value.split("$")[0];
+        }
+        if (value.contains("/")) {
+            ariTime= timeStringToInt(value.split("/", -1)[0]);
+            if (value.split("/", -1)[1].length() != 0) {
+                depTime=timeStringToInt(value.split("/", -1)[1]);
+            }
+        } else {
+            depTime=timeStringToInt(value);
+        }
 
+    }
+    private static String timeIntToString(int time) {
+        if (time < 0) return "";
+        int ss = time % 60;
+        time = time / 60;
+        int mm = time % 60;
+        time = time / 60;
+        int hh = time % 24;
+        return String.format("%02d", hh) + String.format("%02d", mm) + String.format("%02d", ss);
+    }
+    /**
+     * 文字列形式の時刻を秒の数値に変える
+     *
+     * @param sTime
+     * @return
+     */
+    public static int timeStringToInt(String sTime) {
+        int hh = 0;
+        int mm = 0;
+        int ss = 0;
+        switch (sTime.length()) {
+            case 3:
+                hh = Integer.parseInt(sTime.substring(0, 1));
+                mm = Integer.parseInt(sTime.substring(1, 3));
+                break;
+            case 4:
+                hh = Integer.parseInt(sTime.substring(0, 2));
+                mm = Integer.parseInt(sTime.substring(2, 4));
+                break;
+            case 5:
+                hh = Integer.parseInt(sTime.substring(0, 1));
+                mm = Integer.parseInt(sTime.substring(1, 3));
+                ss = Integer.parseInt(sTime.substring(3, 5));
+                break;
+            case 6:
+                hh = Integer.parseInt(sTime.substring(0, 2));
+                mm = Integer.parseInt(sTime.substring(2, 4));
+                ss = Integer.parseInt(sTime.substring(4, 6));
+                break;
+            default:
+                return -1;
+        }
+        if (hh > 23 || hh < 0) {
+            return -1;
+        }
+        if (mm > 59 || mm < 0) {
+            return -1;
+        }
+        if (ss > 59 || ss < 0) {
+            return -1;
+        }
+        return 3600 * hh + 60 * mm + ss;
+    }
 
-
+    public String getOuDiaString(boolean oudia2ndFrag){
+        String value="";
+        if(stopType==0){
+            return value;
+        }
+        value+=stopType;
+        if(ariTime<0&&depTime<0){
+            return value;
+        }
+        value+=";";
+        if(ariTime<0){
+            value+=timeIntToString(ariTime)+"/";
+        }
+        if(depTime<0){
+            value+=timeIntToString(depTime);
+        }
+        if(oudia2ndFrag){
+            value+="$"+stopTrack;
+        }
+        return value;
+    }
 
 }

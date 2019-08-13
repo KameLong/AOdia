@@ -1,8 +1,9 @@
 package com.kamelong.OuDia;
 
 import java.io.FileWriter;
+import java.io.PrintWriter;
 
-public class StationTrack {
+public class StationTrack implements Cloneable{
     /**
      番線名
      */
@@ -48,11 +49,21 @@ public class StationTrack {
      * @param out
      * @throws Exception
      */
-    public void saveToFile(FileWriter out)throws Exception{
-        out.write("EkiTrack2.");
-        out.write("TrackName="+trackName+"\r\n");
-        out.write("TrackRyakusyou="+trackShortName+"\r\n");
-        out.write("TrackNoboriRyakusyou="+trackShortNameUp+"\r\n");
-        out.write(".");
+    public void saveToFile(PrintWriter out)throws Exception{
+        out.println("EkiTrack2.");
+        out.println("TrackName="+trackName);
+        out.println("TrackRyakusyou="+trackShortName);
+        out.println("TrackNoboriRyakusyou="+trackShortNameUp);
+        out.println(".");
     }
+    @Override
+    public StationTrack clone(){
+        try {
+            return (StationTrack) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return new StationTrack();
+    }
+
 }

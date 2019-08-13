@@ -5,8 +5,9 @@ import com.kamelong.tool.Color;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
 
-public class TrainType {
+public class TrainType implements Cloneable{
     /**
      種別名。
      規定値は、空文字列。
@@ -114,39 +115,72 @@ public class TrainType {
         }
 
     }
-    public void saveToFile(FileWriter out) throws Exception {
-            out.write("Ressyasyubetsu.\r\n");
-            out.write("Syubetsumei="+name+"\r\n");
-            out.write("Ryakusyou="+shortName+"\r\n");
-            out.write("JikokuhyouMojiColor="+textColor.getOudiaString()+"\r\n");
-            out.write("JikokuhyouFontIndex="+fontIndex+"\r\n");
-            out.write("JikokuhyouBackColor="+timeTableBackColor.getOudiaString()+"\r\n");
-            out.write("DiagramSenColor="+diaColor.getOudiaString()+"\r\n");
-            switch (lineStyle){
-                case 0:
-                    out.write("DiagramSenStyle=SenStyle_Jissen\r\n");
-                    break;
-                case 1:
-                    out.write("DiagramSenStyle=SenStyle_Hasen\r\n");
-                    break;
-                case 2:
-                    out.write("DiagramSenStyle=SenStyle_Tensen\r\n");
-                    break;
-                case 3:
-                    out.write("DiagramSenStyle=SenStyle_Ittensasen\r\n");
-                    break;
-            }
-            if (bold){
-                out.write("DiagramSenIsBold=1\r\n");
-            }
-            if(stopmark){
-                out.write("StopMarkDrawType=EStopMarkDrawType_DrawOnStop\r\n");
-            }
-            if(parentIndex>=0){
-                out.write("ParentSyubetsuIndex="+parentIndex+"\r\n");
+    public void saveToFile(PrintWriter out) throws Exception {
+        out.println("Ressyasyubetsu.");
+        out.println("Syubetsumei="+name);
+        out.println("Ryakusyou="+shortName);
+        out.println("JikokuhyouMojiColor="+textColor.getOudiaString());
+        out.println("JikokuhyouFontIndex="+fontIndex);
+        out.println("JikokuhyouBackColor="+timeTableBackColor.getOudiaString());
+        out.println("DiagramSenColor="+diaColor.getOudiaString());
+        switch (lineStyle){
+            case 0:
+                out.println("DiagramSenStyle=SenStyle_Jissen");
+                break;
+            case 1:
+                out.println("DiagramSenStyle=SenStyle_Hasen");
+                break;
+            case 2:
+                out.println("DiagramSenStyle=SenStyle_Tensen");
+                break;
+            case 3:
+                out.println("DiagramSenStyle=SenStyle_Ittensasen");
+                break;
+        }
+        if (bold){
+            out.println("DiagramSenIsBold=1");
+        }
+        if(stopmark){
+            out.println("StopMarkDrawType=EStopMarkDrawType_DrawOnStop");
+        }
+        if(parentIndex>=0){
+            out.println("ParentSyubetsuIndex="+parentIndex);
 
-            }
-            out.write(".\r\n");
+        }
+        out.println(".");
+    }
+    public void saveToOuDiaFile(PrintWriter out) throws Exception {
+        out.println("Ressyasyubetsu.");
+        out.println("Syubetsumei="+name);
+        out.println("Ryakusyou="+shortName);
+        out.println("JikokuhyouMojiColor="+textColor.getOudiaString());
+        out.println("JikokuhyouFontIndex="+fontIndex);
+        out.println("DiagramSenColor="+diaColor.getOudiaString());
+        switch (lineStyle){
+            case 0:
+                out.println("DiagramSenStyle=SenStyle_Jissen");
+                break;
+            case 1:
+                out.println("DiagramSenStyle=SenStyle_Hasen");
+                break;
+            case 2:
+                out.println("DiagramSenStyle=SenStyle_Tensen");
+                break;
+            case 3:
+                out.println("DiagramSenStyle=SenStyle_Ittensasen");
+                break;
+        }
+        if (bold){
+            out.println("DiagramSenIsBold=1");
+        }
+        if(stopmark){
+            out.println("StopMarkDrawType=EStopMarkDrawType_DrawOnStop");
+        }
+        out.println(".");
+    }
+    public TrainType clone(){
+        TrainType result=(TrainType)super.clone();
+        result.diaColor=diaColor.clone();
     }
 
 }
