@@ -1,18 +1,11 @@
 package com.kamelong.aodia.TimeTable.EditTrain;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.text.InputFilter;
-import android.text.InputType;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.kamelong.OuDia.Train;
-import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 public class EditStopTimeView extends EditTimeView {
 

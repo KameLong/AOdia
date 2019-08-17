@@ -20,7 +20,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
 import java.util.List;

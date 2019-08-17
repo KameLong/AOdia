@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.kamelong.aodia.AOdiaActivity;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 /**
  * Created by kame on 2017/01/24.

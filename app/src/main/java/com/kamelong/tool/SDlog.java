@@ -1,4 +1,4 @@
-package com.kamelong.aodia;
+package com.kamelong.tool;
 import java.io.File;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;

@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,6 +33,7 @@ import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
 import com.kamelong.aodia.menu.MenuFragment;
+import com.kamelong.tool.SDlog;
 
 import java.io.File;
 import java.io.FileOutputStream;

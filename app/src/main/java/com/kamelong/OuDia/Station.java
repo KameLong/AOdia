@@ -1,12 +1,14 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.tool.SDlog;
+
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Deque;
 
-public class Station {
+public class Station implements Cloneable{
     public DiaFile diaFile;
     /**
      * 駅名
@@ -111,24 +113,6 @@ public class Station {
      */
     public int nextStationDistance;
 
-    /**
-     分岐駅設定・環状線設定による、駅の繋がりをマッピングしたものです。
-     stationIndexLoopに、分岐の基幹駅及び環状線の起点駅・終点駅がstationIndexの降順に収まります。
-     stationIndexBrunchOriginSideには、stationIndexLoopの先頭の駅を基幹駅とする派生駅がstationindexの降順に収まります。
-     stationIndexBrunchTerminalSideには、stationiIndexLoopの末尾の駅を基幹駅とする派生駅がstationindexの降順に収まります。
-     brunchLoopPositionは、これらの中における、当駅の位置を表します。
-     INT_MIN:当駅が起点方派生駅の場合、この値が返されます
-     -1:当駅が単独駅(分岐駅及び環状線と無関係)の場合、この値が返されます
-     0以上:当駅が基幹駅及び起点駅・終点駅の場合、
-     iEkiIndexLoop内におけるIndexを返します。
-     INT_MAX:当駅が終点方派生駅の場合、この値が返されます
-
-     これらの要素は、駅編集及びより上位の編集が行われるたびに更新されます。
-     */
-    int brunchLoopPosition;
-    Deque<Integer> stationIndexBrunchOriginSide;
-    Deque<Integer> stationIndexLoop;
-    Deque<Integer> stationIndexBrunchTerminalSide;
 
     /**
      作業表示欄設定
@@ -576,30 +560,35 @@ public class Station {
     }
 
     @Override
-    public Station clone() throws CloneNotSupportedException {
-        Station result=(Station)super.clone();
-        result.showArrival=showArrival.clone();
-        result.showArrivalCustom=showArrivalCustom.clone();
-        result.showDeparture=showDeparture.clone();
-        result.showDepatureCustom=showDepatureCustom.clone();
-        result.showDiagramInfo=showDiagramInfo.clone();
-        result.showtrack=showtrack.clone();
-        result.showTrainNameCustom=showTrainNameCustom.clone();
-        result.showTrainNumberCustom=showTrainNumberCustom.clone();
-        result.showTrainOperationCustom=showTrainOperationCustom.clone();
-        result.showTrainTypeCustom=showTrainTypeCustom.clone();
-        result.stationOperationNum=stationOperationNum.clone();
-        result.stopMain=stopMain.clone();
-        result.timeTableStyle=timeTableStyle.clone();
-        result.outerTerminals=new ArrayList<>();
-        for(OuterTerminal terminal:outerTerminals){
-            result.outerTerminals.add(terminal.clone());
+    public Station clone(){
+        try {
+            Station result = (Station) super.clone();
+            result.showArrival = showArrival.clone();
+            result.showArrivalCustom = showArrivalCustom.clone();
+            result.showDeparture = showDeparture.clone();
+            result.showDepatureCustom = showDepatureCustom.clone();
+            result.showDiagramInfo = showDiagramInfo.clone();
+            result.showtrack = showtrack.clone();
+            result.showTrainNameCustom = showTrainNameCustom.clone();
+            result.showTrainNumberCustom = showTrainNumberCustom.clone();
+            result.showTrainOperationCustom = showTrainOperationCustom.clone();
+            result.showTrainTypeCustom = showTrainTypeCustom.clone();
+            result.stationOperationNum = stationOperationNum.clone();
+            result.stopMain = stopMain.clone();
+            result.timeTableStyle = timeTableStyle.clone();
+            result.outerTerminals = new ArrayList<>();
+            for (OuterTerminal terminal : outerTerminals) {
+                result.outerTerminals.add(terminal.clone());
+            }
+            result.tracks = new ArrayList<>();
+            for (StationTrack track : tracks) {
+                result.tracks.add(track.clone());
+            }
+            return result;
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new Station(diaFile);
         }
-        result.tracks=new ArrayList<>();
-        for(StationTrack track:tracks){
-            result.tracks.add(track.clone());
-        }
-        return result;
     }
 
 

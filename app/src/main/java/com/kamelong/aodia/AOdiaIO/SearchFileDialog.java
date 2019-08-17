@@ -15,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 public class SearchFileDialog implements OnItemClickListener
 {

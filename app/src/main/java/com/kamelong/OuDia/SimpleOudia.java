@@ -1,6 +1,6 @@
 package com.kamelong.OuDia;
 
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.tool.ShiftJISBufferedReader;
 
 import java.io.BufferedReader;

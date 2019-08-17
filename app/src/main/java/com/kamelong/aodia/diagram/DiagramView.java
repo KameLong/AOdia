@@ -14,7 +14,7 @@ import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
 import java.util.Iterator;

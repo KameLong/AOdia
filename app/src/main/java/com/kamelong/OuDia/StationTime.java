@@ -1,5 +1,7 @@
 package com.kamelong.OuDia;
 
+import com.kamelong.tool.SDlog;
+
 import java.util.ArrayList;
 
 public class StationTime {
@@ -37,15 +39,20 @@ public class StationTime {
      */
     public ArrayList<StationTimeOperation>afterOperations=new ArrayList<>();
 
-    public StationTime clone() throws CloneNotSupportedException {
-        StationTime other=(StationTime)super.clone();
-        for(StationTimeOperation operation:beforeOperations){
-            other.beforeOperations.add(operation.clone());
+    public StationTime clone() {
+        try {
+            StationTime other = (StationTime) super.clone();
+            for (StationTimeOperation operation : beforeOperations) {
+                other.beforeOperations.add(operation.clone());
+            }
+            for (StationTimeOperation operation : afterOperations) {
+                other.afterOperations.add(operation.clone());
+            }
+            return other;
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new StationTime();
         }
-        for(StationTimeOperation operation:afterOperations){
-            other.afterOperations.add(operation.clone());
-        }
-        return other;
     }
 
     public void setStationTime(String value){
@@ -71,9 +78,11 @@ public class StationTime {
         } else {
             depTime=timeStringToInt(value);
         }
-
     }
-    private static String timeIntToString(int time) {
+    public void setTrack(String value){
+        //todo
+    }
+    public static String timeIntToString(int time) {
         if (time < 0) return "";
         int ss = time % 60;
         time = time / 60;
@@ -147,5 +156,38 @@ public class StationTime {
         }
         return value;
     }
+
+
+    /**
+     * @param ad Train.BOUND_OUT or Train.BOUND_IN
+     * @return 各時刻が存在する場合はtrue、存在しないときはfalseを返します
+     */
+    public boolean timeExist(int ad){
+        if(ad==0){
+            return depTime>=0;
+        }else{
+            return ariTime>=0;
+        }
+    }
+    /**
+     * @return 発着時刻のうち片方でも存在する場合はtrue、存在しないときはfalseを返します
+     */
+    public boolean timeExist(){
+        return depTime>=0||ariTime>=0;
+    }
+
+    /**
+     * データを削除し、初期状態にします
+     */
+    public void reset(){
+        depTime=-1;
+        ariTime=-1;
+        stopTrack=0;
+        stopType=0;
+        afterOperations=new ArrayList<>();
+        beforeOperations=new ArrayList<>();
+
+    }
+
 
 }

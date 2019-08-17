@@ -2,7 +2,7 @@ package com.kamelong.OuDia;
 
 import android.content.pm.PackageInfo;
 
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
 import com.kamelong.tool.ShiftJISBufferedReader;
@@ -12,13 +12,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 /**

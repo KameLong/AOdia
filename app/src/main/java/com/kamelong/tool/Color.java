@@ -5,7 +5,7 @@ package com.kamelong.tool;
  * そもそもjava.awt.Colorはあまり好きではないのでColorクラスを自作
  */
 
-public class Color {
+public class Color implements Cloneable{
     public static final Color BLACK=new Color("#000000");
     public static final Color WHITE=new Color("#FFFFFF");
 
@@ -154,5 +154,13 @@ public class Color {
             value=255;
         }
         blue=value;
+    }
+    public Color clone(){
+        try{
+            return (Color)super.clone();
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new Color();
+        }
     }
 }

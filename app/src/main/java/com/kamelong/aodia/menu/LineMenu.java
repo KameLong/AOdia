@@ -2,9 +2,7 @@ package com.kamelong.aodia.menu;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -15,7 +13,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 /**
  * Created by kame on 2017/01/24.

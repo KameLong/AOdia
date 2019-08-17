@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
 

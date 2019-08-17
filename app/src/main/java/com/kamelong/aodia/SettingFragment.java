@@ -1,9 +1,9 @@
 package com.kamelong.aodia;
 
 import android.os.Bundle;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import com.kamelong.tool.SDlog;
 
 /*
  *     This file is part of AOdia.

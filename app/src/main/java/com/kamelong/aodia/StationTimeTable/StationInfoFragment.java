@@ -14,7 +14,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
 

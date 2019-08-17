@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.kamelong.tool.SDlog;
 /*
  *     This file is part of AOdia.
 

@@ -19,7 +19,7 @@ import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.aodia.TimeTable.EditTrain.OnFragmentCloseListener;
 import com.kamelong.aodia.TimeTable.EditTrain.OnTrainChangeListener;
 import com.kamelong.aodia.TimeTable.EditTrain.TrainTimeEditFragment;

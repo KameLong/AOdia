@@ -1,7 +1,5 @@
 package com.kamelong.aodia.EditStation;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,7 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
 

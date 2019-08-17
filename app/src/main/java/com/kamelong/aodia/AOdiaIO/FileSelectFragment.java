@@ -27,8 +27,7 @@ import android.widget.Toast;
 import com.kamelong.OuDia.SimpleOudia;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.AOdiaFragment;
-import com.kamelong.aodia.SDlog;
-import com.kamelong.tool.ShiftJISBufferedReader;
+import com.kamelong.tool.SDlog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +37,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

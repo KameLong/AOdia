@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 public class EditTrainTypeFragment extends AOdiaFragment {
     int fileIndex = 0;

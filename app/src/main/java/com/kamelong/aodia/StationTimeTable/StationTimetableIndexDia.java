@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 /**
  * Created by kame on 2017/02/03.

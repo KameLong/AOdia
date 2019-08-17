@@ -4,7 +4,7 @@ import com.eclipsesource.json.JsonObject;
 
 import org.json.JSONObject;
 
-public class Font {
+public class Font implements Cloneable{
     public static final Font OUDIA_DEFAULT=new Font("ＭＳ ゴシック",9,false,false);
     /**
      * フォント高さ
@@ -124,6 +124,14 @@ public class Font {
             result.append("Itaric=1");
         }
         return result;
+    }
+    public Font clone(){
+        try {
+            return (Font) super.clone();
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new Font();
+        }
     }
 
 

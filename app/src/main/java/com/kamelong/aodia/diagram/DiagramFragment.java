@@ -14,7 +14,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragment;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 public class DiagramFragment extends AOdiaFragment {
     public StationView stationView;

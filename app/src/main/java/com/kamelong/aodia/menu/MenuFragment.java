@@ -15,7 +15,7 @@ import android.widget.SearchView;
 import com.kamelong.OuDia.DiaFile;
 import com.kamelong.aodia.AOdiaActivity;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.aodia.AOdiaIO.SearchFileDialog;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
 

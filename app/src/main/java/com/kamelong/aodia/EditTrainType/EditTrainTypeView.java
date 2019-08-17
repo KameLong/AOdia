@@ -12,10 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
-import com.azeesoft.lib.colorpicker.Stools;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.R;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.tool.Color;
 
 public class EditTrainTypeView extends LinearLayout{

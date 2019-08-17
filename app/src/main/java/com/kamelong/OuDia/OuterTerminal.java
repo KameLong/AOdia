@@ -1,14 +1,15 @@
 package com.kamelong.OuDia;
 
 
-import java.io.FileWriter;
+import com.kamelong.tool.SDlog;
+
 import java.io.PrintWriter;
 
 /**
  * 路線外発着駅
  */
 
-public class OuterTerminal {
+public class OuterTerminal implements Cloneable{
     /**
      路線外発着駅名です。
      作業設定画面で用います。
@@ -67,8 +68,13 @@ public class OuterTerminal {
         out.println(".");
     }
     @Override
-    public OuterTerminal clone() throws CloneNotSupportedException {
-        return (OuterTerminal)super.clone();
+    public OuterTerminal clone(){
+        try{
+            return (OuterTerminal)super.clone();
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new OuterTerminal();
+        }
     }
 
 }

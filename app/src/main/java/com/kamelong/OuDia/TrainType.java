@@ -1,10 +1,8 @@
 package com.kamelong.OuDia;
 
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 import com.kamelong.tool.Color;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.PrintWriter;
 
 public class TrainType implements Cloneable{
@@ -40,10 +38,11 @@ public class TrainType implements Cloneable{
     public Color timeTableBackColor=new Color();
 
 
+    /**
+     * ダイヤ線色
+     */
 
     public Color diaColor=new Color();
-    public boolean bold=false;
-    public boolean ityly=false;
     /**
      列車線(直線)の線の形状属性。
      */
@@ -52,6 +51,10 @@ public class TrainType implements Cloneable{
     public static final int LINESTYLE_DASH=1;
     public static final int LINESTYLE_DOT=2;
     public static final int LINESTYLE_CHAIN=3;
+    /**
+     * ダイヤ線が太線かどうか
+     */
+    public boolean bold=false;
     /**
      列車種別毎の、停車駅明示の方法。
      false:停車駅明示=明示しない
@@ -113,7 +116,6 @@ public class TrainType implements Cloneable{
                 parentIndex=Integer.parseInt(value);
                 break;
         }
-
     }
     public void saveToFile(PrintWriter out) throws Exception {
         out.println("Ressyasyubetsu.");
@@ -179,8 +181,17 @@ public class TrainType implements Cloneable{
         out.println(".");
     }
     public TrainType clone(){
-        TrainType result=(TrainType)super.clone();
-        result.diaColor=diaColor.clone();
+        try {
+            TrainType result = (TrainType) super.clone();
+            result.timeTableBackColor = this.timeTableBackColor.clone();
+            result.diaColor = this.diaColor.clone();
+            result.textColor = this.textColor.clone();
+            return result;
+        }catch (CloneNotSupportedException e){
+            SDlog.log(e);
+            return new TrainType();
+        }
+
     }
 
 }

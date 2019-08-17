@@ -11,7 +11,7 @@ import com.kamelong.OuDia.DiaFile;
 import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaDefaultView;
-import com.kamelong.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 public class TrainTimeView extends AOdiaDefaultView {
     public DiaFile diaFile=null;
