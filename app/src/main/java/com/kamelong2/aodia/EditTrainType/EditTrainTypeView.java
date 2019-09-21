@@ -13,7 +13,7 @@ import android.widget.RadioGroup;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.kamelong2.OuDia.TrainType;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 import com.kamelong2.tool.Color;
 

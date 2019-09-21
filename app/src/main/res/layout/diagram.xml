@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/diagramLayout">
+
+    <Button
+        android:id="@+id/setOperation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="false"
+        android:text="これらの列車で運用を作成する"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomContents2">
+
+        <FrameLayout
+            android:id="@+id/autoFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/autoScroll"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/darker_gray"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_auto_scroll" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/stopFrame"
+            android:layout_width="56dp"
+
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabStop"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/darker_gray"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_stop" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/downFrame"
+            android:layout_width="56dp"
+
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabDown"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/holo_blue_light"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_down" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/nameFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="bottom|center">
+
+            <FrameLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentStart="true"
+
+                >
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabNumber"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_gravity="center"
+                    app:backgroundTint="@android:color/holo_blue_light"
+                    app:elevation="0dp"
+                    app:fabSize="normal" />
+
+            </FrameLayout>
+
+
+            <TextView
+                android:id="@+id/textname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/stationIndex"
+                android:layout_alignParentBottom="false"
+                android:layout_centerHorizontal="true"
+                android:text="しなの"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/stationIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="9dp"
+                android:text="2502M"
+                android:textSize="16dp" />
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/upFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabUp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/holo_blue_light"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_up" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/Leniar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="2px">
+
+            <FrameLayout
+                android:id="@+id/station"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true">
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/timedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/diagramParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <FrameLayout
+                        android:id="@+id/diagramFrame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                    </FrameLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/FinelyFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabFinely"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/holo_blue_light"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_finely" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/roughFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabRough"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                app:backgroundTint="@android:color/holo_blue_light"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_rough" />
+        </FrameLayout>
+
+        <FrameLayout
+
+            android:id="@+id/fitFrame"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabFit"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                app:backgroundTint="@android:color/holo_blue_light"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_fill" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/settingFrame"
+            android:layout_width="56dp"
+
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabDiagram"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:layout_margin="0dp"
+                android:padding="0dp"
+                app:backgroundTint="@android:color/holo_blue_dark"
+                app:elevation="0dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/diagram_setting" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/bottomContents2"
+        android:layout_alignParentBottom="true"
+
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:gravity="center_horizontal"
+
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/menu_expand"
+            android:visibility="gone" />
+
+
+        <FrameLayout
+            android:layout_below="@id/button"
+            android:layout_above="@+id/editTimeLayout"
+
+            android:id="@+id/bottomContents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:visibility="visible">
+
+        </FrameLayout>
+        <com.kamelong.aodia.EditTrain.EditTimeView2
+            android:id="@+id/editTimeLayout"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.kamelong.aodia.EditTrain.EditTimeView2>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

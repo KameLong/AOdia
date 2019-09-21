@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/title"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lineNameFrame"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingEnd="2dp">
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/trainNameFrame"
+            android:background="@drawable/frame_layout_border_line"
+            android:paddingBottom="2dp"
+            android:paddingEnd="2dp">
+
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/trainNameLinear"/>
+        </FrameLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/mainContents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottomContents2"
+            android:minHeight="100dp"
+            android:orientation="horizontal">
+
+
+            <FrameLayout
+                android:id="@+id/stationNameFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/frame_layout_border_line"
+                android:paddingStart="2dp"
+                android:paddingBottom="2dp">
+
+                <LinearLayout
+                    android:id="@+id/stationNameLinear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/trainTimeFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentBottom="false"
+                android:layout_toEndOf="@+id/stationNameFrame"
+                android:background="@drawable/frame_layout_border_line"
+                android:paddingEnd="2dp"
+                android:paddingBottom="2dp">
+
+                <LinearLayout
+                    android:id="@+id/trainTimeLinear"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="170dp"
+                android:layout_height="230dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp">
+
+
+                <FrameLayout
+                    android:id="@+id/frameShowPass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabShowPass"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="通過時刻"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameTrainCopy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabTrainCopy"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        app:srcCompat="?attr/actionModeCopyDrawable"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:backgroundTint="@android:color/holo_green_light"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameTrainPaste"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabTrainPaste"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        app:srcCompat="?attr/actionModePasteDrawable"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:backgroundTint="@android:color/holo_green_light"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameTrainCut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabTrainCut"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        app:srcCompat="?attr/actionModeCutDrawable"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:backgroundTint="@android:color/holo_green_light"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameTrainEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabTrainEdit"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        android:visibility="visible"
+                        app:backgroundTint="@android:color/holo_green_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="編集"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameTrainDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="invisible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabTrainDelete"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="列車削除"
+                        android:visibility="invisible"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameShowSecond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabShowSeconds"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="秒表示"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameStartEnd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabStartEnd"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="始終点"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameShowRemark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabShowRemark"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="備考"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameShowTrainName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabShowTrainName"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="列車名"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/frameRenewOperation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="invisible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabRenewOperation"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+                    <TextView
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="運用表示"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="13dp" />
+
+                </FrameLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabTrainTime"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    android:padding="0dp"
+                    android:visibility="visible"
+                    app:backgroundTint="@android:color/holo_blue_dark"
+                    app:elevation="0dp"
+                    app:fabSize="normal"
+                    app:srcCompat="@drawable/diagram_setting" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+        <RelativeLayout
+
+            android:id="@+id/bottomContents2"
+            android:layout_alignParentBottom="true"
+
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:gravity="center_horizontal"
+
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/menu_expand"
+                android:visibility="gone" />
+
+
+            <FrameLayout
+                android:layout_below="@id/button"
+                android:layout_above="@+id/editTimeLayout"
+
+                android:id="@+id/bottomContents"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:visibility="visible">
+
+            </FrameLayout>
+            <com.kamelong.aodia.EditTrain.EditTimeView2
+                android:id="@+id/editTimeLayout"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </com.kamelong.aodia.EditTrain.EditTimeView2>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>
+

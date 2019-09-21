@@ -3,9 +3,6 @@ package com.kamelong2.aodia.TimeTable;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,10 +12,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamelong2.OuDia.Diagram;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaFragment;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 import com.kamelong2.aodia.TimeTable.EditTrain.OnFragmentCloseListener;
 import com.kamelong2.aodia.TimeTable.EditTrain.OnTrainChangeListener;

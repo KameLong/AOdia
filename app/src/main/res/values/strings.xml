@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">AOdia V2</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -7,5 +6,42 @@
     <string name="action_settings">Settings</string>
     <string name="downTimeTable"><u>下り時刻表</u></string>
     <string name="upTimeTable"><u>上り時刻表</u></string>
-    <string name="diagram"><u>ダイヤグラム</u></string>
+
+//メニュー
+<string name="app_name">AOdia</string>
+<string name="menu">メニュー</string>
+<string name="newFile">新規作成</string>
+<string name="openFile">ファイルを開く</string>
+<string name="openHelp">ヘルプを開く</string>
+<string name="options">設定</string>
+<string name="editStation">駅編集</string>
+<string name="editTrainType">種別編集</string>
+<string name="stationTimeTable">駅時刻表</string>
+<string name="diagram">ダイヤグラム</string>
+<string name="comment">コメント</string>
+
+
+<string name="downwardTimeTable">下り時刻表</string>
+<string name="upwardTimeTable">上り時刻表</string>
+<string name="operationNumber">運用番号</string>
+<string name="trainNumber">列車番号</string>
+<string name="trainType">列車種別</string>
+<string name="stationTrack">発着番線</string>
+<string name="startStation">始発</string>
+<string name="endStation">終着</string>
+<string name="remark">備考</string>
+
+//ファイルオープン
+<string name="FileInTheDevice">スマホ内の\nファイル</string>
+<string name="OuDiaDatabase">OuDia\nデータベース</string>
+<string name="history">履歴</string>
+<string name="baseDirectory">フォルダ選択</string>
+<string name="searchInsideDirectory">フォルダ内検索\nファイル名・駅名検索</string>
+
+<string name="SDcard">SDカード</string>
+<string name="inDevice">本体ストレージ</string>
+<string name="UpperFolder">上のフォルダ</string>
+
+
+
 </resources>

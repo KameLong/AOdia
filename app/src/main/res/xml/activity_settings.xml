@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="全体設定">
+        <EditTextPreference
+            android:defaultValue="30"
+            android:dialogTitle="文字サイズ入力"
+            android:inputType="number"
+            android:key="textsize"
+            android:maxLength="2"
+            android:summary="文字サイズを1~99までの大きさで入力してください"
+            android:title="文字サイズ"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="内部データの削除"
+            android:key="resetDatabase" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:enabled="true"
+        android:title="路線時刻表設定">
+        <EditTextPreference
+            android:defaultValue="5"
+            android:inputType="number"
+            android:key="lineTimetableWidth"
+            android:maxLength="1"
+            android:summary="秒単位時刻をONにしている時は自動的に+3文字分幅が広がります"
+            android:title="路線時刻表の列車の幅：？文字（半角）" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:enabled="true"
+        android:title="ダイヤグラム設定">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="onlySolid"
+            android:summary="ダイヤ線の点線を実線にかえパフォーマンスを上げます"
+            android:title="ダイヤグラム実線表示" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:enabled="true"
+        android:title="駅時刻表設定">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="STTpass"
+            android:summary="通過列車の時刻も表示します"
+            android:title="通過列車を表示" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="endTrain"
+            android:summary="当駅どまりの列車を表示します"
+            android:title="当駅どまりを表示" />
+    </PreferenceCategory>
+</PreferenceScreen>

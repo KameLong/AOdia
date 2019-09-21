@@ -100,7 +100,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabShowPass"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -132,7 +132,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabTrainDelete"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -164,7 +164,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabShowSeconds"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -196,7 +196,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabShowRemark"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -228,7 +228,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabShowTrainName"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -260,7 +260,7 @@
                 android:layout_alignParentEnd="true"
                 android:visibility="invisible">
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabRenewOperation"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -283,7 +283,7 @@
                     android:textColor="#000000"
                     android:textSize="13dp" />
             </FrameLayout>
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabTrainTime"
                 android:layout_width="56dp"
                 android:layout_height="56dp"

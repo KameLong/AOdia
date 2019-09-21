@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Diagram;
 import com.kamelong2.aodia.AOdiaActivity;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 
 /**

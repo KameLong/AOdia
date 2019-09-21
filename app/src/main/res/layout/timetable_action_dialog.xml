@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:text="列車並び替え" />
+
+    <Button
+        android:id="@+id/sortNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#CCC"
+        android:text="列車番号で並び替える" />
+
+    <Button
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
+        android:id="@+id/sortType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#CCC"
+        android:text="列車種別で並び替える" />
+
+    <Button
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
+        android:id="@+id/sortName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#CCC"
+        android:text="列車名で並び替える" />
+
+    <Button
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
+        android:id="@+id/sortRemark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#CCC"
+        android:text="備考で並び替える" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        android:text="その他の操作" />
+
+    <Button
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
+        android:id="@+id/combineTrainNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#CCC"
+        android:text="列車番号で一本化する" />
+
+</LinearLayout>

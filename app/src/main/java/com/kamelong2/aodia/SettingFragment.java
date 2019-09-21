@@ -1,7 +1,13 @@
 package com.kamelong2.aodia;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+
+import com.kamelong.aodia.R;
 
 /*
  *     This file is part of AOdia.
@@ -39,6 +45,16 @@ public class SettingFragment extends PreferenceFragmentCompat {
         payment=((AOdiaActivity)getActivity()).payment;
 
         addPreferencesFromResource(R.xml.old_activity_settings);
+        final CheckBoxPreference useBeta=findPreference("useBeta");
+        useBeta.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                useBeta.setChecked(false);
+                Intent intent = new Intent(getContext(), com.kamelong.aodia.MainActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
 
 
     }

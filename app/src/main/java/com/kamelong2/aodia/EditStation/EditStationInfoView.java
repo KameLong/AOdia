@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.kamelong2.OuDia.Station;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 
 import java.util.ArrayList;

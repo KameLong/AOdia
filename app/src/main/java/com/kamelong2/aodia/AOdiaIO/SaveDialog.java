@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kamelong2.OuDia.DiaFile;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 
 import java.io.File;
 

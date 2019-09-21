@@ -9,18 +9,21 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.kamelong.aodia.R;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaIO.FileSelectFragment;
@@ -40,7 +43,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class AOdiaActivity extends AppCompatActivity {
+public class AOdiaActivity extends FragmentActivity {
     public Payment payment=null;
     public ArrayList<DiaFile>diaFiles=new ArrayList<>();
     public ArrayList<Integer>diaFilesIndex=new ArrayList<>();
@@ -57,7 +60,7 @@ public class AOdiaActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT<23){
             return true;
         }
-        int permissionCheck=ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionCheck= ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if(permissionCheck!= PackageManager.PERMISSION_GRANTED){
             int reqestCode=1;
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},reqestCode);

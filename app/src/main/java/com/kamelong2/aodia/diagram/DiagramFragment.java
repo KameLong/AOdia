@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaFragment;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 
 public class DiagramFragment extends AOdiaFragment {

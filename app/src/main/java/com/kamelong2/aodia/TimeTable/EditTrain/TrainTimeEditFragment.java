@@ -1,7 +1,6 @@
 package com.kamelong2.aodia.TimeTable.EditTrain;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.fragment.app.Fragment;
+
+import com.kamelong.aodia.R;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaActivity;
-import com.kamelong2.aodia.R;
 import com.kamelong2.aodia.SDlog;
 
 import java.util.ArrayList;

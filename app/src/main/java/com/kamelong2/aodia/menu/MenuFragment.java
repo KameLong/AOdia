@@ -12,9 +12,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 
+import androidx.fragment.app.Fragment;
+
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.aodia.AOdiaActivity;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 import com.kamelong2.aodia.AOdiaIO.SearchFileDialog;
 import com.kamelong2.aodia.detabase.AOdiaDetabase;
@@ -49,7 +51,7 @@ AOdia is free software: you can redistribute it and/or modify
  *
  *
  */
-public class MenuFragment extends android.support.v4.app.Fragment {
+public class MenuFragment extends Fragment {
     private LinearLayout layout;
     private ArrayList<DiaFile>diaFiles;
     private AOdiaActivity activity;

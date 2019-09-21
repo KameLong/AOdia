@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_margin="10dp"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="20dp"
+        android:background="#DFF"
+        android:text="路線切り出し" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16dp"
+                android:textColor="#000"
+                android:text="始発駅" />
+
+            <Spinner
+                android:id="@+id/startStation"
+                android:layout_marginStart="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="30dp"
+
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:textSize="16dp"
+                android:textColor="#000"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="終着駅" />
+
+            <Spinner
+                android:id="@+id/endStation"
+                android:layout_marginStart="30dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+
+        <CheckBox
+            android:layout_marginTop="15dp"
+
+            android:id="@+id/userOuter"
+            android:layout_marginStart="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切り出し範囲外を路線外発着にする" />
+
+    <CheckBox
+        android:id="@+id/reverse1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:text="駅順を逆にして切り出す" />
+
+    <Button
+            android:id="@+id/makeSubFile"
+            android:background="@drawable/button_round"
+            android:backgroundTint="#FC3"
+            android:layout_marginStart="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="切り出し" />
+
+    <TextView
+        android:textSize="20dp"
+        android:background="#DFF"
+        android:textColor="#000"
+        android:layout_marginTop="30dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="路線組み入れ" />
+
+
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:textSize="16dp"
+                android:textColor="#000"
+
+                android:layout_height="wrap_content"
+                android:text="組み入れ路線" />
+
+            <Spinner
+                android:id="@+id/lineSpinner"
+                android:layout_marginStart="30dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginStart="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:textSize="16dp"
+                android:textColor="#000"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="組み入れ駅" />
+
+            <Spinner
+                android:id="@+id/insertStation"
+                android:layout_marginStart="30dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/reverse2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+
+            android:text="駅順を逆転させて組み入れる" />
+
+        <Button
+            android:id="@+id/insertButton"
+            android:background="@drawable/button_round"
+            android:backgroundTint="#FC3"
+
+            android:layout_marginStart="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="組み入れ" />
+    </LinearLayout>
+</ScrollView>

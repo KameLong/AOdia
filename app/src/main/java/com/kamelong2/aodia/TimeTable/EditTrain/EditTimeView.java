@@ -3,12 +3,13 @@ package com.kamelong2.aodia.TimeTable.EditTrain;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.support.v7.widget.AppCompatEditText;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.AppCompatEditText;
 
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaDefaultView;

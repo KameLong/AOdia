@@ -4,15 +4,16 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.graphics.PorterDuff;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.aodia.AOdiaActivity;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 
 import java.util.ArrayList;
 

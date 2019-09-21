@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="4dp"
+    android:paddingEnd="0dp">
+    <View
+        android:id="@+id/background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/STTTViewTime"
+        android:layout_alignStart="@id/STTTViewTime"
+        android:layout_alignTop="@id/STTTViewTime"
+        android:layout_alignEnd="@id/STTTViewTime"
+        android:layout_alignBottom="@id/STTTViewTime"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp" />
+
+    <TextView
+        android:id="@+id/STTTViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="0dp"
+        android:fontFamily="sans-serif"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:text="00"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/STTTViewAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/STTTViewTime"
+        android:layout_toRightOf="@+id/STTTViewTime"
+        android:text="★"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/STTTViewGoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/STTTViewAdd"
+        android:layout_toEndOf="@+id/STTTViewTime"
+        android:layout_toRightOf="@+id/STTTViewTime"
+        android:text="大"
+        android:textSize="8sp" />
+
+
+</RelativeLayout>

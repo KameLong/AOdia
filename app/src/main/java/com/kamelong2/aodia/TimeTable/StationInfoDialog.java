@@ -13,7 +13,7 @@ import android.widget.ToggleButton;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Station;
 import com.kamelong2.aodia.AOdiaActivity;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 import com.kamelong2.aodia.TimeTable.EditTrain.OnTrainChangeListener;
 

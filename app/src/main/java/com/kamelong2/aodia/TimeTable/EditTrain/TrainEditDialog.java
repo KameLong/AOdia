@@ -8,9 +8,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kamelong.aodia.R;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
-import com.kamelong2.aodia.R;
 
 public class TrainEditDialog extends Dialog {
     public DiaFile diaFile;

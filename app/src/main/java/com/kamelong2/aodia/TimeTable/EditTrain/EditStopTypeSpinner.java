@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaDefaultView;
@@ -39,7 +40,7 @@ public class EditStopTypeSpinner extends AppCompatSpinner {
         this.setAdapter(dataAdapter);
         this.setSelection(train.getStopType(stationIndex));
         this.setMinimumHeight((int)(HEIGHT*context.getResources().getDisplayMetrics().density));
-        setOnItemSelectedListener(new OnItemSelectedListener() {
+        setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 train.setStopType(stationIndex,i);

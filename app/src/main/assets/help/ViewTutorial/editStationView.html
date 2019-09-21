@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="KameLong">
+    <meta name="viewport" content="width=360px,initial-scale=1">
+
+    <meta name="twitter:title" content="AOdiaヘルプ(駅編集画面)">
+    <title>駅編集画面</title>
+    <link rel="shortcut icon" href="./img/icon.png" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="../css/css.css"></head>
+<body>
+
+<article>
+        <h2>駅編集画面</h2>
+        スクショの番号に対応した説明があります。<br/>
+        <img class="big" src="./img/editStation.png" alt="基本画面"/>
+
+        <h4>①：駅操作画面</h4>
+        <img class="icon" src="./img/editStation_action.png"/>路線切り出し・組み入れダイアログを開きます。<br/>
+        <img class="icon" src="./img/editStation_copy.png"/>チェックを入れた駅を全てコピーします<br/>
+        <img class="icon" src="./img/editStation_paste.png"/>最初にチェックが入っている駅の直前に、コピーされた駅を挿入します。すべての駅がチェックされていなかれば、末尾に追加されます<br/>
+        <img class="icon" src="./img/editStation_delete.png"/>チェックを入れた駅全てを削除します<br/>
+        <img class="icon" src="./img/editStation_add.png"/>最初にチェックが入っている駅の直前に、新規駅を挿入します。すべての駅がチェックされていなかれば、末尾に追加されます<br/>
+        <h4>②各駅編集</h4>
+        駅名は直接編集が可能です。その他の項目を編集するときは<img class="icon" src="./img/editStation_expand.png"/>ボタンで詳細項目を表示できます。
+
+        <h2>駅詳細編集画面</h2>
+        <img class="big" src="./img/editStation2.png" alt="基本画面"/>
+        <h4>③：時刻表形式設定</h4>
+        <a href="lineTimeTable.html">路線時刻表</a>において、チェックが入った項目が表示されます。
+        <h4>④：駅規模</h4>
+        主要駅は強調表示されることがあります。
+        <h4>⑤：番線設定</h4>
+        <ul>
+            <li>
+                下り本：下り主本線（下り列車がデフォルトで使用する番線です）
+            </li>
+            <li>
+                上り本：上り主本線（上り列車がデフォルトで使用する番線です）
+            </li>
+        </ul>
+        <img class="icon" src="./img/editStation_delete2.png"/>番線を削除します。（主本線に設定された番線は削除できません）<br/>
+        <img class="icon" src="./img/editStation_add2.png"/>番線を追加します。番線追加先は末尾のみです<br/>
+        <h4>⑥：路線外発着駅設定</h4>
+        この路線以外に直通する列車が存在するときに使います。
+        路線内でこの駅を始発・終着する列車があるとき、直通先本来の終着駅となりうる駅を入力してください。
+        ここで入力した駅が<a href="editStationView.html">列車編集</a>で路線外始終着駅の候補として使われます。<br/>
+        <img class="icon" src="./img/editStation_delete2.png"/>路線外発着駅を削除します。（列車により使用されている駅は削除できません）<br/>
+        <img class="icon" src="./img/editStation_add2.png"/>路線外発着駅を追加します。追加先は末尾のみです<br/>
+        <h4>⑦：分岐駅設定</h4>
+        路線が分岐している場合、その情報を駅に含める必要があります。
+        本アプリの分岐駅設定方法はOuDia2ndに準拠しています。参考(<a href="http://oudiasecond.seesaa.net/article/454143826.html">境界線設定の廃止と、分岐駅設定・環状線設定の追加</a>)<br/>
+        <img class="max" src="./img/brunch.png" alt=""/><br/>
+        ▲分岐駅設定の例
+
+        <br/><br/>OuDiaの「境界線」を設定する事はできません。
+
+
+    </article>
+
+<footer>
+    <a href="index.html">目次へ戻る</a>
+    <br/>
+    <br/>
+
+    <div class="copyright">Copyright © 2016- kamelong All Rights Reserved.</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+* {
+}
+html{
+    margin:5px;
+}
+body{
+    margin-left: auto;
+    margin-right: auto;
+}
+h2 {
+    color: #364e96;/*文字色*/
+    padding: 0.5em 0;/*上下の余白*/
+    border-top: solid 3px #364e96;/*上線*/
+    border-bottom: solid 3px #364e96;/*下線*/
+}
+h4 {
+    margin-left: 0px;
+    margin-right: 50px;
+    padding: 0.4em 0.5em;/*文字の上下 左右の余白*/
+    color: #494949;/*文字色*/
+    background: #f4f4f4;/*背景色*/
+    border-left: solid 5px #7db4e6;/*左線*/
+    border-bottom: solid 3px #d7d7d7;/*下線*/
+}
+img{
+}
+.copyright {
+    clear:both;
+    padding:10px 0;
+    font-style:normal;
+    font-size:11px;
+    text-align:center;
+    border-top:1px solid #333;
+    background:#ddd;
+}
+@media only screen and (min-width: 450px) {
+    body {
+        max-width:600px;
+        font-size: 15px;
+
+    }
+    img.max{
+        display: block;
+
+        width:90%;
+        padding:5px;
+        border:solid 1px black;
+    }
+    img.big{
+        display: block;
+
+        width:300px;
+        padding:5px;
+        border:solid 1px black;
+    }
+    img.icon{
+        width:40px;
+        vertical-align: middle;
+        margin:5px;
+    }
+}
+@media only screen and (max-width: 450px) {
+    body {
+        font-size: 13px;
+        margin:10px;
+    }
+    img.max{
+        display: block;
+
+        width:90%;
+        margin:auto;
+        padding:5px;
+        border:solid 1px black;
+    }
+
+    img.big{
+        display: block;
+
+        width:90%;
+        margin:auto;
+        padding:5px;
+        border:solid 1px black;
+    }
+    img.icon{
+        width:40px;
+        vertical-align: middle;
+        margin:5px;
+    }
+}
+
+

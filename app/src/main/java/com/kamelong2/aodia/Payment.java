@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
+import com.kamelong.aodia.BuildConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;

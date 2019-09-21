@@ -12,8 +12,12 @@
             android:defaultValue="30"
             android:maxLength="2">
         </EditTextPreference>
+       <CheckBoxPreference
+           android:defaultValue="false"
+           android:title="AOdiaV3(β版に移動する)"
+           android:key="useBeta" />
 
-    </PreferenceCategory>
+   </PreferenceCategory>
     <PreferenceCategory
         android:title="路線時刻表設定"
         android:enabled="true"

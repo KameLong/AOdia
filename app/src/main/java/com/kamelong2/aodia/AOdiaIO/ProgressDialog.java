@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 
 public class ProgressDialog extends DialogFragment {
     View contentView;

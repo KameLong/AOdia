@@ -3,12 +3,13 @@ package com.kamelong2.aodia.TimeTable.EditTrain;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.support.v7.widget.AppCompatTextView;
 import android.view.Gravity;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kamelong2.aodia.AOdiaDefaultView;
 
-public class StationNameTextView extends AppCompatTextView{
+public class StationNameTextView extends AppCompatTextView {
     public int stationNumber;
     public static final int HEIGHT=30;
     public StationNameTextView(Context context,String text,int station){

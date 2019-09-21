@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kamelong2.OuDia.SimpleOudia;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.AOdiaFragment;
 import com.kamelong2.aodia.SDlog;
 

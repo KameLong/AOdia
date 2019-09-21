@@ -21,8 +21,8 @@ import java.util.ArrayList;
  * データベースに保存するデータについてはonCreate内のコメントを参照
  */
 public class AOdiaDetabase extends SQLiteOpenHelper {
-    public static final String DETABASE_NAME = "aodia.db";
-    public static final int DETABASE_VERSION = 3;
+    public static final String DETABASE_NAME = "aodia2.db";
+    public static final int DETABASE_VERSION = 4;
     public static final String ID = "_id";
 
     public static final String DIRECTORY_PATH = "directoryPath";

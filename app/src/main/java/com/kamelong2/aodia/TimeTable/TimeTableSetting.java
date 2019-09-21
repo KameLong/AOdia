@@ -7,11 +7,12 @@ import android.animation.PropertyValuesHolder;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.kamelong2.aodia.R;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kamelong.aodia.R;
 
 import java.util.ArrayList;
 

@@ -80,7 +80,7 @@
         android:id="@+id/fitFrame"
          >
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabFit"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -102,7 +102,7 @@
         android:layout_margin="15dp"
         android:id="@+id/FinelyFrame">
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabFinely"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -135,7 +135,7 @@
 
             >
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 app:fabSize="normal"
@@ -178,7 +178,7 @@
         android:layout_margin="15dp"
 
         android:id="@+id/downFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
@@ -201,7 +201,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:id="@+id/roughFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
@@ -223,7 +223,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:id="@+id/stopFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabStop"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -246,7 +246,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:id="@+id/upFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabUp"
             android:layout_width="56dp"
             android:layout_height="56dp"
@@ -269,7 +269,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
         android:id="@+id/autoFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:clickable="true"
@@ -293,7 +293,7 @@
         android:layout_margin="15dp"
 
         android:id="@+id/settingFrame">
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="56dp"
             android:layout_height="56dp"
             app:fabSize="normal"

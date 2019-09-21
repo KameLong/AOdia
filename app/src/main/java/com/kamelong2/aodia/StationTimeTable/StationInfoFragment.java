@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.google.android.flexbox.FlexboxLayout;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaFragment;
-import com.kamelong2.aodia.R;
+import com.kamelong.aodia.R;
 import com.kamelong2.aodia.SDlog;
 
 import java.util.ArrayList;
