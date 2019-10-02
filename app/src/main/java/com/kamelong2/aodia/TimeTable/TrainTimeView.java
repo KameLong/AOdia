@@ -1,6 +1,8 @@
 package com.kamelong2.aodia.TimeTable;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,6 +10,7 @@ import android.graphics.Paint;
 import android.preference.PreferenceManager;
 
 import com.kamelong2.OuDia.DiaFile;
+import com.kamelong2.OuDia.Diagram;
 import com.kamelong2.OuDia.Station;
 import com.kamelong2.OuDia.Train;
 import com.kamelong2.aodia.AOdiaDefaultView;
@@ -210,7 +213,63 @@ public class TrainTimeView extends AOdiaDefaultView {
                         if(train.getStop(stationNumber)==0){
                         drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
                     }else{
-                        drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
+                            try {
+                                drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
+                            }catch(Exception e){
+                                SDlog.log(e);
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("この時刻表の番線情報が壊れているため情報を表示できません。\n番線情報をデフォルトにリセットしますか？")
+                                        .setPositiveButton(
+                                                "Yes",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        for(Station station :diaFile.station){
+                                                            if(station.trackName.size()<2||station.trackName.size()!=station.trackshortName.size()){
+                                                                station.trackName.clear();
+                                                                station.trackshortName.clear();
+                                                                station.trackName.add("");
+                                                                station.trackshortName.add("");
+                                                                station.trackName.add("1番線");
+                                                                station.trackshortName.add("1");
+                                                                station.trackName.add("2番線");
+                                                                station.trackshortName.add("2");
+                                                            }
+                                                            if(station.stopMain[0]>=station.trackName.size()){
+                                                                station.stopMain[0]=1;
+                                                            }
+                                                            if(station.stopMain[1]>=station.trackName.size()){
+                                                                station.stopMain[1]=Math.min(station.trackName.size()-1,2);
+                                                            }
+                                                        }
+
+                                                        for(Diagram diagram : diaFile.diagram){
+                                                            for(Train train :diagram.trains[0]){
+                                                                for(int i=0;i<train.stationNum;i++){
+                                                                    if(train.getStop(i)>=diaFile.station.get(i).trackName.size()){
+                                                                        train.setStop(i,0);
+                                                                    }
+                                                                }
+                                                            }
+                                                            for(Train train :diagram.trains[1]){
+                                                                for(int i=0;i<train.stationNum;i++){
+                                                                    if(train.getStop(i)>=diaFile.station.get(i).trackName.size()){
+                                                                        train.setStop(i,0);
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                        .setNegativeButton(
+                                                "No",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                })
+                                        .show();
+                            }
                     }}
                     startLine+=textSize / 5;
                     canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);

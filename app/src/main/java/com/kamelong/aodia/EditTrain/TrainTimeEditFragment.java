@@ -165,8 +165,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner outerStartSpinner=findViewById(R.id.outerStartName);
         List<String> outerStartName = new ArrayList<String>();
         outerStartName.add("設定なし");
-        for (OuterTerminal terminal:lineFile.getStation(train.getStartStation()).outerTerminals) {
-            outerStartName.add(terminal.outerTerminalName);
+        if(!train.isnull()) {
+            for (OuterTerminal terminal : lineFile.getStation(train.getStartStation()).outerTerminals) {
+                outerStartName.add(terminal.outerTerminalName);
+            }
         }
         ArrayAdapter<String> outerStartAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item,outerStartName);
         outerStartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -190,8 +192,11 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner outerEndSpinner=findViewById(R.id.outerEndName);
         List<String> outerEndName = new ArrayList<String>();
         outerEndName.add("設定なし");
-        for (OuterTerminal terminal:lineFile.getStation(train.getEndStation()).outerTerminals) {
-            outerEndName.add(terminal.outerTerminalName);
+        if(!train.isnull()) {
+
+            for (OuterTerminal terminal : lineFile.getStation(train.getEndStation()).outerTerminals) {
+                outerEndName.add(terminal.outerTerminalName);
+            }
         }
         ArrayAdapter<String> outerEndAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item,outerEndName);
         outerEndAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

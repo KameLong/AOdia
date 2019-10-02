@@ -217,13 +217,13 @@ public class Station implements Cloneable{
                 break;
             case  "DownMain":
                 stopMain[0]=Integer.parseInt(value);
-                if (Double.parseDouble(lineFile.version.substring(lineFile.version.indexOf(".") + 1)) < 1.06) {
+                if (Double.parseDouble(lineFile.version.substring(lineFile.version.indexOf(".") + 1)) <= 1.06) {
                     stopMain[0]--;
                 }
                 break;
             case  "UpMain":
                 stopMain[1]=Integer.parseInt(value);
-                if (Double.parseDouble(lineFile.version.substring(lineFile.version.indexOf(".") + 1)) < 1.06) {
+                if (Double.parseDouble(lineFile.version.substring(lineFile.version.indexOf(".") + 1)) <= 1.06) {
                     stopMain[1]--;
                 }
                 break;

@@ -1,9 +1,13 @@
 package com.kamelong.aodia;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -20,11 +24,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.tool.SDlog;
+import com.kamelong2.aodia.AOdiaActivity;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
@@ -114,6 +123,42 @@ public class MainActivity extends FragmentActivity {
             }
         }).start();
         storagePermission();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final Handler handler=new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    String url = "http://kamelong.com/aodia/AOdiaInfoVersion.html";
+
+                    URL obj = new URL(url);
+                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    con.setRequestMethod("GET");
+                    int responseCode = con.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        InputStream is = con.getInputStream();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                        final int version=Integer.parseInt(br.readLine());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                int savedVersion=pref.getInt("showDialogVersion",-1);
+                                if(savedVersion!=version){
+                                    Dialog dialog=new InfoDialog(MainActivity.this);
+                                    dialog.show();
+                                    pref.edit().putInt("showDialogVersion",version).apply();
+                                }
+                            }
+                        });
+                    } else {
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
     @NonNull
     public AOdia getAOdia(){

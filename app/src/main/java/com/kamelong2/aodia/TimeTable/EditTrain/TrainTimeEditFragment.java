@@ -386,6 +386,8 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             leaveYead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    SDlog.toast("注意：OuDia2ndの運用機能は次バージョンのAOdiaでは廃止される予定です。");
+
                     train.leaveYard = b;
                     operationName.setEnabled(b);
                 }
@@ -395,6 +397,8 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             goYead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    SDlog.toast("注意：OuDia2ndの運用機能は次バージョンのAOdiaでは廃止される予定です。");
+
                     train.goYard = b;
                 }
             });
@@ -411,6 +415,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             beforeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    SDlog.toast("注意：OuDia2ndの運用機能は次バージョンのAOdiaでは廃止される予定です。");
                     getAOdiaActivity().openTrainEdit(diaNumber, beforeTrain);
 
                 }
@@ -429,6 +434,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
             nextButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    SDlog.toast("注意：OuDia2ndの運用機能は次バージョンのAOdiaでは廃止される予定です。");
                     getAOdiaActivity().openTrainEdit(diaNumber, nextTrain);
 
                 }

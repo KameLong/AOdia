@@ -107,7 +107,7 @@ public class HelpFragment extends AOdiaFragmentCustom {
     @NonNull
     @Override
     public String getName() {
-        return "AOdia β版\n" + "　v3.0b.0";
+        return "AOdia \n" + "　v3.0.2";
     }
 
     @Override

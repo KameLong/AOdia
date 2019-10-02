@@ -658,16 +658,6 @@ public class DiagramView extends AOdiaDefaultView{
                 focsTrain=new ArrayList<>();
                 final Train t=diaFile.getTrain(diaNumber,minTrainDirect,minTrainNum);
                 focsTrain.add(t);
-                Train beforeT=diaFile.diagram.get(diaNumber).beforeOperation(t);
-                while(beforeT!=null) {
-                    focsTrain.add(beforeT);
-                    beforeT=diaFile.diagram.get(diaNumber).beforeOperation(beforeT);
-                }
-                Train afterT=diaFile.diagram.get(diaNumber).nextOperation(t);
-                while(afterT!=null) {
-                    focsTrain.add(afterT);
-                    afterT=diaFile.diagram.get(diaNumber).nextOperation(afterT);
-                }
             }else{
                 focsTrain=new ArrayList<>();
             }

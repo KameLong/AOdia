@@ -213,7 +213,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
         for (int i = 0; i < usedTrainType.length; i++) {
 
             if (usedTrainType[i]) {
-                StationTimeTableTrainView typeView = new StationTimeTableTrainView(getActivity(), lineFile.trainType.get(i).name, "  ", "", lineFile.trainType.get(i).textColor.getAndroidColor(), lineFile.trainType.get(i).bold, lineFile, diaIndex, direction, trainList.get(i));
+                StationTimeTableTrainView typeView = new StationTimeTableTrainView(getActivity(), lineFile.trainType.get(i).name, "  ", "", lineFile.trainType.get(i).textColor.getAndroidColor(), lineFile.trainType.get(i).bold, lineFile, diaIndex, direction, trainList.get(0));
                 ((FlexboxLayout) findViewById(R.id.example)).addView(typeView);
             }
         }
@@ -363,7 +363,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
     @NonNull
     @Override
     public String getName() {
-        return null;
+        return station.name+"\n駅時刻表";
     }
 
     @Override

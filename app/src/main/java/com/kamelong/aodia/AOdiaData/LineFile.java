@@ -580,7 +580,7 @@ public class LineFile implements Cloneable {
         out.println("EkimeiLength="+(stationNameWidth));
         out.println("JikokuhyouRessyaWidth="+trainWidth);
         out.println(".");
-        out.println("FileTypeAppComment=AOdia V3.0a.0");
+        out.println("FileTypeAppComment=AOdia V3.0b.1");
 
         out.close();
     }

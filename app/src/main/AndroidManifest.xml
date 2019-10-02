@@ -1,38 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kamelong.aodia">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="com.android.vending.BILLING" />
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        >
-        <activity
-            android:name="com.kamelong2.aodia.AOdiaActivity"
-            android:label="@string/app_name"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name="com.kamelong.aodia.MainActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme.NoActionBar">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="*/*" />
-                <data android:scheme="file" />
-                <data android:host="*" />
-                <data android:pathPattern=".*\\.oud" />
-                <data android:pathPattern=".*\\.oud2" />
-            </intent-filter>
         </activity>
+        <activity
+            android:name="com.kamelong2.aodia.AOdiaActivity"
+            android:label="AOdia(old)"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme">
+        </activity>
+
     </application>
 
 </manifest>

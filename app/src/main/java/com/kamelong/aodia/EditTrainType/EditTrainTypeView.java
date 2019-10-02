@@ -1,6 +1,8 @@
 package com.kamelong.aodia.EditTrainType;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +13,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.kamelong.aodia.AOdiaData.TrainType;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.SDlog;
+
+
+import top.defaults.colorpicker.ColorPickerPopup;
 
 public class EditTrainTypeView extends LinearLayout {
     public boolean checked = false;
@@ -54,16 +58,24 @@ public class EditTrainTypeView extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     try {
-                        ColorPickerDialog dialog = ColorPickerDialog.createColorPickerDialog(context);
-                        dialog.setLastColor(trainType.textColor.getAndroidColor());
-                        dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-                            @Override
-                            public void onColorPicked(int color, String hexVal) {
-                                trainType.textColor = new Color(color);
-                                textColor.setBackgroundColor(trainType.textColor.getAndroidColor());
-                            }
-                        });
-                        dialog.show();
+                        new ColorPickerPopup.Builder(getContext())
+                                .initialColor(trainType.textColor.getAndroidColor()) // Set initial color
+                                .enableBrightness(true) // Enable brightness slider or not
+                                .enableAlpha(false) // Enable alpha slider or not
+                                .okTitle("PICK")
+                                .cancelTitle("Cancel")
+                                .showIndicator(true)
+                                .showValue(true)
+                                .build()
+                                .show(textColor, new ColorPickerPopup.ColorPickerObserver() {
+                                    @Override
+                                    public void onColorPicked(int color) {
+                                        textColor.setBackgroundColor(color);
+                                        trainType.textColor=new Color(color);
+
+                                    }
+
+                                });
                     } catch (Exception e) {
                         SDlog.log(e);
                         SDlog.toast("色選択時にエラーが発生しました");
@@ -79,16 +91,27 @@ public class EditTrainTypeView extends LinearLayout {
                 @Override
                 public void onClick(View view) {
                     try {
-                        ColorPickerDialog dialog = ColorPickerDialog.createColorPickerDialog(context);
-                        dialog.setLastColor(trainType.diaColor.getAndroidColor());
-                        dialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
-                            @Override
-                            public void onColorPicked(int color, String hexVal) {
-                                trainType.diaColor = new Color(color);
-                                diaColor.setBackgroundColor(trainType.diaColor.getAndroidColor());
-                            }
-                        });
-                        dialog.show();
+
+                        new ColorPickerPopup.Builder(getContext())
+                                .initialColor(trainType.diaColor.getAndroidColor()) // Set initial color
+                                .enableBrightness(true) // Enable brightness slider or not
+                                .enableAlpha(false) // Enable alpha slider or not
+                                .okTitle("PICK")
+                                .cancelTitle("Cancel")
+                                .showIndicator(true)
+                                .showValue(true)
+                                .build()
+                                .show(diaColor, new ColorPickerPopup.ColorPickerObserver() {
+                                    @Override
+                                    public void onColorPicked(int color) {
+                                        diaColor.setBackgroundColor(color);
+                                        trainType.diaColor=new Color(color);
+
+                                    }
+
+                                });
+
+
                     } catch (Exception e) {
                         SDlog.log(e);
                         SDlog.toast("色選択時にエラーが発生しました");

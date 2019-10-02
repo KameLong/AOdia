@@ -14,6 +14,10 @@
             android:defaultValue="false"
             android:title="内部データの削除"
             android:key="resetDatabase" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:title="AOdia v2.7(旧版)に移動する"
+            android:key="useOld" />
 
     </PreferenceCategory>
     <PreferenceCategory

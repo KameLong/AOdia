@@ -8,13 +8,13 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.kamelong.aodia.InfoDialog;
 import com.kamelong.aodia.R;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
@@ -37,10 +38,14 @@ import com.kamelong2.aodia.detabase.AOdiaDetabase;
 import com.kamelong2.aodia.diagram.DiagramFragment;
 import com.kamelong2.aodia.menu.MenuFragment;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class AOdiaActivity extends FragmentActivity {
@@ -184,17 +189,13 @@ public class AOdiaActivity extends FragmentActivity {
         }else{
             openHelpFragment();
         }
+
+
     }
     @Override
     public void onDestroy(){
         payment.close();
         super.onDestroy();
-    }
-    public void onPause(){
-        super.onPause();
-    }
-    public void onStop(){
-        super.onStop();
     }
     private void createSample(){
         File sample=new File(getExternalFilesDir(null), "sample.oud");
@@ -286,11 +287,11 @@ public class AOdiaActivity extends FragmentActivity {
             }
             try {
                 DiaFile diaFile = new DiaFile(file);
-            diaFiles.add(diaFile);
-            diaFilesIndex.add(0,diaFiles.size()-1);
-            database.addHistory(diaFile.filePath);
-            database.addNewFileToLineData(diaFile.filePath,diaFile.getDiaNum());
-            openTimeTable(0,0,0);
+                diaFiles.add(diaFile);
+                diaFilesIndex.add(0,diaFiles.size()-1);
+                database.addHistory(diaFile.filePath);
+                database.addNewFileToLineData(diaFile.filePath,diaFile.getDiaNum());
+                openTimeTable(0,0,0);
             }catch (Exception e){
                 e.printStackTrace();
                 Toast.makeText(this,"エラー：このダイヤファイルを開く事ができませんでした。該当ファイルを、作者メールアドレス(kamelong.dev@gmail.com)に送信していただくと対応いたします。",Toast.LENGTH_LONG).show();

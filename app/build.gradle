@@ -6,8 +6,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 259
-        versionName "2.7.6"
+        versionCode 267
+        versionName "2.7.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -29,12 +29,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
 
     implementation 'com.google.android:flexbox:1.1.0'
-    implementation 'com.azeesoft.lib.colorpicker:colorpicker:1.0.8@aar'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
@@ -43,8 +47,9 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.0.0'
-
+    implementation 'com.github.duanhong169:colorpicker:1.1.6'
 }
 repositories {
     mavenCentral()
+    jcenter()
 }

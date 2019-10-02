@@ -156,11 +156,21 @@ public class Train {
                 continue;
             }
             if (!value[i].contains(";")) {
-                setStopType(station, Integer.parseInt(value[i]));
+                if(value[i].contains("$")){
+                    setStopType(station, Integer.parseInt(value[i].split("\\$")[0]));
+                    setStop(station, Integer.parseInt(value[i].split("\\$")[1]));
+
+                }else {
+                    setStopType(station, Integer.parseInt(value[i]));
+                }
                 continue;
             }
             setStopType(station, Integer.parseInt(value[i].split(";", -1)[0]));
             String str = value[i].split(";", -1)[1];
+            if(str.contains("$")) {
+                setStop(station,Integer.parseInt(str.split("\\$")[1]));
+                str=str.split("\\$")[0];
+            }
             if (str.contains("/")) {
                 setArrivalTime(station, timeStringToInt(str.split("/", -1)[0]));
                 if (str.split("/", -1)[1].length() != 0) {

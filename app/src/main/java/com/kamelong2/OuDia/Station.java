@@ -94,9 +94,16 @@ public class Station {
             }
             if(title.equals("DownMain")){
                 stopMain[0]=Integer.parseInt(line.split("=",-1)[1]);
+                if (Double.parseDouble(diaFile.version.substring(diaFile.version.indexOf(".") + 1)) > 1.06) {
+                    stopMain[0]++;
+                }
+
             }
             if(title.equals("UpMain")){
                 stopMain[1]=Integer.parseInt(line.split("=",-1)[1]);
+                if (Double.parseDouble(diaFile.version.substring(diaFile.version.indexOf(".") + 1)) > 1.06) {
+                    stopMain[1]++;
+                }
             }
 
             line=br.readLine();

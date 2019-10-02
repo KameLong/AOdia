@@ -74,7 +74,7 @@ public class DiaFile {
      * 新規に空路線を生成する
      */
     public DiaFile(){
-        version="OuDiaSecond.1.06";
+        version="OuDiaSecond.1.05";
         name="新しい路線";
         trainType.add(new TrainType());
         diagram.add(new Diagram(this));
@@ -361,7 +361,7 @@ public class DiaFile {
             fos.write(0xbf);
             fos.close();
             FileWriter out=new FileWriter(fileName,true);
-            out.write("FileType=OuDiaSecond.1.06\r\n");
+            out.write("FileType=OuDiaSecond.1.05\r\n");
             out.write("Rosen.\r\n");
             out.write("Rosenmei="+name+"\r\n");
             for(Station s:station){
