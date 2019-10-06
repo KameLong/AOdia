@@ -2,7 +2,7 @@ package com.kamelong.aodia;
 
 import androidx.annotation.NonNull;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 
 public interface AOdiaFragment{
     @NonNull

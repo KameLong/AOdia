@@ -1,4 +1,4 @@
-package com.kamelong.aodia.AOdiaData;
+package com.kamelong.OuDia;
 
 import com.kamelong.tool.SDlog;
 
@@ -789,7 +789,15 @@ public class Station implements Cloneable{
      * 列車が使用している場合　false
      * 削除に成功した場合　true
      */
-    public boolean deleteOuterTerminal(int index) {
+    public boolean deleteOuterTerminal(OuterTerminal terminal) {
+        int index=outerTerminals.indexOf(terminal);
+        if(index<outerTerminals.size()&&index>=0){
+return deleteOuterTerminal(index);
+        }
+        return true;
+    }
+
+        public boolean deleteOuterTerminal(int index) {
         final int stationIndex = lineFile.station.indexOf(this);
         for (Diagram dia : lineFile.diagram) {
             for(int direction=0;direction<2;direction++) {

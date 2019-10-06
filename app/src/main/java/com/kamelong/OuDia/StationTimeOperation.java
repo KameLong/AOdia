@@ -1,4 +1,4 @@
-package com.kamelong.aodia.AOdiaData;
+package com.kamelong.OuDia;
 
 import com.kamelong.tool.SDlog;
 

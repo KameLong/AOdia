@@ -12,7 +12,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 

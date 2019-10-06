@@ -13,11 +13,11 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.OuterTerminal;
-import com.kamelong.aodia.AOdiaData.Station;
-import com.kamelong.aodia.AOdiaData.StationTrack;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.OuterTerminal;
+import com.kamelong.OuDia.Station;
+import com.kamelong.OuDia.StationTrack;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
@@ -256,7 +256,7 @@ public class EditStationInfoView extends LinearLayout {
         stationShortNameLinear.removeAllViews();
         deleteLinear.removeAllViews();
         for (int i = 0; i < station.outerTerminals.size(); i++) {
-            final int index=i;
+            final OuterTerminal outerTerminal=station.outerTerminals.get(i);
             final EditText editText1 = new EditText(getContext());
             editText1.setHeight(height);
 
@@ -265,19 +265,18 @@ public class EditStationInfoView extends LinearLayout {
             editText1.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    station.outerTerminals.get(index).outerTerminalName= editText1.getEditableText().toString();
+                    outerTerminal.outerTerminalName= editText1.getEditableText().toString();
 
                 }
             });
             final EditText editText2 = new EditText(getContext());
-            editText2.setText(station.getOuterStationTimeTableName(index));
+            editText2.setText(outerTerminal.outerTerminalName);
             editText2.setHeight(height);
             stationShortNameLinear.addView(editText2);
             editText2.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    station.outerTerminals.get(index).outerTerminalTimeTableName= editText1.getEditableText().toString();
-
+                    outerTerminal.outerTerminalName= editText1.getEditableText().toString();
                 }
             });
             final Button delete=new Button(getContext());
@@ -287,7 +286,7 @@ public class EditStationInfoView extends LinearLayout {
             delete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!station.deleteOuterTerminal(index)){
+                    if(!station.deleteOuterTerminal(outerTerminal)){
                         SDlog.toast("この駅は使用されているため削除できません");
                     }
                     initOuterStation();

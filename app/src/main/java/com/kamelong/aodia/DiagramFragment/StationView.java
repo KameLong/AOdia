@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 
 import java.util.ArrayList;
 /*

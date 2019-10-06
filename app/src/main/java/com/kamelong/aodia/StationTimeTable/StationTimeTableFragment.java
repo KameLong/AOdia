@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
-import com.kamelong.aodia.AOdiaData.StationTime;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
+import com.kamelong.OuDia.StationTime;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragmentCustom;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;

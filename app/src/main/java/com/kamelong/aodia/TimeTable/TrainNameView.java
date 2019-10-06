@@ -9,7 +9,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 

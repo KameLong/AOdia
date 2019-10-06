@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.tool.SDlog;
 
 public class LineFileEditDialog extends Dialog {

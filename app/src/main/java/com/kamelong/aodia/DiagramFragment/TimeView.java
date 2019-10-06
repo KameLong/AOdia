@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 /*
  * Copyright (c) 2019 KameLong
  * contact:kamelong.com

@@ -1,4 +1,4 @@
-package com.kamelong.aodia.AOdiaData;
+package com.kamelong.OuDia;
 
 
 import com.kamelong.tool.Color;
@@ -243,7 +243,7 @@ public class LineFile implements Cloneable {
         StationTrack tempTrack=new StationTrack();
         OuterTerminal tempOuterTerminal=new OuterTerminal();
         TrainType tempType=new TrainType();
-        com.kamelong.aodia.AOdiaData.Diagram tempDia=new com.kamelong.aodia.AOdiaData.Diagram(this);
+        Diagram tempDia=new Diagram(this);
         Train tempTrain=new Train(this,0);
         while(line!=null){
             if(line.equals(".")) {
@@ -273,7 +273,7 @@ public class LineFile implements Cloneable {
                         trainType.add(tempType);
                         break;
                     case "Dia":
-                        tempDia=new com.kamelong.aodia.AOdiaData.Diagram(this);
+                        tempDia=new Diagram(this);
                         diagram.add(tempDia);
                         break;
                     case "Kudari":
@@ -486,7 +486,7 @@ public class LineFile implements Cloneable {
         for(TrainType type:trainType){
             type.saveToFile(out);
         }
-        for(com.kamelong.aodia.AOdiaData.Diagram dia:diagram){
+        for(Diagram dia:diagram){
             dia.saveToFile(out);
         }
 
@@ -551,7 +551,7 @@ public class LineFile implements Cloneable {
         for(TrainType type:trainType){
             type.saveToOuDiaFile(out);
         }
-        for(com.kamelong.aodia.AOdiaData.Diagram dia:diagram){
+        for(Diagram dia:diagram){
             dia.saveToOuDiaFile(out);
         }
 
@@ -665,9 +665,12 @@ public class LineFile implements Cloneable {
                          station.brunchCoreStationIndex=check;
                      }
                  }
-                 for(int check=0;check<index;check++){
-                     if(getStation(check).name.equals(getStation(index+1).name)){
-                         getStation(index+1).brunchCoreStationIndex=check;                     }
+                 if(index!=getStationNum()-1) {
+                     for (int check = 0; check < index; check++) {
+                         if (getStation(check).name.equals(getStation(index + 1).name)) {
+                             getStation(index + 1).brunchCoreStationIndex = check;
+                         }
+                     }
                  }
              }
          }
@@ -1021,6 +1024,12 @@ public class LineFile implements Cloneable {
                     }
                 }
                 for (Train train : dia.trains[1]) {
+                    if(train.getStartStation()<0){
+                        continue;
+                    }
+                    if(train.getEndStation()<0){
+                        continue;
+                    }
                     if (train.getEndStation() < startStation) {
                         StationTimeOperation operation = new StationTimeOperation();
                         operation.operationType = 4;
@@ -1118,7 +1127,7 @@ public class LineFile implements Cloneable {
                     }
                 }
                 if(!frag){
-                    lineFile.diagram.add(dia.clone(this));
+                    diagram.add(dia.clone(this));
                 }
             }
             station.get(insertPos).showArrivalCustom[Train.DOWN]=true;
@@ -1153,7 +1162,6 @@ public class LineFile implements Cloneable {
                     train.setTime(insertPos,Train.ARRIVE,-1);
                 }
             }
-
             for(Diagram dia:lineFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
@@ -1169,9 +1177,10 @@ public class LineFile implements Cloneable {
                     }
                 }
                 if(!frag){
-                    lineFile.diagram.add(dia.clone(this));
+                    diagram.add(dia.clone(this));
                 }
             }
+
             station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.DOWN]=true;
             station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.UP]=true;
             station.get(insertPos+other.getStationNum()).showDepartureCustom[Train.DOWN]=true;
@@ -1205,7 +1214,6 @@ public class LineFile implements Cloneable {
                     train.setTime(insertPos,Train.ARRIVE,-1);
                 }
             }
-
             for(Diagram dia:lineFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
@@ -1221,9 +1229,10 @@ public class LineFile implements Cloneable {
                     }
                 }
                 if(!frag){
-                    lineFile.diagram.add(dia.clone(this));
+                    diagram.add(dia.clone(this));
                 }
             }
+
             station.get(insertPos+other.getStationNum()+1).brunchCoreStationIndex=insertPos;
 
             if(insertPos==0){

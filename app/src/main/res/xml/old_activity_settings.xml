@@ -14,7 +14,7 @@
         </EditTextPreference>
        <CheckBoxPreference
            android:defaultValue="false"
-           android:title="AOdiaV3(β版に移動する)"
+           android:title="AOdiaV3(正式版に移動する)"
            android:key="useBeta" />
 
    </PreferenceCategory>

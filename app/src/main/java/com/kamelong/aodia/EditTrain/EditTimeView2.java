@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
 
 public class EditTimeView2 extends LinearLayout {

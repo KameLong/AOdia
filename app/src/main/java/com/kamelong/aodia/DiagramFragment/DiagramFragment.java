@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.AOdiaFragmentCustom;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;

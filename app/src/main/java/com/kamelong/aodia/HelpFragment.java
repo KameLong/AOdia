@@ -1,5 +1,7 @@
 package com.kamelong.aodia;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -13,7 +15,7 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 
 
 /**
@@ -107,7 +109,16 @@ public class HelpFragment extends AOdiaFragmentCustom {
     @NonNull
     @Override
     public String getName() {
-        return "AOdia \n" + "　v3.0.2";
+        try {
+            PackageManager pm = getContext().getPackageManager();
+            PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(), 0);
+            return ("AOdia v" + packageInfo.versionName + "のヘルプ");
+
+
+        }catch (Exception e){
+            return "AOdia ";
+
+        }
     }
 
     @Override

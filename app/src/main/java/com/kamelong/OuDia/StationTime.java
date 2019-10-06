@@ -1,4 +1,4 @@
-package com.kamelong.aodia.AOdiaData;
+package com.kamelong.OuDia;
 
 import com.kamelong.tool.SDlog;
 
@@ -128,10 +128,20 @@ public class StationTime implements Cloneable{
      * @param value
      */
     void setTrack(String value){
-        if(value.contains(";")){
-            value=value.split(";")[0];
+        try {
+            if (value.length() == 0) {
+                stopTrack=-1;
+                return;
+
+            }
+            if (value.contains(";")) {
+                value = value.split(";")[0];
+            }
+            stopTrack = (byte) (Byte.parseByte(value) - 1);
+        }catch(Exception e){
+            stopTrack=-1;
+            SDlog.log(e);
         }
-        stopTrack=(byte)(Byte.parseByte(value)-1);
     }
 
     /**

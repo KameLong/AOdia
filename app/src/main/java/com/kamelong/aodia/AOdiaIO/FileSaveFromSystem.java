@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 

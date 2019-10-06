@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;

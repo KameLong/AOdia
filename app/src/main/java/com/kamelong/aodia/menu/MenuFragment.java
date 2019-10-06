@@ -10,12 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.AOdiaFragmentCustom;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
-import com.kamelong.aodia.R;
 
 
 public class MenuFragment extends AOdiaFragmentCustom {

@@ -5,8 +5,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import android.view.View;
 
-import com.kamelong.aodia.AOdiaData.Diagram;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
 
 public class TrainEditDialog extends Dialog {

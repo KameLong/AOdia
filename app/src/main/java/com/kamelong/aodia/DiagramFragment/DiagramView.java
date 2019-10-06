@@ -15,10 +15,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.Diagram;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Train;
-import com.kamelong.aodia.AOdiaData.TrainType;
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Train;
+import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.EditTrain.OnTrainChangeListener;
 import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
 import com.kamelong.aodia.MainActivity;
@@ -109,7 +109,7 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
             return;
         }
     }
-    if(train.getStartStation()==-1){
+    if(train.getTimeStartStation()==-1){
         if(diagramPath[direct].size()<=trainIndex) {
             diagramPath[direct].add(trainPath);
         }else{
@@ -118,11 +118,11 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
         return;
     }
     //始発部分のパスを追加
-    trainPath.add(getDiagramTime(train.getDepTime(train.getStartStation())));
-    trainPath.add(stationTime.get(train.getStartStation()));
+    trainPath.add(getDiagramTime(train.getDepTime(train.getTimeStartStation())));
+    trainPath.add(stationTime.get(train.getTimeStartStation()));
     boolean drawable=true;
     //駅ループ
-    for (int j = train.getStartStation() + (1-direct*2);(1-direct*2)* j <(1-direct*2)* (train.getEndStation()+ (1-direct*2)); j=j+(1-direct*2)) {
+    for (int j = train.getTimeStartStation() + (1-direct*2);(1-direct*2)* j <(1-direct*2)* (train.getTimeEndStation()+ (1-direct*2)); j=j+(1-direct*2)) {
         if(drawable&&train.getStopType(j)==0){
             //描画打ち切り
             drawable=false;
@@ -215,8 +215,8 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
             try {
                 if (train.getStopType(j) == 1 &&
                         lineFile.trainType.get(train.type).stopmark &&
-                        j!=train.getStartStation()&&
-                        j!=train.getEndStation()&&
+                        j!=train.getTimeStartStation()&&
+                        j!=train.getTimeEndStation()&&
                         trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
                     //始発終着駅を除き　停車マークを用意する
                     trainStopMark.add(trainPath.get(trainPath.size() - 4));

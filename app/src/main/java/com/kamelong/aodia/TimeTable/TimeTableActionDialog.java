@@ -4,9 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
-import com.kamelong.aodia.AOdiaData.Diagram;
+import com.kamelong.OuDia.Diagram;
 import com.kamelong.aodia.EditTrain.OnTrainChangeListener;
 import com.kamelong.aodia.R;
 

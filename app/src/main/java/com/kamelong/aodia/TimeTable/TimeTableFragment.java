@@ -17,9 +17,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.Diagram;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragmentCustom;
 import com.kamelong.aodia.EditTrain.OnFragmentCloseListener;
 import com.kamelong.aodia.EditTrain.OnTrainChangeListener;
@@ -433,10 +433,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                     for (Train cTrain : copyTrain){
                         timetable.addTrain(direction,pasteIndex, cTrain.clone(lineFile));
                         timetable.getTrain(direction,pasteIndex).shiftTime(shiftTime);
-                        dialog.dismiss();
 
                         pasteIndex++;
                     }
+                    dialog.dismiss();
                     final LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
                     final int scrollX = trainTimeLinear.getScrollX();
                     final int scrollY = trainTimeLinear.getScrollY();
@@ -444,7 +444,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
                     init();
                     SDlog.toast("列車を貼り付けました");
-                    ((TrainNameView)trainNameLinea.getChildAt(pasteIndex)).selected=true;
+                    if(pasteIndex<timetable.getTrainNum(direction)) {
+                        ((TrainNameView) trainNameLinea.getChildAt(pasteIndex)).selected = true;
+                    }
                 }
                 @Override
                 public void onCancelClicked() {

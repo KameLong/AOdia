@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 
 import androidx.appcompat.widget.AppCompatSpinner;
 
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 
 import java.util.ArrayList;

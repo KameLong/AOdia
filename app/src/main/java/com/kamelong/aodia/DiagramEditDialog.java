@@ -5,8 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 
-import com.kamelong.aodia.AOdiaData.Diagram;
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.LineFile;
 
 public class DiagramEditDialog extends Dialog {
     public DiagramEditDialog(final Context context, final LineFile lineFile, final Diagram diagram){

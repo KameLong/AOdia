@@ -47,7 +47,12 @@ public class TimeTableOptions {
         this.activity=activity;
         this.fragment=fragment;
         this.container =container;
-        trainWidth = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("lineTimetableWidth", "5"));
+        try {
+            trainWidth = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("lineTimetableWidth", "5"));
+        }catch (NumberFormatException e){
+            trainWidth=5;
+            PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("lineTimetableWidth", "5").apply();
+        }
         //メインボタン
         this.container.findViewById(R.id.fabTrainTime).setOnClickListener(new View.OnClickListener() {
             @Override

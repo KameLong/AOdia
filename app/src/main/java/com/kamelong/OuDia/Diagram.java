@@ -1,4 +1,4 @@
-package com.kamelong.aodia.AOdiaData;
+package com.kamelong.OuDia;
 
 import com.kamelong.tool.SDlog;
 
@@ -166,7 +166,11 @@ public class Diagram implements Cloneable{
      * 指定方向の列車数を返します
      */
     public int getTrainNum(int direction) {
-        return trains[direction].size();
+        try {
+            return trains[direction].size();
+        }catch (IndexOutOfBoundsException e){
+            return 0;
+        }
     }
 
 
@@ -176,7 +180,12 @@ public class Diagram implements Cloneable{
      * @param index 列車index
      */
     public Train getTrain(int direction, int index) {
-        return trains[direction].get(index);
+        try {
+            return trains[direction].get(index);
+        }catch(IndexOutOfBoundsException e){
+            SDlog.log(e);
+            return new Train(lineFile,0);
+        }
     }
 
     /**

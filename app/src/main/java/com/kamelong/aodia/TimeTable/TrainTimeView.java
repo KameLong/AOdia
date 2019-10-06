@@ -5,9 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
+import com.kamelong.OuDia.Train;
 import com.kamelong.tool.SDlog;
 
 public class TrainTimeView extends TimeTableDefaultView {

@@ -1,6 +1,6 @@
 package com.kamelong.aodia.EditTrain;
 
-import com.kamelong.aodia.AOdiaData.Train;
+import com.kamelong.OuDia.Train;
 
 public interface OnTrainChangeListener {
     void trainChanged(Train train);

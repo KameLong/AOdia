@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.Diagram;
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.Diagram;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.DiagramEditDialog;
 import com.kamelong.aodia.LineFileEditDialog;
 import com.kamelong.aodia.MainActivity;

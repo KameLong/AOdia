@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.AOdiaFragmentCustom;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;

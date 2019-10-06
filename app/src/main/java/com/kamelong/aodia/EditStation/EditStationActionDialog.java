@@ -9,8 +9,8 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
@@ -102,6 +102,10 @@ public class EditStationActionDialog extends Dialog {
                 LineFile insertFile=((MainActivity)context).getAOdia().getLineFileList().get(lineSpiner.getSelectedItemPosition()).clone();
                 if(((CheckBox)findViewById(R.id.reverse2)).isChecked()){
                     insertFile.reverse();
+                }
+                if(lineFile.getStationNum()==0||insertFile.getStationNum()==0){
+                    SDlog.toast("駅数0の路線を組み入れに用いることはできません。");
+                    return;
                 }
 
                 if(insertFile==lineFile){

@@ -1,8 +1,6 @@
 package com.kamelong.aodia.EditTrainType;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
-import com.kamelong.aodia.AOdiaData.TrainType;
+import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.SDlog;

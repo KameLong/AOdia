@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
-import com.kamelong.aodia.AOdiaData.Train;
-import com.kamelong.aodia.AOdiaData.TrainType;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
+import com.kamelong.OuDia.Train;
+import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaIO.FileSaveFragment;
 import com.kamelong.aodia.AOdiaIO.FileSelectorFragment;
 import com.kamelong.aodia.DiagramFragment.DiagramFragment;
@@ -159,7 +159,7 @@ public class AOdia {
      */
     private void openOuDiaFile(File file,String path){
         try {
-            LineFile lineFile = new com.kamelong.aodia.AOdiaData.LineFile(file);
+            LineFile lineFile = new LineFile(file);
             if(path!=null){
                 lineFile.filePath=path;
 
@@ -169,7 +169,8 @@ public class AOdia {
             lineFileExpand.put(lineFile,true);
             openTimeTable(lineFile, 0, 0);
         }catch (Exception e){
-            e.printStackTrace();
+            SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
+            SDlog.log(e);
         }
     }
 

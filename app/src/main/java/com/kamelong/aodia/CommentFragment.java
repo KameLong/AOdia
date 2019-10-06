@@ -8,7 +8,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.tool.SDlog;
 /*
  *     This file is part of AOdia.

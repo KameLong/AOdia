@@ -9,7 +9,7 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.detabase.AOdiaDetabase;

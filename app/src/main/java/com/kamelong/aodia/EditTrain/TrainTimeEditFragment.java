@@ -15,11 +15,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.OuterTerminal;
-import com.kamelong.aodia.AOdiaData.StationTime;
-import com.kamelong.aodia.AOdiaData.Train;
-import com.kamelong.aodia.AOdiaData.TrainType;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.OuterTerminal;
+import com.kamelong.OuDia.StationTime;
+import com.kamelong.OuDia.Train;
+import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
@@ -47,8 +47,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
-        editText.setVisibility(GONE);
 
         try {//まずBundleを確認し、fileNum,diaIndex,directを更新する
             Bundle bundle = getArguments();
@@ -165,7 +163,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner outerStartSpinner=findViewById(R.id.outerStartName);
         List<String> outerStartName = new ArrayList<String>();
         outerStartName.add("設定なし");
-        if(!train.isnull()) {
+        if(train.getStartStation()>=0) {
             for (OuterTerminal terminal : lineFile.getStation(train.getStartStation()).outerTerminals) {
                 outerStartName.add(terminal.outerTerminalName);
             }
@@ -355,6 +353,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
+            EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
+                editText.setVisibility(GONE);
+
             init();
             initTimeView();
 

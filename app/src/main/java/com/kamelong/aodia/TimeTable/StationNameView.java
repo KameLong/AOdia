@@ -4,8 +4,8 @@ package com.kamelong.aodia.TimeTable;
 import android.content.Context;
 import android.graphics.Canvas;
 
-import com.kamelong.aodia.AOdiaData.LineFile;
-import com.kamelong.aodia.AOdiaData.Station;
+import com.kamelong.OuDia.LineFile;
+import com.kamelong.OuDia.Station;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 
