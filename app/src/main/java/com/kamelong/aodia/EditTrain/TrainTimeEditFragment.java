@@ -190,7 +190,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner outerEndSpinner=findViewById(R.id.outerEndName);
         List<String> outerEndName = new ArrayList<String>();
         outerEndName.add("設定なし");
-        if(!train.isnull()) {
+        if(train.getEndStation()>=0) {
 
             for (OuterTerminal terminal : lineFile.getStation(train.getEndStation()).outerTerminals) {
                 outerEndName.add(terminal.outerTerminalName);

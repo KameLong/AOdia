@@ -4,14 +4,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:id="@+id/diagramLayout">
 
-    <Button
-        android:id="@+id/setOperation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="false"
-        android:text="これらの列車で運用を作成する"
-        android:visibility="gone" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -132,7 +125,7 @@
                 android:layout_below="@+id/stationIndex"
                 android:layout_alignParentBottom="false"
                 android:layout_centerHorizontal="true"
-                android:text="しなの"
+                android:text="@string/trainNameSample"
                 android:textSize="16dp" />
 
             <TextView
@@ -141,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="9dp"
-                android:text="2502M"
+                android:text="@string/trainNumberSample"
                 android:textSize="16dp" />
 
         </RelativeLayout>

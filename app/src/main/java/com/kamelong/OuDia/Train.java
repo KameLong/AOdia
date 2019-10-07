@@ -159,6 +159,12 @@ public class Train implements Cloneable {
         }
         for (int i = 0; i < value.length && i < lineFile.getStationNum(); i++) {
             stationTimes.get(getStationIndex(i)).setStationTime(value[i]);
+            if(getStopTrack(getStationIndex(i))<0||getStopTrack(getStationIndex(i))>=lineFile.getStation(getStationIndex(i)).getTrackNum()){
+                setStopTrack(getStationIndex(i),-1);
+            }
+            if(getStopType(getStationIndex(i))<0||getStopType(getStationIndex(i))>=4){
+                setStopType(getStationIndex(i),2);
+            }
         }
 
     }
@@ -555,7 +561,7 @@ public class Train implements Cloneable {
      * 発着番線設定
      */
     public void setStopTrack(int station, int value) {
-        stationTimes.get(station).stopType=(byte)value;
+        stationTimes.get(station).stopTrack=(byte) value;
     }
 
     /**

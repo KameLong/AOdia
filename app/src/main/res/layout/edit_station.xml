@@ -20,7 +20,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:background="#DFF"
-                android:text="下り時刻表形式"
+                android:text="@string/downwardTimeTableStyle"
                 android:textColor="@android:color/black" />
 
             <LinearLayout
@@ -34,21 +34,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="着時刻" />
+                    android:text="@string/ariTime" />
 
                 <CheckBox
                     android:id="@+id/stopDown"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="番線" />
+                    android:text="@string/track" />
 
                 <CheckBox
                     android:id="@+id/depDown"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="発時刻" />
+                    android:text="@string/depTime" />
 
             </LinearLayout>
 
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="上り時刻表形式"
+                android:text="@string/upwardTimeTableStyle"
                 android:background="#DFF"
                 android:textColor="@android:color/black" />
 
@@ -80,21 +80,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="着時刻" />
+                    android:text="@string/ariTime" />
 
                 <CheckBox
                     android:id="@+id/stopUp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="番線" />
+                    android:text="@string/track" />
 
                 <CheckBox
                     android:id="@+id/depUp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="発時刻" />
+                    android:text="@string/depTime" />
 
             </LinearLayout>
 
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="駅規模"
+                android:text="@string/stationSize"
                 android:background="#DFF"
                 android:textColor="@android:color/black" />
 
@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="一般駅" />
+                    android:text="@string/normalStation" />
 
                 <RadioButton
                     android:id="@+id/bigStation"
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
-                    android:text="主要駅" />
+                    android:text="@string/bigStation" />
             </RadioGroup>
 
 
@@ -171,7 +171,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="番線名"
+                        android:text="@string/trackName"
                         android:textColor="@android:color/black" />
 
                     <LinearLayout
@@ -194,7 +194,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="略称"
+                        android:text="@string/trackShortName"
                         android:textColor="@android:color/black" />
 
                     <LinearLayout
@@ -216,7 +216,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="下り本"
+                        android:text="@string/downMain"
                         android:textColor="@android:color/black" />
 
                     <RadioGroup
@@ -238,7 +238,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="上り本"
+                        android:text="@string/upMain"
                         android:textColor="@android:color/black" />
 
                     <RadioGroup
@@ -260,7 +260,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="削除"
+                        android:text="@string/delete"
                         android:textColor="@android:color/black" />
 
                     <LinearLayout
@@ -294,7 +294,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
-                    android:text="番線追加" />
+                    android:text="@string/addTrack" />
             </LinearLayout>
 
         </LinearLayout>
@@ -308,7 +308,7 @@
                 android:layout_height="wrap_content"
                 android:background="#DFF"
                 android:paddingLeft="5dp"
-                android:text="路線外発着駅設定"
+                android:text="@string/outerStationOption"
                 android:textColor="@android:color/black" />
 
             <LinearLayout
@@ -326,7 +326,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="路線外始発終着駅名"
+                        android:text="@string/outerStationName"
                         android:textColor="@android:color/black" />
 
                     <LinearLayout
@@ -350,7 +350,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="駅略称"
+                        android:text="@string/outerStationName"
                         android:textColor="@android:color/black" />
                     <LinearLayout
                         android:id="@+id/outerStationShortNameLinear"
@@ -371,7 +371,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="削除"
+                        android:text="@string/delete"
                         android:textColor="@android:color/black" />
 
                     <LinearLayout
@@ -405,7 +405,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#000"
-                    android:text="路線外始発終着駅追加" />
+                    android:text="@string/addOuterStation" />
             </LinearLayout>
 
         </LinearLayout>
@@ -421,7 +421,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:background="#DFF"
-                android:text="路線形状設定"
+                android:text="@string/lineStyleOption"
                 android:textColor="@android:color/black" />
 
             <LinearLayout
@@ -437,7 +437,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
-                    android:text="当駅を分岐駅にする　　　分岐元："
+                    android:text="@string/asBrunchStation"
                     android:textColor="@android:color/black"
                     android:textSize="12dp" />
                 <Spinner

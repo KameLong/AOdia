@@ -1,5 +1,4 @@
 <resources>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -7,40 +6,76 @@
     <string name="downTimeTable"><u>下り時刻表</u></string>
     <string name="upTimeTable"><u>上り時刻表</u></string>
 
-//メニュー
-<string name="app_name">AOdia</string>
-<string name="menu">メニュー</string>
-<string name="newFile">新規作成</string>
-<string name="openFile">ファイルを開く</string>
-<string name="openHelp">ヘルプを開く</string>
-<string name="options">設定</string>
-<string name="editStation">駅編集</string>
-<string name="editTrainType">種別編集</string>
-<string name="stationTimeTable">駅時刻表</string>
-<string name="diagram">ダイヤグラム</string>
-<string name="comment">コメント</string>
 
+    <string name="delete">削除</string>
+    <string name="add">追加</string>
+    //メニュー
+    <string name="app_name">AOdia</string>
+    <string name="menu">メニュー</string>
+    <string name="newFile">新規作成</string>
+    <string name="openFile">ファイルを開く</string>
+    <string name="openHelp">ヘルプを開く</string>
+    <string name="options">設定</string>
+    <string name="editStation">駅編集</string>
+    <string name="editTrainType">種別編集</string>
+    <string name="stationTimeTable">駅時刻表</string>
+    <string name="diagram">ダイヤグラム</string>
 
-<string name="downwardTimeTable">下り時刻表</string>
-<string name="upwardTimeTable">上り時刻表</string>
-<string name="operationNumber">運用番号</string>
-<string name="trainNumber">列車番号</string>
-<string name="trainType">列車種別</string>
-<string name="stationTrack">発着番線</string>
-<string name="startStation">始発</string>
-<string name="endStation">終着</string>
-<string name="remark">備考</string>
+    //時刻表
+    <string name="downwardTimeTable">下り時刻表</string>
+    <string name="upwardTimeTable">上り時刻表</string>
+    <string name="operationNumber">運用番号</string>
+    <string name="trainNumber">列車番号</string>
+    <string name="trainType">列車種別</string>
+    <string name="stationTrack">発着番線</string>
+    <string name="startStation">始発</string>
+    <string name="endStation">終着</string>
+    <string name="remark">備考</string>
+    //駅編集
+    <string name="downwardTimeTableStyle">下り時刻表形式</string>
+    <string name="upwardTimeTableStyle">上り時刻表形式</string>
+    <string name="depTime">発時刻</string>
+    <string name="ariTime">発時刻</string>
+    <string name="track">番線</string>
+    <string name="stationSize">駅規模</string>
+    <string name="normalStation">一般駅</string>
+    <string name="bigStation">主要駅</string>
+    <string name="trackOption">番線設定</string>
+    <string name="trackName">番線名</string>
+    <string name="trackShortName">略称</string>
+    <string name="downMain">下り本</string>
+    <string name="upMain">上り本</string>
+    <string name="addTrack">番線追加</string>
+    <string name="outerStationOption">路線外発着駅設定</string>
+    <string name="outerStationName">路線外始発終着駅名</string>
+    <string name="outerStationShortName">駅略称</string>
+    <string name="addOuterStation">路線外始発終着駅追加</string>
+    <string name="lineStyleOption">路線形状設定</string>
+    <string name="asBrunchStation">当駅を分岐駅にする　　　分岐元：</string>
+    //ダイヤグラム
+    <string name="trainNameSample">しなの</string>
+    <string name="trainNumberSample">2502M</string>
+    //ダイヤ編集
+    <string name="diagramProperty">ダイヤのプロパティ</string>
+    <string name="diagramName">ダイヤ名</string>
+    <string name="diagramUpper">ダイヤを一つ上に移動する</string>
+    <string name="diagramCopy">このダイヤをコピーする</string>
+    <string name="diagramDelete">このダイヤを削除する</string>
 
-//ファイルオープン
-<string name="FileInTheDevice">スマホ内の\nファイル</string>
-<string name="OuDiaDatabase">OuDia\nデータベース</string>
-<string name="history">履歴</string>
-<string name="baseDirectory">フォルダ選択</string>
-<string name="searchInsideDirectory">フォルダ内検索\nファイル名・駅名検索</string>
+    //ファイルオープン
+    <string name="FileInTheDevice">スマホ内の\nファイル</string>
+    <string name="OuDiaDatabase">OuDia\nデータベース</string>
+    <string name="history">履歴</string>
+    <string name="baseDirectory">フォルダ選択</string>
+    <string name="searchInsideDirectory">フォルダ内検索\nファイル名・駅名検索</string>
 
-<string name="SDcard">SDカード</string>
-<string name="inDevice">本体ストレージ</string>
-<string name="UpperFolder">上のフォルダ</string>
+    <string name="SDcard">SDカード</string>
+    <string name="inDevice">本体ストレージ</string>
+    <string name="UpperFolder">上のフォルダ</string>
+
+    //コメント
+    <string name="comment">コメント</string>
+    <string name="submit">編集完了</string>
 
 
 
