@@ -31,6 +31,8 @@
     <string name="startStation">始発</string>
     <string name="endStation">終着</string>
     <string name="remark">備考</string>
+
+    <string name="UserInputNumberFormatException">数値を入力してください</string>
     //駅編集
     <string name="downwardTimeTableStyle">下り時刻表形式</string>
     <string name="upwardTimeTableStyle">上り時刻表形式</string>

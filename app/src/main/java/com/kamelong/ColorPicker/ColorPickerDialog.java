@@ -1,25 +1,20 @@
 package com.kamelong.ColorPicker;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.kamelong.aodia.R;
 import com.kamelong.tool.Color;
 
 import top.defaults.colorpicker.ColorObserver;
-import top.defaults.colorpicker.ColorPickerPopup;
 import top.defaults.colorpicker.ColorPickerView;
 
-public class ColorPicker extends LinearLayout {
+public class ColorPickerDialog extends Dialog {
     public ColorPickerView colorPickerView;
     public SeekBar rSeek;
     public SeekBar gSeek;
@@ -28,18 +23,23 @@ public class ColorPicker extends LinearLayout {
     public EditText editG;
     public EditText editB;
     public Color color;
+    public Color startColor;
 
     public ColorPickerLisetener lisetener=null;
     public void setColorPickerListener(ColorPickerLisetener listener){
         this.lisetener=listener;
     }
-    public ColorPicker(Context context, AttributeSet attrs) {
-        this(context,attrs,0);
+    public ColorPickerDialog(Context context,ColorPickerLisetener lisetener,Color startColor) {
+        this(context);
+        setColorPickerListener(lisetener);
+        this.startColor=startColor;
+        this.color=startColor;
+        onColorChanged();
     }
 
-    public ColorPicker(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        View layout = LayoutInflater.from(context).inflate(R.layout.color_picker, this);
+    public ColorPickerDialog(Context context) {
+        super(context);
+        setContentView(R.layout.color_picker);
         colorPickerView=findViewById(R.id.view4);
         rSeek=findViewById(R.id.Rseek);
         rSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -162,9 +162,23 @@ public class ColorPicker extends LinearLayout {
         colorPickerView.subscribe(new ColorObserver() {
             @Override
             public void onColor(int color, boolean fromUser, boolean shouldPropagate) {
-                ColorPicker.this.color=new Color(color);
+                ColorPickerDialog.this.color=new Color(color);
                 onColorChanged();
 
+            }
+        });
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                color=startColor;
+                onColorChanged();
+                dismiss();
             }
         });
     }

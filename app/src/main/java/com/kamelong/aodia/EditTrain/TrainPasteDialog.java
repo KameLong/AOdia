@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.kamelong.aodia.R;
+import com.kamelong.tool.SDlog;
 
 
 public class TrainPasteDialog extends Dialog {
@@ -31,12 +32,16 @@ public class TrainPasteDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if(trainPasteDialogInterface!=null) {
-                    int time=Integer.parseInt(((EditText)findViewById(R.id.minitesEdit)).getEditableText().toString());
-                    time*=60;
-                    time+=Integer.parseInt(((EditText)findViewById(R.id.secondEdit)).getEditableText().toString());
+                    try {
+                        int time = Integer.parseInt(((EditText) findViewById(R.id.minitesEdit)).getEditableText().toString());
+                        time *= 60;
+                        time += Integer.parseInt(((EditText) findViewById(R.id.secondEdit)).getEditableText().toString());
 
 
-                    trainPasteDialogInterface.onOkClicked(time);
+                        trainPasteDialogInterface.onOkClicked(time);
+                    }catch (NumberFormatException e){
+                        SDlog.toast(context.getResources().getString(R.string.UserInputNumberFormatException));
+                    }
                 }
             }
         });
