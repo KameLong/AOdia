@@ -9,6 +9,8 @@ package com.kamelong.tool;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -62,6 +64,8 @@ public class SDlog {
         try {
             System.out.println(activity.getCacheDir());
             PrintWriter pw = new PrintWriter(activity.getCacheDir() + "/log.log");
+            PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+            pw.println(packageInfo.versionName);
             e.printStackTrace(pw);
             pw.close();
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -74,7 +78,7 @@ public class SDlog {
                     @Override
                     public void run() {
 
-                        Send(activity.getCacheDir() + "/log.log",pref.getString("userID",""),getNowDate());
+                        Send(activity.getCacheDir() + "/log.log",packageInfo.versionName+"_"+pref.getString("userID",""),getNowDate());
 
                     }
                 }).start();

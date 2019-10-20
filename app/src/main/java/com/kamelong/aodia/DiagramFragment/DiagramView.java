@@ -420,6 +420,9 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
      * @param canvas
      */
     private void drawAxis(Canvas canvas){
+        if(lineFile.getStationNum()==0){
+            return;
+        }
         //通常線
         Paint paint = new Paint();
         paint.setAntiAlias(true);

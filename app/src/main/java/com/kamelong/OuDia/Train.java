@@ -574,7 +574,7 @@ public class Train implements Cloneable {
             return null;
         }
         for(StationTimeOperation operation:stationTimes.get(startStation).beforeOperations){
-            if(operation.operationType==4){
+            if(operation.operationType==4&&operation.intData1>=0&&operation.intData1<lineFile.getStation(startStation).outerTerminals.size()){
                 return lineFile.getStation(startStation).getOuterStationTimeTableName(operation.intData1);
             }
         }
@@ -619,7 +619,7 @@ public class Train implements Cloneable {
             return null;
         }
         for(StationTimeOperation operation:stationTimes.get(endStation).afterOperations){
-            if(operation.operationType==4){
+            if(operation.operationType==4&&operation.intData1>=0&&operation.intData1<lineFile.getStation(endStation).outerTerminals.size()){
                 return lineFile.getStation(endStation).getOuterStationTimeTableName(operation.intData1);
             }
         }
