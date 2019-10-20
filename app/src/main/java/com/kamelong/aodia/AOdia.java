@@ -87,10 +87,10 @@ public class AOdia {
 
 
     public void makeNewLineFile(){
-            File sample=new File(activity.getFilesDir(), "new.oud");
+            File sample=new File(activity.getFilesDir(), "new2.oud");
         if (!sample.exists()) {
             try {
-                InputStream input=activity.getAssets().open("new.oud");
+                InputStream input=activity.getAssets().open("new2.oud");
                 OutputStream output=new FileOutputStream(sample);
                 byte[] data=new byte[input.available()];
                 input.read(data);

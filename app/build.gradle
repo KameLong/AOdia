@@ -6,8 +6,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 272
-        versionName "3.0.5"
+        versionCode 319
+        versionName "3.1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,8 +48,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
+//    implementation 'com.kamelong:OuDiaParser:1.0'
+
 }
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url 'https://kamelong.github.io/OuDia-JavaLib/'
+    }
+
 }

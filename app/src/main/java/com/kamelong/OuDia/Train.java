@@ -159,6 +159,12 @@ public class Train implements Cloneable {
         }
         for (int i = 0; i < value.length && i < lineFile.getStationNum(); i++) {
             stationTimes.get(getStationIndex(i)).setStationTime(value[i]);
+            if(getStopTrack(getStationIndex(i))<0||getStopTrack(getStationIndex(i))>=lineFile.getStation(getStationIndex(i)).getTrackNum()){
+                setStopTrack(getStationIndex(i),-1);
+            }
+            if(getStopType(getStationIndex(i))<0||getStopType(getStationIndex(i))>=4){
+                setStopType(getStationIndex(i),2);
+            }
         }
 
     }
@@ -555,7 +561,7 @@ public class Train implements Cloneable {
      * 発着番線設定
      */
     public void setStopTrack(int station, int value) {
-        stationTimes.get(station).stopType=(byte)value;
+        stationTimes.get(station).stopTrack=(byte) value;
     }
 
     /**
@@ -851,19 +857,20 @@ public class Train implements Cloneable {
     }
     public void setOuterEndStation(int outer){
         int station=getEndStation();
-        if(stationTimes.get(station).afterOperations.size()>0){
-            stationTimes.get(station).afterOperations.get(0).operationType=4;
-            stationTimes.get(station).afterOperations.get(0).intData1=outer;
-
+        if(stationTimes.get(station).afterOperations.size()==0) {
+            stationTimes.get(station).afterOperations.add(new StationTimeOperation());
 
         }
+            stationTimes.get(station).afterOperations.get(0).operationType=4;
+            stationTimes.get(station).afterOperations.get(0).intData1=outer;
     }
     public void setOuterStartStation(int outer){
         int station=getStartStation();
-        if(stationTimes.get(station).beforeOperations.size()>0){
+        if(stationTimes.get(station).beforeOperations.size()==0){
+            stationTimes.get(station).beforeOperations.add(new StationTimeOperation());
+        }
             stationTimes.get(station).beforeOperations.get(0).operationType=4;
             stationTimes.get(station).beforeOperations.get(0).intData1=outer;
-        }
     }
     public void setOuterStartTime(int time){
         int station=getStartStation();
@@ -871,10 +878,11 @@ public class Train implements Cloneable {
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");
             return;
         }
-        if(stationTimes.get(station).beforeOperations.size()>0){
+        if(stationTimes.get(station).beforeOperations.size()==0){
+            stationTimes.get(station).beforeOperations.add(new StationTimeOperation());
+        }
             stationTimes.get(station).beforeOperations.get(0).operationType=4;
             stationTimes.get(station).beforeOperations.get(0).time1=time;
-        }
     }
     public void setOuterEndTime(int time){
         int station=getEndStation();
@@ -882,12 +890,14 @@ public class Train implements Cloneable {
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");
             return;
         }
-        if(stationTimes.get(station).afterOperations.size()>0){
+        if(stationTimes.get(station).afterOperations.size()==0) {
+            stationTimes.get(station).afterOperations.add(new StationTimeOperation());
+
+        }
             stationTimes.get(station).afterOperations.get(0).operationType=4;
             stationTimes.get(station).afterOperations.get(0).time1=time;
 
 
-        }
     }
 
 

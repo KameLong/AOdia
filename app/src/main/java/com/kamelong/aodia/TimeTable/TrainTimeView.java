@@ -380,7 +380,11 @@ public class TrainTimeView extends TimeTableDefaultView {
     }
     private String getStopTrackText(int station){
        int stopTrack=train.getStopTrack(station);
-       return lineFile.getStation(station).getTrackShortName(stopTrack);
+       if(train.getStopType(station)==1||train.getStopType(station)==2) {
+           return lineFile.getStation(station).getTrackShortName(stopTrack);
+       }else{
+           return "";
+       }
     }
 
 }

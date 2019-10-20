@@ -59,6 +59,11 @@ public class EditTrainTypeFragment extends AOdiaFragmentCustom {
             getAOdia().killFragment(this);
             return;
         }
+
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
         init();
         final FloatingActionButton copyButton = fragmentContainer.findViewById(R.id.copyButton);
         copyButton.setOnClickListener(new View.OnClickListener() {
@@ -133,18 +138,8 @@ public class EditTrainTypeFragment extends AOdiaFragmentCustom {
                 init();
             }
         });
-//        Button addButton=fragmentContainer.findViewById(R.id.addButton);
-//        addButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                TrainType trainType=new TrainType();
-//                lineFile.trainType.add(trainType);
-//                typeListLinear.addView(new EditTrainTypeView(getMainActivity(),trainType));
-//
-//            }
-//        });
-
     }
+
 
     @NonNull
     @Override

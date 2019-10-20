@@ -440,7 +440,7 @@ Nobori.
 .
 KitenJikoku=300
 DiagramDgrYZahyouKyoriDefault=60
-Comment={\n  "author": [\n    "kamelong @LongKame kamelong.com",\n  ],\n  "LICENSE": "\n１、このファイルは、著作者の許可なく改変・配布する事ができる。\n （例外1）コメントのLICENSE項目、NOTICE項目の改変は禁止する。\n （例外2）コメントのauthor項目（この項目）の削除は禁止する。\n２、このファイルを改変したものはコメントのauthor項目に追記する事ができる。\n３、このファイルに含まれるデータをoudia形式以外に変換する事を許可する。その際、このライセンスを継承する必要はない。\n",\n  "NOTICE": "このファイルに含まれるデータは無保証です。このファイルに含まれるデータは商用・非商用問わず利用する事ができます。"\n}
+Comment=
 .
 DispProp.
 JikokuhyouFont=PointTextHeight=9;Facename=ＭＳ ゴシック

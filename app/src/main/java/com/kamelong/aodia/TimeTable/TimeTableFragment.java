@@ -142,7 +142,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                 //タップ位置から駅を特定し、駅編集画面を出す
                 findViewById(R.id.bottomContents2).setVisibility(View.GONE);
                 //editTrainが設定されているときは設定を解除する
-                if (editTrain >= 0) {
+                if (editTrain >= 0&&editTrain<timetable.getTrainNum(direction)) {
                     ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 255));
                     ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255, 255, 255));
                     editTrain = -1;
@@ -356,7 +356,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.bottomContents,fragment);
         fragmentTransaction.commit();
-        if(editTrain>=0){
+        if(editTrain>=0&&editTrain<timetable.getTrainNum(direction)){
             ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
             ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(editTrain).setBackgroundColor(Color.rgb(255,255,255));
         }
@@ -481,7 +481,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
             init();
             SDlog.toast("列車を貼り付けました");
-            ((TrainNameView)trainNameLinea.getChildAt(pasteIndex)).selected=true;
+            if(pasteIndex>=0&&pasteIndex<timetable.getTrainNum(direction)) {
+                ((TrainNameView) trainNameLinea.getChildAt(pasteIndex)).selected = true;
+            }
 
 
         }

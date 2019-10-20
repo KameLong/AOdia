@@ -170,6 +170,14 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         }
         ArrayAdapter<String> outerStartAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item,outerStartName);
         outerStartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        outerStartSpinner.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(outerStartName.size()==1){
+//                    SDlog.toast("路線外始発駅が設定されていません。「駅編集」から路線外始発駅を追加してください");
+//                }
+//            }
+//        });
         outerStartSpinner.setAdapter(outerStartAdapter);
         outerStartSpinner.setSelection(train.getOuterStartStation()+1);
         outerStartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -190,7 +198,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner outerEndSpinner=findViewById(R.id.outerEndName);
         List<String> outerEndName = new ArrayList<String>();
         outerEndName.add("設定なし");
-        if(!train.isnull()) {
+        if(train.getEndStation()>=0) {
 
             for (OuterTerminal terminal : lineFile.getStation(train.getEndStation()).outerTerminals) {
                 outerEndName.add(terminal.outerTerminalName);
@@ -200,6 +208,16 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         outerEndAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         outerEndSpinner.setAdapter(outerEndAdapter);
         outerEndSpinner.setSelection(train.getOuterEndStation()+1);
+//        outerEndSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if(outerEndName.size()==1){
+//                    SDlog.toast("路線外終着駅が設定されていません。「駅編集」から路線外終着駅を追加してください");
+//                }
+//
+//            }
+//        });
+
         outerEndSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

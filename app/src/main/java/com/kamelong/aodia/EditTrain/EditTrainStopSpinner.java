@@ -43,12 +43,16 @@ public class EditTrainStopSpinner extends AppCompatSpinner {
         setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(train.getStopTrack(stationIndex)!=i){
-                    train.setStopTrack(stationIndex,i);
-                    if(listener!=null){
-                        listener.trainChanged(train);
-                    }
+                try {
+                    if (train.getStopTrack(stationIndex) != i) {
+                        train.setStopTrack(stationIndex, i);
+                        if (listener != null) {
+                            listener.trainChanged(train);
+                        }
 
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }
 

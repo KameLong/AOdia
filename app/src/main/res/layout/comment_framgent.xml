@@ -19,14 +19,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="編集完了" />
+            android:text="@string/submit" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_weight="1"
-            android:text="コメント"
+            android:text="@string/comment"
             android:textColor="#000"
             android:textSize="20dp" />
 

@@ -1,0 +1,80 @@
+<resources>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="downTimeTable"><u>下り時刻表</u></string>
+    <string name="upTimeTable"><u>上り時刻表</u></string>
+
+
+    <string name="delete">delete</string>
+    <string name="add">add</string>
+    //メニュー
+    <string name="app_name">AOdia</string>
+    <string name="menu">MENU</string>
+    <string name="newFile">　create new file</string>
+    <string name="openFile">　open a file</string>
+    <string name="openHelp">　open help</string>
+    <string name="options">　options</string>
+    <string name="editStation">station</string>
+    <string name="editTrainType">type of train</string>
+    <string name="stationTimeTable">timetable of station</string>
+    <string name="diagram">diagram</string>
+
+    //時刻表
+    <string name="downwardTimeTable">downward timetable</string>
+    <string name="upwardTimeTable">upward timetable</string>
+    <string name="operationNumber">operation</string>
+    <string name="trainNumber">number</string>
+    <string name="trainType">type</string>
+    <string name="stationTrack">track</string>
+    <string name="startStation">start</string>
+    <string name="endStation">end</string>
+    <string name="remark">remark</string>
+    //駅編集
+    <string name="downwardTimeTableStyle">style of down timetable</string>
+    <string name="upwardTimeTableStyle">style of upper timetable</string>
+    <string name="depTime">departure time</string>
+    <string name="ariTime">arrival time</string>
+    <string name="track">shop track</string>
+    <string name="stationSize">station style</string>
+    <string name="normalStation">normal</string>
+    <string name="bigStation">big</string>
+    <string name="trackOption">stop track option</string>
+    <string name="trackName">track name</string>
+    <string name="trackShortName">short name</string>
+    <string name="downMain">main for down</string>
+    <string name="upMain">main for upper</string>
+    <string name="addTrack">add track</string>
+    <string name="outerStationOption">outer station option</string>
+    <string name="outerStationName">outer station name</string>
+    <string name="outerStationShortName">short name</string>
+    <string name="addOuterStation">add outer station</string>
+    <string name="lineStyleOption">branch option</string>
+    <string name="asBrunchStation">set as a brunch station    original：</string>
+    //ダイヤグラム
+    <string name="trainNameSample">Name</string>
+    <string name="trainNumberSample">Number</string>
+    //ダイヤ編集
+    <string name="diagramProperty">property of timetable</string>
+    <string name="diagramName">name of timetable</string>
+    <string name="diagramUpper">move to forward</string>
+    <string name="diagramCopy">clone timetable</string>
+    <string name="diagramDelete">delete timetable</string>
+
+    /ファイルオープン
+    <string name="FileInTheDevice">a file　in \n device</string>
+    <string name="OuDiaDatabase">OuDia\ndatabase</string>
+    <string name="history">history</string>
+    <string name="baseDirectory">base directory</string>
+    <string name="searchInsideDirectory">search from\nfile\'s or station\'s name</string>
+
+    <string name="SDcard">SD card</string>
+    <string name="inDevice">storage of device</string>
+    <string name="UpperFolder">upper directory</string>
+
+    //コメント
+    <string name="comment">comment</string>
+    <string name="submit">submit</string>
+
+</resources>
