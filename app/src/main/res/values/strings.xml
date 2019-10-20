@@ -37,7 +37,7 @@
     <string name="downwardTimeTableStyle">下り時刻表形式</string>
     <string name="upwardTimeTableStyle">上り時刻表形式</string>
     <string name="depTime">発時刻</string>
-    <string name="ariTime">発時刻</string>
+    <string name="ariTime">着時刻</string>
     <string name="track">番線</string>
     <string name="stationSize">駅規模</string>
     <string name="normalStation">一般駅</string>
