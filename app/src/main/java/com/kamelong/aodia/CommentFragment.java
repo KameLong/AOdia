@@ -86,6 +86,11 @@ public class CommentFragment extends AOdiaFragmentCustom {
     @Override
     public String getName() {
         try {
+            int i = 1 / 0;
+        }catch (Exception e){
+            SDlog.log(e);
+        }
+        try {
             String line = lineFile.name;
             if (line.length() > 10) {
                 line = line.substring(0, 10);

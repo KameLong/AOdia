@@ -159,6 +159,12 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         }).start();
+        if((!pref.getBoolean("send_log",false))
+                &&(!pref.getBoolean("send_log_action",false))
+        ){
+            SendLogPerm perm=new SendLogPerm(this,pref);
+            perm.show();
+        }
     }
     @NonNull
     public AOdia getAOdia(){

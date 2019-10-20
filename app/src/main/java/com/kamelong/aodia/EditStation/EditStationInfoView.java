@@ -270,13 +270,13 @@ public class EditStationInfoView extends LinearLayout {
                 }
             });
             final EditText editText2 = new EditText(getContext());
-            editText2.setText(outerTerminal.outerTerminalName);
+            editText2.setText(outerTerminal.outerTerminalTimeTableName);
             editText2.setHeight(height);
             stationShortNameLinear.addView(editText2);
             editText2.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view, boolean b) {
-                    outerTerminal.outerTerminalName= editText1.getEditableText().toString();
+                    outerTerminal.outerTerminalTimeTableName= editText2.getEditableText().toString();
                 }
             });
             final Button delete=new Button(getContext());

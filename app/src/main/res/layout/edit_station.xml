@@ -350,7 +350,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
-                        android:text="@string/outerStationName"
+                        android:text="@string/outerStationShortName"
                         android:textColor="@android:color/black" />
                     <LinearLayout
                         android:id="@+id/outerStationShortNameLinear"

@@ -25,6 +25,6 @@ public class InfoDialog extends Dialog {
 
         });
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl("http://kamelong.com/aodia/test.html");
+        webView.loadUrl("http://kamelong.com/aodia/AOdiaInfo.html");
     }
 }

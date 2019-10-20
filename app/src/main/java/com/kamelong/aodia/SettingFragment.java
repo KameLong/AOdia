@@ -1,7 +1,9 @@
 package com.kamelong.aodia;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -76,6 +78,8 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
                         return false;
             }
         });
+        final CheckBoxPreference sendLog=findPreference("send_log");
+        sendLog.setChecked(PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("send_log",false));
         final CheckBoxPreference useBeta=findPreference("useOld");
         useBeta.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

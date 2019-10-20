@@ -857,19 +857,20 @@ public class Train implements Cloneable {
     }
     public void setOuterEndStation(int outer){
         int station=getEndStation();
-        if(stationTimes.get(station).afterOperations.size()>0){
-            stationTimes.get(station).afterOperations.get(0).operationType=4;
-            stationTimes.get(station).afterOperations.get(0).intData1=outer;
-
+        if(stationTimes.get(station).afterOperations.size()==0) {
+            stationTimes.get(station).afterOperations.add(new StationTimeOperation());
 
         }
+            stationTimes.get(station).afterOperations.get(0).operationType=4;
+            stationTimes.get(station).afterOperations.get(0).intData1=outer;
     }
     public void setOuterStartStation(int outer){
         int station=getStartStation();
-        if(stationTimes.get(station).beforeOperations.size()>0){
+        if(stationTimes.get(station).beforeOperations.size()==0){
+            stationTimes.get(station).beforeOperations.add(new StationTimeOperation());
+        }
             stationTimes.get(station).beforeOperations.get(0).operationType=4;
             stationTimes.get(station).beforeOperations.get(0).intData1=outer;
-        }
     }
     public void setOuterStartTime(int time){
         int station=getStartStation();
@@ -877,10 +878,11 @@ public class Train implements Cloneable {
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");
             return;
         }
-        if(stationTimes.get(station).beforeOperations.size()>0){
+        if(stationTimes.get(station).beforeOperations.size()==0){
+            stationTimes.get(station).beforeOperations.add(new StationTimeOperation());
+        }
             stationTimes.get(station).beforeOperations.get(0).operationType=4;
             stationTimes.get(station).beforeOperations.get(0).time1=time;
-        }
     }
     public void setOuterEndTime(int time){
         int station=getEndStation();
@@ -888,12 +890,14 @@ public class Train implements Cloneable {
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");
             return;
         }
-        if(stationTimes.get(station).afterOperations.size()>0){
+        if(stationTimes.get(station).afterOperations.size()==0) {
+            stationTimes.get(station).afterOperations.add(new StationTimeOperation());
+
+        }
             stationTimes.get(station).afterOperations.get(0).operationType=4;
             stationTimes.get(station).afterOperations.get(0).time1=time;
 
 
-        }
     }
 
 
