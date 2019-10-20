@@ -83,6 +83,7 @@ public class FileListAdapter extends BaseAdapter {
         }
         //親フォルダに移動する項目を追加
         fileList.add(0, new File(new File(directoryPath).getParent()));
+        fileList.add( new File(directoryPath+"/dsofijwaoij"));
     }
     public FileListAdapter(Context context, ArrayList<String> filePathList){
         this.activity = (MainActivity) context;
@@ -111,12 +112,19 @@ public class FileListAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         convertView = layoutInflater.inflate(R.layout.fileselector_file_list, parent, false);
+        if(!fileList.get(position).exists()){
+            //新規フォルダ作成
+            ((TextView) convertView.findViewById(R.id.fileName)).setText(activity.getResources().getString(R.string.makeNewDirectory));
+        }else{
+            ((TextView) convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
+        }
 
-        ((TextView) convertView.findViewById(R.id.fileName)).setText(fileList.get(position).getName());
         ((TextView) convertView.findViewById(R.id.stationName)).setText(stationName(fileList.get(position)));
-        if (fileList.get(position).getName().endsWith(".oud")|| fileList.get(position).getName().endsWith(".oud2")){
+        if(fileList.get(position).isFile()){
+        if (fileList.get(position).getName().endsWith(".oud")|| fileList.get(position).getName().endsWith(".oud2")) {
             ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
             fileIcon.setImageResource(R.drawable.fileselector_dia_icon);
+        }
 
             //ファイル削除操作
             ImageView deleteButton=convertView.findViewById(R.id.deleteDiagram);
@@ -127,7 +135,7 @@ public class FileListAdapter extends BaseAdapter {
                     System.out.println(fileList.get(position).getPath());
                     new AlertDialog.Builder(activity)
                             .setTitle("ファイル削除")
-                            .setMessage(fileList.get(position).getName()+"のダイヤデータを削除します")
+                            .setMessage(fileList.get(position).getName()+"を削除します")
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -148,6 +156,32 @@ public class FileListAdapter extends BaseAdapter {
         } else if (fileList.get(position).isDirectory()) {
             ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
             fileIcon.setImageResource(R.drawable.fileselector_folder_icon);
+            ImageView deleteButton=convertView.findViewById(R.id.deleteDiagram);
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(fileList.get(position).listFiles().length!=0){
+                        SDlog.toast(activity.getString(R.string.errorDirectoryIsNotEnpty));
+                        return;
+                    }
+                    new AlertDialog.Builder(activity)
+                            .setTitle("フォルダ削除")
+                            .setMessage("フォルダ（"+fileList.get(position).getName()+")を削除します")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(!fileList.get(position).delete()){
+                                        Toast.makeText(activity,"フォルダを削除できませんでした",Toast.LENGTH_LONG).show();
+                                    }
+                                    selector.openDirectory(directoryPath);
+                                }
+                            })
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                }
+            });
+
         }
 
 

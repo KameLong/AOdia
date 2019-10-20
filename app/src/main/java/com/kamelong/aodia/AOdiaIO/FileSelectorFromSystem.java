@@ -188,7 +188,7 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                     Toast.makeText(getContext(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getContext(),"このファイルは削除された可能性があります。", Toast.LENGTH_SHORT).show();
+                new MakeNewDirectoryDialog(getContext(),currentDirectoryPath,this).show();
             }
         }catch (Exception e){
             Toast.makeText(getContext(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();
