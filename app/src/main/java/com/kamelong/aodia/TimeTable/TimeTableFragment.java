@@ -190,7 +190,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             timetable = lineFile.getDiagram(diaIndex);
         }catch(Exception e){
             SDlog.log(e);
-            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG).show();
         }
         if(lineFile==null){
             Toast.makeText(getActivity(),"ダイヤファイルが見つかりませんでした",Toast.LENGTH_LONG).show();
@@ -275,6 +274,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             final FrameLayout trainTimeFrame = findViewById(R.id.trainTimeFrame);
             final LinearLayout trainNameLinear = findViewById(R.id.trainNameLinear);
             final LinearLayout stationNameLinear = findViewById(R.id.stationNameLinear);
+            if(trainTimeLinear.getChildCount()==0){
+                return;
+            }
             //スクロール量の限界設定
             if (scrollX > 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize() * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth()) {
                 scrollX = 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize()  * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth();

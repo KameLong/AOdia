@@ -381,7 +381,7 @@ public void loadData(){
         openTimeTable(file,0,0);
         }catch ( Exception e) {
         SDlog.log(e);
-        SDlog.toast("ファイルを開けませんでした");
+        SDlog.toast("初期ファイルを開けませんでした");
         }
         }
         }

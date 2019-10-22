@@ -184,9 +184,9 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
      */
     public void openDirectory(String directorypath){
         try {
-            currentDirectoryPath=directorypath;
             File file=new File(directorypath);
             if (file.isDirectory()) {
+                currentDirectoryPath=directorypath;
                 final ListView fileListView =  findViewById(R.id.fileList);
                 final FileListAdapter adapter = new FileListAdapter(getContext(), file.getPath(),this);
 

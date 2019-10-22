@@ -373,7 +373,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         try {
             EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
-
             init();
             initTimeView();
 

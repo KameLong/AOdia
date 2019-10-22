@@ -85,7 +85,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             SDlog.log(e);
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
-        if (lineFile == null) {
+        if (lineFile == null||station==null) {
             getAOdia().killFragment(this);
             return contentView;
         }

@@ -108,6 +108,9 @@ public class Train implements Cloneable {
                 remark = value;
                 break;
         }
+        if(title.startsWith("OperationNumbe")){
+            return;
+        }
         if(title.startsWith("Operation")){
             if(title.contains(".")){
                 title=title.substring(9);

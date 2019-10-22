@@ -66,6 +66,10 @@ public class StationInfoIndexFragment extends AOdiaFragmentCustom {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (lineFile == null) {
+            getAOdia().killFragment(this);
+            return;
+        }
         try {
             LinearLayout stationListLayout = contentView.findViewById(R.id.stationList);
             for (int station = 0; station < lineFile.getStationNum(); station++) {
