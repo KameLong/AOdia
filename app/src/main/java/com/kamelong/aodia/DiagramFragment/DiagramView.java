@@ -633,6 +633,9 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
      * @param canvas
      */
     private void drawNowTime(Canvas canvas){
+        if(lineFile.getStationNum()==0){
+            return;
+        }
         if(options.autoScrollState==0){
             return;
         }
