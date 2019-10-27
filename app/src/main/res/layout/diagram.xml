@@ -11,6 +11,58 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottomContents2">
 
+        <LinearLayout
+            android:id="@+id/Leniar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="2px">
+
+            <FrameLayout
+                android:id="@+id/station"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true">
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/timedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:id="@+id/time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/diagramParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
+
+                    <FrameLayout
+                        android:id="@+id/diagramFrame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                    </FrameLayout>
+                </FrameLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/autoFrame"
             android:layout_width="56dp"
@@ -164,58 +216,6 @@
                 app:srcCompat="@drawable/diagram_up" />
 
         </FrameLayout>
-
-        <LinearLayout
-            android:id="@+id/Leniar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="2px">
-
-            <FrameLayout
-                android:id="@+id/station"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true">
-
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/timedia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:id="@+id/time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/diagramParent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipChildren="false"
-                    android:clipToPadding="false">
-
-                    <FrameLayout
-                        android:id="@+id/diagramFrame"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clipChildren="false"
-                        android:clipToPadding="false">
-
-                    </FrameLayout>
-                </FrameLayout>
-
-            </LinearLayout>
-
-
-        </LinearLayout>
 
         <FrameLayout
             android:id="@+id/FinelyFrame"

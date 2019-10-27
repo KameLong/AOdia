@@ -150,6 +150,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                 int y = (int) motionEvent.getY();
                 int timeTabley = y + findViewById(R.id.trainTimeLinear).getScrollY() - findViewById(R.id.trainNameLinear).getHeight();
                 int station = ((StationNameView) ((LinearLayout) findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
+                if(direction==1){
+                    station=lineFile.getStationNum()-station-1;
+                }
                 if (station >= 0 && station < lineFile.getStationNum()) {
                     StationInfoDialog dialog = new StationInfoDialog(getContext(), lineFile, diaIndex, direction, station);
                     dialog.show();
@@ -202,6 +205,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     }
     public void onStart(){
         super.onStart();
+        if(lineFile==null){
+            getAOdia().killFragment(this);
+            return;
+        }
         if(editTrain<0||editTrain>=timetable.trains[direction].size()) {
         }else {
             openTrainEditFragment(timetable.trains[direction].get(editTrain));
