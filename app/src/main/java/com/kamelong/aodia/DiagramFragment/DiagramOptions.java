@@ -4,7 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -74,6 +77,7 @@ public class DiagramOptions {
     MainActivity activity;
     DiagramFragment fragment;
     LineFile diaFile;
+    SharedPreferences diagramPreference;
 
     private static final int DURATION = 200;
     private boolean fabDiagramVisible;//ダイヤ詳細徹底を開いているか
@@ -82,15 +86,21 @@ public class DiagramOptions {
         this.activity = activity;
         this.fragment = fragment;
         this.diaFile = diaFile;
+        diagramPreference= PreferenceManager.getDefaultSharedPreferences(activity);
         if(diaFile==null)return;
         //デフォルトscaleはTrainNumに依存する
-            if (diaFile.getDiagram(diaNumber).getTrainNum(0) > 100) {
-                scaleX = 0.1f;
-                scaleY = 0.3f;
-            } else {
-                scaleX = 0.05f;
-                scaleY = 0.3f;
-            }
+        if (diaFile.getDiagram(diaNumber).getTrainNum(0) > 100) {
+            scaleX = 0.1f;
+            scaleY = 0.3f;
+        } else {
+            scaleX = 0.05f;
+            scaleY = 0.3f;
+        }
+        verticalAxis=diagramPreference.getInt("diagramVerticalAxis",0);
+        numberState=diagramPreference.getInt("diagramNumberState",0);
+        showUpTrain=diagramPreference.getBoolean("diagramShowUp",true);
+        showDownTrain=diagramPreference.getBoolean("diagramShowDown",true);
+        showTrainStop=diagramPreference.getBoolean("diagramShowStop",false);
     }
     public void setDefault(int[] value){
         scrollX=value[0];
@@ -289,6 +299,7 @@ public class DiagramOptions {
             public void onClick(View view){
                 if(verticalAxis<7){
                     verticalAxis++;
+                    diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
                     //Viewの再描画
                     ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
                     ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
@@ -302,7 +313,8 @@ public class DiagramOptions {
             public void onClick(View view){
                 if(verticalAxis>0){
                     verticalAxis--;
-                    //Viewの再描画
+                    diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
+
                     ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
                     ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
                 }
@@ -314,6 +326,7 @@ public class DiagramOptions {
             @Override
             public void onClick(View view){
                 showDownTrain=!showDownTrain;
+                diagramPreference.edit().putBoolean("diagramShowDown",showDownTrain).apply();
                 //Viewと詳細設定ボタンの再描画
                 ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
                 DiagramOptions.this.buttonInit();
@@ -326,6 +339,7 @@ public class DiagramOptions {
             @Override
             public void onClick(View view){
                 showUpTrain=!showUpTrain;
+                diagramPreference.edit().putBoolean("diagramShowUp",showUpTrain).apply();
                 //Viewと詳細設定ボタンの再描画
                 ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
                 DiagramOptions.this.buttonInit();
@@ -337,6 +351,7 @@ public class DiagramOptions {
             @Override
             public void onClick(View view){
                 showTrainStop=!showTrainStop;
+                diagramPreference.edit().putBoolean("diagramShowStop",showTrainStop).apply();
                 //Viewと詳細設定ボタンの再描画
                 ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
                 DiagramOptions.this.buttonInit();
@@ -356,6 +371,8 @@ public class DiagramOptions {
             @Override
             public void onClick(View view){
                 numberState=(numberState+1)%4;
+                diagramPreference.edit().putInt("diagramNumberState",numberState).apply();
+
                 DiagramOptions.this.buttonInit();
                 ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
             }

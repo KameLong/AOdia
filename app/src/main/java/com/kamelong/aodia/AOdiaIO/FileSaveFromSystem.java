@@ -49,7 +49,12 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
     public void setLineFile(final LineFile lineFile){
         this.lineFile=lineFile;
         System.out.println("path:"+lineFile.filePath);
-        ((EditText)findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/")+1,lineFile.filePath.lastIndexOf(".")));
+        try {
+            ((EditText) findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/") + 1, lineFile.filePath.lastIndexOf(".")));
+            openDirectory(lineFile.filePath.substring(0,lineFile.filePath.lastIndexOf("/")));
+        }catch (Exception e){
+            SDlog.log(e);
+        }
 
         final RadioGroup saveStyle=findViewById(R.id.savestyle);
         if(lineFile.filePath.endsWith("oud2")){
@@ -58,7 +63,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
             saveStyle.check(R.id.oud);
         }
 
-        openDirectory(lineFile.filePath.substring(0,lineFile.filePath.lastIndexOf("/")));
+
         findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +75,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
                     savePath+=".oud";
                 }
                 if(new File(savePath).isDirectory()){
-                    SDlog.toast("このファイル名はディレクトリです。保存できません");
+                    SDlog.toast("このファイル名はディレクトリで既に存在しています。ここに保存できません");
                     return;
                 }
                 final String savePath2 = savePath;
@@ -113,7 +118,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
 
                 }catch (Exception e){
                     SDlog.log(e);
-                    SDlog.toast("ファイルの保存に失敗しました。");
+                    SDlog.toast(savePath+"にファイルを保存する事ができませんでした");
                 }
 
 
@@ -206,7 +211,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
             } else if (file.exists()) {
                         ((EditText)findViewById(R.id.fileName)).setText(file.getName().substring(0,file.getName().lastIndexOf(".")));
             } else {
-                Toast.makeText(getContext(),"このファイルは削除された可能性があります。", Toast.LENGTH_SHORT).show();
+                new MakeNewDirectoryDialog(getContext(),currentDirectoryPath,this).show();
             }
         }catch (Exception e){
             Toast.makeText(getContext(), "このフォルダにアクセスする権限がありません", Toast.LENGTH_SHORT).show();

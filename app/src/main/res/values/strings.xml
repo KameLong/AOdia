@@ -70,6 +70,11 @@
     <string name="history">履歴</string>
     <string name="baseDirectory">フォルダ選択</string>
     <string name="searchInsideDirectory">フォルダ内検索\nファイル名・駅名検索</string>
+    <string name="makeNewDirectory">新しいフォルダを作る</string>
+    <string name="newDirectory">新規フォルダ</string>
+    <string name="directoryName">フォルダ名</string>
+    <string name="errorFileExist">ここには既にファイルもしくはフォルダが存在します</string>
+    <string name="errorDirectoryIsNotEnpty">フォルダを削除する前にフォルダ内を空にしてください</string>
 
     <string name="SDcard">SDカード</string>
     <string name="inDevice">本体ストレージ</string>

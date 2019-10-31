@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -33,6 +34,8 @@ public class TimeTableOptions {
 
     public boolean showPassTime=false;
 
+    public SharedPreferences preference;
+
     private int trainWidth=5;
     public int getTrainWidth(){
         if(showSecond){
@@ -47,11 +50,13 @@ public class TimeTableOptions {
         this.activity=activity;
         this.fragment=fragment;
         this.container =container;
+        preference= PreferenceManager.getDefaultSharedPreferences(activity);
+
         try {
-            trainWidth = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(activity).getString("lineTimetableWidth", "5"));
+            trainWidth = Integer.parseInt(preference.getString("lineTimetableWidth", "5"));
         }catch (NumberFormatException e){
             trainWidth=5;
-            PreferenceManager.getDefaultSharedPreferences(activity).edit().putString("lineTimetableWidth", "5").apply();
+            preference.edit().putString("lineTimetableWidth", "5").apply();
         }
         //メインボタン
         this.container.findViewById(R.id.fabTrainTime).setOnClickListener(new View.OnClickListener() {
@@ -60,56 +65,67 @@ public class TimeTableOptions {
                 openTrainTimeOption();
             }
         });
+        showPassTime=preference.getBoolean("timetableShowPass",false);
         //通過駅
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowPass),showPassTime);
         this.container.findViewById(R.id.fabShowPass).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPassTime=!showPassTime;
+                preference.edit().putBoolean("timetableShowPass",showPassTime).apply();
                 checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowPass),showPassTime);
                 fragment.invalidate();
-
-
             }
         });
         //秒表示
+        showSecond=preference.getBoolean("timetableShowSecond",false);
+
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowSeconds),showSecond);
         this.container.findViewById(R.id.fabShowSeconds).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSecond=!showSecond;
+                preference.edit().putBoolean("timetableShowSecond",showSecond).apply();
                 checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowSeconds),showSecond);
                 fragment.invalidate();
             }
         });
         //列車名
+        showTrainName=preference.getBoolean("timetableShowName",false);
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowTrainName),showTrainName);
         this.container.findViewById(R.id.fabShowTrainName).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showTrainName=!showTrainName;
+                preference.edit().putBoolean("timetableShowName",showTrainName).apply();
                 checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowTrainName),showTrainName);
                 fragment.invalidate();
             }
         });
         //始終点
+        showStartStation=preference.getBoolean("timetableShowStart",false);
+        showEndStation=showStartStation;
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabStartEnd),showStartStation);
         this.container.findViewById(R.id.fabStartEnd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showStartStation=!showStartStation;
                 showEndStation=showStartStation;
+                preference.edit().putBoolean("timetableShowStart",showStartStation).apply();
+
                 checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabStartEnd),showStartStation);
                 fragment.invalidate();
 
             }
         });
         //備考
+        showRemark=preference.getBoolean("timetableShowRemark",false);
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowRemark),showRemark);
         this.container.findViewById(R.id.fabShowRemark).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showRemark=!showRemark;
+                preference.edit().putBoolean("timetableShowRemark",showRemark).apply();
                 checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowRemark),showRemark);
                 fragment.invalidate();
             }

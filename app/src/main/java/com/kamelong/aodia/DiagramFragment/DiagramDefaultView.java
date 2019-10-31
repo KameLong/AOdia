@@ -1,8 +1,10 @@
 package com.kamelong.aodia.DiagramFragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.kamelong.aodia.MainActivity;
@@ -29,6 +31,8 @@ public abstract class DiagramDefaultView extends View {
     public static int smallSpace;//細線を入れたときのスペース
     public static int normalSpace;//太線を入れたときのスペース
 
+    public static int stationWidth=5;
+
     /*
      * staticなコンストラクタ。
      * 最初にKLViewが呼ばれたときに実行されるはず
@@ -49,6 +53,7 @@ public abstract class DiagramDefaultView extends View {
         blackPaint.setAntiAlias(true);
         blackBPaint.setAntiAlias(true);
         grayPaint.setAntiAlias(true);
+
         setTextSize(30);
 
     }
@@ -75,6 +80,9 @@ public abstract class DiagramDefaultView extends View {
         blackBPaint.setStrokeWidth(size / 6f);
         smallSpace=size/6;
         normalSpace=size/3;
+    }
+    public static void setStationWidth(int width){
+        stationWidth=width;
     }
     /**
      * onMeasureは結構いじっている。

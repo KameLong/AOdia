@@ -28,6 +28,15 @@
         android:enabled="true"
         android:title="路線時刻表設定">
         <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="5"
+            android:inputType="number"
+            android:key="timetableStationWidth"
+            android:maxLength="1"
+            android:summary="(全角)"
+            android:title="路線時刻表駅名幅" />
+        <EditTextPreference
             android:defaultValue="5"
             android:inputType="number"
             android:key="lineTimetableWidth"
@@ -38,6 +47,15 @@
     <PreferenceCategory
         android:enabled="true"
         android:title="ダイヤグラム設定">
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="5"
+            android:inputType="number"
+            android:key="diagramStationWidth"
+            android:maxLength="1"
+            android:summary="(全角)"
+            android:title="ダイヤグラム駅名幅" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="onlySolid"

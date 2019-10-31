@@ -138,7 +138,7 @@ public class StationNameView extends TimeTableDefaultView {
 
     }
     protected int getXsize(){
-        return (int)(textPaint.getTextSize()*5);
+        return (int)(textPaint.getTextSize()*stationWidth);
     }
     public int getYsize(){
         int startLine=0;

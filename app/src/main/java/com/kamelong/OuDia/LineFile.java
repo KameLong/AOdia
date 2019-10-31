@@ -863,6 +863,9 @@ public class LineFile implements Cloneable {
             if(minTime>90000){
                 minTime=180;
             }
+            if(minTime<30){
+                minTime=30;
+            }
             stationTime.add(stationTime.get(stationTime.size()-1)+minTime);
 
         }
@@ -1279,6 +1282,19 @@ public class LineFile implements Cloneable {
      */
     public void sortTrain(int diaIndex, int direction, int stationIndex) {
         getDiagram(diaIndex).sortTrain(direction, stationIndex);
+    }
+    /**
+     * ダイヤ名からダイヤを取得します
+     * 重複している場合最初のダイヤファイルを返します。
+     * 指定ダイヤが存在しない時はnullが返ります。
+     */
+    public Diagram getDiaFromName(String name){
+        for(Diagram dia:diagram){
+            if(dia.name.equals(name)){
+                return dia;
+            }
+        }
+        return null;
     }
 
 }
