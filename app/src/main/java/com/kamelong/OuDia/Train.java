@@ -108,6 +108,9 @@ public class Train implements Cloneable {
                 remark = value;
                 break;
         }
+        if(title.startsWith("OperationNumbe")){
+            return;
+        }
         if(title.startsWith("Operation")){
             if(title.contains(".")){
                 title=title.substring(9);
@@ -574,7 +577,7 @@ public class Train implements Cloneable {
             return null;
         }
         for(StationTimeOperation operation:stationTimes.get(startStation).beforeOperations){
-            if(operation.operationType==4){
+            if(operation.operationType==4&&operation.intData1>=0&&operation.intData1<lineFile.getStation(startStation).outerTerminals.size()){
                 return lineFile.getStation(startStation).getOuterStationTimeTableName(operation.intData1);
             }
         }

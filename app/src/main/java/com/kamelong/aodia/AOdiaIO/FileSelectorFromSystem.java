@@ -177,16 +177,22 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                 });
             } else if (file.exists()) {
                 if (file.getName().endsWith(".oud") || file.getName().endsWith(".oud2")) {
-                    try{
-                        ((MainActivity)getContext()).getAOdia().openFile(file);
+                    try {
+                        ((MainActivity) getContext()).getAOdia().openFile(file);
 //                        getAOdiaActivity().openFile(file);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         System.out.println("AOdia専用の処理です");
                         e.printStackTrace();
                     }
-                } else {
-                    Toast.makeText(getContext(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (file.getName().endsWith(".zip")) {
+
+                    ((MainActivity)getContext()).getAOdia().openGTFSfile(file);
+                    return;
+                }
+
+                Toast.makeText(getContext(), "この拡張子のファイルは開けません", Toast.LENGTH_SHORT).show();
             } else {
                 new MakeNewDirectoryDialog(getContext(),currentDirectoryPath,this).show();
             }

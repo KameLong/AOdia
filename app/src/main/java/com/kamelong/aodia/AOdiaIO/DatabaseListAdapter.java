@@ -113,7 +113,7 @@ public class DatabaseListAdapter extends BaseAdapter {
                                     final DataInputStream DATA_INPUT = new DataInputStream(download.getInputStream());
                                     // 書き込み用ストリーム
                                     try {
-                                        final FileOutputStream FILE_OUTPUT = new FileOutputStream(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud");
+                                        final FileOutputStream FILE_OUTPUT = new FileOutputStream(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/","-") + ".oud");
                                         final DataOutputStream DATA_OUT = new DataOutputStream(FILE_OUTPUT);
 
                                         // 読み込みデータ単位
@@ -140,7 +140,7 @@ public class DatabaseListAdapter extends BaseAdapter {
                                         @Override
                                         public void run() {
                                             try {
-                                                ((MainActivity) context).getAOdia().openFile(new File(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName") + ".oud"));
+                                                ((MainActivity) context).getAOdia().openFile(new File(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/","-") + ".oud"));
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }

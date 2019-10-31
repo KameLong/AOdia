@@ -226,6 +226,10 @@ public class DiagramFragment extends AOdiaFragmentCustom {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(lineFile==null){
+            getAOdia().killFragment(this);
+            return;
+        }
         try {
             setting = new DiagramOptions((MainActivity) getActivity(), this, lineFile, diaIndex);
             setting.create(this);

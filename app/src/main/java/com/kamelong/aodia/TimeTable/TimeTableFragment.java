@@ -150,6 +150,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                 int y = (int) motionEvent.getY();
                 int timeTabley = y + findViewById(R.id.trainTimeLinear).getScrollY() - findViewById(R.id.trainNameLinear).getHeight();
                 int station = ((StationNameView) ((LinearLayout) findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
+                if(direction==1){
+                    station=lineFile.getStationNum()-station-1;
+                }
                 if (station >= 0 && station < lineFile.getStationNum()) {
                     StationInfoDialog dialog = new StationInfoDialog(getContext(), lineFile, diaIndex, direction, station);
                     dialog.show();
@@ -190,7 +193,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             timetable = lineFile.getDiagram(diaIndex);
         }catch(Exception e){
             SDlog.log(e);
-            Toast.makeText(getActivity(),"なぜこの場所でエラーが起こるのか不明です。対策したいのですが、理由不明のため対策ができません。情報募集中です！",Toast.LENGTH_LONG).show();
         }
         if(lineFile==null){
             Toast.makeText(getActivity(),"ダイヤファイルが見つかりませんでした",Toast.LENGTH_LONG).show();
@@ -203,6 +205,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     }
     public void onStart(){
         super.onStart();
+        if(lineFile==null){
+            getAOdia().killFragment(this);
+            return;
+        }
         if(editTrain<0||editTrain>=timetable.trains[direction].size()) {
         }else {
             openTrainEditFragment(timetable.trains[direction].get(editTrain));
@@ -275,6 +281,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             final FrameLayout trainTimeFrame = findViewById(R.id.trainTimeFrame);
             final LinearLayout trainNameLinear = findViewById(R.id.trainNameLinear);
             final LinearLayout stationNameLinear = findViewById(R.id.stationNameLinear);
+            if(trainTimeLinear.getChildCount()==0){
+                return;
+            }
             //スクロール量の限界設定
             if (scrollX > 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize() * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth()) {
                 scrollX = 6 + ((TrainTimeView)trainTimeLinear.getChildAt(0)).getXsize()  * trainTimeLinear.getChildCount() - trainTimeFrame.getWidth();

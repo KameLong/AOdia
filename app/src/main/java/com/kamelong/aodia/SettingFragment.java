@@ -63,6 +63,21 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
                 return false;
             }
         });
+        findPreference("timetableStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                return false;
+            }
+        });
+        findPreference("diagramStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                return false;
+            }
+        });
+
         final CheckBoxPreference resetDatabase=findPreference("resetDatabase");
         resetDatabase.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

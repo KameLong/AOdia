@@ -18,6 +18,7 @@ import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.StationTimeTable.StationTimeTableFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
+import com.kamelong.aodia.loadGTFS.SelectRouteFragment;
 import com.kamelong.tool.SDlog;
 
 import java.io.File;
@@ -33,11 +34,14 @@ import java.util.Map;
  */
 public class AOdia {
     public AOdiaDetabase database;
+
     public static final String FILE_INDEX="fileIndex";
     public static final String DIA_INDEX="diaIndex";
     public static final String DIRECTION = "direction";
     public static final String TRAIN_INDEX="trainIndex";
     public static final String STATION_INDEX = "stationIndex";
+
+    public static final String FILE_NAME="fileName";
 
     private MainActivity activity=null;
     /**
@@ -146,6 +150,22 @@ public class AOdia {
             }
         }
         SDlog.log("この形式のファイルは読めません");
+    }
+
+    /**
+     * GTFS形式のファイルを開く
+     */
+    public void openGTFSfile(File file){
+
+        if (!file.isFile()) {
+            return;
+        }
+        SelectRouteFragment fragment=new SelectRouteFragment();
+        Bundle args=new Bundle();
+        args.putString(FILE_NAME, file.getPath());
+        fragment.setArguments(args);
+        openFragment(fragment);
+
     }
     public void addLineFile(LineFile lineFile){
         lineFiles.add(lineFile);
@@ -381,7 +401,7 @@ public void loadData(){
         openTimeTable(file,0,0);
         }catch ( Exception e) {
         SDlog.log(e);
-        SDlog.toast("ファイルを開けませんでした");
+        SDlog.toast("初期ファイルを開けませんでした");
         }
         }
         }

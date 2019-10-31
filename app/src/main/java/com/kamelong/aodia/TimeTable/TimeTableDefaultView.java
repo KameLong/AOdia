@@ -19,6 +19,8 @@ public abstract class TimeTableDefaultView extends View {
     public static Paint blackBPaint;//太い枠線部分に用いる
     public static Paint blackBig;//主要駅（２段使う）駅名の既出に使う
     public static int textSize;
+    public static int stationWidth=5;
+
     public static int smallSpace;//細線を入れたときのスペース
     public static int normalSpace;//太線を入れたときのスペース
 
@@ -70,6 +72,10 @@ public abstract class TimeTableDefaultView extends View {
         smallSpace=size/6;
         normalSpace=size/3;
     }
+    public static void setStationWidth(int width){
+        stationWidth=width;
+    }
+
     /**
      * onMeasureは結構いじっている。
      * このViewは常に縦横のサイズは固定して使いたいため

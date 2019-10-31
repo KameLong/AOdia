@@ -9,6 +9,8 @@ package com.kamelong.tool;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -60,21 +62,30 @@ public class SDlog {
     }
     public static void log(Exception e) {
         try {
-            System.out.println(activity.getCacheDir());
-            PrintWriter pw = new PrintWriter(activity.getCacheDir() + "/log.log");
-            e.printStackTrace(pw);
-            pw.close();
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
-
+            if(pref.getString("userID","").length()==0){
+                pref.edit().putString("userID",UUID.randomUUID().toString()).apply();
+            }
             if(pref.getBoolean("send_log",false)) {
                 if(pref.getString("userID","").length()==0){
                     pref.edit().putString("userID",UUID.randomUUID().toString()).apply();
                 }
+                PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
+               final String logName=activity.getCacheDir()+"/"+getNowDate()+"_"+packageInfo.versionName+"_"+pref.getString("userID","")+".log";
+
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        Send(activity.getCacheDir() + "/log.log",pref.getString("userID",""),getNowDate());
+                        try {
+                            PrintWriter pw = new PrintWriter(logName);
+                            pw.println(packageInfo.versionName);
+                            e.printStackTrace(pw);
+                            pw.close();
+                            Send(logName);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
 
                     }
                 }).start();
@@ -95,7 +106,7 @@ public class SDlog {
     }
 
 
-    public static int Send(String filename,String userID,String time){
+    public static int Send(String filename){
         try {
             HttpURLConnection con;
             OutputStream op;
@@ -121,7 +132,7 @@ public class SDlog {
 
             op.write("Content-Disposition: form-data;".getBytes());
             op.write("name=\"upfile\";".getBytes());
-            op.write(("filename=\""+time+"_"+userID+".log\"\r\n").getBytes());
+            op.write(("filename=\""+filename+"\"\r\n").getBytes());
             op.write("Content-Type:text/html\r\n".getBytes());
             op.write("\r\n".getBytes());
 

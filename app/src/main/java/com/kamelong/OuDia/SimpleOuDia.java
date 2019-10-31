@@ -31,7 +31,6 @@ public class SimpleOuDia {
             }
         }catch(Exception e){
             SDlog.log(e);
-            SDlog.log("ファイルの読み込みに失敗しました。"+file.getPath());
         }finally {
             br.close();
         }

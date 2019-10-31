@@ -49,7 +49,12 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
     public void setLineFile(final LineFile lineFile){
         this.lineFile=lineFile;
         System.out.println("path:"+lineFile.filePath);
-        ((EditText)findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/")+1,lineFile.filePath.lastIndexOf(".")));
+        try {
+            ((EditText) findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/") + 1, lineFile.filePath.lastIndexOf(".")));
+            openDirectory(lineFile.filePath.substring(0,lineFile.filePath.lastIndexOf("/")));
+        }catch (Exception e){
+            SDlog.log(e);
+        }
 
         final RadioGroup saveStyle=findViewById(R.id.savestyle);
         if(lineFile.filePath.endsWith("oud2")){
@@ -58,7 +63,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
             saveStyle.check(R.id.oud);
         }
 
-        openDirectory(lineFile.filePath.substring(0,lineFile.filePath.lastIndexOf("/")));
+
         findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,9 +189,9 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
      */
     public void openDirectory(String directorypath){
         try {
-            currentDirectoryPath=directorypath;
             File file=new File(directorypath);
             if (file.isDirectory()) {
+                currentDirectoryPath=directorypath;
                 final ListView fileListView =  findViewById(R.id.fileList);
                 final FileListAdapter adapter = new FileListAdapter(getContext(), file.getPath(),this);
 

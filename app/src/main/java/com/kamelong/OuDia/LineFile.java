@@ -11,6 +11,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -464,7 +465,11 @@ public class LineFile implements Cloneable {
      */
     public void saveToFile(String fileName) throws Exception {
         convertToOud2();
-        new File(fileName).createNewFile();
+        try {
+            new File(fileName).createNewFile();
+        }catch(IOException e){
+            throw new IOException("errorFile:"+fileName);
+        }
         FileOutputStream fos = new FileOutputStream(fileName);
         //BOM付与
         fos.write(0xef);
@@ -857,6 +862,9 @@ public class LineFile implements Cloneable {
             }
             if(minTime>90000){
                 minTime=180;
+            }
+            if(minTime<30){
+                minTime=30;
             }
             stationTime.add(stationTime.get(stationTime.size()-1)+minTime);
 
@@ -1274,6 +1282,19 @@ public class LineFile implements Cloneable {
      */
     public void sortTrain(int diaIndex, int direction, int stationIndex) {
         getDiagram(diaIndex).sortTrain(direction, stationIndex);
+    }
+    /**
+     * ダイヤ名からダイヤを取得します
+     * 重複している場合最初のダイヤファイルを返します。
+     * 指定ダイヤが存在しない時はnullが返ります。
+     */
+    public Diagram getDiaFromName(String name){
+        for(Diagram dia:diagram){
+            if(dia.name.equals(name)){
+                return dia;
+            }
+        }
+        return null;
     }
 
 }

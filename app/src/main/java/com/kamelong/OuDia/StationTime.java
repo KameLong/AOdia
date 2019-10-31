@@ -170,41 +170,46 @@ public class StationTime implements Cloneable{
      * @param sTime 3桁から6桁の数字で構成された文字列
      */
     public static int timeStringToInt(String sTime) {
-        int hh = 0;
-        int mm = 0;
-        int ss = 0;
-        switch (sTime.length()) {
-            case 3:
-                hh = Integer.parseInt(sTime.substring(0, 1));
-                mm = Integer.parseInt(sTime.substring(1, 3));
-                break;
-            case 4:
-                hh = Integer.parseInt(sTime.substring(0, 2));
-                mm = Integer.parseInt(sTime.substring(2, 4));
-                break;
-            case 5:
-                hh = Integer.parseInt(sTime.substring(0, 1));
-                mm = Integer.parseInt(sTime.substring(1, 3));
-                ss = Integer.parseInt(sTime.substring(3, 5));
-                break;
-            case 6:
-                hh = Integer.parseInt(sTime.substring(0, 2));
-                mm = Integer.parseInt(sTime.substring(2, 4));
-                ss = Integer.parseInt(sTime.substring(4, 6));
-                break;
-            default:
+        try {
+            int hh = 0;
+            int mm = 0;
+            int ss = 0;
+            switch (sTime.length()) {
+                case 3:
+                    hh = Integer.parseInt(sTime.substring(0, 1));
+                    mm = Integer.parseInt(sTime.substring(1, 3));
+                    break;
+                case 4:
+                    hh = Integer.parseInt(sTime.substring(0, 2));
+                    mm = Integer.parseInt(sTime.substring(2, 4));
+                    break;
+                case 5:
+                    hh = Integer.parseInt(sTime.substring(0, 1));
+                    mm = Integer.parseInt(sTime.substring(1, 3));
+                    ss = Integer.parseInt(sTime.substring(3, 5));
+                    break;
+                case 6:
+                    hh = Integer.parseInt(sTime.substring(0, 2));
+                    mm = Integer.parseInt(sTime.substring(2, 4));
+                    ss = Integer.parseInt(sTime.substring(4, 6));
+                    break;
+                default:
+                    return -1;
+            }
+            if (hh > 23 || hh < 0) {
                 return -1;
-        }
-        if (hh > 23 || hh < 0) {
+            }
+            if (mm > 59 || mm < 0) {
+                return -1;
+            }
+            if (ss > 59 || ss < 0) {
+                return -1;
+            }
+            return 3600 * hh + 60 * mm + ss;
+        }catch (NumberFormatException e){
+            SDlog.log(e);
             return -1;
         }
-        if (mm > 59 || mm < 0) {
-            return -1;
-        }
-        if (ss > 59 || ss < 0) {
-            return -1;
-        }
-        return 3600 * hh + 60 * mm + ss;
     }
 
     String getOuDiaString(boolean oudia2ndFrag){

@@ -73,7 +73,7 @@ public class LineNameView extends TimeTableDefaultView{
 
     @Override
     int getXsize() {
-        return textSize*5;
+        return textSize*stationWidth;
     }
 
     @Override

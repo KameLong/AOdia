@@ -22,6 +22,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
+import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.tool.SDlog;
 import com.kamelong2.aodia.AOdiaActivity;
@@ -165,6 +167,25 @@ public class MainActivity extends FragmentActivity {
             SendLogPerm perm=new SendLogPerm(this,pref);
             perm.show();
         }
+        initApp();
+    }
+    private void initApp(){
+        try {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            final String textSize = pref.getString("textsize", "30");
+            TimeTableDefaultView.setTextSize(Integer.valueOf(textSize));
+            DiagramDefaultView.setTextSize(Integer.valueOf(textSize));
+
+            final String diagramStationWidth = pref.getString("diagramStationWidth", "5");
+            DiagramDefaultView.setStationWidth(Integer.valueOf(diagramStationWidth));
+            final String timetableStationWidth = pref.getString("timetableStationWidth", "5");
+            TimeTableDefaultView.setStationWidth(Integer.valueOf(timetableStationWidth));
+        }catch (Exception e){
+            SDlog.log(e);
+        }
+
+
+
     }
     @NonNull
     public AOdia getAOdia(){

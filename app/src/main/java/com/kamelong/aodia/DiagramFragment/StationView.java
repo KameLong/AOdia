@@ -59,7 +59,7 @@ public class StationView extends DiagramDefaultView {
         }
     }
     protected int getXsize(){
-        return (int)(textPaint.getTextSize()*5)+2;
+        return (int)(textPaint.getTextSize()*stationWidth)+2;
     }
     protected int getYsize(){
         if(lineFile.getStationNum()==0)return 1000;
