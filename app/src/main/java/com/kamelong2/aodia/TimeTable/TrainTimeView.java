@@ -54,327 +54,334 @@ public class TrainTimeView extends AOdiaDefaultView {
 
     }
     private void drawTime(Canvas canvas){
-        int startLine=0;
-        for(int i=0;i<diaFile.getStationNum();i++){
-            textPaint.setColor(diaFile.trainType.get(train.type).textColor.getAndroidColor());
-            int stationNumber=(diaFile.getStationNum()-1)*direct+(1-2*direct)*i;
-            Station station=diaFile.station.get(stationNumber);
-            switch (station.getTimeTableStyle(direct)){
-                case 0:
-                    break;
-                case 1:
-                    //発のみ
-                    startLine=startLine+textSize;
-                    if (station.bigStation && (train.getStopType(stationNumber) == 0)) {
-                        drawText(canvas,"- - - - - - -", 1, startLine, textPaint,true);
-                    } else {
-                        drawText( canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                    }
-                    break;
-                case 2:
-                    //着のみ
-                    startLine=startLine+textSize;
-                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                    break;
-                case 3:
-                    //発着
-                    startLine=startLine+textSize;
-                    int backwordStation = stationNumber + (direct * 2 - 1);
-                    if (backwordStation < 0 || backwordStation >= diaFile.getStationNum()) {
-                        if(train.arriveExist(stationNumber)){
-                            drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                        }else {
-                            drawText(canvas, ": :", 1, startLine, textPaint, true);
-                        }
-                    }else {
-                        switch (train.getStopType(backwordStation)) {
-                            case 0:
-                                if(train.arriveExist(stationNumber)){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            case 3:
-                                if(train.arriveExist(stationNumber)){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            default:
-                                drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                break;
-                        }
-
-                    }
-                    startLine=startLine+textSize/6;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine=startLine+textSize;
-
-                    int forwordStation = stationNumber + (1 - direct * 2);
-                    if (forwordStation < 0 || forwordStation >= diaFile.getStationNum()) {
-                        if(train.departExist(stationNumber)){
+        try {
+            int startLine = 0;
+            for (int i = 0; i < diaFile.getStationNum(); i++) {
+                textPaint.setColor(diaFile.trainType.get(train.type).textColor.getAndroidColor());
+                int stationNumber = (diaFile.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
+                Station station = diaFile.station.get(stationNumber);
+                switch (station.getTimeTableStyle(direct)) {
+                    case 0:
+                        break;
+                    case 1:
+                        //発のみ
+                        startLine = startLine + textSize;
+                        if (station.bigStation && (train.getStopType(stationNumber) == 0)) {
+                            drawText(canvas, "- - - - - - -", 1, startLine, textPaint, true);
+                        } else {
                             drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                        }else {
-                            drawText(canvas, ": :", 1, startLine, textPaint, true);
                         }
-                    }else {
-                        switch (train.getStopType(forwordStation)) {
-                            case 0:
-                                if(train.departExist(stationNumber)){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            case 3:
-                                if(train.departExist(stationNumber)){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            default:
-                                drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                break;
-                        }
-                    }
-                    break;
-                case 5:
-                    //発番線
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine+=textSize ;
-                    if(train.getStopType(stationNumber)==1||train.getStopType(stationNumber)==2){
-                    if(train.getStop(stationNumber)==0){
-                        drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
-                    }else{
-                        drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
-                    }}
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine+=textSize ;
-                    drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                    break;
-                case 6:
-                    //着番線
-                    startLine+=textSize ;
-                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine+=textSize ;
-                    if(train.getStopType(stationNumber)==1||train.getStopType(stationNumber)==2){
-                    if(train.getStop(stationNumber)==0){
-                        drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
-                    }else{
-                        drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
-                    }}
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    break;
-                case 7:
-                    //発着番線
-                    startLine+=textSize ;
-                    backwordStation = stationNumber + (direct * 2 - 1);
-                    if (backwordStation < 0 || backwordStation >= diaFile.getStationNum()) {
-                        if(train.arriveExist(stationNumber)){
-                            drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                        }else {
-                            drawText(canvas, ": :", 1, startLine, textPaint, true);
-                        }
-                    }else {
-                        switch (train.getStopType(backwordStation)) {
-                            case 0:
-                                if(train.arriveExist(stationNumber)){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            case 3:
-                                if(train.arriveExist(stationNumber)){
-                                    drawText(canvas,getArriveTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            default:
+                        break;
+                    case 2:
+                        //着のみ
+                        startLine = startLine + textSize;
+                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        break;
+                    case 3:
+                        //発着
+                        startLine = startLine + textSize;
+                        int backwordStation = stationNumber + (direct * 2 - 1);
+                        if (backwordStation < 0 || backwordStation >= diaFile.getStationNum()) {
+                            if (train.arriveExist(stationNumber)) {
                                 drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                break;
-                        }
-
-                    }
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine+=textSize ;
-                    if(train.getStopType(stationNumber)==1||train.getStopType(stationNumber)==2){
-
-                        if(train.getStop(stationNumber)==0){
-                        drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
-                    }else{
-                            try {
-                                drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
-                            }catch(Exception e){
-                                SDlog.log(e);
-                                new AlertDialog.Builder(getContext())
-                                        .setTitle("この時刻表の番線情報が壊れているため情報を表示できません。\n番線情報をデフォルトにリセットしますか？")
-                                        .setPositiveButton(
-                                                "Yes",
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        for(Station station :diaFile.station){
-                                                            if(station.trackName.size()<2||station.trackName.size()!=station.trackshortName.size()){
-                                                                station.trackName.clear();
-                                                                station.trackshortName.clear();
-                                                                station.trackName.add("");
-                                                                station.trackshortName.add("");
-                                                                station.trackName.add("1番線");
-                                                                station.trackshortName.add("1");
-                                                                station.trackName.add("2番線");
-                                                                station.trackshortName.add("2");
-                                                            }
-                                                            if(station.stopMain[0]>=station.trackName.size()){
-                                                                station.stopMain[0]=1;
-                                                            }
-                                                            if(station.stopMain[1]>=station.trackName.size()){
-                                                                station.stopMain[1]=Math.min(station.trackName.size()-1,2);
-                                                            }
-                                                        }
-
-                                                        for(Diagram diagram : diaFile.diagram){
-                                                            for(Train train :diagram.trains[0]){
-                                                                for(int i=0;i<train.stationNum;i++){
-                                                                    if(train.getStop(i)>=diaFile.station.get(i).trackName.size()){
-                                                                        train.setStop(i,0);
-                                                                    }
-                                                                }
-                                                            }
-                                                            for(Train train :diagram.trains[1]){
-                                                                for(int i=0;i<train.stationNum;i++){
-                                                                    if(train.getStop(i)>=diaFile.station.get(i).trackName.size()){
-                                                                        train.setStop(i,0);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                })
-                                        .setNegativeButton(
-                                                "No",
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                    }
-                                                })
-                                        .show();
+                            } else {
+                                drawText(canvas, ": :", 1, startLine, textPaint, true);
                             }
-                    }}
-                    startLine+=textSize / 5;
-                    canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackPaint);
-                    startLine+=textSize ;
-                    forwordStation = stationNumber + (1 - direct * 2);
-                    if (forwordStation < 0 || forwordStation >= diaFile.getStationNum()) {
-                        if(train.departExist(stationNumber)){
-                            drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                        }else {
-                            drawText(canvas, ": :", 1, startLine, textPaint, true);
+                        } else {
+                            switch (train.getStopType(backwordStation)) {
+                                case 0:
+                                    if (train.arriveExist(stationNumber)) {
+                                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                case 3:
+                                    if (train.arriveExist(stationNumber)) {
+                                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                default:
+                                    drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    break;
+                            }
+
                         }
-                    }else {
-                        switch (train.getStopType(forwordStation)) {
-                            case 0:
-                                if(train.departExist(stationNumber)){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, ": :", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            case 3:
-                                if(train.departExist(stationNumber)){
-                                    drawText(canvas,getDepartureTime(train,stationNumber, direct), 1, startLine, textPaint,true);
-                                }else {
-                                    drawText(canvas, "| |", 1, startLine, textPaint, true);
-                                }
-                                break;
-                            default:
+                        startLine = startLine + textSize / 6;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine = startLine + textSize;
+
+                        int forwordStation = stationNumber + (1 - direct * 2);
+                        if (forwordStation < 0 || forwordStation >= diaFile.getStationNum()) {
+                            if (train.departExist(stationNumber)) {
                                 drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
-                                break;
+                            } else {
+                                drawText(canvas, ": :", 1, startLine, textPaint, true);
+                            }
+                        } else {
+                            switch (train.getStopType(forwordStation)) {
+                                case 0:
+                                    if (train.departExist(stationNumber)) {
+                                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                case 3:
+                                    if (train.departExist(stationNumber)) {
+                                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                default:
+                                    drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    break;
+                            }
                         }
-                    }
-                    break;
+                        break;
+                    case 5:
+                        //発番線
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine += textSize;
+                        if (train.getStopType(stationNumber) == 1 || train.getStopType(stationNumber) == 2) {
+                            if (train.getStop(stationNumber) == 0) {
+                                drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
+                            } else {
+                                drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
+                            }
+                        }
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine += textSize;
+                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        break;
+                    case 6:
+                        //着番線
+                        startLine += textSize;
+                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine += textSize;
+                        if (train.getStopType(stationNumber) == 1 || train.getStopType(stationNumber) == 2) {
+                            if (train.getStop(stationNumber) == 0) {
+                                drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
+                            } else {
+                                drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
+                            }
+                        }
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        break;
+                    case 7:
+                        //発着番線
+                        startLine += textSize;
+                        backwordStation = stationNumber + (direct * 2 - 1);
+                        if (backwordStation < 0 || backwordStation >= diaFile.getStationNum()) {
+                            if (train.arriveExist(stationNumber)) {
+                                drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                            } else {
+                                drawText(canvas, ": :", 1, startLine, textPaint, true);
+                            }
+                        } else {
+                            switch (train.getStopType(backwordStation)) {
+                                case 0:
+                                    if (train.arriveExist(stationNumber)) {
+                                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                case 3:
+                                    if (train.arriveExist(stationNumber)) {
+                                        drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                default:
+                                    drawText(canvas, getArriveTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    break;
+                            }
+
+                        }
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine += textSize;
+                        if (train.getStopType(stationNumber) == 1 || train.getStopType(stationNumber) == 2) {
+
+                            if (train.getStop(stationNumber) == 0) {
+                                drawText(canvas, station.trackshortName.get(station.stopMain[direct]), 1, startLine, textPaint, true);
+                            } else {
+                                try {
+                                    drawText(canvas, station.trackshortName.get(train.getStop(stationNumber)), 1, startLine, textPaint, true);
+                                } catch (Exception e) {
+                                    SDlog.log(e);
+                                    new AlertDialog.Builder(getContext())
+                                            .setTitle("この時刻表の番線情報が壊れているため情報を表示できません。\n番線情報をデフォルトにリセットしますか？")
+                                            .setPositiveButton(
+                                                    "Yes",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            for (Station station : diaFile.station) {
+                                                                if (station.trackName.size() < 2 || station.trackName.size() != station.trackshortName.size()) {
+                                                                    station.trackName.clear();
+                                                                    station.trackshortName.clear();
+                                                                    station.trackName.add("");
+                                                                    station.trackshortName.add("");
+                                                                    station.trackName.add("1番線");
+                                                                    station.trackshortName.add("1");
+                                                                    station.trackName.add("2番線");
+                                                                    station.trackshortName.add("2");
+                                                                }
+                                                                if (station.stopMain[0] >= station.trackName.size()) {
+                                                                    station.stopMain[0] = 1;
+                                                                }
+                                                                if (station.stopMain[1] >= station.trackName.size()) {
+                                                                    station.stopMain[1] = Math.min(station.trackName.size() - 1, 2);
+                                                                }
+                                                            }
+
+                                                            for (Diagram diagram : diaFile.diagram) {
+                                                                for (Train train : diagram.trains[0]) {
+                                                                    for (int i = 0; i < train.stationNum; i++) {
+                                                                        if (train.getStop(i) >= diaFile.station.get(i).trackName.size()) {
+                                                                            train.setStop(i, 0);
+                                                                        }
+                                                                    }
+                                                                }
+                                                                for (Train train : diagram.trains[1]) {
+                                                                    for (int i = 0; i < train.stationNum; i++) {
+                                                                        if (train.getStop(i) >= diaFile.station.get(i).trackName.size()) {
+                                                                            train.setStop(i, 0);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    })
+                                            .setNegativeButton(
+                                                    "No",
+                                                    new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                        }
+                                                    })
+                                            .show();
+                                }
+                            }
+                        }
+                        startLine += textSize / 5;
+                        canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackPaint);
+                        startLine += textSize;
+                        forwordStation = stationNumber + (1 - direct * 2);
+                        if (forwordStation < 0 || forwordStation >= diaFile.getStationNum()) {
+                            if (train.departExist(stationNumber)) {
+                                drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                            } else {
+                                drawText(canvas, ": :", 1, startLine, textPaint, true);
+                            }
+                        } else {
+                            switch (train.getStopType(forwordStation)) {
+                                case 0:
+                                    if (train.departExist(stationNumber)) {
+                                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, ": :", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                case 3:
+                                    if (train.departExist(stationNumber)) {
+                                        drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    } else {
+                                        drawText(canvas, "| |", 1, startLine, textPaint, true);
+                                    }
+                                    break;
+                                default:
+                                    drawText(canvas, getDepartureTime(train, stationNumber, direct), 1, startLine, textPaint, true);
+                                    break;
+                            }
+                        }
+                        break;
+                }
+                //もし境界線が存在する駅なら境界線を引く
+                //上り時刻表の時は次の駅が境界線ありなら境界線を引く
+                int checkStation = stationNumber - direct;
+                if (checkStation < 0) {
+                    checkStation = 0;
+                }
+                if (diaFile.station.get(checkStation).getBorder()) {
+                    startLine = startLine + (int) (textPaint.getTextSize() * 1 / 3);
+                    canvas.drawLine(0, startLine, this.getWidth() - 1, startLine, blackBPaint);
+                }
             }
-            //もし境界線が存在する駅なら境界線を引く
-            //上り時刻表の時は次の駅が境界線ありなら境界線を引く
-            int checkStation=stationNumber-direct;
-            if(checkStation<0){
-                checkStation=0;
-            }
-            if(diaFile.station.get(checkStation).getBorder()){
-                startLine=startLine+(int)(textPaint.getTextSize()*1/3);
-                canvas.drawLine(0, startLine,this.getWidth()-1,startLine,blackBPaint);
-            }
+        }catch (IndexOutOfBoundsException e){
+            SDlog.log(e);
         }
 
     }
-    public int getYsize(){
-        int startLine=0;
-        for(int i=0;i<diaFile.getStationNum();i++){
-            int stationNumber=(diaFile.getStationNum()-1)*direct+(1-2*direct)*i;
-            Station station=diaFile.station.get(stationNumber);
-            switch (station.getTimeTableStyle(direct)){
-                case 0:
-                    break;
-                case 1:
-                    //発のみ
-                    startLine=startLine+textSize;
-                    break;
-                case 2:
-                    //着のみ
-                    startLine=startLine+textSize;
-                    break;
-                case 3:
-                    //発着
-                    startLine=startLine+textSize*13/6;
-                    break;
-                case 5:
-                    //発番線
-                    startLine+=textSize / 5;
-                    startLine+=textSize ;
-                    startLine+=textSize / 5;
-                    startLine+=textSize ;
-                    break;
-                case 6:
-                    //着番線
-                    startLine+=textSize ;
-                    startLine+=textSize / 5;
-                    startLine+=textSize ;
-                    startLine+=textSize / 5;
-                    break;
-                case 7:
-                    //発着番線
-                    startLine+=textSize ;
-                    startLine+=textSize / 5;
-                    startLine+=textSize ;
-                    startLine+=textSize / 5;
-                    startLine+=textSize ;
-                    break;
+    public int getYsize() {
+            int startLine = 0;
+            for (int i = 0; i < diaFile.getStationNum(); i++) {
+                int stationNumber = (diaFile.getStationNum() - 1) * direct + (1 - 2 * direct) * i;
+                Station station = diaFile.station.get(stationNumber);
+                switch (station.getTimeTableStyle(direct)) {
+                    case 0:
+                        break;
+                    case 1:
+                        //発のみ
+                        startLine = startLine + textSize;
+                        break;
+                    case 2:
+                        //着のみ
+                        startLine = startLine + textSize;
+                        break;
+                    case 3:
+                        //発着
+                        startLine = startLine + textSize * 13 / 6;
+                        break;
+                    case 5:
+                        //発番線
+                        startLine += textSize / 5;
+                        startLine += textSize;
+                        startLine += textSize / 5;
+                        startLine += textSize;
+                        break;
+                    case 6:
+                        //着番線
+                        startLine += textSize;
+                        startLine += textSize / 5;
+                        startLine += textSize;
+                        startLine += textSize / 5;
+                        break;
+                    case 7:
+                        //発着番線
+                        startLine += textSize;
+                        startLine += textSize / 5;
+                        startLine += textSize;
+                        startLine += textSize / 5;
+                        startLine += textSize;
+                        break;
+                }
+                //もし境界線が存在する駅なら境界線を考える
+                int checkStation = stationNumber - direct;
+                if (checkStation < 0) {
+                    checkStation = 0;
+                }
+                if (diaFile.station.get(checkStation).getBorder()) {
+                    startLine += (textSize * 1 / 3);
+                }
             }
-            //もし境界線が存在する駅なら境界線を考える
-            int checkStation=stationNumber-direct;
-            if(checkStation<0){
-                checkStation=0;
+            SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
+            if (remarkFrag) {
+                startLine += (int) (textSize * 9.4f);
             }
-            if(diaFile.station.get(checkStation).getBorder()){
-                startLine+=(textSize*1/3);
-            }
-        }
-        SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if(remarkFrag){
-            startLine+=(int)(textSize*9.4f);
-        }
-        startLine+=textSize/3;
-        return startLine;
+            startLine += textSize / 3;
+            return startLine;
     }
     private void drawText(Canvas canvas, String text, int x, int y, Paint paint, boolean centerFrag){
         if(centerFrag){

@@ -58,22 +58,35 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
         findPreference("textsize").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                TimeTableDefaultView.setTextSize(Integer.parseInt((String) newValue));
-                DiagramDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                try{
+                    TimeTableDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                    DiagramDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                }catch (NumberFormatException e){
+                    SDlog.toast("数字を入力してください");
+                }
+
                 return false;
             }
         });
         findPreference("timetableStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+                try{
                 TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                }catch (NumberFormatException e){
+                    SDlog.toast("数字を入力してください");
+                }
                 return false;
             }
         });
         findPreference("diagramStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
+                try{
                 DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+            }catch (NumberFormatException e){
+                SDlog.toast("数字を入力してください");
+            }
                 return false;
             }
         });
