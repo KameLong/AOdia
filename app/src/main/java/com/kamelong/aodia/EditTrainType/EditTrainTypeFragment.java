@@ -43,6 +43,10 @@ public class EditTrainTypeFragment extends AOdiaFragmentCustom {
     }
 
     private void init() {
+        if (lineFile == null) {
+            getAOdia().killFragment(this);
+            return;
+        }
         final LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
         typeListLinear.removeAllViews();
         for (int i = 0; i < lineFile.trainType.size(); i++) {

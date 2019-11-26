@@ -60,6 +60,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
+        //メニュー設定
         final DrawerLayout menuLayout=findViewById(R.id.drawer_layout);
         menuLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -89,10 +90,13 @@ public class MainActivity extends FragmentActivity {
         FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.menu,menuFragment);
         fragmentTransaction.commit();
+
+        //サンプルファイル作成
         createSample();
+        //AOdia起動
         aodiaData.openHelp();
         aodiaData.loadData();
-        //メイン画面にあるボタン
+        //メイン画面にあるボタン設定
         findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,35 +115,37 @@ public class MainActivity extends FragmentActivity {
                 aodiaData.killFragment();
             }
         });
+        //自動保存機能開始
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while(true){
                     try{
-                        Thread.sleep(1000*10);
+                        Thread.sleep(1000*10);//10秒ごとに保存
                         MainActivity.this.getAOdia().saveData();
 
                     }catch (Exception e){
+                        SDlog.log(e);
                     }
                 }
             }
         }).start();
+        //ストレージ権限があるか確認
         storagePermission();
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         final Handler handler=new Handler();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-
                     String url = "http://kamelong.com/aodia/AOdiaInfoVersion.html";
-
                     URL obj = new URL(url);
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
                     con.setRequestMethod("GET");
                     int responseCode = con.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
+                        //お知らせ機能
                         InputStream is = con.getInputStream();
                         BufferedReader br = new BufferedReader(new InputStreamReader(is));
                         final int version=Integer.parseInt(br.readLine());
@@ -155,12 +161,14 @@ public class MainActivity extends FragmentActivity {
                             }
                         });
                     } else {
+                        //何もしない
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+        //エラーを開発者に通知させる
         if((!pref.getBoolean("send_log",false))
                 &&(!pref.getBoolean("send_log_action",false))
         ){

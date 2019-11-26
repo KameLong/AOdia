@@ -56,7 +56,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
             int trainNum = bundle.getInt(AOdia.TRAIN_INDEX);
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
             train = lineFile.getTrain(diaNumber, direction, trainNum);
-        } catch (Exception e) {
+
+        }
+        catch (Exception e) {
             SDlog.log(e);
         }
 

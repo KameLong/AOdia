@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -454,7 +455,7 @@
 
             <FrameLayout
                 android:layout_below="@id/button"
-                android:layout_above="@+id/editTimeLayout"
+                android:layout_alignParentBottom="true"
 
                 android:id="@+id/bottomContents"
                 android:layout_width="match_parent"
@@ -463,14 +464,7 @@
                 android:visibility="visible">
 
             </FrameLayout>
-            <com.kamelong.aodia.EditTrain.EditTimeView2
-                android:id="@+id/editTimeLayout"
-                android:layout_alignParentBottom="true"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-            </com.kamelong.aodia.EditTrain.EditTimeView2>
 
         </RelativeLayout>
     </RelativeLayout>

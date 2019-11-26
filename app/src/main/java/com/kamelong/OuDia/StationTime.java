@@ -218,7 +218,8 @@ public class StationTime implements Cloneable{
             return value;
         }
         if(stopType==3){
-            value+=0;
+            //OuDia2nd対策はしない
+            value += stopType;
         }else {
             value += stopType;
         }

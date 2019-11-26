@@ -34,7 +34,7 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
             try {//まずBundleを確認し、fileNum,diaIndex,directを更新する
                 Bundle bundle = getArguments();
                 int lineIndex = bundle.getInt(AOdia.FILE_INDEX, 0);
-                lineFile = ((MainActivity) getActivity()).getAOdia().getLineFile(lineIndex);
+                    lineFile = getAOdia().getLineFile(lineIndex);
             } catch (Exception e) {
                 SDlog.log(e);
             }
@@ -52,6 +52,9 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        if(lineFile==null){
+            getAOdia().killFragment(this);
+        }
         try {
             TabHost tabHost = activity.findViewById(R.id.tabhost);
             tabHost.setup();

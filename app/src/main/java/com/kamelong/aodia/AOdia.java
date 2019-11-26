@@ -290,7 +290,11 @@ public class AOdia {
 
 
     public LineFile getLineFile(int index){
-        return lineFiles.get(index);
+        try {
+            return lineFiles.get(index);
+        }catch (Exception e){
+            return null;
+        }
     }
     public ArrayList<LineFile>getLineFileList(){
         return lineFilesIndex;

@@ -48,11 +48,13 @@ public class CommentFragment extends AOdiaFragmentCustom {
 
             Bundle bundle = getArguments();
             fileIndex = bundle.getInt(AOdia.FILE_INDEX);
-            lineFile = ((MainActivity) getActivity()).getAOdia().getLineFile(fileIndex);
-        } catch (Exception e) {
+            lineFile = getAOdia().getLineFile(fileIndex);
+        }
+        catch (Exception e) {
             SDlog.toast("Error(CommentFragment-onCreateView-E1)");
             SDlog.log(e);
         }
+
         fragmentContainer = inflater.inflate(R.layout.comment_framgent, container, false);
         return fragmentContainer;
     }
@@ -60,6 +62,9 @@ public class CommentFragment extends AOdiaFragmentCustom {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(lineFile==null){
+            getAOdia().killFragment(this);
+        }
         try {
             ((EditText) fragmentContainer.findViewById(R.id.commentText)).setText(lineFile.comment.replace("\\n", "\n"));
             fragmentContainer.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
@@ -85,11 +90,6 @@ public class CommentFragment extends AOdiaFragmentCustom {
     @NonNull
     @Override
     public String getName() {
-        try {
-            int i = 1 / 0;
-        }catch (Exception e){
-            SDlog.log(e);
-        }
         try {
             String line = lineFile.name;
             if (line.length() > 10) {

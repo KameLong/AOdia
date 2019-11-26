@@ -202,7 +202,11 @@ public class DiagramFragment extends AOdiaFragmentCustom {
             Bundle bundle = getArguments();
             lineIndex = bundle.getInt(AOdia.FILE_INDEX, 0);
             diaIndex = bundle.getInt(AOdia.DIA_INDEX, 0);
-            lineFile = getAOdia().getLineFile(lineIndex);
+                lineFile = getAOdia().getLineFile(lineIndex);
+                if(lineFile==null){
+                    getAOdia().killFragment(this);
+                    return new View(getActivity());
+                }
             if (lineFile.getDiagramNum() <= diaIndex) {
                 throw new Exception();
             }

@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentTop="true"
+    android:layout_above="@id/editTimeLayout"
+    >
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -547,3 +554,12 @@
     </LinearLayout>
 
 </ScrollView>
+    <com.kamelong.aodia.EditTrain.EditTimeView2
+        android:id="@+id/editTimeLayout"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.kamelong.aodia.EditTrain.EditTimeView2>
+</RelativeLayout>
