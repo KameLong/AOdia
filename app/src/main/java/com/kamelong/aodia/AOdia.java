@@ -19,6 +19,7 @@ import com.kamelong.aodia.StationTimeTable.StationTimeTableFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
 import com.kamelong.aodia.loadGTFS.SelectRouteFragment;
+import com.kamelong.aodia.routeMap.RouteMapFragment;
 import com.kamelong.tool.SDlog;
 
 import java.io.File;
@@ -192,6 +193,10 @@ public class AOdia {
             SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
             SDlog.log(e);
         }
+    }
+    public void openRouteMap(){
+        RouteMapFragment fragment=new RouteMapFragment();
+        openFragment(fragment);
     }
 
     /**

@@ -26,7 +26,6 @@ import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.tool.SDlog;
-import com.kamelong2.aodia.AOdiaActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
