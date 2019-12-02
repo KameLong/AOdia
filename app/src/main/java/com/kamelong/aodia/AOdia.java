@@ -41,6 +41,7 @@ public class AOdia {
     public static final String DIRECTION = "direction";
     public static final String TRAIN_INDEX="trainIndex";
     public static final String STATION_INDEX = "stationIndex";
+    public static final String ROUTE_ID="routeID";
 
     public static final String FILE_NAME="fileName";
 
