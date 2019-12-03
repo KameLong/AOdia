@@ -183,7 +183,7 @@ public class Diagram implements Cloneable{
         try {
             return trains[direction].get(index);
         }catch(IndexOutOfBoundsException e){
-            SDlog.log(e);
+            SDlog.log(new Exception("Diagram.getTrain("+direction+","+index+")"));
             return new Train(lineFile,0);
         }
     }

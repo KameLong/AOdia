@@ -15,8 +15,14 @@ public class SimpleOuDia {
 
     public SimpleOuDia(File file)throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        String version="";
         try {
-            String version = br.readLine().split("=", -1)[1];
+            version = br.readLine().split("=", -1)[1];
+        }catch (NullPointerException e){
+            br.close();
+            return;
+        }
+        try {
             double v = 1.02;
             try {
                 v = Double.parseDouble(version.substring(version.indexOf(".") + 1));

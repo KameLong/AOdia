@@ -52,7 +52,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
             Bundle bundle = getArguments();
             int fileNum = bundle.getInt(AOdia.FILE_INDEX);
             diaNumber = bundle.getInt(AOdia.DIA_INDEX);
-            int direction = bundle.getInt("direction");
+            int direction = bundle.getInt(AOdia.DIRECTION);
             int trainNum = bundle.getInt(AOdia.TRAIN_INDEX);
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
             train = lineFile.getTrain(diaNumber, direction, trainNum);
@@ -61,9 +61,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         catch (Exception e) {
             SDlog.log(e);
         }
-
         fragmentContainer = inflater.inflate(R.layout.trainedit_fragment, container, false);
         return fragmentContainer;
+
+
     }
 
     private void init(){
@@ -373,7 +374,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
+            EditTimeView2 editText=fragmentContainer.findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
             init();
             initTimeView();

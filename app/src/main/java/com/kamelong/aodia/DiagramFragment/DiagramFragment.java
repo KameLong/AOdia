@@ -364,6 +364,9 @@ public class DiagramFragment extends AOdiaFragmentCustom {
 
     public void fitVertical(){
         try {
+            if(lineFile.getStationNum()<2){
+                return;
+            }
             FrameLayout diagramFrame = getActivity().findViewById(R.id.diagramFrame);
             float frameSize = diagramFrame.getHeight() - 40;
             float nessTime = lineFile.getStationTime().get(lineFile.getStationNum() - 1);
@@ -388,8 +391,14 @@ public class DiagramFragment extends AOdiaFragmentCustom {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-
-
+                            try {
+                                final FrameLayout diagramFrame = getActivity().findViewById(R.id.diagramFrame);
+                                if(diagramFrame==null){
+                                    autoScroll=false;
+                                }
+                            }catch (Exception e){
+                                autoScroll=false;
+                            }
                             scrollTo();
                             diagramView.invalidate();
                         }

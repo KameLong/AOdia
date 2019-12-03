@@ -22,6 +22,7 @@ import com.kamelong.aodia.loadGTFS.SelectRouteFragment;
 import com.kamelong.tool.SDlog;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -91,7 +92,7 @@ public class AOdia {
 
 
     public void makeNewLineFile(){
-            File sample=new File(activity.getFilesDir(), "new2.oud");
+        File sample=new File(activity.getFilesDir(), "new2.oud");
         if (!sample.exists()) {
             try {
                 InputStream input=activity.getAssets().open("new2.oud");
@@ -359,85 +360,88 @@ public class AOdia {
         activity.openFragment(fragmentList.get(fragmentIndex));
     }
 
-public void proceedFragment(){
+    public void proceedFragment(){
         fragmentIndex++;
         if(fragmentIndex>=fragmentList.size()){
-        fragmentIndex--;
+            fragmentIndex--;
         }
-    activity.setVisibleProceed(fragmentIndex!=fragmentList.size()-1);
-    activity.setVisibleBack(fragmentIndex!=0);
+        activity.setVisibleProceed(fragmentIndex!=fragmentList.size()-1);
+        activity.setVisibleBack(fragmentIndex!=0);
 
-    activity.openFragment(fragmentList.get(fragmentIndex));
+        activity.openFragment(fragmentList.get(fragmentIndex));
 
-        }
-public void backFragment(){
+    }
+    public void backFragment(){
         fragmentIndex--;
         if(fragmentIndex<0){
-        fragmentIndex++;
+            fragmentIndex++;
         }
-            activity.setVisibleProceed(fragmentIndex!=fragmentList.size()-1);
-    activity.setVisibleBack(fragmentIndex!=0);
+        activity.setVisibleProceed(fragmentIndex!=fragmentList.size()-1);
+        activity.setVisibleBack(fragmentIndex!=0);
         activity.openFragment(fragmentList.get(fragmentIndex));
-        }
-public void killFragment(){
+    }
+    public void killFragment(){
         fragmentList.remove(fragmentIndex);
         fragmentIndex--;
         if(fragmentIndex<0){
-        fragmentIndex++;
+            fragmentIndex++;
         }
         if(fragmentList.size()==0){
-        openHelp();
+            openHelp();
         }else{
-        activity.openFragment(fragmentList.get(fragmentIndex));
+            activity.openFragment(fragmentList.get(fragmentIndex));
         }
-        }
+    }
 
-public void loadData(){
+    public void loadData(){
         SharedPreferences preferences=activity.getSharedPreferences("files", Context.MODE_PRIVATE);
         String filePath=preferences.getString("tempFilePath","");
         if(filePath.length()>0) {
-        try {
-        LineFile file = new LineFile(new File(activity.getFilesDir() + "/temp.oud2"));
-            file.filePath = filePath;
-        lineFiles.add(file);
-        lineFilesIndex.add(file);
-        lineFileExpand.put(file,true);
-        openTimeTable(file,0,0);
-        }catch ( Exception e) {
-        SDlog.log(e);
-        SDlog.toast("初期ファイルを開けませんでした");
-        }
-        }
-        }
+            try {
+                LineFile file = new LineFile(new File(activity.getFilesDir() + "/temp.oud2"));
+                file.filePath = filePath;
+                lineFiles.add(file);
+                lineFilesIndex.add(file);
+                lineFileExpand.put(file, true);
+                openTimeTable(file, 0, 0);
+            }catch (FileNotFoundException e){
+                SDlog.toast("一時保存ファイルが見つかりませんでした");
 
-public void saveData(){
+            }catch ( Exception e) {
+                SDlog.log(e);
+                SDlog.toast("初期ファイルを開けませんでした");
+            }
+        }
+    }
+
+    public void saveData(){
 
         SharedPreferences preferences=activity.getSharedPreferences("files", Context.MODE_PRIVATE);
         if(lineFilesIndex.size()==0) {
-        preferences.edit().putString("tempFilePath","").apply();
-        return;
+            preferences.edit().putString("tempFilePath","").apply();
+            return;
         }
         LineFile file=lineFilesIndex.get(0);
         String fileName=activity.getFilesDir() + "/temp2.oud2";
 
         try {
-        file.saveToFile(fileName);
-        System.out.println(file.filePath);
-        preferences.edit().putString("tempFilePath",file.filePath).apply();
-        File oldFile=new File(activity.getFilesDir() + "/temp.oud2");
+            file.saveToFile(fileName);
+            System.out.println(file.filePath);
+            preferences.edit().putString("tempFilePath",file.filePath).apply();
+            File oldFile=new File(activity.getFilesDir() + "/temp.oud2");
             File newFile=new File(activity.getFilesDir() + "/temp2.oud2");
             oldFile.delete();
             newFile.renameTo(oldFile);
 
         }catch (Exception e){
-        e.printStackTrace();
-        SDlog.toast("バックアップファイルを保存できませんでした");
+            e.printStackTrace();
+            SDlog.toast("バックアップファイルを保存できませんでした");
         }
 
-        }
+    }
 
 
 
 
-        }
+}
 

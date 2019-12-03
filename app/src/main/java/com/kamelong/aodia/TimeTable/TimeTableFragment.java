@@ -190,7 +190,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         try {
             lineFile = getAOdia().getLineFile(lineIndex);
-            timetable = lineFile.getDiagram(diaIndex);
+            if(lineFile!=null) {
+                timetable = lineFile.getDiagram(diaIndex);
+            }
         }catch(Exception e){
             SDlog.log(e);
         }
@@ -582,6 +584,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
      @Override
     public void onStop() {
+        if(lineFile==null){
+            return;
+        }
         try {
             final LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
             final int scrollX = trainTimeLinear.getScrollX();
