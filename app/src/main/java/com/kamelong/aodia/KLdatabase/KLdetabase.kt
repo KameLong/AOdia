@@ -3,6 +3,11 @@ package com.kamelong.aodia.KLdatabase
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.kamelong.aodia.MainActivity
+data class Route(var id:String,var name:String,var color:String){
+    lateinit var stationList:ArrayList<String>
+}
+data class Station(var id:String,var name:String){
+}
 
 class KLdetabase(activity:MainActivity): SQLiteOpenHelper(activity, DB_NAME,null, DATABASE_VERSION) {
     companion object{
@@ -26,11 +31,14 @@ class KLdetabase(activity:MainActivity): SQLiteOpenHelper(activity, DB_NAME,null
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
+        //とりあえず何もしない
 
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //とりあえず何もしない
     }
+    fun getStationListFromName(name:String,):ArrayList<Station>
+
+
 }
