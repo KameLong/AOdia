@@ -26,7 +26,7 @@ class KLdetabase(activity:MainActivity): SQLiteOpenHelper(activity, DB_NAME,null
 
     }
     override fun onCreate(db: SQLiteDatabase?) {
-        
+
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
