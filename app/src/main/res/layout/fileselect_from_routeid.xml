@@ -16,8 +16,9 @@
         android:text="スマホ内ファイル" />
 
     <ListView
+        android:id="@+id/fileListInSystem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
     </ListView>
 
@@ -26,4 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="OuDiaデータベース検索結果" />
+
+    <ListView
+        android:id="@+id/fileListInDataBase"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 </LinearLayout>

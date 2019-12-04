@@ -43,6 +43,7 @@ public class AOdia {
     public static final String STATION_INDEX = "stationIndex";
 
     public static final String FILE_NAME="fileName";
+    public static final String ROUTE_ID="routeID";
 
     private MainActivity activity=null;
     /**
