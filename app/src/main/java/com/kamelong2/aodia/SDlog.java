@@ -85,9 +85,9 @@ public class SDlog {
             return;
         }
         try {
-            PrintWriter pw=getLogFile();
-            e.printStackTrace(pw);
-            pw.close();
+//            PrintWriter pw=getLogFile();
+//            e.printStackTrace(pw);
+//            pw.close();
         } catch (Exception e1) {
             e1.printStackTrace();
         }

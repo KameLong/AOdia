@@ -85,9 +85,15 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             SDlog.log(e);
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
+        return contentView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         if (lineFile == null||station==null) {
             getAOdia().killFragment(this);
-            return contentView;
         }
         subName = new HashMap<>();
         subNameCount = new HashMap<>();
@@ -95,12 +101,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
         for (int i = 0; i < lineFile.trainType.size(); i++) {
             usedTrainType[i] = false;
         }
-        return contentView;
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         try {
             if (diaIndex < backColor.length) {
                 findViewById(R.id.mainLinear).setBackgroundColor(backColor[diaIndex]);

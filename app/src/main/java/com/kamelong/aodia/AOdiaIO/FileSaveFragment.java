@@ -54,6 +54,7 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
         super.onViewCreated(view, savedInstanceState);
         if(lineFile==null){
             getAOdia().killFragment(this);
+            return;
         }
         try {
             TabHost tabHost = activity.findViewById(R.id.tabhost);

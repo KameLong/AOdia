@@ -47,6 +47,11 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
      * @param lineFile 保存するLineFile
      */
     public void setLineFile(final LineFile lineFile){
+        if(lineFile==null){
+            SDlog.log(new Exception("FileSaveFromSystem.setLineFile(null)"));
+            SDlog.toast("エラーの為このファイルは保存できません");
+            return;
+        }
         this.lineFile=lineFile;
         System.out.println("path:"+lineFile.filePath);
         try {
@@ -67,6 +72,42 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
         findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("/")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("\\")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(":")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("*")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("?")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("!")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("<")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(">")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                    return;
+                }
+                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("|")){
+                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                    return;
+                }
                 String savePath=currentDirectoryPath+"/"+ ((EditText)findViewById(R.id.fileName)).getText();
 
                 if(saveStyle.getCheckedRadioButtonId()==R.id.oud2){
