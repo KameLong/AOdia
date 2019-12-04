@@ -20,6 +20,7 @@ class FileSelectFromRouteID: AOdiaFragmentCustom() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         try{
+            
             routeID=arguments?.getString(ROUTE_ID,"")?:""
         }catch (e:Exception){
             SDlog.log(e)
