@@ -10,10 +10,13 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaIO.FileSaveFragment;
+import com.kamelong.aodia.AOdiaIO.FileSelectFromRouteID;
 import com.kamelong.aodia.AOdiaIO.FileSelectorFragment;
 import com.kamelong.aodia.DiagramFragment.DiagramFragment;
 import com.kamelong.aodia.EditStation.EditStationFragment;
 import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
+import com.kamelong.aodia.KLdatabase.SearchFragment;
+import com.kamelong.aodia.SearchSystem.StationSearchFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.StationTimeTable.StationTimeTableFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
@@ -45,7 +48,6 @@ public class AOdia {
     public static final String ROUTE_ID="routeID";
 
     public static final String FILE_NAME="fileName";
-    public static final String ROUTE_ID="routeID";
 
     private MainActivity activity=null;
     /**
@@ -444,6 +446,28 @@ public class AOdia {
             e.printStackTrace();
             SDlog.toast("バックアップファイルを保存できませんでした");
         }
+
+    }
+
+    /**
+     * routeIDからファイルを検索するfragment
+     */
+//    public void openFileSelectFromRouteIDFragment(String routeID){
+//        FileSelectFromRouteID fragment = new FileSelectFromRouteID();
+//        Bundle args = new Bundle();
+//        args.putString(ROUTE_ID, routeID);
+//        fragment.setArguments(args);
+//        openFragment(fragment);
+//
+//    }
+
+
+    public void openSearchFragment(String word){
+        StationSearchFragment fragment=new StationSearchFragment();
+        Bundle args = new Bundle();
+        args.putString(StationSearchFragment.SEARCH_WORD, word);
+        fragment.setArguments(args);
+        openFragment(fragment);
 
     }
 

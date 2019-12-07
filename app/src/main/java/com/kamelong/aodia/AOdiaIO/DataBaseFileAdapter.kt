@@ -14,7 +14,7 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DataBaseFileAdapter(val activity:MainActivity,val directoryPath:String,val selector:OpenDirectory,val routeID:String) : BaseAdapter() {
+class DataBaseFileAdapter(val activity:MainActivity,val directoryPath:String,val selector:OpenDirectory,var routeID:String) : BaseAdapter() {
     var fileList:ArrayList<File>
     lateinit var layoutInflater:LayoutInflater
     init{
@@ -45,6 +45,10 @@ class DataBaseFileAdapter(val activity:MainActivity,val directoryPath:String,val
 //            }
 //
 //            Arrays.sort(files, comparator)
+
+            if(routeID.length==6){
+                routeID=routeID.substring(0,5)
+            }
             for(file in files){
                 if(file.name.startsWith(routeID)){
                     fileList.add(file)
@@ -65,11 +69,12 @@ class DataBaseFileAdapter(val activity:MainActivity,val directoryPath:String,val
         val fileNameSplit=file.name.split(".")[0].split("-");
         val routeID=fileNameSplit[0];
         val date=fileNameSplit[1];
+
         val term=fileNameSplit[2];
 
         view.findViewById<TextView>(R.id.routeID).setText(routeID)
         view.findViewById<TextView>(R.id.time).setText(date)
-        view.findViewById<TextView>(R.id.time).setText(term)
+        view.findViewById<TextView>(R.id.team).setText(term)
         return view
 
     }

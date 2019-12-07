@@ -24,7 +24,7 @@ class RouteMapFragment: AOdiaFragmentCustom() {
 
         webView?.getSettings()?.setJavaScriptEnabled(true)
         if(webView != null){
-            webView!!.addJavascriptInterface(JSObject(webView!!),"AOdia");
+            webView!!.addJavascriptInterface(JSObject(webView!!,aOdia),"AOdia");
             webView!!.loadUrl("https://kamelong.com/test/index.html")
             return webView
         }

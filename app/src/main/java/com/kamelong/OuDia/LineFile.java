@@ -30,6 +30,10 @@ import java.util.Stack;
  */
 public class LineFile implements Cloneable {
     /**
+     * AOdia専用　routeID
+     */
+    public String routeID="";
+    /**
      * このファイルが保存されていたパス
      */
     public String filePath="";

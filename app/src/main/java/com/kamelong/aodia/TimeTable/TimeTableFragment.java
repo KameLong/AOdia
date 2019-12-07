@@ -29,7 +29,7 @@ import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.StationTimeTable.OnSortButtonClickListener;
-import com.kamelong.aodia.StationTimeTable.StationInfoDialog;
+import com.kamelong.aodia.StationTimeTable.StationDialog;
 import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
@@ -154,7 +154,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                     station=lineFile.getStationNum()-station-1;
                 }
                 if (station >= 0 && station < lineFile.getStationNum()) {
-                    StationInfoDialog dialog = new StationInfoDialog(getContext(), lineFile, diaIndex, direction, station);
+                    StationDialog dialog = new StationDialog(getContext(), lineFile, diaIndex, direction, station);
                     dialog.show();
                     dialog.setOnSortListener(new OnSortButtonClickListener() {
                         @Override
