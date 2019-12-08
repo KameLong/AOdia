@@ -83,7 +83,7 @@ class KLdetabase(private val activity:MainActivity): SQLiteOpenHelper(activity, 
 
     }
 
-    private var databaseExist = true //適切なDBファイルが存在するか
+    private var databaseExist = false //適切なDBファイルが存在するか
     private val dbPath: File=activity.getDatabasePath(DB_NAME)
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -119,6 +119,44 @@ class KLdetabase(private val activity:MainActivity): SQLiteOpenHelper(activity, 
         c.moveToFirst()
         return Station(c)
     }
+    fun getStationID(routeID:String,stationIndex:Int):String{
+        var cursor:Cursor?=null
+        try {
+            cursor = writableDatabase.rawQuery("select * from $TABLE_ROUTE_STATION_LIST where $ROUTE_ID = ? and $STATION_SEQ =? ", arrayOf(routeID,stationIndex.toString()))
+            cursor.moveToFirst()
+            return RouteStation(cursor).stationID
+        }catch (e:Exception){
+            SDlog.log(e)
+        }
+        finally {
+            if(cursor!=null){
+                cursor.close()
+            }
+        }
+        throw Exception("RouteStation don't have routeID=$routeID and seq=$stationIndex")
+
+
+    }
+
+    fun getRouteStation(id:String):RouteStation{
+        var cursor:Cursor?=null
+        try {
+            cursor = writableDatabase.rawQuery("select * from $TABLE_ROUTE_STATION_LIST where $ID = ? ", arrayOf(id))
+            cursor.moveToFirst()
+            return RouteStation(cursor)
+        }catch (e:Exception){
+            SDlog.log(e)
+        }
+        finally {
+            if(cursor!=null){
+                cursor.close()
+            }
+        }
+        throw Exception("RouteStation don't have ID=$id ")
+
+
+    }
+
     fun getRoute(routeID:String):Route{
         var c = writableDatabase.rawQuery("select * from $TABLE_ROUTE where $ID = ? ", arrayOf(routeID))
         c.moveToFirst()

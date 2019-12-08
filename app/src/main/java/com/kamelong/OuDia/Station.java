@@ -18,6 +18,7 @@ import java.util.ArrayList;
  */
 public class Station implements Cloneable{
     public LineFile lineFile;
+    public String stationID="";
     /**
      * 駅名
      */

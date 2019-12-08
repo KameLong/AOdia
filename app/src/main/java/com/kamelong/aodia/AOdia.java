@@ -15,6 +15,7 @@ import com.kamelong.aodia.AOdiaIO.FileSelectorFragment;
 import com.kamelong.aodia.DiagramFragment.DiagramFragment;
 import com.kamelong.aodia.EditStation.EditStationFragment;
 import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
+import com.kamelong.aodia.KLdatabase.KLdetabase;
 import com.kamelong.aodia.KLdatabase.SearchFragment;
 import com.kamelong.aodia.SearchSystem.StationSearchFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
@@ -190,6 +191,7 @@ public class AOdia {
                 lineFile.filePath=path;
 
             }
+            lineFile.setRouteID(new KLdetabase(activity));
             lineFiles.add(lineFile);
             lineFilesIndex.add(0,lineFile);
             lineFileExpand.put(lineFile,true);

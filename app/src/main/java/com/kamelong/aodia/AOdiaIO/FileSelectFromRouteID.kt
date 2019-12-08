@@ -37,8 +37,8 @@ class FileSelectFromRouteID(activity:MainActivity,routeID:String,fileSeleter:OnF
         fileListView.setAdapter(databaseFileAdapter)
         fileListView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
             try {
-                activity.aOdia.openFile(databaseFileAdapter.fileList[position])
-//                openDirectory(databaseFileAdapter.getItem(position))
+                fileSeleter.OnFileSelect(databaseFileAdapter.fileList[position].absolutePath)
+                this.dismiss()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

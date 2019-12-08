@@ -119,7 +119,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             titleView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    StationDialog dialog = new StationDialog(getActivity(), lineFile, diaIndex, direction, lineFile.station.indexOf(station));
+                    StationInfoDialog dialog = new StationInfoDialog(getActivity(), lineFile, diaIndex, direction, lineFile.station.indexOf(station));
                     dialog.show();
 
                 }

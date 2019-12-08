@@ -66,12 +66,16 @@ class DataBaseFileAdapter(val activity:MainActivity,val directoryPath:String,val
         val file=fileList[position]
         val diaFile = SimpleOuDia(file)
         view.findViewById<TextView>(R.id.lineName).setText(diaFile.name)
-        val fileNameSplit=file.name.split(".")[0].split("-");
-        val routeID=fileNameSplit[0];
-        val date=fileNameSplit[1];
-
-        val term=fileNameSplit[2];
-
+        val fileNameSplit=file.name.split(".")[0].split("-")
+        val routeID=fileNameSplit[0]
+        var date="";
+        if(fileNameSplit.size>1) {
+            date = fileNameSplit[1]
+        }
+        var term="";
+        if(fileNameSplit.size>2) {
+            term = fileNameSplit[2]
+        }
         view.findViewById<TextView>(R.id.routeID).setText(routeID)
         view.findViewById<TextView>(R.id.time).setText(date)
         view.findViewById<TextView>(R.id.team).setText(term)

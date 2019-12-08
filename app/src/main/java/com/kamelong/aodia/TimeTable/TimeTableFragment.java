@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -29,7 +30,6 @@ import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.StationTimeTable.OnSortButtonClickListener;
-import com.kamelong.aodia.StationTimeTable.StationDialog;
 import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
@@ -154,7 +154,13 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                     station=lineFile.getStationNum()-station-1;
                 }
                 if (station >= 0 && station < lineFile.getStationNum()) {
-                    StationDialog dialog = new StationDialog(getContext(), lineFile, diaIndex, direction, station);
+                    FragmentActivity a=getActivity();
+                    if(a==null)
+                    {
+                        return false;
+                    }
+
+                    StationDialog dialog = new StationDialog((MainActivity) a, lineFile, diaIndex, direction, station,TimeTableFragment.this);
                     dialog.show();
                     dialog.setOnSortListener(new OnSortButtonClickListener() {
                         @Override

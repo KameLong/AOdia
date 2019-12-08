@@ -7,6 +7,7 @@ import com.kamelong.aodia.AOdia
 import com.kamelong.aodia.AOdiaIO.FileSelectFromRouteID
 import com.kamelong.aodia.AOdiaIO.OnFileSelect
 import com.kamelong.aodia.MainActivity
+import java.io.File
 
 
 class JSObject(private val mWebView: WebView,private val aodia:AOdia) {
@@ -16,7 +17,7 @@ class JSObject(private val mWebView: WebView,private val aodia:AOdia) {
 
         val dialog=FileSelectFromRouteID(mWebView.context as MainActivity,routeID,object:OnFileSelect{
             override fun OnFileSelect(filePath: String) {
-
+                aodia.openFile(File(filePath))
             }
         })
         dialog.show()
@@ -29,6 +30,7 @@ class JSObject(private val mWebView: WebView,private val aodia:AOdia) {
 
         val dialog=FileSelectFromRouteID(mWebView.context as MainActivity,routeID,object:OnFileSelect{
             override fun OnFileSelect(filePath: String) {
+                aodia.openFile(File(filePath))
 
             }
         })

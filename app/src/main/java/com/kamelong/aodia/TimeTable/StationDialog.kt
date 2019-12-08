@@ -1,5 +1,4 @@
-package com.kamelong.aodia.StationTimeTable
-
+package com.kamelong.aodia.TimeTable
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -7,18 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.BaseAdapter
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 
 import com.kamelong.aodia.AOdia
 import com.kamelong.OuDia.LineFile
 import com.kamelong.OuDia.Train
+import com.kamelong.aodia.AOdiaIO.FileSelectFromRouteID
+import com.kamelong.aodia.AOdiaIO.OnFileSelect
+import com.kamelong.aodia.EditTrain.OnTrainChangeListener
 import com.kamelong.aodia.KLdatabase.KLdetabase
+import com.kamelong.aodia.KLdatabase.RouteStation
 import com.kamelong.aodia.MainActivity
 import com.kamelong.aodia.R
+import com.kamelong.aodia.SearchSystem.OnRouteViewClicked
+import com.kamelong.aodia.SearchSystem.RouteView
+import com.kamelong.aodia.StationTimeTable.OnSortButtonClickListener
 import com.kamelong.tool.SDlog
+import kotlinx.android.synthetic.main.diagram.*
 import java.io.File
 
 /**
@@ -45,14 +49,14 @@ AOdia is free software: you can redistribute it and/or modify
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-class StationDialog(context: Context, internal var lineFile: LineFile, internal var diaIndex: Int, internal var direction: Int, internal var stationIndex: Int) : Dialog(context) {
+class StationDialog(private val activity: MainActivity, internal var lineFile: LineFile, internal var diaIndex: Int, internal var direction: Int, internal var stationIndex: Int,private val timetable:OnTrainChangeListener) : Dialog(activity) {
     internal var aodia: AOdia
 
     init {
-        aodia = (context as MainActivity).aOdia
+        aodia = activity.aOdia
     }
 
-    override fun onCreate(savedInstanceState: Bundle) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -98,9 +102,103 @@ class StationDialog(context: Context, internal var lineFile: LineFile, internal 
             }
 
             if(lineFile.routeID.length!=0){
-                val connectStationsListView=findViewById<ListView>(R.id.connectLines)
-                val connectLineAdapter=ConnectLinesAdapter(context as MainActivity,lineFile.routeID,stationIndex)
+                if(lineFile.getStation(stationIndex).stationID.length==0){
+                    return
+                }
+                val database=KLdetabase(activity)
+//                var routeStationID=0
+//                try{
+//                    routeStationID=lineFile.routeID.toInt()*100+stationIndex
+//                }catch (e:Exception){
+//
+//                }
+//                if(routeStationID==0){
+//                    return
+//                }
+//
+//                val routeStation=database.getRouteStation(routeStationID.toString())
+                val connectStationsListView=findViewById<LinearLayout>(R.id.connectLines)
+                connectStationsListView.removeAllViews()
 
+
+                val routeList:ArrayList<RouteStation> = database.getRouteListFromStation(database.getStation(lineFile.getStation(stationIndex).stationID))
+
+                val connectList=ArrayList<RouteView.ConnectLine>()
+                for(route in routeList){
+                    if(route.routeID.length==6){
+                        if(route.routeID.substring(0,5)==lineFile.routeID){
+                            continue
+                        }
+                    }
+                    val startStation=database.getStartStation(route.routeID)
+                    val endStation=database.getEndStation(route.routeID)
+                    if(endStation.stationID!=route.stationID){
+                        val connectLine= RouteView.ConnectLine()
+                        connectLine.routeID=route.routeID
+                        connectLine.directionName=database.getStation(endStation.stationID).name
+                        connectLine.direction=0
+                        connectLine.routeName=database.getRoute(route.routeID).name
+                        connectLine.seq=route.seq
+                        connectList.add(connectLine)
+
+                    }
+                    if(startStation.stationID!=route.stationID){
+                        val connectLine= RouteView.ConnectLine()
+                        connectLine.routeID=route.routeID
+                        connectLine.directionName=database.getStation(startStation.stationID).name
+                        connectLine.direction=1
+                        connectLine.routeName=database.getRoute(route.routeID).name
+                        connectLine.seq=route.seq
+                        connectList.add(connectLine)
+                    }
+                }
+                for(route in connectList){
+
+                    val routeView=RouteView(activity,route,object:OnRouteViewClicked{
+                        override fun onRouteTimeTableClicked(routeID: String) {
+                            val dialog= FileSelectFromRouteID(activity,route.routeID,object: OnFileSelect {
+                                override fun OnFileSelect(filePath: String) {
+                                    val openSelect=OpenLineFileSelector(activity,object:OnLineFileOpenSelect{
+                                        override fun openAsIncludeLine(direction: Int) {
+                                            val lineFile=LineFile(File(filePath))
+                                            lineFile.setRouteID(database)
+                                            if(route.direction==Train.DOWN){
+                                                for(i in 0..(route.seq-1)){
+                                                    lineFile.deleteStation(0)
+                                                }
+                                            }else{
+                                                val stationNum=lineFile.stationNum
+                                                for(i in (route.seq+1)..(stationNum-1)){
+                                                    lineFile.deleteStation(route.seq+1)
+                                                }
+                                                lineFile.reverse()
+                                            }
+                                            if(this@StationDialog.direction==Train.DOWN){
+
+                                            }else{
+                                                lineFile.reverse()
+                                            }
+
+                                            this@StationDialog.lineFile.addLineFile(this@StationDialog.stationIndex,lineFile)
+                                            this@StationDialog.timetable.allTrainChange()
+                                        }
+
+                                        override fun openAsNewLine() {
+                                            activity.aOdia.openFile(File(filePath))
+                                        }
+                                    })
+                                    openSelect.show()
+
+                                    this@StationDialog.dismiss()
+                                }})
+                            dialog.show()
+                        }
+
+                        override fun onStationTimeTableClicked(routeID: String, direction: Int) {
+                        }
+                    })
+                    connectStationsListView.addView(routeView)
+                }
             }
 
 

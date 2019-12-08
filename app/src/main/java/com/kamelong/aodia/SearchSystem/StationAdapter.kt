@@ -11,7 +11,7 @@ import com.kamelong.aodia.KLdatabase.KLdetabase
 import com.kamelong.aodia.KLdatabase.RouteStation
 import com.kamelong.aodia.MainActivity
 import com.kamelong.aodia.R
-import kotlinx.android.synthetic.main.search_station_view.view.*
+import java.io.File
 
 class StationAdapter(private val activity:MainActivity,private val searchWord:String) :BaseAdapter() {
     private val database=KLdetabase(activity)
@@ -29,12 +29,12 @@ class StationAdapter(private val activity:MainActivity,private val searchWord:St
             routeListView.removeAllViews()
             val routeList:ArrayList<RouteStation> = database.getRouteListFromStation(stationList[position])
 
-            val connectList=ArrayList<RouteAdapter.ConnectLine>()
+            val connectList=ArrayList<RouteView.ConnectLine>()
             for(route in routeList){
                 val startStation=database.getStartStation(route.routeID)
                 val endStation=database.getEndStation(route.routeID)
                 if(endStation.stationID!=route.stationID){
-                    val connectLine= RouteAdapter.ConnectLine()
+                    val connectLine= RouteView.ConnectLine()
                     connectLine.routeID=route.routeID
                     connectLine.directionName=database.getStation(endStation.stationID).name
                     connectLine.direction=1
@@ -43,7 +43,7 @@ class StationAdapter(private val activity:MainActivity,private val searchWord:St
 
                 }
                 if(startStation.stationID!=route.stationID){
-                    val connectLine= RouteAdapter.ConnectLine()
+                    val connectLine= RouteView.ConnectLine()
                     connectLine.routeID=route.routeID
                     connectLine.directionName=database.getStation(startStation.stationID).name
                     connectLine.direction=0
@@ -52,18 +52,23 @@ class StationAdapter(private val activity:MainActivity,private val searchWord:St
                 }
             }
             for(route in connectList){
+
+
+
                 val routeView=(activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.search_route_view,routeListView,false)
                 routeView.findViewById<TextView>(R.id.routeName).setText(route.routeName)
                 routeView.findViewById<TextView>(R.id.direction).setText(route.directionName+" 方面")
                 routeView.findViewById<Button>(R.id.openTimeTable).setOnClickListener{
                     val dialog=FileSelectFromRouteID(activity,route.routeID,object:OnFileSelect{
                         override fun OnFileSelect(filePath: String) {
+                            activity.aOdia.openFile(File(filePath))
                         }})
                     dialog.show()
                 }
                 routeView.findViewById<Button>(R.id.openStationTimeTable).setOnClickListener{
                     val dialog=FileSelectFromRouteID(activity,route.routeID,object:OnFileSelect{
                         override fun OnFileSelect(filePath: String) {
+                            //未実装
                         }})
                     dialog.show()
                 }

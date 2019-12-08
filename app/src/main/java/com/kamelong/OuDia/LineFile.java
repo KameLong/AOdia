@@ -1,6 +1,7 @@
 package com.kamelong.OuDia;
 
 
+import com.kamelong.aodia.KLdatabase.KLdetabase;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
 import com.kamelong.tool.SDlog;
@@ -32,7 +33,7 @@ public class LineFile implements Cloneable {
     /**
      * AOdia専用　routeID
      */
-    public String routeID="";
+    private String routeID="";
     /**
      * このファイルが保存されていたパス
      */
@@ -194,13 +195,53 @@ public class LineFile implements Cloneable {
 
     }
 
+    public String getRouteID(){
+        String fileName=filePath.substring(filePath.lastIndexOf("/")+1);
+        if(fileName.contains("-")){
+            String routeID=fileName.split("-")[0];
+            if(routeID.length()==5){
+                try{
+                    int a=Integer.parseInt(routeID);
+                    return routeID;
+                }catch (Exception e){
+                }
+            }
+        }
+        try{
+            int fileNameNumber=Integer.parseInt(fileName.substring(0,fileName.indexOf(".")));
+            if(fileNameNumber>10000&&fileNameNumber<100000){
+                 return fileNameNumber+"";
+            }
+        }catch (Exception e){
+
+        }
+        return "";
+
+    }
+    public void setRouteID(KLdetabase database){
+        this.routeID=getRouteID();
+        if(this.routeID.length()>0){
+            try{
+                int routeNumber=Integer.parseInt(routeID);
+                for(int i=0;i<getStationNum();i++){
+                    getStation(i).stationID=database.getRouteStation((routeNumber*100+i)+"").stationID;
+                }
+            }catch (Exception e){
+
+            }
+        }
+    }
+
     /**
      * ファイルからダイヤを開く
      * @param file　入力ファイル
      * @throws Exception ファイルが読み込めなかった時に返す
      */
     public LineFile(File file)throws Exception{
+
         filePath=file.getPath();
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         version=br.readLine().split("=",-1)[1];
         double v=1.02;
