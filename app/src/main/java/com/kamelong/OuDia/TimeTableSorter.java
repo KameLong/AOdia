@@ -146,173 +146,179 @@ public class TimeTableSorter {
     }
 
     /**
-     * 路線内を上方向に探索していきます。
+     * 路線内を上り方向に探索していきます。
      */
     public void sortUp(int stationIndex){
-        try{
-        boolean skip=true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
-        search:
-        for(;stationIndex>=0;stationIndex--){
-            if(stationIndex==56){
-                System.out.println(55);
-            }
-            //上方向に探索
-            if(lineFile.getStation(stationIndex).brunchCoreStationIndex>=0){
-                //この駅が分岐駅設定されている場合
-                if(lineFile.getStation(stationIndex).brunchCoreStationIndex>stationIndex){
-                    //下から分岐する場合はskipfragが入る
-                    skip=true;
-                }
-            }
-            if(sorted[stationIndex]){
-                //skipを戻す
-                //上から分岐する場合はこの駅でソートを試み、無理ならskipfragが入る
-                skip= lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0 && lineFile.getStation(stationIndex).brunchCoreStationIndex < stationIndex;
-            }else{
-                if(skip){
-                    //skipされている場合でもbrachでの同一駅がソート済みならその駅を用いてソートする。
-                    if(lineFile.getStation(stationIndex).brunchCoreStationIndex>=0&&sorted[lineFile.getStation(stationIndex).brunchCoreStationIndex]){
-                        skip=false;
-                        break;
-                    }
-                    for(int j=0;j<lineFile.getStationNum();j++){
-                        if(sorted[j]&&lineFile.getStation(j).brunchCoreStationIndex==stationIndex){
-                            skip=false;
-                            break search;
-                        }
-                    }
-
-                }else {
-                    //skipされていないので普通のソートする
-                    skip=false;
-                    break;
-                }
-            }
-        }
-        if(stationIndex<0){
-            stationIndex=0;
-
-            //ループが終わったのに、既にソート済みの駅が最後に残った場合や最後スキップされていた場合
-            boolean frag1=false;
-            for(int i=0;i<lineFile.getStationNum();i++){
-                if(!sorted[i]){
-                    sortDown(0);
-                }
-            }
-            return;
-        }
-        System.out.println("sortUp:\t"+stationIndex+"\t("+lineFile.getStation(stationIndex).name+")");
-
-        ArrayList<Integer>stations=new ArrayList<>();
-        stations.add(stationIndex);
-        if(lineFile.getStation(stationIndex).brunchCoreStationIndex>=0){
-            stations.add(lineFile.getStation(stationIndex).brunchCoreStationIndex);
-        }
-        for(int i=0;i<lineFile.getStationNum();i++){
-            if(lineFile.getStation(i).brunchCoreStationIndex==stationIndex){
-                stations.add(i);
-            }
-        }
-        if(direction==Train.DOWN){
-            addTrainInSort1(stations);
-        }else{
-            addTrainInSort2(stations);
-        }
-        sorted[stationIndex]=true;
-        //上方向に探索
-        if(stationIndex!=0){
-            sortUp(stationIndex);
-        }else{
-            sortDown(0);
-        }
-    }catch (Exception e){
-        SDlog.log(e);
-        SDlog.toast("スタックがオーバーフローしました。この時刻表の並び替えはできません");
-    }
-
-}
-    /**
-     * 路線内を下方向に探索していきます。
-     */
-    public void sortDown(int stationIndex){
         try {
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
-            search:
-            for (; stationIndex < lineFile.getStationNum(); stationIndex++) {
-                //上方向に探索
+
+            for (; stationIndex >=0; stationIndex--) {
+                //上り方向に探索
+                if (sorted[stationIndex]) {
+                    skip = false;
+                }
                 if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
                     //この駅が分岐駅設定されている場合
-                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex < stationIndex) {
-                        //上から分岐する場合はskipfragが入る
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex > stationIndex) {
+                        //下から分岐する場合はソート対象外
                         skip = true;
                     }
                 }
-                if (sorted[stationIndex]) {
-                    //skipを戻す
-                    //上から分岐する場合はこの駅でソートを試み、無理ならskipfragが入る
-                    skip = lineFile.getStation(stationIndex).brunchCoreStationIndex > stationIndex;
-                } else {
-                    if (skip) {
-                        //skipされている場合でもbrachでの同一駅がソート済みならその駅を用いてソートする。
-                        if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0 && sorted[lineFile.getStation(stationIndex).brunchCoreStationIndex]) {
-                            skip = false;
-                            break;
-                        }
-                        for (int j = 0; j < lineFile.getStationNum(); j++) {
-                            if (sorted[j] && lineFile.getStation(j).brunchCoreStationIndex == stationIndex) {
-                                skip = false;
-                                break search;
+
+                if (!sorted[stationIndex]) {
+                    //この駅がまだソートされていないとき
+                    if(skip) {
+                        boolean subskip=true;
+                        //この駅がスキップされるとき
+                        if(lineFile.getStation(stationIndex).brunchCoreStationIndex>=0) {
+                            //分岐駅設定あり
+                            if(sorted[lineFile.getStation(stationIndex).brunchCoreStationIndex]) {
+                                //分岐元がソート済み
+                                //ソートする
+                                subskip=false;
                             }
                         }
-
+                        //この駅がどこかの分岐元でその駅がソートされている可能性
+                        for(int i=0;i<lineFile.getStationNum();i++) {
+                            if(lineFile.getStation(i).brunchCoreStationIndex==stationIndex&&sorted[i]) {
+                                subskip=false;
+                            }
+                        }
+                        if(subskip) {
+                            //スキップする
+                            continue;
+                        }
+                    }
+                    //ソートする
+                    System.out.println("sortUp:\t" + stationIndex + "\t(" + lineFile.getStation(stationIndex).name + ")");
+                    ArrayList<Integer> stations = new ArrayList<>();
+                    stations.add(stationIndex);
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
+                        stations.add(lineFile.getStation(stationIndex).brunchCoreStationIndex);
+                    }
+                    for (int i = 0; i < lineFile.getStationNum(); i++) {
+                        if (lineFile.getStation(i).brunchCoreStationIndex == stationIndex) {
+                            stations.add(i);
+                        }
+                    }
+                    if (direction == Train.DOWN) {
+                        addTrainInSort1(stations);
                     } else {
-                        //skipされていないので普通のソートする
-                        skip = false;
-                        break;
+                        addTrainInSort2(stations);
                     }
+                    sorted[stationIndex] = true;
+                    skip=false;
                 }
-            }
-            if (stationIndex == lineFile.getStationNum()) {
-                stationIndex--;
 
-                //ループが終わったのに、既にソート済みの駅が最後に残った場合や最後スキップされていた場合
-                boolean frag1 = false;
-                for (int i = 0; i < lineFile.getStationNum(); i++) {
-                    if (!sorted[i]) {
-                        sortUp(lineFile.getStationNum() - 1);
+                if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
+                    //この駅が分岐駅設定されている場合
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex < stationIndex) {
+                        //上へ分岐するときは次の駅からソート対象外
+                        skip = true;
                     }
                 }
-                return;
             }
-            System.out.println("sortDown:\t" + stationIndex + "\t(" + lineFile.getStation(stationIndex).name + ")");
-            ArrayList<Integer> stations = new ArrayList<>();
-            stations.add(stationIndex);
-            if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
-                stations.add(lineFile.getStation(stationIndex).brunchCoreStationIndex);
-            }
+
+            //ループが終わったのに、既にソート済みの駅が最後に残った場合や最後スキップされていた場合
             for (int i = 0; i < lineFile.getStationNum(); i++) {
-                if (lineFile.getStation(i).brunchCoreStationIndex == stationIndex) {
-                    stations.add(i);
+                if (!sorted[i]) {
+                    sortDown(0);
+                    break;
                 }
-            }
-            if (direction == Train.DOWN) {
-                addTrainInSort2(stations);
-            } else {
-                addTrainInSort1(stations);
-            }
-            sorted[stationIndex] = true;
-            //上方向に探索
-            if (stationIndex != lineFile.getStationNum() - 1) {
-                sortDown(stationIndex);
-            } else {
-                sortUp(lineFile.getStationNum() - 1);
             }
         }catch (Exception e){
             SDlog.log(e);
             SDlog.toast("スタックがオーバーフローしました。この時刻表の並び替えはできません");
         }
-    }    /**
+    }
+    /**
+     * 路線内を下り方向に探索していきます。
+     */
+    public void sortDown(int stationIndex){
+        try {
+
+            boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
+
+            for (; stationIndex < lineFile.getStationNum(); stationIndex++) {
+                //下り方向に探索
+                if (sorted[stationIndex]) {
+                    skip = false;
+                }
+                if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
+                    //この駅が分岐駅設定されている場合
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex < stationIndex) {
+                        //上から分岐する場合はソート対象外
+                        skip = true;
+                    }
+                }
+
+                if (!sorted[stationIndex]) {
+                    //この駅がまだソートされていないとき
+                    if(skip) {
+                        boolean subskip=true;
+                        //この駅がスキップされるとき
+                        if(lineFile.getStation(stationIndex).brunchCoreStationIndex>=0) {
+                            //分岐駅設定あり
+                            if(sorted[lineFile.getStation(stationIndex).brunchCoreStationIndex]) {
+                                //分岐元がソート済み
+                                //ソートする
+                                subskip=false;
+                            }
+                        }
+                        //この駅がどこかの分岐元でその駅がソートされている可能性
+                        for(int i=0;i<lineFile.getStationNum();i++) {
+                            if(lineFile.getStation(i).brunchCoreStationIndex==stationIndex&&sorted[i]) {
+                                subskip=false;
+                            }
+                        }
+                        if(subskip) {
+                            //スキップする
+                            continue;
+                        }
+                    }
+                    //ソートする
+                    System.out.println("sortDown:\t" + stationIndex + "\t(" + lineFile.getStation(stationIndex).name + ")");
+                    ArrayList<Integer> stations = new ArrayList<>();
+                    stations.add(stationIndex);
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
+                        stations.add(lineFile.getStation(stationIndex).brunchCoreStationIndex);
+                    }
+                    for (int i = 0; i < lineFile.getStationNum(); i++) {
+                        if (lineFile.getStation(i).brunchCoreStationIndex == stationIndex) {
+                            stations.add(i);
+                        }
+                    }
+                    if (direction == Train.DOWN) {
+                        addTrainInSort2(stations);
+                    } else {
+                        addTrainInSort1(stations);
+                    }
+                    sorted[stationIndex] = true;
+                    skip=false;
+                }
+
+                if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
+                    //この駅が分岐駅設定されている場合
+                    if (lineFile.getStation(stationIndex).brunchCoreStationIndex > stationIndex) {
+                        //下へ分岐するときは次の駅からソート対象外
+                        skip = true;
+                    }
+                }
+            }
+            //ループが終わったのに、既にソート済みの駅が最後に残った場合や最後スキップされていた場合
+            for (int i = 0; i < lineFile.getStationNum(); i++) {
+                if (!sorted[i]) {
+                    sortUp(lineFile.getStationNum() - 1);
+                    break;
+                }
+            }
+        }catch (Exception e){
+            SDlog.log(e);
+            SDlog.toast("スタックがオーバーフローしました。この時刻表の並び替えはできません");
+        }
+    }
+    /**
      * 列車をsortAfterに時刻前方から挿入する
      * station[0]に停車する列車がソート対象
      * station[1以上]は同一駅
@@ -360,7 +366,7 @@ public class TimeTableSorter {
 
                 int sortTime=-1;
                 for(int s:station){
-                        sortTime=Math.max(sortTime,trainList[sortAfter.get(j)].getPredictionTime(s,Train.ARRIVE));
+                    sortTime=Math.max(sortTime,trainList[sortAfter.get(j)].getPredictionTime(s,Train.ARRIVE));
                 }
                 if (sortTime < 0) {
                     continue;
@@ -421,7 +427,7 @@ public class TimeTableSorter {
         }
         @Override
         public int compareTo(TrainTypeSorter o) {
-                return this.train.type-o.train.type;
+            return this.train.type-o.train.type;
         }
     }
     class TrainNameSorter implements Comparable<TrainNameSorter>{

@@ -64,11 +64,11 @@ public class SettingFragment extends PreferenceFragmentCompat {
     }
     @Override
     public void onStop(){
+        super.onStop();
         try {
             ((AOdiaActivity)getActivity()).onCloseSetting();
         }catch(Exception e){
             SDlog.log(e);
         }
-        super.onStop();
     }
 }

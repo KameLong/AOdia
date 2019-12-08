@@ -748,13 +748,17 @@ public class Train implements Cloneable {
      * AD=1の時、着時刻が存在する場合は着時刻っを優先する
      */
     public int getPredictionTime(int station, int AD) {
+        if(getStopType(station)==STOP_TYPE_NOVIA||getStopType(station)==STOP_TYPE_NOSERVICE){
+            return -1;
+        }
+
         if (AD == 1 && timeExist(station,ARRIVE)) {
             return getAriTime(station);
         }
         if (timeExist(station)) {
             return getTime(station,AD,true);
         }
-        if (getStopType(station) == STOP_TYPE_NOVIA || getStopType(station) == STOP_TYPE_PASS) {
+        if (getStopType(station) == STOP_TYPE_PASS) {
             //通過時間を予測します
             int afterTime = -1;//後方の時刻あり駅の発車時間
             int beforeTime = -1;//後方の時刻あり駅の発車時間
@@ -779,7 +783,6 @@ public class Train implements Cloneable {
                 }
             }
             if (afterTime < 0) {
-                SDlog.log("予測時間", "afterTime");
                 //対象駅より先の駅で駅時刻が存在する駅がなかった
                 return -1;
             }
@@ -847,13 +850,13 @@ public class Train implements Cloneable {
      * 12時間以上さかのぼる際は日付をまたいでいると考えています。
      */
     public boolean checkDoubleDay() {
-        int time = getDepTime(getStartStation());
+        int time = getTime(getStartStation(),DEPART,true);
         for (int i = getStartStation(); i < getEndStation() + 1; i++) {
             if (timeExist(i)) {
                 if (getTime(i, DEPART, true) - time < -12 * 60 * 60 || getTime(i, DEPART, true) - time > 12 * 60 * 60) {
                     return true;
                 }
-                time = getDepTime(i);
+                time = getTime(i,DEPART,true);
             }
         }
         return false;

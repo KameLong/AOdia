@@ -394,6 +394,7 @@ public class AOdia {
     }
 
     public void loadData(){
+
         SharedPreferences preferences=activity.getSharedPreferences("files", Context.MODE_PRIVATE);
         String filePath=preferences.getString("tempFilePath","");
         if(filePath.length()>0) {

@@ -119,9 +119,17 @@ public class Color implements Cloneable{
      * @param value
      */
     public void setOuDiaColor(String value){
+        if(value.length()==8) {
             red = Integer.parseInt(value.substring(6, 8), 16);
             green = Integer.parseInt(value.substring(4, 6), 16);
             blue = Integer.parseInt(value.substring(2, 4), 16);
+        }
+        if(value.length()==6){
+            red = Integer.parseInt(value.substring(4, 6), 16);
+            green = Integer.parseInt(value.substring(2, 4), 16);
+            blue = Integer.parseInt(value.substring(0, 2), 16);
+
+        }
     }
 
 

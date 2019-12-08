@@ -584,6 +584,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
      @Override
     public void onStop() {
+         super.onStop();
         if(lineFile==null){
             return;
         }
@@ -596,7 +597,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             SDlog.log(e);
         }
 
-         super.onStop();
      }
      @Override
     public LineFile getLineFile(){

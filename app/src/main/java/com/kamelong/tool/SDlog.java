@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -44,15 +45,23 @@ import java.util.UUID;
 public class SDlog {
     private static boolean able = false;
     private static Activity activity;
+    private static Handler handler;
 
 
     public static void setActivity(Activity a) {
         activity = a;
+        handler=new Handler();
     }
 
     public static void toast(String string) {
         if (activity != null) {
-            Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
+
+                }
+            });
         }
     }
     public static String getNowDate(){
