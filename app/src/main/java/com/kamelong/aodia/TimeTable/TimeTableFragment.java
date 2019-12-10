@@ -242,19 +242,24 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
             LinearLayout trainNameLinea = findViewById(R.id.trainNameLinear);
             trainNameLinea.removeAllViews();
-            TrainNameView[] trainNameViews = new TrainNameView[timetable.getTrainNum(direction)];
-            for (int i = 0; i < trainNameViews.length; i++) {
 
-                trainNameViews[i] = new TrainNameView(getActivity(),this,options,timetable.getTrain(direction,i));
-                trainNameLinea.addView(trainNameViews[i]);
+//            TrainNameView[] trainNameViews = new TrainNameView[timetable.getTrainNum(direction)];
+            for (Train train :timetable.trains[direction]) {
+                if(lineFile.getTrainType(train.type).showInTimeTable) {
+                    TrainNameView trainNameView = new TrainNameView(getActivity(), this, options, train);
+                    trainNameLinea.addView(trainNameView);
+                }
             }
             LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
             trainTimeLinear.removeAllViews();
-            TrainTimeView[] trainTimeViews = new TrainTimeView[timetable.getTrainNum(direction)];
-            for (int i = 0; i < trainNameViews.length; i++) {
-                trainTimeViews[i] = new TrainTimeView(getActivity(), options, lineFile,timetable.getTrain(direction,i),direction);
-                trainTimeLinear.addView(trainTimeViews[i]);
+            for (Train train :timetable.trains[direction]) {
+                if(lineFile.getTrainType(train.type).showInTimeTable) {
+                    TrainTimeView trainTimeView = new TrainTimeView(getActivity(), options, lineFile,train,direction);
+                    trainTimeLinear.addView(trainTimeView);
+                }
             }
+
+
             int[] pos = getAOdia().database.getPositionData(lineFile.filePath, diaIndex, direction);
             scrollTo(pos[0], pos[1]);
 

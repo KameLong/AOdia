@@ -76,6 +76,11 @@ public class TrainType implements Cloneable {
      */
     public int parentIndex=-1;
 
+    /**
+     * AOdia用
+     */
+    public boolean showInTimeTable=true;
+
     public TrainType(){
         name = "種別名未設定";
     }
