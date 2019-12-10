@@ -94,6 +94,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
         if (lineFile == null||station==null) {
             getAOdia().killFragment(this);
+            return;
         }
         subName = new HashMap<>();
         subNameCount = new HashMap<>();
