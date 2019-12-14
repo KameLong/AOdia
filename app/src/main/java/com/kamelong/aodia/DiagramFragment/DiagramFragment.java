@@ -11,10 +11,15 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.AOdiaFragmentCustom;
+import com.kamelong.aodia.EditTrain.OnTrainChangeListener;
+import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
@@ -443,6 +448,43 @@ public class DiagramFragment extends AOdiaFragmentCustom {
     public LineFile getLineFile() {
         return lineFile;
     }
+    /**
+     * 列車編集画面を表示する
+     */
+    public void openTrainEdit(Train train){
+        final int trainIndex=lineFile.getDiagram(diaIndex).getTrainIndex(train);
+        fragmentContainer.findViewById(R.id.bottomContents2).setVisibility(View.VISIBLE);
+        TrainTimeEditFragment fragment=new TrainTimeEditFragment();
+        Bundle args=new Bundle();
+        args.putInt(AOdia.FILE_INDEX,lineIndex );
+        args.putInt(AOdia.DIA_INDEX, diaIndex);
+        args.putInt(AOdia.DIRECTION, train.direction);
+        args.putInt(AOdia.TRAIN_INDEX, trainIndex);
+        fragment.setArguments(args);
+        fragment.setOnTrainChangeListener(new OnTrainChangeListener() {
+            @Override
+            public void trainChanged(Train train) {
+                diagramView.makeDiagramPath(train,train.direction,lineFile.getDiagram(diaIndex).getTrainIndex(train));
+                diagramView.invalidate();
+
+            }
+
+            @Override
+            public void allTrainChange() {
+                diagramView.makeDiagramPath();
+                diagramView.invalidate();
+
+            }
+
+        });
+
+        FragmentManager fragmentManager=((MainActivity)getContext()).getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.bottomContents,fragment);
+        fragmentTransaction.commit();
+
+    }
+
 }
 
 

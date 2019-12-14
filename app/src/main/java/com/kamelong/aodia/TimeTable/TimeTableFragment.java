@@ -44,7 +44,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     Handler handler = new Handler();
 
     private LineFile lineFile;
-    private Diagram timetable;
+    private ArrayList<TrainForTimeTable>trains;
     private TimeTableOptions options;
 
     private View fragmentContainer;
@@ -191,7 +191,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         try {
             lineFile = getAOdia().getLineFile(lineIndex);
             if(lineFile!=null) {
-                timetable = lineFile.getDiagram(diaIndex);
             }
         }catch(Exception e){
             SDlog.log(e);
@@ -228,15 +227,25 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     private void init() {
         try {
             //列車の最後に空白列車を入れる
-            if(timetable.getTrainNum(direction)==0||!timetable.getTrain(direction,timetable.getTrainNum(direction)-1).isnull()){
-                timetable.addTrain(direction,timetable.getTrainNum(direction),new Train(lineFile,direction));
+            if(lineFile.getDiagram(diaIndex).getTrainNum(direction)==0||!lineFile.getDiagram(diaIndex).getTrain(direction,lineFile.getDiagram(diaIndex).getTrainNum(direction)-1).isnull()){
+                lineFile.getDiagram(diaIndex).addTrain(direction,lineFile.getDiagram(diaIndex).getTrainNum(direction),new Train(lineFile,direction));
             }
-            FrameLayout lineNameFrame = findViewById(R.id.lineNameFrame);
-            LineNameView lineNameView = new LineNameView(getActivity(), options);
+            trains=new ArrayList<>();
+            for(Train train :lineFile.getDiagram(diaIndex).trains[direction]){
+                trains.add(new TrainForTimeTable(train));
+            }
+            if(editTrain>=0&&editTrain<trains.size()){
+                trains.get(editTrain).setShow(true);
+            }
+
+
+
+            final FrameLayout lineNameFrame = findViewById(R.id.lineNameFrame);
+            final LineNameView lineNameView = new LineNameView(getActivity(), options);
             lineNameFrame.removeAllViews();
             lineNameFrame.addView(lineNameView);
-            LinearLayout stationNameLinea = findViewById(R.id.stationNameLinear);
-            StationNameView stationNameView = new StationNameView(getActivity(),options, lineFile, direction);
+            final LinearLayout stationNameLinea = findViewById(R.id.stationNameLinear);
+            final StationNameView stationNameView = new StationNameView(getActivity(),options, lineFile, direction);
             stationNameLinea.removeAllViews();
             stationNameLinea.addView(stationNameView);
 
@@ -244,8 +253,8 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             trainNameLinea.removeAllViews();
 
 //            TrainNameView[] trainNameViews = new TrainNameView[timetable.getTrainNum(direction)];
-            for (Train train :timetable.trains[direction]) {
-                if(lineFile.getTrainType(train.type).showInTimeTable) {
+            for (TrainForTimeTable train :trains) {
+                if(lineFile.getTrainType(train.getTrain().type).showInTimeTable) {
                     TrainNameView trainNameView = new TrainNameView(getActivity(), this, options, train);
                     trainNameLinea.addView(trainNameView);
                 }
@@ -607,5 +616,8 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     public LineFile getLineFile(){
         return lineFile;
      }
+
+
+
 
 }
