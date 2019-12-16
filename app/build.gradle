@@ -8,8 +8,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 328
-        versionName "3.2.4"
+        versionCode 331
+        versionName "3.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -48,6 +48,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation 'com.android.billingclient:billing:2.1.0'
+    implementation 'com.android.billingclient:billing-ktx:2.1.0'
 
 }
 repositories {

@@ -21,6 +21,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
     MainActivity activity;
 
     AOdia aodia;
+    int count=0;
 
     private LinearLayout layout;
 
@@ -48,7 +49,15 @@ public class MenuFragment extends AOdiaFragmentCustom {
     }
     public void createMenu() {
         try {
+
             layout.removeAllViews();
+            getActivity().findViewById(R.id.menuButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    count++;
+                }
+            });
+
 
             LinearLayout fileOpenLayout=new LinearLayout(activity);
 
@@ -110,7 +119,17 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
             layout.addView(openHelp);
-
+            Button openPay = new Button(activity);
+            openPay.setText("開発者に寄付する");
+            openPay.setBackgroundColor(Color.TRANSPARENT);
+            openPay.setGravity(Gravity.START);
+            openPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getAOdia().openPayFragment();
+                }
+            });
+                layout.addView(openPay);
         }catch(Exception e){
             SDlog.log(e);
         }

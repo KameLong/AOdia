@@ -53,14 +53,19 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
             e.printStackTrace();
         }
 
-        addPreferencesFromResource(R.xml.activity_settings);
+        final Payment payment=((MainActivity)getContext()).payment;
 
+        addPreferencesFromResource(R.xml.activity_settings);
         findPreference("textsize").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 try{
+
+
                     TimeTableDefaultView.setTextSize(Integer.parseInt((String) newValue));
                     DiagramDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    pref.edit().putString("textsize",(String) newValue).apply();
                 }catch (NumberFormatException e){
                     SDlog.toast("数字を入力してください");
                 }
@@ -72,7 +77,10 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 try{
-                TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+
+                    TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    pref.edit().putString("timetableStationWidth",(String) newValue).apply();
                 }catch (NumberFormatException e){
                     SDlog.toast("数字を入力してください");
                 }
@@ -83,10 +91,13 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 try{
-                DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
-            }catch (NumberFormatException e){
-                SDlog.toast("数字を入力してください");
-            }
+                    DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    pref.edit().putString("diagramStationWidth",(String) newValue).apply();
+
+                }catch (NumberFormatException e){
+                    SDlog.toast("数字を入力してください");
+                }
                 return false;
             }
         });
@@ -103,7 +114,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
                     SDlog.toast("内部データの削除に失敗しました");
                 }
                 resetDatabase.setChecked(false);
-                        return false;
+                return false;
             }
         });
         final CheckBoxPreference sendLog=findPreference("send_log");
@@ -118,7 +129,62 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
                 return false;
             }
         });
+        try {
+            findPreference("011").setOnPreferenceChangeListener(
+                    new Preference.OnPreferenceChangeListener() {
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object o) {
 
+                            if(payment.buyCheck("011")){
+                                ((CheckBoxPreference) preference).setChecked(true);
+                                ((CheckBoxPreference) preference).setEnabled(false);
+                            }else{
+                                payment.buy("011");
+                                if(payment.buyCheck("011")){
+                                    ((CheckBoxPreference) preference).setChecked(true);
+                                    ((CheckBoxPreference) preference).setEnabled(false);
+                                }
+                            }
+                            return false;
+                        }
+
+                    });
+
+        }catch(Exception e){
+            SDlog.log(e);
+        }
+
+//        final CheckBoxPreference a=findPreference("aaa");
+//        a.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+////                    if (payment.buyCheck("010")) {
+////                        ((CheckBoxPreference) preference).setChecked(true);
+////                        ((CheckBoxPreference) preference).setEnabled(false);
+////                    } else {
+////                        payment.buy("010");
+////                        if (payment.buyCheck("010")) {
+////                            ((CheckBoxPreference) preference).setChecked(true);
+////                            ((CheckBoxPreference) preference).setEnabled(false);
+////                        }
+////                    }
+//                payment.querySkuDetails("010");
+//                return false;
+//            }
+//        });
+//        findPreference("011").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//
+//                    @Override
+//                    public boolean onPreferenceClick(Preference preference) {
+////                        payment.buy("011");
+////                        if (payment.buyCheck("011")) {
+//////                            ((CheckBoxPreference) preference).setChecked(true);
+//////                            ((CheckBoxPreference) preference).setEnabled(false);
+////                        }
+//                        return false;
+//                    }
+//
+//        });
 
     }
 
@@ -130,6 +196,9 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
     @Override
     public void onResume() {
         super.onResume();
+        Payment payment=((MainActivity)getContext()).payment;
+        (findPreference("aaa")).setEnabled(!payment.buyCheck("010"));
+        ((CheckBoxPreference) findPreference("aaa")).setChecked(payment.buyCheck("010"));
     }
 
     @Override

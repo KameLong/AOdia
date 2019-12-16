@@ -26,7 +26,6 @@ import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.tool.SDlog;
-import com.kamelong2.aodia.AOdiaActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,6 +38,7 @@ import java.net.URL;
 
 public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
+    public Payment payment=null;
     private AOdia aodiaData=new AOdia(this);
 
     public boolean storagePermission() {
@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        payment=new Payment(this);
         SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
         //メニュー設定
@@ -132,7 +133,6 @@ public class MainActivity extends FragmentActivity {
         }).start();
         //ストレージ権限があるか確認
         storagePermission();
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         final Handler handler=new Handler();
         new Thread(new Runnable() {
@@ -259,6 +259,11 @@ public class MainActivity extends FragmentActivity {
     public void onStop(){
         aodiaData.saveData();
         super.onStop();
+    }
+    @Override
+    public void onDestroy(){
+        payment.close();
+        super.onDestroy();
     }
 
     @Override
