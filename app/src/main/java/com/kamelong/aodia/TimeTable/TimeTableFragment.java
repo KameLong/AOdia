@@ -71,6 +71,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         } catch (Exception e) {
             SDlog.log(e);
         }
+        if(savedInstanceState!=null){
+            editTrainIndex = savedInstanceState.getInt(AOdia.TRAIN_INDEX, -1);
+        }
         fragmentContainer = inflater.inflate(R.layout.timetable_fragment, container, false);
         options = new TimeTableOptions(getActivity(), fragmentContainer, this);
 
@@ -97,7 +100,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             getAOdia().killFragment(this);
             return;
         }
-//        init();
         super.onViewCreated(view, savedInstanceState);
 
     }
@@ -142,6 +144,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
             LinearLayout trainNameLinea = findViewById(R.id.trainNameLinear);
             trainNameLinea.removeAllViews();
+            trains=lineFile.getDiagram(diaIndex).trains[direction];
 
             for (Train train :trains) {
                 if(lineFile.getTrainType(train.type).showInTimeTable) {
@@ -506,6 +509,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             final int scrollX = trainTimeLinear.getScrollX();
             final int scrollY = trainTimeLinear.getScrollY();
             getAOdia().database.updateLineData(lineFile.filePath, diaIndex, direction, scrollX, scrollY);
+
         }catch (Exception e){
             SDlog.log(e);
         }
@@ -516,7 +520,11 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
         return lineFile;
     }
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt(AOdia.TRAIN_INDEX,trains.indexOf(editTrain));
+        super.onSaveInstanceState(outState);
+    }
     @Override
     public boolean onDown(MotionEvent motionEvent) {
         //flingを止める
