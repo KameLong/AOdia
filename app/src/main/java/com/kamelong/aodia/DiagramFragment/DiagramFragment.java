@@ -179,7 +179,6 @@ public class DiagramFragment extends AOdiaFragmentCustom {
 
                                         Thread.sleep(16);
                                     } catch (Exception e) {
-                                        SDlog.log(e);
                                         fling = false;
                                     }
                                 }

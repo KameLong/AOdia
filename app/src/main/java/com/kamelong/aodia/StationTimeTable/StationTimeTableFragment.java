@@ -94,6 +94,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
         if (lineFile == null||station==null) {
             getAOdia().killFragment(this);
+            return;
         }
         subName = new HashMap<>();
         subNameCount = new HashMap<>();
@@ -231,6 +232,9 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
 
     private void addStationSubName(Train train){
+        if(train.getEndStation()==-1){
+            return;
+        }
         String endName=train.getOuterEndStationName();
         if(endName==null){
             endName=lineFile.getStation(train.getEndStation()).name;
@@ -248,7 +252,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
         ArrayList<Integer> trainList = new ArrayList<Integer>();
         for (int i = 0; i < lineFile.getTrainNum(diaIndex, direction); i++) {
             Train train=lineFile.getTrain(diaIndex, direction, i);
-            if (train.getPredictionTime(stationIndex) > 0) {
+            if (train.getPredictionTime(stationIndex) >= 0) {
                 if (train.getStopType(stationIndex) != StationTime.STOP_TYPE_STOP && !spf.getBoolean("STTpass", true)) {
                     continue;
                 }

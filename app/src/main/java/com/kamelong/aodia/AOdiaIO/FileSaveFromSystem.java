@@ -159,7 +159,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
 
                 }catch (Exception e){
                     SDlog.log(e);
-                    SDlog.toast(savePath+"にファイルを保存する事ができませんでした");
+                    SDlog.toast(savePath+"にファイルを保存する事ができませんでした。このフォルダに対するアクセス権限がない可能性があります。");
                 }
 
 
