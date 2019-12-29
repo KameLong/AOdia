@@ -44,6 +44,8 @@ AOdia is free software: you can redistribute it and/or modify
  * 個々で定義したPreferenceのリソースを設定します
  */
 public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFragment {
+    public static final String FRAGMENT_NAME="SettingFragment";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -214,6 +216,11 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
     @Override
     public String getName() {
         return "設定";
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

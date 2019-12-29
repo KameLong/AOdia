@@ -35,6 +35,8 @@ import com.kamelong.tool.SDlog;
 import java.util.ArrayList;
 
 public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainChangeListener , GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener {
+    public static final String FRAGMENT_NAME="TimeTableFragment";
+
     public int lineIndex = 0;
     public int diaIndex = 0;
     public int direction = 0;
@@ -259,6 +261,12 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         }
 
     }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME+"-"+diaIndex+"-"+direction;
+    }
+
     public void openTrainEditFragment(Train train){
         findViewById(R.id.bottomContents2).setVisibility(View.VISIBLE);
         TrainTimeEditFragment fragment=new TrainTimeEditFragment();
@@ -522,7 +530,17 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
     }
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(AOdia.TRAIN_INDEX,trains.indexOf(editTrain));
+        try {
+            if(editTrain!=null) {
+                outState.putInt(AOdia.TRAIN_INDEX, trains.indexOf(editTrain));
+            }else{
+                outState.putInt(AOdia.TRAIN_INDEX, -1);
+
+            }
+        }catch (Exception e){
+            SDlog.log(e);
+            outState.putInt(AOdia.TRAIN_INDEX, -1);
+        }
         super.onSaveInstanceState(outState);
     }
     @Override

@@ -18,6 +18,8 @@ import com.kamelong.tool.SDlog;
 
 
 public class MenuFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="MenuFragment";
+
     MainActivity activity;
 
     AOdia aodia;
@@ -119,6 +121,17 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
             layout.addView(openHelp);
+            Button userhelp = new Button(activity);
+            userhelp.setText("ユーザーヘルプを開く");
+            userhelp.setBackgroundColor(Color.TRANSPARENT);
+            userhelp.setGravity(Gravity.START);
+            userhelp.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getAOdia().openUserHelp();
+                }
+            });
+            layout.addView(userhelp);
             Button openPay = new Button(activity);
             openPay.setText("開発者に寄付する");
             openPay.setBackgroundColor(Color.TRANSPARENT);
@@ -139,6 +152,12 @@ public class MenuFragment extends AOdiaFragmentCustom {
     public String getName() {
         return "";
     }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
+    }
+
     @Override
     public LineFile getLineFile(){
         return null;

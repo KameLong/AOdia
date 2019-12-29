@@ -47,6 +47,8 @@ AOdia is free software: you can redistribute it and/or modify
  * まあ、強制はできないので、皆さんの良識におまかせします。
  */
 public class HelpFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="HelpFragment";
+
     public HelpFragment() {
         super();
     }
@@ -119,6 +121,11 @@ public class HelpFragment extends AOdiaFragmentCustom {
             return "AOdia ";
 
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

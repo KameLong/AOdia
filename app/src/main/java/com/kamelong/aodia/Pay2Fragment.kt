@@ -1,12 +1,13 @@
 package com.kamelong.aodia
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import com.kamelong.OuDia.LineFile
-import com.kamelong.tool.SDlog
+import java.util.*
 
 /*
 *     This file is part of AOdia.
@@ -29,41 +30,43 @@ When you want to know about GNU, see <http://www.gnu.org/licenses/>.
  * 公開した場合はそのアプリにもGNUライセンスとしてください。
  *
  */
-class PayFragment : AOdiaFragmentCustom() {
-    val FRAGMENT_NAME = "PayFragment"
+class Pay2Fragment : AOdiaFragmentCustom() {
+    val FRAGMENT_NAME = "Pay2Fragment"
 
     private lateinit var fragmentContainer: View
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        try {
-        } catch (e: Exception) {
-            SDlog.toast("Error(CommentFragment-onCreateView-E1)")
-            SDlog.log(e)
-        }
-        fragmentContainer = inflater.inflate(R.layout.pay_fragment, container, false)
+
+        fragmentContainer = inflater.inflate(R.layout.kifu, container, false)
         return fragmentContainer
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val payment=(context as MainActivity).payment
-        if(payment.buyCheck("010")){
-            fragmentContainer.findViewById<Button>(R.id.keizoku1000).isEnabled=false
-        }else{
-            fragmentContainer.findViewById<Button>(R.id.keizoku1000).setOnClickListener {payment.buy("010")  }
 
-        }
-        if(payment.buyCheck("012")){
-            fragmentContainer.findViewById<Button>(R.id.keizoku100).isEnabled=false
-        }else{
-            fragmentContainer.findViewById<Button>(R.id.keizoku100).setOnClickListener {payment.buy("012")  }
-
-        }
-        fragmentContainer.findViewById<Button>(R.id.button2).setOnClickListener {
+        fragmentContainer.findViewById<Button>(R.id.button5).setOnClickListener {
             if(payment.buyCheck("011")){
                 payment.use()
             }
             payment.buy("011")
+
+        }
+        fragmentContainer.findViewById<Button>(R.id.button6).setOnClickListener {
+            if(payment.buyCheck("013")){
+                payment.use()
+            }
+            payment.buy("013")
+
+        }
+        fragmentContainer.findViewById<Button>(R.id.button7).setOnClickListener {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = System.currentTimeMillis()
+            val month = calendar[Calendar.YEAR].toString() + "" + calendar[Calendar.MONTH]
+            val pref = PreferenceManager.getDefaultSharedPreferences(activity)
+            pref.edit().putBoolean(month, true).apply()
+
+            aOdia.killFragment(this)
 
         }
 

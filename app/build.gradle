@@ -8,8 +8,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 332
-        versionName "3.3.2"
+        versionCode 333
+        versionName "3.3.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

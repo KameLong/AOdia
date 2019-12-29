@@ -198,7 +198,7 @@ public class Payment {
 
                     // 正常終了
                     if(response == 0) {
-                        alert(productId + "を消費しました。");
+//                        alert(productId + "を消費しました。");
                     } else {
                         alert(purchaseData);
                     }

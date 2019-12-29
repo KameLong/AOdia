@@ -40,6 +40,8 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationInfoIndexFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="StationInfoIndexFragment";
+
     LineFile lineFile;
     View contentView;
 
@@ -89,6 +91,11 @@ public class StationInfoIndexFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             return "駅時刻表";
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

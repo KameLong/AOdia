@@ -53,6 +53,8 @@ AOdia is free software: you can redistribute it and/or modify
  *
  */
 public class StationTimeTableFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="StationTimeTableFragment";
+
     static final int[] backColor = new int[]{Color.rgb(134, 179, 224), Color.rgb(241, 157, 181), Color.rgb(224, 224, 137), Color.rgb(181, 224, 137), Color.rgb(224, 137, 224)};
     LineFile lineFile;
     int diaIndex = 0;
@@ -94,6 +96,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
         if (lineFile == null||station==null) {
             getAOdia().killFragment(this);
+            return;
         }
         subName = new HashMap<>();
         subNameCount = new HashMap<>();
@@ -368,6 +371,11 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
     @Override
     public String getName() {
         return station.name+"\n駅時刻表";
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME+"-"+diaIndex+"-"+direction+"-"+lineFile.station.indexOf(station);
     }
 
     @Override

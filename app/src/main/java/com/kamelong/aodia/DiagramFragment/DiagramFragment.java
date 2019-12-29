@@ -34,6 +34,7 @@ import com.kamelong.tool.SDlog;
  * ダイヤグラムを表示するためのFragment
  */
 public class DiagramFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="DiagramFragment";
     public StationView stationView;
     public TimeView timeView;
     public DiagramView diagramView;
@@ -442,6 +443,11 @@ public class DiagramFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME+"-"+diaIndex;
     }
 
     @Override

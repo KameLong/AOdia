@@ -33,9 +33,17 @@
         android:text="継続購入"
         android:textColor="#000"
         android:textSize="18dp" />
+    <Button
+        android:id="@+id/keizoku100"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_round"
+        android:backgroundTint="#6DD"
+        android:text="100円/月　定期的に寄付をする" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/keizoku1000"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,13 +51,5 @@
         android:backgroundTint="#6DD"
         android:text="1000円/月　定期的に寄付をする" />
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/button_round"
-        android:backgroundTint="#CCC"
-        android:text="現在　1000円/月支払い中です。\nありがとうございます。"
-        android:visibility="gone" />
+
 </LinearLayout>

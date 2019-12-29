@@ -29,6 +29,8 @@ import java.util.ArrayList;
  * 駅編集を行うFragmentです
  */
 public class EditStationFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="EditStationFragment";
+
     public ArrayList<EditStationView> editStationViews = new ArrayList<>();
     int fileIndex = 0;
     boolean frag = true;
@@ -193,6 +195,11 @@ public class EditStationFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             return "駅編集";
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

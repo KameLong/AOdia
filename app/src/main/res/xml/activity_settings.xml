@@ -78,23 +78,6 @@
             android:title="当駅どまりを表示" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:enabled="true"
-        android:title="開発者に寄付する">
-        <EditTextPreference
-            android:defaultValue=" "
-            android:enabled="true"
-            android:key="011"
-            android:selectAllOnFocus="false"
-            android:singleLine="false"
-            android:summary="寄付して頂くと開発者が喜びます"
-            android:title="1000円　寄付をする" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="aaa"
-            android:summary="寄付して頂くと開発者が喜びます"
-            android:title="1000円/月　定期的に寄付をする" />
-    </PreferenceCategory>
 
 
 </PreferenceScreen>

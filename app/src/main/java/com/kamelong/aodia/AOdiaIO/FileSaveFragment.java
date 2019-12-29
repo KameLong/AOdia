@@ -23,6 +23,7 @@ import com.kamelong.tool.SDlog;
  * 端末内にファイルを保存するたのFragment
  */
 public class FileSaveFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="FileSaveFragment";
     MainActivity activity;
     LineFile lineFile;
 
@@ -95,6 +96,12 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
 
         }
     }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
+    }
+
     @Override
     public LineFile getLineFile(){
         return lineFile;
