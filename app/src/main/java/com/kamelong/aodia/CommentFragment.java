@@ -33,6 +33,8 @@ AOdia is free software: you can redistribute it and/or modify
  */
 
 public class CommentFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="CommentFragment";
+
     private LineFile lineFile;
     private int fileIndex = 0;
     private View fragmentContainer;
@@ -99,6 +101,11 @@ public class CommentFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             return "コメント";
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
 

@@ -2,6 +2,7 @@ package com.kamelong.aodia;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -26,7 +27,6 @@ import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.menu.MenuFragment;
 import com.kamelong.tool.SDlog;
-import com.kamelong2.aodia.AOdiaActivity;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,10 +36,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
+    public Payment payment=null;
     private AOdia aodiaData=new AOdia(this);
+    private boolean saveLoop=true;
 
     public boolean storagePermission() {
         if (Build.VERSION.SDK_INT < 23) {
@@ -58,6 +61,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        payment=new Payment(this);
         SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
         //メニュー設定
@@ -95,7 +99,7 @@ public class MainActivity extends FragmentActivity {
         createSample();
         //AOdia起動
         aodiaData.openHelp();
-        aodiaData.loadData();
+        aodiaData.loadTempData();
         //メイン画面にあるボタン設定
         findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,13 +119,14 @@ public class MainActivity extends FragmentActivity {
                 aodiaData.killFragment();
             }
         });
+        saveLoop=true;
         //自動保存機能開始
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(saveLoop){
                     try{
-                        Thread.sleep(1000*10);//10秒ごとに保存
+                        Thread.sleep(1000*100);//10秒ごとに保存
                         MainActivity.this.getAOdia().saveData();
 
                     }catch (Exception e){
@@ -132,7 +137,6 @@ public class MainActivity extends FragmentActivity {
         }).start();
         //ストレージ権限があるか確認
         storagePermission();
-
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         final Handler handler=new Handler();
         new Thread(new Runnable() {
@@ -176,6 +180,10 @@ public class MainActivity extends FragmentActivity {
             perm.show();
         }
         initApp();
+        if(savedInstanceState!=null){
+            String fragmentHash=savedInstanceState.getString("fragment");
+            aodiaData.openFragment(fragmentHash);
+        }
     }
     private void initApp(){
         try {
@@ -254,11 +262,25 @@ public class MainActivity extends FragmentActivity {
             e.printStackTrace();
         }
     }
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putString("fragment",aodiaData.getFragmentHash());
+    }
+
 
     @Override
     public void onStop(){
+
+        saveLoop=false;
+        SDlog.log("tempSave onStop");
         aodiaData.saveData();
         super.onStop();
+    }
+    @Override
+    public void onDestroy(){
+        payment.close();
+        super.onDestroy();
     }
 
     @Override
@@ -284,6 +306,25 @@ public class MainActivity extends FragmentActivity {
         }else{
             findViewById(R.id.backFragment).setVisibility(View.INVISIBLE);
 
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == 1001) {
+            if (resultCode == RESULT_OK) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                String month=calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONTH);
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+                pref.edit().putBoolean(month,true).apply();
+
+
+                SDlog.toast("寄付して頂きありがとうございます（カメロング）");
+                    payment.use();
+            } else {
+                SDlog.toast("購入に失敗しました");
+            }
         }
     }
 

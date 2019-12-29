@@ -170,11 +170,7 @@ public class SDlog {
             while ((resChar = isr.read()) != -1) {
                 sb.append((char) resChar);
             }
-            System.out.println(sb.toString());
 
-// 応答コード＆メッセージ
-            System.err.println("【応答コード】 " + con.getResponseCode()
-                    + " " + con.getResponseMessage());
 
             inputStream.close();
             con.disconnect();

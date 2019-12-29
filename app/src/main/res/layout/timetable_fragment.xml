@@ -228,37 +228,7 @@
 
                 </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/frameTrainDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:visibility="invisible">
 
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabTrainDelete"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_gravity="center"
-                        android:layout_margin="0dp"
-                        android:padding="0dp"
-                        app:backgroundTint="@android:color/holo_blue_dark"
-                        app:elevation="0dp"
-                        app:fabSize="normal" />
-
-                    <TextView
-                        android:layout_width="56dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="列車削除"
-                        android:visibility="invisible"
-                        android:textAlignment="center"
-                        android:textColor="#000000"
-                        android:textSize="13dp" />
-
-                </FrameLayout>
 
                 <FrameLayout
                     android:id="@+id/frameShowSecond"
@@ -288,6 +258,30 @@
                         android:textAlignment="center"
                         android:textColor="#000000"
                         android:textSize="13dp" />
+
+                </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/frameFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:visibility="visible">
+
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabFilter"
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp"
+                        android:padding="0dp"
+                        android:src="@drawable/ic_filter_list_black_24dp"
+                        app:backgroundTint="@android:color/holo_blue_dark"
+                        app:elevation="0dp"
+                        app:fabSize="normal" />
+
+
 
                 </FrameLayout>
 
@@ -439,7 +433,7 @@
             android:layout_alignParentBottom="true"
 
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="350dp"
             android:gravity="center_horizontal"
 
             android:visibility="gone">
@@ -464,7 +458,6 @@
                 android:visibility="visible">
 
             </FrameLayout>
-
 
         </RelativeLayout>
     </RelativeLayout>
