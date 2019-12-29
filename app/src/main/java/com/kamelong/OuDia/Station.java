@@ -201,6 +201,9 @@ public class Station implements Cloneable{
             case "Ekimei":
                 name=value;
                 break;
+            case "stationID":
+                stationID=value;
+                break;
             case "EkimeiJikokuRyaku":
                 shortName=value;
                 break;
@@ -498,6 +501,7 @@ public class Station implements Cloneable{
     void saveToFile(PrintWriter out){
         out.println("Eki.");
         out.println("Ekimei="+name);
+        out.println("stationID="+stationID);
         if(shortName.length()!=0){
             out.println("EkimeiJikokuRyaku="+shortName);
         }
@@ -583,6 +587,7 @@ public class Station implements Cloneable{
     void saveToOuDiaFile(PrintWriter out){
         out.println("Eki.");
         out.println("Ekimei="+name);
+        out.println("stationID="+stationID);
         out.println("Ekijikokukeisiki="+getTimeTableStyleOuDia());
         if(bigStation){
             out.println("Ekikibo=Ekikibo_Syuyou");

@@ -435,6 +435,7 @@ public class AOdia {
             try {
                 SDlog.log("tempSave loadTemp");
                 LineFile file = new LineFile(new File(activity.getFilesDir() + "/temp.oud2"));
+                file.setRouteID(new KLdetabase(activity));
                 file.filePath = filePath;
                 lineFiles.add(file);
                 lineFilesIndex.add(file);

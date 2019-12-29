@@ -174,10 +174,14 @@ class StationDialog(private val activity: MainActivity, internal var lineFile: L
                                                 lineFile.reverse()
                                             }
                                             if(this@StationDialog.direction==Train.DOWN){
-
                                             }else{
                                                 lineFile.reverse()
                                             }
+                                            if(direction==Train.DOWN){
+                                            }else{
+                                                lineFile.reverse()
+                                            }
+
 
                                             this@StationDialog.lineFile.addLineFile(this@StationDialog.stationIndex,lineFile)
                                             this@StationDialog.timetable.allTrainChange()

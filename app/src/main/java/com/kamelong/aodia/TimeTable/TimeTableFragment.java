@@ -622,22 +622,24 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         editTrain=null;
         int y = (int) motionEvent.getY();
         int timeTabley = y + findViewById(R.id.trainTimeLinear).getScrollY() - findViewById(R.id.trainNameLinear).getHeight();
-        int station = ((StationNameView) ((LinearLayout) findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
-        if(direction==1){
-            station=lineFile.getStationNum()-station-1;
-        }
-        if (station >= 0 && station < lineFile.getStationNum()) {
-            StationInfoDialog dialog = new StationInfoDialog(getContext(), lineFile, diaIndex, direction, station);
-            dialog.show();
-            dialog.setOnSortListener(new OnSortButtonClickListener() {
-                @Override
-                public void onSortCicked(int stationIndex) {
-                    lineFile.sortTrain(diaIndex, direction, stationIndex);
-                    TimeTableFragment.this.allTrainChange();
+        if(timeTabley>findViewById(R.id.trainTimeLinear).getScrollY()) {
+            int station = ((StationNameView) ((LinearLayout) findViewById(R.id.stationNameLinear)).getChildAt(0)).getStationFromY(timeTabley);
+            if (direction == 1) {
+                station = lineFile.getStationNum() - station - 1;
+            }
+            if (station >= 0 && station < lineFile.getStationNum()) {
+                StationDialog dialog = new StationDialog((MainActivity) getActivity(), lineFile, diaIndex, direction, station, TimeTableFragment.this);
+                dialog.show();
+                dialog.setOnSortListener(new OnSortButtonClickListener() {
+                    @Override
+                    public void onSortCicked(int stationIndex) {
+                        lineFile.sortTrain(diaIndex, direction, stationIndex);
+                        TimeTableFragment.this.allTrainChange();
 
-                }
-            });
-            return true;
+                    }
+                });
+                return true;
+            }
         }
         TimeTableActionDialog dialog=new TimeTableActionDialog(getContext(),lineFile.getDiagram(diaIndex),direction,TimeTableFragment.this);
         dialog.show();

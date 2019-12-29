@@ -818,12 +818,15 @@ public class Train implements Cloneable {
      * @param brunch
      */
     public void addNewStation(int index,boolean brunch){
+        if(this.number.equals("7860")){
+            System.out.println("a");
+
+        }
         StationTime time=new StationTime(this);
         if(brunch){
             if (index > 0 && index < stationTimes.size()) {
                 if (getStopType(index - 1) != STOP_TYPE_NOSERVICE && getStopType(index ) != STOP_TYPE_NOSERVICE) {
                     time.stopType = STOP_TYPE_NOVIA;
-
                 }
             }
 
