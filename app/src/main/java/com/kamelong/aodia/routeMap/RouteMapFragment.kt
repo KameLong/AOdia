@@ -36,6 +36,10 @@ class RouteMapFragment: AOdiaFragmentCustom() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun getHash(): String {
+        return "RouteMapFragment"
+    }
+
 
     override fun getName(): String {
         return "路線図"

@@ -45,6 +45,10 @@ class StationSearchFragment():AOdiaFragmentCustom(){
         stationListView.adapter=stationListAdapter
     }
 
+    override fun getHash(): String {
+        return "StationSearchFragment"
+    }
+
     override fun getName(): String {
         return "検索"
     }

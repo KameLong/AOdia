@@ -15,6 +15,11 @@ class SearchFragment : AOdiaFragmentCustom() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun getHash(): String {
+        return "SearchFragment"
+    }
+
     override fun getLineFile(): LineFile?{
         return null
     }
