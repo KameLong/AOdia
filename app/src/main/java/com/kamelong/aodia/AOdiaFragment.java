@@ -7,6 +7,7 @@ import com.kamelong.OuDia.LineFile;
 public interface AOdiaFragment{
     @NonNull
     String getName();
+    String getHash();
 
     /**
      * このFragmentで使われているLineFileを返します。

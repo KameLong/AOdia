@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AOdia.iml" filepath="$PROJECT_DIR$/AOdia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/AOdia-app.iml" filepath="$PROJECT_DIR$/app/AOdia-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProgramingProject-AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProject-AOdia.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

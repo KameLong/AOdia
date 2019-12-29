@@ -1,26 +1,45 @@
 package com.kamelong.aodia.TimeTable;
 
 import android.content.Context;
+import android.gesture.Gesture;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.tool.SDlog;
 
-public class TrainTimeView extends TimeTableDefaultView {
+public class TrainTimeView extends TimeTableDefaultView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     private LineFile lineFile;
     private Train train;
     public int direct=0;
+    private GestureDetector gesture;
+    private TimeTableFragment fragment;
 
-   public TrainTimeView(Context context, TimeTableOptions options, LineFile lineFile, Train train, int direct){
+   public TrainTimeView(Context context, TimeTableOptions options, LineFile lineFile, Train train, int direct,TimeTableFragment fragment){
         super(context,options);
         this.lineFile =lineFile;
         this.direct=direct;
         this.train=train;
+        this.gesture=new GestureDetector(context,this);
+        this.fragment=fragment;
+
+
+
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+//        this.gesture.onTouchEvent(event);
+
+        return false;
+    }
+
 
     protected int getXsize(){
        return options.getTrainWidth()*textSize/2;
@@ -165,6 +184,10 @@ public class TrainTimeView extends TimeTableDefaultView {
         canvas.drawLine(getWidth()-1,0,getWidth()-1,getHeight(),blackPaint);
 
     }
+
+    /**
+     * Viewの高さを返す
+     */
     public int getYsize(){
         int startLine=0;
         if(options.showStartStation){
@@ -387,4 +410,55 @@ public class TrainTimeView extends TimeTableDefaultView {
        }
     }
 
+//    このViewに帯するgesture
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        fragment.onDown(e);
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+//        fragment.onSingleTapUp(e);
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        fragment.onScroll(e1,e2,distanceX,distanceY);
+
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+        SDlog.log("onLongPress");
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        fragment.onFling(e1,e2,velocityX,velocityY);
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return true;
+    }
 }

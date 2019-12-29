@@ -62,7 +62,6 @@ public class DiagramView extends DiagramDefaultView{
 
     public LineFile lineFile;
     public Diagram timeTable;
-    public int lineIndex=0;
     public int diaIndex =0;
     public ArrayList<Integer>stationTime;
     private boolean onlySolid=false;
@@ -94,7 +93,7 @@ public class DiagramView extends DiagramDefaultView{
         }
 
     }
-private void makeDiagramPath(Train train,int direct,int trainIndex){
+public void makeDiagramPath(Train train,int direct,int trainIndex){
     //この列車のdiagramPath
     ArrayList<Integer> trainPath=new ArrayList<Integer>();
     ArrayList<Integer> trainStopMark=new ArrayList<Integer>();
@@ -247,7 +246,7 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
     /**
      * diagramPathを作成する
      */
-    private void makeDiagramPath(){
+    public void makeDiagramPath(){
         //makeDiagramData
         diagramPath[0]=new  ArrayList<ArrayList<Integer>>();
         diagramPath[1]=new  ArrayList<ArrayList<Integer>>();
@@ -709,7 +708,7 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
             if(focsTrain!=(lineFile.getTrain(diaIndex,minTrainDirect,minTrainNum))){
                 focsTrain=lineFile.getTrain(diaIndex,minTrainDirect,minTrainNum);
                 this.invalidate();
-                openTrainEdit(focsTrain);
+                options.fragment.openTrainEdit(focsTrain);
             }else{
                 focsTrain=null;
                 this.invalidate();
@@ -719,42 +718,6 @@ private void makeDiagramPath(Train train,int direct,int trainIndex){
             SDlog.log(e);
         }
    }
-    /**
-     * 列車編集画面を表示する
-     */
-    private void openTrainEdit(Train train){
-        final int trainIndex=lineFile.getDiagram(diaIndex).getTrainIndex(train);
-        activity.findViewById(R.id.bottomContents2).setVisibility(View.VISIBLE);
-        TrainTimeEditFragment fragment=new TrainTimeEditFragment();
-        Bundle args=new Bundle();
-        args.putInt(AOdia.FILE_INDEX, lineIndex);
-        args.putInt(AOdia.DIA_INDEX, diaIndex);
-        args.putInt(AOdia.DIRECTION, train.direction);
-        args.putInt(AOdia.TRAIN_INDEX, trainIndex);
-        fragment.setArguments(args);
-        fragment.setOnTrainChangeListener(new OnTrainChangeListener() {
-            @Override
-            public void trainChanged(Train train) {
-                makeDiagramPath(train,train.direction,timeTable.getTrainIndex(train));
-                invalidate();
-
-            }
-
-            @Override
-            public void allTrainChange() {
-                makeDiagramPath();
-                invalidate();
-
-            }
-
-        });
-
-        FragmentManager fragmentManager=((MainActivity)getContext()).getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.bottomContents,fragment);
-        fragmentTransaction.commit();
-
-    }
     /**
      * onMesureをオーバーライドすることで
      * このViewのサイズを設定する

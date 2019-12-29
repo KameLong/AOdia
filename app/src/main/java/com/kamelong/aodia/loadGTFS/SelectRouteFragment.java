@@ -30,6 +30,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class SelectRouteFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="SelectRouteFragment";
 
     String zipFileName=null;
     String tempPath=null;
@@ -181,6 +182,11 @@ public class SelectRouteFragment extends AOdiaFragmentCustom {
     @Override
     public String getName() {
         return "";
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

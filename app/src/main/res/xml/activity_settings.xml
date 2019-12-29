@@ -77,4 +77,7 @@
             android:summary="当駅どまりの列車を表示します"
             android:title="当駅どまりを表示" />
     </PreferenceCategory>
+
+
+
 </PreferenceScreen>

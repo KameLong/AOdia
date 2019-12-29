@@ -5,6 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.preference.PreferenceManager;
@@ -13,6 +14,7 @@ import android.view.View;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 
 import java.util.ArrayList;
@@ -130,6 +132,20 @@ public class TimeTableOptions {
                 fragment.invalidate();
             }
         });
+        this.container.findViewById(R.id.fabFilter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TrainTypeFilter dialog=new TrainTypeFilter((MainActivity) activity,fragment.getLineFile(),fragment);
+                dialog.show();
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        fragment.allTrainChange();
+                    }
+                });
+            }
+        });
+
         //編集
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabTrainEdit),trainEdit);
         if (trainEdit) {
@@ -189,7 +205,7 @@ public class TimeTableOptions {
             addAnimation(animatorList, container.findViewById(R.id.frameShowTrainName), 0, -2 * fabSize, 0, 0, 0, 1);
             addAnimation(animatorList, container.findViewById(R.id.frameStartEnd), 0, -fabSize, 0, 0, 0, 1);
             addAnimation(animatorList, container.findViewById(R.id.frameShowRemark), 0, 0, 0, 0, 0, 1);
-            addAnimation(animatorList, container.findViewById(R.id.frameTrainDelete), 0, 0, 0, -fabSize, 0, 1);
+            addAnimation(animatorList, container.findViewById(R.id.frameFilter), 0, 0, 0, -fabSize, 0, 1);
             if(trainEdit){
                 addAnimation(animatorList, container.findViewById(R.id.frameTrainCopy), 0, -2*fabSize, 0, -3*fabSize, 0, 1);
                 addAnimation(animatorList, container.findViewById(R.id.frameTrainPaste), 0, -1*fabSize, 0, -3*fabSize, 0, 1);
@@ -220,7 +236,7 @@ public class TimeTableOptions {
             addAnimation(animatorList, container.findViewById(R.id.frameShowTrainName), -2 * fabSize, 0, 0, 0, 1, 0);
             addAnimation(animatorList, container.findViewById(R.id.frameStartEnd), -fabSize, 0, 0, 0, 1, 0);
             addAnimation(animatorList, container.findViewById(R.id.frameShowRemark), 0, 0, 0, 0, 1, 0);
-            addAnimation(animatorList, container.findViewById(R.id.frameTrainDelete), 0, 0, -fabSize, 0, 1, 0);
+            addAnimation(animatorList, container.findViewById(R.id.frameFilter), 0, 0, -fabSize, 0, 1, 0);
             if(trainEdit) {
                 addAnimation(animatorList, container.findViewById(R.id.frameTrainCopy), -2 * fabSize, 0, -3 * fabSize, 0, 1, 0);
                 addAnimation(animatorList, container.findViewById(R.id.frameTrainPaste), -1 * fabSize, 0, -3 * fabSize, 0, 1, 0);

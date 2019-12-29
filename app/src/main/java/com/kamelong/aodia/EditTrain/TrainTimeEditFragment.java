@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -41,7 +42,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         return (MainActivity)getActivity();
     }
     public <T extends View> T findViewById(int id){
-        return getActivity().findViewById(id);
+        return fragmentContainer.findViewById(id);
     }
 
     @Override
@@ -54,6 +55,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
             diaNumber = bundle.getInt(AOdia.DIA_INDEX);
             int direction = bundle.getInt(AOdia.DIRECTION);
             int trainNum = bundle.getInt(AOdia.TRAIN_INDEX);
+
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
             train = lineFile.getTrain(diaNumber, direction, trainNum);
 
@@ -280,11 +282,15 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         (findViewById(R.id.editSubmit)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findViewById(R.id.bottomContents2).setVisibility(GONE);
-                if(trainChangeListener!=null){
-                    trainChangeListener.allTrainChange();
+                try {
+                    getActivity().findViewById(R.id.bottomContents2).setVisibility(GONE);
+                    if (trainChangeListener != null) {
+                        trainChangeListener.allTrainChange();
+                    }
+                    getMainActivity().getSupportFragmentManager().beginTransaction().remove(TrainTimeEditFragment.this).commit();
+                }catch (Exception e){
+                    SDlog.log(e);
                 }
-                getMainActivity().getSupportFragmentManager().beginTransaction().remove(TrainTimeEditFragment.this).commit();
 
 
 
@@ -374,13 +380,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            EditTimeView2 editText=fragmentContainer.findViewById(R.id.editTimeLayout);
+            EditTimeView2 editText=findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
             init();
             initTimeView();
-
-
-
             nessTimeCreate();
 
 //            final EditText operationName = (EditText) findViewById(R.id.operationName);

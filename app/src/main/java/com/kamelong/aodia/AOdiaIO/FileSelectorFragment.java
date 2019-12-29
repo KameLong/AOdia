@@ -23,6 +23,8 @@ import com.kamelong.tool.SDlog;
  */
 public class FileSelectorFragment extends AOdiaFragmentCustom {
     MainActivity activity;
+    public static final String FRAGMENT_NAME="FileSelectorFragment";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,6 +78,12 @@ public class FileSelectorFragment extends AOdiaFragmentCustom {
     public String getName() {
         return "ファイル選択";
     }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
+    }
+
     @Override
     public LineFile getLineFile(){
         return null;

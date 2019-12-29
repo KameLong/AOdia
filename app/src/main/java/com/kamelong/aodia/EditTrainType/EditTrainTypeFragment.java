@@ -19,6 +19,8 @@ import com.kamelong.tool.SDlog;
 import java.util.ArrayList;
 
 public class EditTrainTypeFragment extends AOdiaFragmentCustom {
+    public static final String FRAGMENT_NAME="EditTrainTypeFragment";
+
     int fileIndex;
     LineFile lineFile;
     View fragmentContainer;
@@ -157,6 +159,11 @@ public class EditTrainTypeFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             return "列車種別";
         }
+    }
+
+    @Override
+    public String getHash() {
+        return FRAGMENT_NAME;
     }
 
     @Override

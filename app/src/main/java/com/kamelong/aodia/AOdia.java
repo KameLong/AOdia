@@ -2,8 +2,11 @@ package com.kamelong.aodia;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.OuDia.Station;
@@ -32,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -217,6 +221,20 @@ public class AOdia {
         args.putInt(DIRECTION, direction);
         fragment.setArguments(args);
         openFragment(fragment);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        String month=calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONTH);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        if(!pref.getBoolean(month,false)){
+            if(activity.payment.buyCheck("010")||activity.payment.buyCheck("012")){
+                //pass
+            }else{
+                openPay2Fragment();
+            }
+        }
+
+
     }
 
     public void openTimeTable(LineFile lineFile, int diaIndex, int direction, int trainIndex) {
@@ -292,6 +310,11 @@ public class AOdia {
     public void openHelp(){
         HelpFragment fragment=new HelpFragment();
         openFragment(fragment);
+    }
+    public void openUserHelp(){
+        Uri uri = Uri.parse("http://kamelong.com/aodia/helpWiki/?%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%83%98%E3%83%AB%E3%83%97");
+        Intent i = new Intent(Intent.ACTION_VIEW,uri);
+        activity.startActivity(i);
     }
 
     public void openSetting() {
@@ -404,12 +427,13 @@ public class AOdia {
         }
     }
 
-    public void loadData(){
+    public void loadTempData(){
 
         SharedPreferences preferences=activity.getSharedPreferences("files", Context.MODE_PRIVATE);
         String filePath=preferences.getString("tempFilePath","");
         if(filePath.length()>0) {
             try {
+                SDlog.log("tempSave loadTemp");
                 LineFile file = new LineFile(new File(activity.getFilesDir() + "/temp.oud2"));
                 file.filePath = filePath;
                 lineFiles.add(file);
@@ -425,6 +449,14 @@ public class AOdia {
             }
         }
     }
+    public void openPayFragment(){
+        PayFragment fragment = new PayFragment();
+        openFragment(fragment);
+    }
+    public void openPay2Fragment(){
+        Pay2Fragment fragment = new Pay2Fragment();
+        openFragment(fragment);
+    }
 
     public void saveData(){
 
@@ -434,6 +466,9 @@ public class AOdia {
             return;
         }
         LineFile file=lineFilesIndex.get(0);
+        if(fragmentList.get(fragmentIndex).getLineFile()!=null){
+            file=fragmentList.get(fragmentIndex).getLineFile();
+        }
         String fileName=activity.getFilesDir() + "/temp2.oud2";
 
         try {
@@ -444,6 +479,8 @@ public class AOdia {
             File newFile=new File(activity.getFilesDir() + "/temp2.oud2");
             oldFile.delete();
             newFile.renameTo(oldFile);
+            SDlog.log("tempSave endSave");
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -474,6 +511,51 @@ public class AOdia {
 
     }
 
+
+    public String getFragmentHash(){
+        if(fragmentIndex>=0&&fragmentIndex<fragmentList.size()){
+            return fragmentList.get(fragmentIndex).getHash();
+        }
+        return "";
+    }
+    public void openFragment(String fragmentHash){
+        String[] hash=fragmentHash.split("-");
+        if(lineFiles.size()==0){
+            return;
+        }
+        if(hash.length>0){
+            switch(hash[0]){
+                case TimeTableFragment.FRAGMENT_NAME:
+                    if(hash.length>=3){
+                        final int diaIndex=Integer.parseInt(hash[1]);
+                        final int direction=Integer.parseInt(hash[2]);
+                        if(lineFiles.get(0).getDiagramNum()>diaIndex){
+                            openTimeTable(lineFiles.get(0),diaIndex,direction);
+                        }
+                    }
+                    break;
+                case DiagramFragment.FRAGMENT_NAME:
+                    if(hash.length>=2){
+                        final int diaIndex=Integer.parseInt(hash[1]);
+                        if(lineFiles.get(0).getDiagramNum()>diaIndex){
+                            openDiagram(lineFiles.get(0),diaIndex);
+                        }
+                    }
+                    break;
+                case StationTimeTableFragment.FRAGMENT_NAME:
+                    if(hash.length>=4){
+                        final int diaIndex=Integer.parseInt(hash[1]);
+                        final int direction=Integer.parseInt(hash[2]);
+                        final int station=Integer.parseInt(hash[3]);
+                        if(lineFiles.get(0).getDiagramNum()>diaIndex&&lineFiles.get(0).getStationNum()>station){
+                            openStationTimeTable(lineFiles.get(0),diaIndex,direction,station);
+                        }
+                    }
+                    break;
+
+            }
+        }
+    }
 
 
 
