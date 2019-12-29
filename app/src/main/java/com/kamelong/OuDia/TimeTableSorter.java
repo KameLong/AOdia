@@ -2,7 +2,9 @@ package com.kamelong.OuDia;
 
 import com.kamelong2.aodia.SDlog;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /*
@@ -23,6 +25,7 @@ public class TimeTableSorter {
     private ArrayList<Integer> sortBefore;
     private ArrayList<Integer> sortAfter;
     boolean[] sorted;
+    int loopNum=0;
 
     /**
      * ソートする時刻表を入力します。
@@ -116,30 +119,41 @@ public class TimeTableSorter {
      * @param stationIndex ソート基準時刻
      */
     public ArrayList<Train> sort(int stationIndex){
-        for (int i = 0; i < sortBefore.size(); i++) {
-            if (trainList[sortBefore.get(i)].getPredictionTime(stationIndex) > 0 && !trainList[sortBefore.get(i)].checkDoubleDay()) {
-                //今からsortAfterに追加する列車の基準駅の時間
-                int baseTime = trainList[sortBefore.get(i)].getPredictionTime(stationIndex);
-                int j;
-                for (j = sortAfter.size(); j > 0; j--) {
-                    if (trainList[sortAfter.get(j - 1)].getPredictionTime(stationIndex) < baseTime) {
-                        break;
+        ArrayList<Train> result = new ArrayList<>();
+
+        try {
+            loopNum = 0;
+            for (int i = 0; i < sortBefore.size(); i++) {
+                if (trainList[sortBefore.get(i)].getPredictionTime(stationIndex) > 0 && !trainList[sortBefore.get(i)].checkDoubleDay()) {
+                    //今からsortAfterに追加する列車の基準駅の時間
+                    int baseTime = trainList[sortBefore.get(i)].getPredictionTime(stationIndex);
+                    int j;
+                    for (j = sortAfter.size(); j > 0; j--) {
+                        if (trainList[sortAfter.get(j - 1)].getPredictionTime(stationIndex) < baseTime) {
+                            break;
+                        }
                     }
+                    sortAfter.add(j, sortBefore.get(i));
+                    sortBefore.remove(i);
+                    i--;
                 }
-                sortAfter.add(j, sortBefore.get(i));
-                sortBefore.remove(i);
-                i--;
             }
+            sorted[stationIndex] = true;
+            if (direction == Train.DOWN) {
+                sortDown(stationIndex);
+            } else {
+                sortUp(stationIndex);
+            }
+            sortAfter.addAll(sortBefore);
+            for (int i : sortAfter) {
+                result.add(trainList[i]);
+            }
+            return result;
+        }catch (Exception e){
+            SDlog.log(e);
         }
-        sorted[stationIndex]=true;
-        if(direction==Train.DOWN){
-            sortDown(stationIndex);
-        }else{
-            sortUp(stationIndex);
-        }
-        sortAfter.addAll(sortBefore);
-        ArrayList<Train>result=new ArrayList<>();
-        for(int i:sortAfter){
+        result=new ArrayList<>();
+        for (int i : sortBefore) {
             result.add(trainList[i]);
         }
         return result;
@@ -148,8 +162,12 @@ public class TimeTableSorter {
     /**
      * 路線内を上り方向に探索していきます。
      */
-    public void sortUp(int stationIndex){
-        try {
+    public void sortUp(int stationIndex)throws Exception{
+        loopNum++;
+        if(loopNum>50){
+            SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
+            throw new Exception("並び替えエラー："+lineFile.name);
+        }
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
 
@@ -224,19 +242,20 @@ public class TimeTableSorter {
             for (int i = 0; i < lineFile.getStationNum(); i++) {
                 if (!sorted[i]) {
                     sortDown(0);
-                    break;
+
+                    return;
                 }
             }
-        }catch (Exception e){
-            SDlog.log(e);
-            SDlog.toast("スタックがオーバーフローしました。この時刻表の並び替えはできません");
-        }
     }
     /**
      * 路線内を下り方向に探索していきます。
      */
-    public void sortDown(int stationIndex){
-        try {
+    public void sortDown(int stationIndex)throws Exception{
+        loopNum++;
+        if(loopNum>50){
+            SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
+            throw new Exception("並び替えエラー："+lineFile.name);
+        }
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
 
@@ -313,10 +332,6 @@ public class TimeTableSorter {
                     break;
                 }
             }
-        }catch (Exception e){
-            SDlog.log(e);
-            SDlog.toast("スタックがオーバーフローしました。この時刻表の並び替えはできません");
-        }
     }
     /**
      * 列車をsortAfterに時刻前方から挿入する
