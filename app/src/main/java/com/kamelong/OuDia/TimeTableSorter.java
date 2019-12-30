@@ -1,6 +1,6 @@
 package com.kamelong.OuDia;
 
-import com.kamelong2.aodia.SDlog;
+import com.kamelong.tool.SDlog;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -150,11 +150,12 @@ public class TimeTableSorter {
             }
             return result;
         }catch (Exception e){
+//            SDlog.toast(e.toString());
             SDlog.log(e);
         }
         result=new ArrayList<>();
-        for (int i : sortBefore) {
-            result.add(trainList[i]);
+        for(Train train :trainList){
+            result.add(train);
         }
         return result;
     }
@@ -164,7 +165,7 @@ public class TimeTableSorter {
      */
     public void sortUp(int stationIndex)throws Exception{
         loopNum++;
-        if(loopNum>50){
+        if(loopNum>20){
             SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
             throw new Exception("並び替えエラー："+lineFile.name);
         }
@@ -252,7 +253,7 @@ public class TimeTableSorter {
      */
     public void sortDown(int stationIndex)throws Exception{
         loopNum++;
-        if(loopNum>50){
+        if(loopNum>20){
             SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
             throw new Exception("並び替えエラー："+lineFile.name);
         }
