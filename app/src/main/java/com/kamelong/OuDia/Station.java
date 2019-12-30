@@ -408,16 +408,16 @@ public class Station implements Cloneable{
 
     private String getTimeTableStyleOuDia(){
         int result=0;
-        if(showArrival[1]){
+        if(showArrivalCustom[1]){
             result+=8;
         }
-        if(showDeparture[1]){
+        if(showDepartureCustom[1]){
             result+=4;
         }
-        if(showArrival[0]){
+        if(showArrivalCustom[0]){
             result+=2;
         }
-        if(showDeparture[0]){
+        if(showDepartureCustom[0]){
             result+=1;
         }
         switch (result){

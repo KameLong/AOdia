@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import static com.kamelong.OuDia.StationTime.STOP_TYPE_NOSERVICE;
 import static com.kamelong.OuDia.StationTime.STOP_TYPE_NOVIA;
 import static com.kamelong.OuDia.StationTime.STOP_TYPE_PASS;
+import static com.kamelong.OuDia.StationTime.STOP_TYPE_STOP;
 /*
  * Copyright (c) 2019 KameLong
  * contact:kamelong.com
@@ -710,16 +711,24 @@ public class Train implements Cloneable {
      */
     public void conbine(Train other){
         int endStation=this.getEndStation();
+        int startStation=other.getStartStation();
         if(direction==0){
-            for(int i=endStation+1;i<getStationNum();i++){
+            for(int i=startStation+1;i<getStationNum();i++){
                 stationTimes.set(i,other.stationTimes.get(i).clone(this));
             }
         }else{
-            for(int i=0;i<endStation;i++){
+            for(int i=0;i<startStation;i++){
                 stationTimes.set(i,other.stationTimes.get(i).clone(this));
             }
         }
-        setDepTime(endStation,other.getDepTime(endStation));
+        if(startStation==endStation) {
+            setDepTime(endStation, other.getDepTime(endStation));
+        }else{
+            for(int i=startStation+1;i<endStation;i++){
+                setStopType(i,STOP_TYPE_NOVIA);
+            }
+
+        }
     }
 
     /**
@@ -907,6 +916,10 @@ public class Train implements Cloneable {
             stationTimes.get(station).afterOperations.get(0).time1=time;
 
 
+    }
+
+    public boolean stopOrPass(int stationIndex){
+        return getStopType(stationIndex)==STOP_TYPE_STOP||getStopType(stationIndex)==STOP_TYPE_PASS;
     }
 
 

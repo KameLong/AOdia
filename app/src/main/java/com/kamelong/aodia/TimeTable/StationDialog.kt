@@ -126,9 +126,6 @@ class StationDialog(private val activity: MainActivity, internal var lineFile: L
                 val connectList=ArrayList<RouteView.ConnectLine>()
                 for(route in routeList){
                     if(route.routeID.length==6){
-                        if(route.routeID.substring(0,5)==lineFile.routeID){
-                            continue
-                        }
                     }
                     val startStation=database.getStartStation(route.routeID)
                     val endStation=database.getEndStation(route.routeID)
