@@ -80,7 +80,7 @@ class Pay2Fragment : AOdiaFragmentCustom() {
         return "開発者に寄付をする"
     }
 
-    override fun getLineFile(): LineFile {
-        return lineFile!!
+    override fun getLineFile(): LineFile? {
+        return null
     }
 }
