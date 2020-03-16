@@ -4,8 +4,6 @@
     android:layout_height="500dp"
     android:orientation="vertical"
     android:padding="20dip">
-
-
     <TextView
         android:id="@+id/stationNameView"
         android:layout_width="match_parent"
@@ -14,11 +12,9 @@
         android:text=""
         android:textColor="@android:color/black"
         android:textSize="24sp" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <Button
             android:id="@+id/beforeStationButton"
             android:layout_width="wrap_content"
@@ -82,22 +78,20 @@
 
         </LinearLayout>
     </LinearLayout>
-
     <TextView
         android:id="@+id/textView25"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:text="接続路線一覧" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:visibility="invisible"
             android:id="@+id/connectLines"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>
-
-
 </LinearLayout>

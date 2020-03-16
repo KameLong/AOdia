@@ -2,21 +2,30 @@ package com.kamelong.aodia.EditTrain;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
 
+//時刻入力のView
 public class EditTimeView2 extends LinearLayout {
+    //イベントリスナー
+    private OnCloseEditTimeView2 onCloseEditTimeView2=null;
+    //時刻変更する列車
     private Train train=null;
+    //時刻変更する駅
     private int stationIndex=0;
+    //到着or発車
     private int AD=0;
     private OnTrainChangeListener trainChangeListener =null;
     public EditTimeView2(Context context) {
@@ -30,16 +39,21 @@ public class EditTimeView2 extends LinearLayout {
     public EditTimeView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.trainedit_edit_time, this);
-        //閉じるボタン
+        ((EditText)findViewById(R.id.editTime)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_NEXT){
+                    submitTime();
+                    return true;
+                }
+                return false;
+            }
+        });
+        //閉じるボタンが押されたとき
         findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                int time=timeString2Int(((EditText)findViewById(R.id.editTime)).getEditableText().toString());
-                train.setTime(stationIndex,AD,time);
-                if(trainChangeListener!=null){
-                    trainChangeListener.trainChanged(train);
-                }
-                EditTimeView2.this.setVisibility(GONE);
+                submitTime();
             }
         });
         //時刻編集
@@ -262,6 +276,25 @@ public class EditTimeView2 extends LinearLayout {
     }
     public void setOnTrainChangedLister(OnTrainChangeListener listener){
         trainChangeListener =listener;
+    }
+
+    /**
+     * 入力時刻を決定する
+     */
+    private void submitTime(){
+        int time=timeString2Int(((EditText)findViewById(R.id.editTime)).getEditableText().toString());
+        train.setTime(stationIndex,AD,time);
+        if(trainChangeListener!=null){
+            trainChangeListener.trainChanged(train);
+        }
+        this.setVisibility(GONE);
+        if(onCloseEditTimeView2!=null){
+            onCloseEditTimeView2.onClosed();
+        }
+
+    }
+    public void setOnCloseEditTimeView2(OnCloseEditTimeView2 listener){
+        onCloseEditTimeView2=listener;
     }
 
 }

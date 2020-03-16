@@ -93,7 +93,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
 
-            layout.addView(searchView);
+//            layout.addView(searchView);
 
             Button routeMap = new Button(activity);
             routeMap.setText("路線図");
@@ -106,7 +106,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
 
                 }
             });
-            layout.addView(routeMap);
+//            layout.addView(routeMap);
 
 
 

@@ -2,6 +2,10 @@ package com.kamelong.aodia.EditTrain;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 
@@ -11,11 +15,9 @@ public class EditTimeView extends LabelView {
     public EditTimeView(Context context,int time) {
         super(context);
         this.setText(timeInt2String(time));
-//        this.setTextColor(Color.BLACK);
         this.setTextSize(15);
 
         setPadding(10, 5, 10, 5);
-//        setGravity(Gravity.CENTER_VERTICAL);
 
         this.setHeight((int)(HEIGHT));
     }

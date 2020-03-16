@@ -95,11 +95,6 @@ public class LabelView extends View {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // ビューの幅を求める
-
-        // ビューの高さを求める
-
-        // ビューのサイズをセットする
         this.setMeasuredDimension( this.measureWidth(widthMeasureSpec), (int)(height* getResources().getDisplayMetrics().density));
     }
 

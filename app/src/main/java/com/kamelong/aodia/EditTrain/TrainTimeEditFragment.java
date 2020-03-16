@@ -1,5 +1,6 @@
 package com.kamelong.aodia.EditTrain;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -332,11 +333,22 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
             depTime.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    for(int stationIndex=0;stationIndex<lineFile.getStationNum();stationIndex++){
+                        departureTimeLayout.getChildAt(stationIndex).setBackgroundColor(Color.WHITE);
+                        arrivalTimeLayout.getChildAt(stationIndex).setBackgroundColor(Color.WHITE);
+                    }
                     EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
                     editText.setOnTrainChangedLister(TrainTimeEditFragment.this);
                     editText.setVisibility(VISIBLE);
                     editText.setValues(train,stationIndex,0);
+                    editText.setOnCloseEditTimeView2(new OnCloseEditTimeView2() {
+                        @Override
+                        public void onClosed() {
+                            v.setBackgroundColor(Color.WHITE);
+                        }
+                    });
                     ((MainActivity)getContext()).findViewById(R.id.editTimeLayout).setVisibility(VISIBLE);
+                    v.setBackgroundColor(Color.YELLOW);
                 }
             });
             departureTimeLayout.addView(depTime);

@@ -822,18 +822,15 @@ public class Train implements Cloneable {
     }
 
     /**
-     * 分岐で経由なしを用いる場合はbrunch=true
-     * @param index
-     * @param brunch
+     * 分岐駅で経由なしを用いる場合はbrunch=true
+     * index:挿入する駅index
      */
     public void addNewStation(int index,boolean brunch){
-        if(this.number.equals("7860")){
-            System.out.println("a");
-
-        }
+        //追加する駅時刻
         StationTime time=new StationTime(this);
         if(brunch){
             if (index > 0 && index < stationTimes.size()) {
+                //挿入駅の前後がNOSERVICEではない時
                 if (getStopType(index - 1) != STOP_TYPE_NOSERVICE && getStopType(index ) != STOP_TYPE_NOSERVICE) {
                     time.stopType = STOP_TYPE_NOVIA;
                 }
