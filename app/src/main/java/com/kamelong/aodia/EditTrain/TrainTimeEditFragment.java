@@ -290,36 +290,13 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
             }
         });
     }
-    private void initTimeView(){
+    private void initDepAtiTimeView() {
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
-        final LinearLayout stopTimeLayout = findViewById(R.id.stopTimeLayout);
-        final LinearLayout stopTypeLayout = findViewById(R.id.stopTypeLayout);
-        final LinearLayout stopNumberLayout = findViewById(R.id.stopNumerLayout);
-        final LinearLayout stationNameLayout= findViewById(R.id.stationNameLayout);
-
         departureTimeLayout.removeAllViews();
         arrivalTimeLayout.removeAllViews();
-        stopTypeLayout.removeAllViews();
-        stopTimeLayout.removeAllViews();
-        stopNumberLayout.removeAllViews();
-        stationNameLayout.removeAllViews();
-
         for (int i = 0; i < lineFile.getStationNum(); i++) {
-            final int stationIndex=train.getStationIndex(i);
-
-            //駅名
-            TextView stationNameView = new StationNameTextView(getMainActivity(), lineFile.getStation(stationIndex).name, stationIndex);
-            stationNameView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    TrainEditDialog dialog=new TrainEditDialog(getContext(),lineFile.getDiagram(diaNumber),train,stationIndex,TrainTimeEditFragment.this);
-                    dialog.show();
-                }
-            });
-
-            stationNameLayout.addView(stationNameView);
-
+            final int stationIndex = train.getStationIndex(i);
             //発車時刻
             TimeView depTime = new TimeView(getMainActivity(),  train.getDepTime(stationIndex));
             depTime.setOnClickListener(new View.OnClickListener() {
@@ -371,6 +348,35 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
                 }
             });
             arrivalTimeLayout.addView(ariTime);
+
+        }
+    }
+    private void initStopTimeView(){
+        final LinearLayout stopTimeLayout = findViewById(R.id.stopTimeLayout);
+        final LinearLayout stopTypeLayout = findViewById(R.id.stopTypeLayout);
+        final LinearLayout stopNumberLayout = findViewById(R.id.stopNumerLayout);
+        final LinearLayout stationNameLayout= findViewById(R.id.stationNameLayout);
+
+        stopTypeLayout.removeAllViews();
+        stopTimeLayout.removeAllViews();
+        stopNumberLayout.removeAllViews();
+        stationNameLayout.removeAllViews();
+
+        for (int i = 0; i < lineFile.getStationNum(); i++) {
+            final int stationIndex=train.getStationIndex(i);
+
+            //駅名
+            TextView stationNameView = new StationNameTextView(getMainActivity(), lineFile.getStation(stationIndex).name, stationIndex);
+            stationNameView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TrainEditDialog dialog=new TrainEditDialog(getContext(),lineFile.getDiagram(diaNumber),train,stationIndex,TrainTimeEditFragment.this);
+                    dialog.show();
+                }
+            });
+
+            stationNameLayout.addView(stationNameView);
+
             TimeView stopTime=null;
             //発着時刻
             if (train.timeExist(stationIndex,0) && train.timeExist(stationIndex,1)) {
@@ -399,7 +405,8 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
             EditTimeView editText=findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
             init();
-            initTimeView();
+            initDepAtiTimeView();
+            initStopTimeView();
             nessTimeCreate();
 
 //            final EditText operationName = (EditText) findViewById(R.id.operationName);
@@ -480,33 +487,33 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         }
         betweenStationTimeLayout.removeAllViews();
         int size = 0;
-        int depTime = -1;
+        int time = -1;
         BetweenTimeView nessTime=null;
         for (int i = 0; i < lineFile.getStationNum(); i++) {
             nessTime=null;
             int stationIndex = train.getStationIndex(i);
             size++;
             if (train.timeExist(stationIndex,1)) {
-                if (depTime >= 0) {
-                    nessTime = new BetweenTimeView(getMainActivity(), train.getAriTime(stationIndex) - depTime,  size);
+                if (time >= 0) {
+                    nessTime = new BetweenTimeView(getMainActivity(), train.getAriTime(stationIndex) - time,  size);
                 }
-                depTime = -1;
+                time = train.getAriTime(stationIndex);
                 size = 0;
-            }
-            if (train.timeExist(stationIndex,0)) {
-                if (depTime >= 0) {
-                    nessTime = new BetweenTimeView(getMainActivity(), train.getDepTime(stationIndex) - depTime, size);
+            }else if (train.timeExist(stationIndex,0)) {
+                if (time >= 0) {
+                    nessTime = new BetweenTimeView(getMainActivity(), train.getDepTime(stationIndex) - time, size);
                 } else {
                     if (size != 0) {
                         nessTime = new BetweenTimeView(getMainActivity(), -1, size - 1);
                     }
                 }
-                depTime = train.getDepTime(stationIndex);
+            }
+            if (train.timeExist(stationIndex,0)) {
+                time = train.getDepTime(stationIndex);
                 size = 0;
             }
             if(nessTime!=null) {
                 betweenStationTimeLayout.addView(nessTime);
-
             }
 
         }
@@ -539,18 +546,21 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
         if(AD==Train.DEPART){
-            ((EditTimeView)departureTimeLayout.getChildAt(station)).setValues(train,station,AD);
+            ((TimeView)departureTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
         }else{
-            ((EditTimeView)arrivalTimeLayout.getChildAt(station)).setValues(train,station,AD);
-
+            ((TimeView)arrivalTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
         }
+        initStopTimeView();
+        nessTimeCreate();
     }
 
     @Override
     public void trainChanged(Train train) {
         init();
-        initTimeView();
+        initDepAtiTimeView();
+        initStopTimeView();
         nessTimeCreate();
+
 
     }
 

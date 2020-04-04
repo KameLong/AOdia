@@ -5,11 +5,11 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.kamelong.aodia3"
+        applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 333
-        versionName "3.3.3"
+        versionCode 337
+        versionName "3.3.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

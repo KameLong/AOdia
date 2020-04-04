@@ -13,9 +13,10 @@ import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 public class TimeView extends LabelView {
     protected static final int HEIGHT=30;
 
-    public TimeView(Context context) {
+    public TimeView(Context context,int time) {
         super(context);
         this.setTextSize(15);
+        this.setTime(time);
 
         setPadding(10, 5, 10, 5);
 

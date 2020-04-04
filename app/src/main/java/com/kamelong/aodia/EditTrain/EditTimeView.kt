@@ -14,7 +14,7 @@ import com.kamelong.OuDia.Train
 import com.kamelong.aodia.R
 import com.kamelong2.aodia.TimeTable.EditTrain.OnTimeChangeListener
 
-//時刻入力のView
+//時刻入力のViewグループ
 class EditTimeView : LinearLayout {
     //Viewを閉じたときのイベントリスナー
     private var onCloseEditTimeViewListener: OnCloseEditTimeViewListener? = null

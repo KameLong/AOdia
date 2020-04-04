@@ -8,8 +8,8 @@ import android.content.Context;
  */
 public class StopTimeView extends TimeView {
 
-    public StopTimeView(Context context) {
-        super(context);
+    public StopTimeView(Context context, int time) {
+        super(context,time);
     }
     @Override
     protected String timeInt2String(int time){
