@@ -18,6 +18,9 @@ import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 到着番線を選ぶSpinner
+ */
 public class EditTrainStopSpinner extends AppCompatSpinner {
 
     public int stationIndex;

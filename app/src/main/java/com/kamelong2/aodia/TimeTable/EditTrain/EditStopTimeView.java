@@ -5,12 +5,13 @@ import android.text.InputFilter;
 import android.view.View;
 import android.widget.Toast;
 
+import com.kamelong.OuDia.Train;
 import com.kamelong2.aodia.SDlog;
 
 public class EditStopTimeView extends EditTimeView {
 
     public EditStopTimeView(Context context,int station,int time,boolean editable) {
-        super(context,station,time,editable);
+        super(context,station,0,time,editable);
 
         InputFilter[] filters = new InputFilter[1];
             filters[0] = new InputFilter.LengthFilter(5);
@@ -26,7 +27,7 @@ public class EditStopTimeView extends EditTimeView {
                     String text=EditStopTimeView.this.getText().toString();
                     if(text.isEmpty()){
                         if(onTimeChangeListener!=null){
-                            onTimeChangeListener.onTimeChanged(station,-1);
+                            onTimeChangeListener.onTimeChanged(station, Train.DEPART);
                         }
 
                         return;

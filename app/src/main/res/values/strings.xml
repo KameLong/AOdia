@@ -1,8 +1,8 @@
 <resources>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">メニューを開く</string>
+    <string name="navigation_drawer_close">メニューを閉じる</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">設定</string>
     <string name="downTimeTable"><u>下り時刻表</u></string>
     <string name="upTimeTable"><u>上り時刻表</u></string>
 
@@ -31,8 +31,13 @@
     <string name="startStation">始発</string>
     <string name="endStation">終着</string>
     <string name="remark">備考</string>
+    <string name="count">号</string>
+    <string name="NoOuterStatationNotice">"路線外始発駅が設定されていません。「駅編集」から路線外始発駅を追加してください"</string>
+    <string name="outerStationNull">設定なし</string>
 
     <string name="UserInputNumberFormatException">数値を入力してください</string>
+    <string name="undefined_error">原因不明のエラーが発生しました。</string>
+    <string name="eroor_trainNotFound">列車が見つかりません。</string>
     //駅編集
     <string name="downwardTimeTableStyle">下り時刻表形式</string>
     <string name="upwardTimeTableStyle">上り時刻表形式</string>
@@ -83,7 +88,19 @@
     //コメント
     <string name="comment">コメント</string>
     <string name="submit">編集完了</string>
+    <string-array
+        name="StopTypeSpinner">
+        <item>    ：運行無し</item>
+        <item>○：停車</item>
+        <item>レ：通過</item>
+        <item> || ：経由無し</item>
+    </string-array>
 
-
+    //Payment
+    <string name="cant_buy">購入できませんでした</string>
+    <string name="already_buy">既に購入している</string>
+    <string name="buy_thanks">寄付して頂きありがとうございます（カメロング）</string>
+    <string name="purchase_error">購入処理でエラーが発生しました。</string>
+    <string name="purchase_fail">購入に失敗しました</string>
 
 </resources>

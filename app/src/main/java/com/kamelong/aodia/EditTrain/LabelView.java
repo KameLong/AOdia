@@ -8,46 +8,37 @@ import android.view.View;
 
 
 /**
- * EditViewはなんか重いから単純なテキストを表示するだけのモノを作るよ
- * @author a5
- *
+ * 単純なテキストを表示するだけのモノ
  */
 public class LabelView extends View {
+    private Paint textPaint;   // 文字を書く色
+    private String text = "";  // 文字列
+    private int textSize=30;  // テキストサイズ
+    private int textColor = 0xff000000;    // テキストカラー
 
-    private Paint mTextPaint;   // 文字を書く色
-    private String mText = "";  // 文字列
-    private int mTextSize;  // テキストサイズ
-    private int mTextColor = 0xff000000;    // テキストカラー
-
-    private int height;    // 1行の高さ
+    private int height; // 1行の高さ
 
 
     /**
      * コンストラクタ
-     * @param context
      */
     public LabelView(Context context) {
         super(context);
-
-        // ラベルビューを初期化するよ
         this.initLabelView();
     }
-
     public void setHeight(int height) {
         this.height = height;
     }
-
     /**
      * ラベルビューの初期化
      */
     private final void initLabelView() {
         // 色を変えたりするためのペイントを用意
-        this.mTextPaint = new Paint();
-        this.mTextPaint.setAntiAlias(false);
-
+        this.textPaint = new Paint();
+        this.textPaint.setAntiAlias(true);
         // スクリーンに合わせたテキストサイズに変更する
-        this.mTextPaint.setTextSize(30 * getResources().getDisplayMetrics().density);
-        this.mTextPaint.setColor(0xff000000);
+        this.textPaint.setTextSize(textSize * getResources().getDisplayMetrics().density);
+        this.textPaint.setColor(textColor);
     }
 
 
@@ -57,8 +48,8 @@ public class LabelView extends View {
      */
     public void setText(String text) {
         // テキストに変更がある場合だけ修正する
-        if (!this.mText.equals(text)) {
-            this.mText = text;
+        if (!this.text.equals(text)) {
+            this.text = text;
             this.invalidate();
         }
     }
@@ -69,9 +60,9 @@ public class LabelView extends View {
      */
     public void setTextSize(int size) {
         // サイズに変更があった時だけ変更する
-        if (this.mTextSize != size) {
-            this.mTextSize = size;
-            this.mTextPaint.setTextSize(size* getResources().getDisplayMetrics().density);
+        if (this.textSize != size) {
+            this.textSize = size;
+            this.textPaint.setTextSize(size* getResources().getDisplayMetrics().density);
             this.invalidate();
         }
     }
@@ -83,9 +74,9 @@ public class LabelView extends View {
     public void setColor(int color) {
 
         // 変更があったときだけ変える
-        if (this.mTextColor != color) {
-            this.mTextColor = color;
-            this.mTextPaint.setColor(color);
+        if (this.textColor != color) {
+            this.textColor = color;
+            this.textPaint.setColor(color);
             this.invalidate();
         }
     }
@@ -114,7 +105,7 @@ public class LabelView extends View {
         } else {
 
             // テキストの長さを測る
-            result = (int) mTextPaint.measureText(mText) + getPaddingLeft() + getPaddingRight();
+            result = (int) textPaint.measureText(text) + getPaddingLeft() + getPaddingRight();
             if (specMode == MeasureSpec.AT_MOST) {
                 // Respect AT_MOST value if that was what is called for by measureSpec
                 result = Math.min(result, specSize);
@@ -134,25 +125,19 @@ public class LabelView extends View {
         super.onDraw(canvas);
 
         // テキストが無いときは何もせんよ
-        if (this.mText == null) {
+        if (this.text == null) {
             return ;
         }
         // 文字を書き始める最初の位置
-        int baseTop = (int)((height+mTextSize*0.8)* getResources().getDisplayMetrics().density/2);
-
-        // 1行に収まる
-            // テキストをそのまま書く
-            canvas.drawText(this.mText, getPaddingLeft(), baseTop, mTextPaint);
-
+        int baseTop = (int)((height+ textSize *0.8)* getResources().getDisplayMetrics().density/2);
+        canvas.drawText(this.text, getPaddingLeft(), baseTop, textPaint);
     }
-
-
     /**
      * テキスト表示用のペイントを取り出す
      * @return ペイント
      */
     public Paint getPaint() {
-        return this.mTextPaint;
+        return this.textPaint;
     }
 
 }

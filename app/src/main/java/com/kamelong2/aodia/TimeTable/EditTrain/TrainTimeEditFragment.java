@@ -159,7 +159,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                     }
                 });
                 ((LinearLayout) findViewById(R.id.stationNameLayout)).addView(textView);
-                EditTimeView depTime = new EditTimeView(getAOdiaActivity(), stationNum, train.getDepartureTime(stationNum), true);
+                EditTimeView depTime = new EditTimeView(getAOdiaActivity(), stationNum,Train.DEPART, train.getDepartureTime(stationNum), true);
                 depTime.setOnTimeChangeListener(new OnTimeChangeListener() {
                     @Override
                     public void onTimeChanged(int station, int time) {
@@ -203,7 +203,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainEditInterf
                 });
                 departureTimeLayout.addView(depTime);
 
-                EditTimeView ariTime = new EditTimeView(getAOdiaActivity(), stationNum, train.getArrivalTime(stationNum), true);
+                EditTimeView ariTime = new EditTimeView(getAOdiaActivity(), stationNum,Train.DEPART, train.getArrivalTime(stationNum), true);
                 ariTime.setOnTimeChangeListener(new OnTimeChangeListener() {
                     @Override
                     public void onTimeChanged(int station, int time) {

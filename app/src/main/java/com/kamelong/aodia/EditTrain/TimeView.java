@@ -9,17 +9,20 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 
-public class EditTimeView extends LabelView {
+//時刻を表示するView
+public class TimeView extends LabelView {
     protected static final int HEIGHT=30;
 
-    public EditTimeView(Context context,int time) {
+    public TimeView(Context context) {
         super(context);
-        this.setText(timeInt2String(time));
         this.setTextSize(15);
 
         setPadding(10, 5, 10, 5);
 
         this.setHeight((int)(HEIGHT));
+    }
+    public void setTime(int time){
+        this.setText(timeInt2String(time));
     }
     protected String timeInt2String(int time){
         if(time<0)return"";

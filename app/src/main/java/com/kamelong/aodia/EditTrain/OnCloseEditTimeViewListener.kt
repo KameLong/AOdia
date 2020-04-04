@@ -1,5 +1,5 @@
 package com.kamelong.aodia.EditTrain
 
-interface OnCloseEditTimeView2 {
+interface OnCloseEditTimeViewListener {
     fun onClosed()
 }

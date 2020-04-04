@@ -18,15 +18,17 @@ public class EditTimeView extends AppCompatEditText {
     public String history="";
     protected OnTimeChangeListener onTimeChangeListener=null;
     public int stationNum;
+    private int AD=Train.DEPART;
     protected static final int HEIGHT=30;
 
-    public EditTimeView(Context context,int station,int time,boolean editable) {
+    public EditTimeView(Context context,int station,int AD,int time,boolean editable) {
         super(context);
         if(time<0){
             history="";
         }else {
             history = timeInt2String(time);
         }
+        this.AD=AD;
         this.setText(history);
         this.setEnabled(editable);
         this.stationNum=station;
@@ -53,7 +55,7 @@ public class EditTimeView extends AppCompatEditText {
                     String text=EditTimeView.this.getText().toString();
                     if(text.isEmpty()){
                         if(onTimeChangeListener!=null){
-                            onTimeChangeListener.onTimeChanged(station,-1);
+                            onTimeChangeListener.onTimeChanged(station,AD);
                         }
 
                         return;
@@ -65,7 +67,7 @@ public class EditTimeView extends AppCompatEditText {
 
                     }else{
                         if(onTimeChangeListener!=null) {
-                            onTimeChangeListener.onTimeChanged(station, time);
+                            onTimeChangeListener.onTimeChanged(station,AD);
                         }
                     }
 
