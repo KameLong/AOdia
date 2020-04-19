@@ -18,9 +18,6 @@ import com.kamelong2.aodia.TimeTable.EditTrain.OnTimeChangeListener
 class EditTimeView : LinearLayout {
     //Viewを閉じたときのイベントリスナー
     private var onCloseEditTimeViewListener: OnCloseEditTimeViewListener? = null
-
-    //列車を変更するイベントリスナー
-//    private var trainChangeListener: OnTrainChangeListener? = null
     //時刻を変更するイベントリスナー
     private var timeChangedListener:OnTimeChangeListener?=null
 
@@ -30,7 +27,7 @@ class EditTimeView : LinearLayout {
     //時刻変更する駅のindex
     private var stationIndex = 0
 
-    //到着or発車
+    //変更するのは到着or発車
     private var AD = Train.DEPART
 
     constructor(context: Context?) : super(context, null) {}

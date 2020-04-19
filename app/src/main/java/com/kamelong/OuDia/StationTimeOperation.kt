@@ -1,16 +1,14 @@
-package com.kamelong.OuDia;
+package com.kamelong.OuDia
 
-import com.kamelong.tool.SDlog;
+import com.kamelong.tool.SDlog
+import java.util.*
 
-import java.util.ArrayList;
-import java.util.Arrays;
 /*
  * Copyright (c) 2019 KameLong
  * contact:kamelong.com
  *
  * This source code is released under GNU GPL ver3.
  */
-
 /**
  * 駅での運用作業を表すクラスです。
  * １つの駅に対して複数のStationTimeOperationを用いることができます。
@@ -18,19 +16,20 @@ import java.util.Arrays;
  * KameLongはこのクラスの使用方法を理解していないため、
  * OuDia2ndのソースコード（CentDetAfterOperation.hやCentDetBeforeOperation.h）をご覧ください。
  */
-public class StationTimeOperation implements Cloneable{
+class StationTimeOperation() : Cloneable {
     /**
-     作業種類です。
-     0:入れ替え
-     1:増結
-     2:解結
-     3:出区
-     4:路線外始発
-     5:前列車接続
-
-
+     * 作業種類です。
+     * 0:入れ替え
+     * 1:増結
+     * 2:解結
+     * 3:出区
+     * 4:路線外始発
+     * 5:前列車接続
+     *
+     *
      */
-    public int operationType=0;
+    var operationType = 0
+
     /*
      * 停車前運用の場合
 
@@ -72,7 +71,7 @@ public class StationTimeOperation implements Cloneable{
      その場合、在線表表示駅において、この作業がある番線の在線横線は表示せず、
      後列車に委任します。
      */
-    public Boolean boolData1=false;
+    var boolData1 = false
 
     /*
      *　停車前運用の場合
@@ -123,7 +122,7 @@ public class StationTimeOperation implements Cloneable{
      カスタム表示モードにおける↳マークの表示位置になります。
      デフォルト値は-1です。
      */
-    public int intData1=-1;
+    var intData1 = -1
 
     /*
      * 停車前運用の場合
@@ -178,10 +177,7 @@ public class StationTimeOperation implements Cloneable{
      1:(この値にはなりません)
      2:この列車の列車方向の終点方から(入換があるので確定)
      */
-    public int intData2=-1;
-
-
-
+    var intData2 = -1
     /*
     停車前運用の場合
 
@@ -222,7 +218,7 @@ public class StationTimeOperation implements Cloneable{
     /**
      * 時刻は秒単位で表現し、0:00:00を0とします。
      */
-    public int time1=-1;
+    var time1 = -1
     /*
      *　停車前運用の場合
      *
@@ -260,8 +256,7 @@ public class StationTimeOperation implements Cloneable{
     /**
      * 時刻は秒単位で表現し、0:00:00を0とします。
      */
-
-    public int time2=-1;
+    var time2 = -1
 
     /*
      * 停車前運用の場合
@@ -313,175 +308,167 @@ public class StationTimeOperation implements Cloneable{
      それを配列形式で保持します。
      この作業の運用番号は、運用探索によって求まります。
      */
-    public ArrayList<String>operationNumberList=new ArrayList<>();
-
+    var operationNumberList = ArrayList<String>()
 
     /**
      *
      */
-    public ArrayList<StationTimeOperation>afterOperation=new ArrayList<>();
+    var afterOperation = ArrayList<StationTimeOperation>()
+
     /**
      *
      */
-    public ArrayList<StationTimeOperation>beforeOperation=new ArrayList<>();
+    var beforeOperation = ArrayList<StationTimeOperation>()
 
-    public StationTimeOperation(){
-
-    }
-    public StationTimeOperation(String value){
-        this();
-        setValue(value);
+    constructor(value: String) : this() {
+        setValue(value)
     }
 
     /**
      * OuDia2ndV2形式の運用情報を読み込みます
      * @param value
      */
-    void setValue(String value){
-            String[] values=value.split("\\$",-1);
-            String[] value1=values[0].split("/",-1);
-            String[] value2;
-            operationType=Integer.parseInt(value1[0]);
-            switch (operationType){
-                case 0:
-                    //入れかえ
-                    value2=values[1].split("/",-1);
-                    intData1=Integer.parseInt(value1[1]);
-                    time2= StationTime.timeStringToInt(value2[0]);
-                    time1= StationTime.timeStringToInt(value2[1]);
-                    boolData1=values[2].equals("1");
-
-                    break;
-                case 1:
-                    boolData1=value1[1].equals("1");
-                    time1= StationTime.timeStringToInt(values[1]);
-                    break;
-                case 2:
-                    value2=values[1].split("/",-1);
-                    intData1=Integer.parseInt(value2[0]);
-                    intData2=Integer.parseInt(value1[1]);
-                    time1= StationTime.timeStringToInt(value2[1]);
-                    break;
-                case 3:
-                    time1= StationTime.timeStringToInt(value1[1]);
-                    operationNumberList=new ArrayList<>();
-                    if (values.length > 1) {
-                        operationNumberList.addAll(Arrays.asList(values[1].split(";", -1)));
-                    }
-                    break;
-                case 4:
-                    try {
-                        if (value1.length > 1) {
-                            intData1 = Integer.parseInt(value1[1]);
-                        }
-                        value2 = values[1].split("/", -1);
-                        time1 = StationTime.timeStringToInt(value2[0]);
-                        time2 = StationTime.timeStringToInt(value2[1]);
-
-                        if (values.length > 3) {
-                            operationNumberList = new ArrayList<>();
-                            operationNumberList.addAll(Arrays.asList(values[3].split(";", -1)));
-                        }
-                    }catch (Exception e){
-                        SDlog.log(e);
-                    }
-                    break;
-                case 5:
-                    time1= StationTime.timeStringToInt(value1[1]);
-                    if (values.length > 1) {
-                        value2 = values[1].split("/", -1);
-                        boolData1 = value2[0].equals("1");
-                        operationNumberList=new ArrayList<>();
-                        if(value2.length>1) {
-                            operationNumberList.addAll(Arrays.asList(value2[1].split(";", -1)));
-                        }
-                    }
-                    break;
-
+    fun setValue(value: String) {
+        val values = value.split("\\$").dropLastWhile { it.isEmpty() }.toTypedArray()
+        val value1 = values[0].split("/").dropLastWhile { it.isEmpty() }.toTypedArray()
+        val value2: Array<String>
+        operationType = value1[0].toInt()
+        when (operationType) {
+            0 -> {
+                //入れかえ
+                value2 = values[1].split("/").dropLastWhile { it.isEmpty() }.toTypedArray()
+                intData1 = value1[1].toInt()
+                time2 = StationTime.Companion.timeStringToInt(value2[0])
+                time1 = StationTime.Companion.timeStringToInt(value2[1])
+                boolData1 = values[2] == "1"
             }
-    }
-    String getOuDiaString(){
-        String result=""+operationType;
-        switch (operationType) {
-            case 0:
-                result += "/" + intData1 + "$";
-                result += StationTime.timeIntToOuDiaString(time2) + "/" + StationTime.timeIntToOuDiaString(time1);
-                result += "$";
-                if (boolData1) {
-                    result += "1";
-                } else {
-                    result += "0";
+            1 -> {
+                boolData1 = value1[1] == "1"
+                time1 = StationTime.Companion.timeStringToInt(values[1])
+            }
+            2 -> {
+                value2 = values[1].split("/").dropLastWhile { it.isEmpty() }.toTypedArray()
+                intData1 = value2[0].toInt()
+                intData2 = value1[1].toInt()
+                time1 = StationTime.Companion.timeStringToInt(value2[1])
+            }
+            3 -> {
+                time1 = StationTime.Companion.timeStringToInt(value1[1])
+                operationNumberList = ArrayList()
+                if (values.size > 1) {
+                    operationNumberList.addAll(Arrays.asList(*values[1].split(";").dropLastWhile { it.isEmpty() }.toTypedArray()))
                 }
-                break;
-            case 1:
-                result += "/";
-                if (boolData1) {
-                    result += "1";
-                } else {
-                    result += "0";
+            }
+            4 -> try {
+                if (value1.size > 1) {
+                    intData1 = value1[1].toInt()
                 }
-                result+="$";
-                result += StationTime.timeIntToOuDiaString(time1);
-                break;
-            case 2:
-                result += "/" + intData2 + "$" + intData1 + "/";
-                result += StationTime.timeIntToOuDiaString(time1);
-                break;
-            case 3:
-                result += "/";
-                result += StationTime.timeIntToOuDiaString(time1);
-                result += "$";
-                for (String s : operationNumberList) {
-                    result += (s + ";");
+                value2 = values[1].split("/").dropLastWhile { it.isEmpty() }.toTypedArray()
+                time1 = StationTime.Companion.timeStringToInt(value2[0])
+                time2 = StationTime.Companion.timeStringToInt(value2[1])
+                if (values.size > 3) {
+                    operationNumberList = ArrayList()
+                    operationNumberList.addAll(Arrays.asList(*values[3].split(";").dropLastWhile { it.isEmpty() }.toTypedArray()))
                 }
-                result = result.substring(0, result.length() - 1);
-                break;
-            case 4:
-                result+="/";
-                result+=intData1;
-                result += "$";
-                result += StationTime.timeIntToOuDiaString(time1) + "/" + StationTime.timeIntToOuDiaString(time2) + "$";
-                for (String s : operationNumberList) {
-                    result += (s + ";");
+            } catch (e: Exception) {
+                SDlog.log(e)
+            }
+            5 -> {
+                time1 = StationTime.Companion.timeStringToInt(value1[1])
+                if (values.size > 1) {
+                    value2 = values[1].split("/").dropLastWhile { it.isEmpty() }.toTypedArray()
+                    boolData1 = value2[0] == "1"
+                    operationNumberList = ArrayList()
+                    if (value2.size > 1) {
+                        operationNumberList.addAll(Arrays.asList(*value2[1].split(";").dropLastWhile { it.isEmpty() }.toTypedArray()))
+                    }
                 }
-                result = result.substring(0, result.length() - 1);
-
-                break;
-            case 5:
-                result += "/";
-                result += StationTime.timeIntToOuDiaString(time1);
-                result += "$";
-                if (boolData1) {
-                    result += "1";
-                } else {
-                    result += "0";
-                }
-                result += "/";
-                for (String s : operationNumberList) {
-                    result += (s + ";");
-                }
-                result = result.substring(0, result.length() - 1);
-                break;
+            }
         }
-        return result;
     }
-    @Override
-    public StationTimeOperation clone(){
-        try{
-            StationTimeOperation result=(StationTimeOperation)super.clone();
-            result.afterOperation=new ArrayList<>();
-            for(StationTimeOperation value:this.afterOperation){
-                result.afterOperation.add(value.clone());
+
+    val ouDiaString: String
+        get() {
+            var result = "" + operationType
+            when (operationType) {
+                0 -> {
+                    result += "/$intData1$"
+                    result += StationTime.Companion.timeIntToOuDiaString(time2) + "/" + StationTime.Companion.timeIntToOuDiaString(time1)
+                    result += "$"
+                    result += if (boolData1) {
+                        "1"
+                    } else {
+                        "0"
+                    }
+                }
+                1 -> {
+                    result += "/"
+                    result += if (boolData1) {
+                        "1"
+                    } else {
+                        "0"
+                    }
+                    result += "$"
+                    result += StationTime.Companion.timeIntToOuDiaString(time1)
+                }
+                2 -> {
+                    result += "/$intData2$$intData1/"
+                    result += StationTime.Companion.timeIntToOuDiaString(time1)
+                }
+                3 -> {
+                    result += "/"
+                    result += StationTime.Companion.timeIntToOuDiaString(time1)
+                    result += "$"
+                    for (s in operationNumberList) {
+                        result += "$s;"
+                    }
+                    result = result.substring(0, result.length - 1)
+                }
+                4 -> {
+                    result += "/"
+                    result += intData1
+                    result += "$"
+                    result += StationTime.Companion.timeIntToOuDiaString(time1) + "/" + StationTime.Companion.timeIntToOuDiaString(time2) + "$"
+                    for (s in operationNumberList) {
+                        result += "$s;"
+                    }
+                    result = result.substring(0, result.length - 1)
+                }
+                5 -> {
+                    result += "/"
+                    result += StationTime.Companion.timeIntToOuDiaString(time1)
+                    result += "$"
+                    result += if (boolData1) {
+                        "1"
+                    } else {
+                        "0"
+                    }
+                    result += "/"
+                    for (s in operationNumberList) {
+                        result += "$s;"
+                    }
+                    result = result.substring(0, result.length - 1)
+                }
             }
-            result.beforeOperation=new ArrayList<>();
-            for(StationTimeOperation value:this.beforeOperation){
-                result.beforeOperation.add(value.clone());
+            return result
+        }
+
+    public override fun clone(): StationTimeOperation {
+        return try {
+            val result = super.clone() as StationTimeOperation
+            result.afterOperation = ArrayList()
+            for (value in afterOperation) {
+                result.afterOperation.add(value.clone())
             }
-//            result.operationNumberList=(ArrayList<String>)operationNumberList.clone();
-            return result;
-        }catch (CloneNotSupportedException e){
-            SDlog.log(e);
-            return new StationTimeOperation();
+            result.beforeOperation = ArrayList()
+            for (value in beforeOperation) {
+                result.beforeOperation.add(value.clone())
+            }
+            //            result.operationNumberList=(ArrayList<String>)operationNumberList.clone();
+            result
+        } catch (e: CloneNotSupportedException) {
+            SDlog.log(e)
+            StationTimeOperation()
         }
     }
 }

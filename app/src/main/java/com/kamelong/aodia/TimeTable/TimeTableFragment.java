@@ -149,7 +149,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             trains=lineFile.getDiagram(diaIndex).trains[direction];
 
             for (Train train :trains) {
-                if(lineFile.getTrainType(train.type).showInTimeTable) {
+                if(lineFile.trainType.showInTimeTable) {
                     TrainNameView trainNameView = new TrainNameView(getActivity(), this, options, train);
                     trainNameLinea.addView(trainNameView);
                 }
@@ -157,7 +157,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
             trainTimeLinear.removeAllViews();
             for (Train train :trains) {
-                if(lineFile.getTrainType(train.type).showInTimeTable) {
+                if(lineFile.trainType.showInTimeTable) {
                     TrainTimeView trainTimeView = new TrainTimeView(getActivity(), options, lineFile,train,direction,this);
                     trainTimeLinear.addView(trainTimeView);
                 }

@@ -154,7 +154,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         Spinner typeSpinner = findViewById(R.id.typeSpinner);
         List<String> typeList = new ArrayList<String>();
         for (TrainType trainType:lineFile.getTrainType()) {
-            typeList.add(trainType.getName());
+            typeList.add(trainType.name);
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item, typeList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
