@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 
 import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.LineFile;
@@ -75,6 +76,40 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
             layout.addView(newFile);
+
+
+            SearchView searchView=new SearchView(activity);
+            searchView.setQueryHint("駅検索");
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    aodia.openSearchFragment(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+
+            layout.addView(searchView);
+
+            Button routeMap = new Button(activity);
+            routeMap.setText("路線図");
+            routeMap.setBackgroundColor(Color.TRANSPARENT);
+            routeMap.setGravity(Gravity.START);
+            routeMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getAOdia().openRouteMap();
+
+                }
+            });
+            layout.addView(routeMap);
+
+
+
 
             Button openFileIcon=new Button(activity);
             fileOpenLayout.addView(openFileIcon);

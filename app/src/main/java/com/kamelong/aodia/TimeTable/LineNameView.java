@@ -3,9 +3,7 @@ package com.kamelong.aodia.TimeTable;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 
-import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 
 public class LineNameView extends TimeTableDefaultView{

@@ -1,10 +1,8 @@
 package com.kamelong.aodia.DiagramFragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.kamelong.aodia.MainActivity;

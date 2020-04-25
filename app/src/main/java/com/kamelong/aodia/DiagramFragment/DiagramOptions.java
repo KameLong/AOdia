@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.FrameLayout;

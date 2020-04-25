@@ -3,15 +3,9 @@ package com.kamelong.aodia;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
-
-import com.kamelong.aodia.R;
 
 public class SendLogPerm extends Dialog {
     public SendLogPerm(Context context, final SharedPreferences pref){

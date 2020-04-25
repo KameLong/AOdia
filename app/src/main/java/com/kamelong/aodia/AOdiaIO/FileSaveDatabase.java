@@ -72,7 +72,7 @@ public class FileSaveDatabase extends ScrollView {
                 preferences.edit().putString("name", name).apply();
                 int year = 0;
                 try {
-                    year = Integer.parseInt(((EditText) findViewById(R.id.year)).getText().toString());
+                    year = Integer.parseInt(((EditText) findViewById(R.id.time)).getText().toString());
                 } catch (Exception e) {
                     SDlog.toast("年代を正しく入力してください");
                     return;

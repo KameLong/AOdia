@@ -320,7 +320,9 @@ public class Diagram implements Cloneable{
             int endStation=train1.getEndStation();
             for(int j=0;j<trains[direction].size();j++){
                 Train train2=trains[direction].get(j);
-                if(train1.number.equals(train2.number)&&train1.type==train2.type&&i!=j&&train2.getStartStation()==endStation){
+                if(train1.number.equals(train2.number)&&train1.type==train2.type&&i!=j){
+                    if(lineFile.isSameStation(endStation, train2.getStartStation())){
+
                         train1.conbine(train2);
                         trains[direction].remove(train2);
                         if(j>i){
@@ -329,6 +331,8 @@ public class Diagram implements Cloneable{
                             i=i-2;
                         }
                         break;
+                    }
+
                 }
             }
         }

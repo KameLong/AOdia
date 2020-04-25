@@ -1,7 +1,6 @@
 package com.kamelong.aodia.EditTrainType;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,9 +16,6 @@ import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.SDlog;
-
-
-import top.defaults.colorpicker.ColorPickerPopup;
 
 public class EditTrainTypeView extends LinearLayout {
     public boolean checked = false;

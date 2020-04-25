@@ -1,25 +1,19 @@
 package com.kamelong.aodia.loadGTFS;
 
 import android.content.Context;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.annotation.Nullable;
 
 import com.kamelong.GTFS.GTFS;
 import com.kamelong.GTFS.Route;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Comparator;

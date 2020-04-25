@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.kamelong.aodia.MainActivity"
+        <activity android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             >

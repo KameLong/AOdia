@@ -6,8 +6,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.kamelong.aodia.R;
-
 public class InfoDialog extends Dialog {
     public InfoDialog(Context context){
         super(context);

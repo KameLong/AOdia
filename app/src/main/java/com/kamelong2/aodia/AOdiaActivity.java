@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,7 +22,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.kamelong.aodia.InfoDialog;
 import com.kamelong.aodia.R;
 import com.kamelong2.OuDia.DiaFile;
 import com.kamelong2.OuDia.Train;
@@ -38,14 +36,10 @@ import com.kamelong2.aodia.detabase.AOdiaDetabase;
 import com.kamelong2.aodia.diagram.DiagramFragment;
 import com.kamelong2.aodia.menu.MenuFragment;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class AOdiaActivity extends FragmentActivity {

@@ -1,6 +1,7 @@
 package com.kamelong.OuDia;
 
 
+import com.kamelong.aodia.KLdatabase.KLdetabase;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
 import com.kamelong.tool.SDlog;
@@ -29,6 +30,10 @@ import java.util.Stack;
  * 一つの路線ファイルを表す。
  */
 public class LineFile implements Cloneable {
+    /**
+     * AOdia専用　routeID
+     */
+    private String routeID="";
     /**
      * このファイルが保存されていたパス
      */
@@ -190,13 +195,55 @@ public class LineFile implements Cloneable {
 
     }
 
+    public String getRouteID(){
+        String fileName=filePath.substring(filePath.lastIndexOf("/")+1);
+        if(fileName.contains("-")){
+            String routeID=fileName.split("-")[0];
+            if(routeID.length()==5){
+                try{
+                    int a=Integer.parseInt(routeID);
+                    return routeID;
+                }catch (Exception e){
+                }
+            }
+        }
+        try{
+            int fileNameNumber=Integer.parseInt(fileName.substring(0,fileName.indexOf(".")));
+            if(fileNameNumber>10000&&fileNameNumber<100000){
+                return fileNameNumber+"";
+            }
+        }catch (Exception e){
+
+        }
+        return "";
+
+    }
+    public void setRouteID(KLdetabase database){
+        if(this.routeID.length()==0) {
+            this.routeID = getRouteID();
+            if (this.routeID.length() > 0) {
+                try {
+                    int routeNumber = Integer.parseInt(routeID);
+                    for (int i = 0; i < getStationNum(); i++) {
+                        getStation(i).stationID = database.getRouteStation((routeNumber * 100 + i) + "").stationID;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
     /**
      * ファイルからダイヤを開く
      * @param file　入力ファイル
      * @throws Exception ファイルが読み込めなかった時に返す
      */
     public LineFile(File file)throws Exception{
+
         filePath=file.getPath();
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
         version=br.readLine().split("=",-1)[1];
         double v=1.02;
@@ -354,6 +401,9 @@ public class LineFile implements Cloneable {
             case "Rosenmei":
                 name=value;
                 break;
+            case "routeID":
+                routeID=value;
+                break;
             case "KudariDiaAlias":
                 if(value.length()!=0){
                     diaNameDefault[0]=value;
@@ -479,6 +529,9 @@ public class LineFile implements Cloneable {
         out.println("FileType=OuDiaSecond.1.07");
         out.println("Rosen.");
         out.println("Rosenmei="+name);
+        if(routeID.length()>0){
+            out.println("routeID="+routeID);
+        }
         if(!diaNameDefault[0].equals("下り時刻表")) {
             out.println("KudariDiaAlias=" + diaNameDefault[0]);
         }
@@ -550,6 +603,10 @@ public class LineFile implements Cloneable {
         out.println("FileType=OuDia.1.02");
         out.println("Rosen.");
         out.println("Rosenmei="+name);
+        if(routeID.length()>0){
+            out.println("routeID="+routeID);
+        }
+
         for(Station s:station){
             s.saveToOuDiaFile(out);
         }
@@ -662,35 +719,28 @@ public class LineFile implements Cloneable {
      */
     public void checkBorderStation(){
         //oudiaのborderをoudia2ndに合わせる
-         for(int index=0;index<getStationNum();index++){
-             Station station=getStation(index);
-             if(station.border){
-                 for(int check=index+1;check<getStationNum();check++){
-                     if(getStation(check).name.equals(station.name)){
-                         station.brunchCoreStationIndex=check;
-                     }
-                 }
-                 if(index!=getStationNum()-1) {
-                     for (int check = 0; check < index; check++) {
-                         if (getStation(check).name.equals(getStation(index + 1).name)) {
-                             getStation(index + 1).brunchCoreStationIndex = check;
-                         }
-                     }
-                 }
-             }
-         }
-         //oudiaSecondのborderをoudiaに合わせる
-//        for(int index=0;index<getStationNum();index++){
-//            Station station=getStation(index);
-//            if(station.brunchCoreStationIndex>=0){
-//                if(station.brunchCoreStationIndex<index){
-//                    getStation(index-1).border=true;
-//                }else{
-//                    station.border=true;
-//                }
-//
-//            }
-//        }
+        for(int index=0;index<getStationNum();index++){
+            Station station=getStation(index);
+            if(station.border){
+                for(int check=index+1;check<getStationNum();check++){
+                    if(getStation(check).name.equals(station.name)){
+                        station.brunchCoreStationIndex=check;
+                    }
+                }
+                if(index!=getStationNum()-1) {
+                    for (int check = 0; check < index; check++) {
+                        if (getStation(check).name.equals(getStation(index + 1).name)) {
+                            getStation(index + 1).brunchCoreStationIndex = check;
+                        }
+                    }
+                }
+            }
+        }
+        for(int index=0;index<getStationNum();index++){
+            Station station=getStation(index);
+            station.border=false;
+        }
+
     }
 
     /*
@@ -1093,43 +1143,65 @@ public class LineFile implements Cloneable {
      * 組み入れ路線の始発終着駅が組み入れ駅と同じ場合は、２路線の駅を共通化します。
      */
     public void addLineFile(int insertPos,LineFile other){
-        LineFile lineFile=other.clone();
+        LineFile insertFile=other.clone();
+        //挿入先の駅名
         String stationName=getStation(insertPos).name;
         int type=0;
-        if(lineFile.getStation(0).name.equals(stationName)){
+        //挿入路線の0番目の駅名が挿入先の駅名の時
+        if(insertFile.getStation(0).name.equals(stationName)){
             for(int i=0;i<insertPos;i++){
-                lineFile.addStation(i,getStation(i).clone(lineFile),true);
+                insertFile.addStation(i,getStation(i).clone(insertFile),true);
             }
             for(int i=insertPos;i<getStationNum();i++){
-                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
+                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
             }
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+i,other.getStation(i).clone(this),true);
+                this.addStation(insertPos+i,insertFile.getStation(i+insertPos).clone(this),true);
 
             }
+            //分岐駅の処理
             for(Diagram dia:diagram){
                 for(Train train:dia.trains[0]){
-                    train.setStopType(insertPos,train.getStopType(insertPos+other.getStationNum()));
-                    train.setTime(insertPos,Train.ARRIVE,train.getTime(insertPos+other.getStationNum(),Train.ARRIVE,true));
-                    train.setTime(insertPos+other.getStationNum(),Train.ARRIVE,-1);
+                    if(train.getStartStation()!=insertPos+other.getStationNum()) {
+                        train.setStopType(insertPos , train.getStopType(insertPos+ other.getStationNum()));
+                        train.setTime(insertPos, Train.ARRIVE, train.getTime(insertPos + other.getStationNum(), Train.ARRIVE, true));
+                        train.setTime(insertPos + other.getStationNum(), Train.ARRIVE, -1);
+                    }
+                    if (!(insertPos+other.getStationNum()+1 <getStationNum()&&train.getStopType(insertPos+other.getStationNum()+1) != StationTime.STOP_TYPE_NOSERVICE)){
+                        for (int i = insertPos+1 ; i < insertPos + other.getStationNum()+1 ; i++) {
+                            train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                        }
+                    }
+
                 }
                 for(Train train:dia.trains[1]){
-                    train.setStopType(insertPos,train.getStopType(insertPos+other.getStationNum()));
-                    train.setTime(insertPos,Train.DEPART,train.getTime(insertPos+other.getStationNum(),Train.DEPART,true));
-                    train.setTime(insertPos+other.getStationNum(),Train.DEPART,-1);
+                    if(train.getEndStation()!=insertPos+other.getStationNum()) {
+                        train.setStopType(insertPos , train.getStopType(insertPos)+ other.getStationNum());
+                        train.setTime(insertPos, Train.DEPART, train.getTime(insertPos + other.getStationNum(), Train.DEPART, true));
+                        train.setTime(insertPos + other.getStationNum(), Train.DEPART, -1);
+                    }
+                    if (!(insertPos+other.getStationNum()+1 <getStationNum()&&train.getStopType(insertPos+other.getStationNum()+1) != StationTime.STOP_TYPE_NOSERVICE)){
+                        for (int i = insertPos+1 ; i < insertPos + other.getStationNum()+1 ; i++) {
+                            train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                        }
+                    }
                 }
             }
-            for(Diagram dia:lineFile.diagram){
+            for(Diagram dia:insertFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){
                         frag=true;
                         for(Train train:dia.trains[0]){
-                            dia2.addTrain(0,-1,train.clone(this));
+                            if(train.getEndStation()>=0&&train.getEndStation()>insertPos) {
+                                dia2.addTrain(0, -1, train.clone(this));
+                            }
                         }
                         for(Train train:dia.trains[1]){
-                            dia2.addTrain(1,-1,train.clone(this));
+                            if(train.getStartStation()>=0&&train.getStartStation()>insertPos) {
+                                dia2.addTrain(1, -1, train.clone(this));
+                            }
                         }
                         break;
                     }
@@ -1142,44 +1214,72 @@ public class LineFile implements Cloneable {
             station.get(insertPos).showArrivalCustom[Train.UP]=true;
             station.get(insertPos).showDepartureCustom[Train.DOWN]=true;
             station.get(insertPos).showDepartureCustom[Train.UP]=true;
+
+            station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.DOWN]=false;
+            station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.UP]=true;
+            station.get(insertPos+other.getStationNum()).showDepartureCustom[Train.DOWN]=true;
+            station.get(insertPos+other.getStationNum()).showDepartureCustom[Train.UP]=false;
+
             station.get(insertPos+other.getStationNum()).brunchCoreStationIndex=insertPos;
+
             if(getStationNum()==insertPos+other.getStationNum()+1){
                 deleteStation(insertPos+other.getStationNum());
             }
         }
-        else if(lineFile.getStation(lineFile.getStationNum()-1).name.equals(stationName)){
+        //挿入元路線最後の駅がオリジナルの挿入駅名の時
+        else if(insertFile.getStation(insertFile.getStationNum()-1).name.equals(stationName)){
             for(int i=0;i<=insertPos;i++){
-                lineFile.addStation(i,getStation(i).clone(lineFile),true);
+                insertFile.addStation(i,getStation(i).clone(insertFile),true);
             }
             for(int i=insertPos+1;i<getStationNum();i++){
-                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
+                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
             }
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+1+i,other.getStation(i).clone(this),true);
+                this.addStation(insertPos+1+i,insertFile.getStation(i+insertPos+1).clone(this),true);
             }
+            //分岐駅処理
             for(Diagram dia:diagram){
                 for(Train train:dia.trains[0]){
-                    train.setStopType(insertPos+other.getStationNum(),train.getStopType(insertPos));
-                    train.setTime(insertPos+other.getStationNum(),Train.DEPART,train.getTime(insertPos,Train.DEPART,true));
-                    train.setTime(insertPos,Train.DEPART,-1);
+                    if(train.getEndStation()!=insertPos) {
+                        train.setStopType(insertPos + other.getStationNum(), train.getStopType(insertPos));
+                        train.setTime(insertPos + other.getStationNum(), Train.DEPART, train.getTime(insertPos, Train.DEPART, true));
+                        train.setTime(insertPos, Train.DEPART, -1);
+                    }
+                    if (!(insertPos >0&&train.getStopType(insertPos-1) != StationTime.STOP_TYPE_NOSERVICE)){
+                            for (int i = insertPos ; i < insertPos + other.getStationNum() ; i++) {
+                                train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                            }
+                    }
+
                 }
                 for(Train train:dia.trains[1]){
-                    train.setStopType(insertPos+other.getStationNum(),train.getStopType(insertPos));
-                    train.setTime(insertPos+other.getStationNum(),Train.ARRIVE,train.getTime(insertPos,Train.ARRIVE,true));
-                    train.setTime(insertPos,Train.ARRIVE,-1);
+                    if(train.getStartStation()!=insertPos) {
+                        train.setStopType(insertPos + other.getStationNum(), train.getStopType(insertPos));
+                        train.setTime(insertPos + other.getStationNum(), Train.ARRIVE, train.getTime(insertPos, Train.ARRIVE, true));
+                        train.setTime(insertPos, Train.ARRIVE, -1);
+                    }
+                    if (!(insertPos >0&&train.getStopType(insertPos-1) != StationTime.STOP_TYPE_NOSERVICE)) {
+                            for (int i = insertPos ; i < insertPos + other.getStationNum() ; i++) {
+                                train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                            }
+                    }
                 }
             }
-            for(Diagram dia:lineFile.diagram){
+            for(Diagram dia:insertFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){
                         frag=true;
                         for(Train train:dia.trains[0]){
-                            dia2.addTrain(0,-1,train.clone(this));
+                            if(train.getStartStation()>=0&&train.getStartStation()<insertPos+other.getStationNum()) {
+                                dia2.addTrain(0, -1, train.clone(this));
+                            }
                         }
                         for(Train train:dia.trains[1]){
-                            dia2.addTrain(1,-1,train.clone(this));
+                            if(train.getEndStation()>=0&&train.getEndStation()<insertPos+other.getStationNum()) {
+                                dia2.addTrain(1, -1, train.clone(this));
+                            }
                         }
                         break;
                     }
@@ -1189,26 +1289,32 @@ public class LineFile implements Cloneable {
                 }
             }
 
+            station.get(insertPos).showArrivalCustom[Train.DOWN]=true;
+            station.get(insertPos).showArrivalCustom[Train.UP]=false;
+            station.get(insertPos).showDepartureCustom[Train.DOWN]=false;
+            station.get(insertPos).showDepartureCustom[Train.UP]=true;
+
             station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.DOWN]=true;
             station.get(insertPos+other.getStationNum()).showArrivalCustom[Train.UP]=true;
             station.get(insertPos+other.getStationNum()).showDepartureCustom[Train.DOWN]=true;
             station.get(insertPos+other.getStationNum()).showDepartureCustom[Train.UP]=true;
-            station.get(insertPos).brunchCoreStationIndex=insertPos+other.getStationNum()-1;
+
+            station.get(insertPos).brunchCoreStationIndex=insertPos+other.getStationNum();
             if(insertPos==0){
                 deleteStation(0);
             }
         }
         else{
             for(int i=0;i<=insertPos;i++){
-                lineFile.addStation(i,getStation(i).clone(lineFile),true);
+                insertFile.addStation(i,getStation(i).clone(insertFile),true);
             }
             for(int i=insertPos;i<getStationNum();i++){
-                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
+                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
             }
             this.addStation(insertPos+1,getStation(insertPos).clone(this),true);
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+1+i,other.getStation(i).clone(this),true);
+                this.addStation(insertPos+1+i,insertFile.getStation(i+insertPos+1).clone(this),true);
             }
             for(Diagram dia:diagram){
                 for(Train train:dia.trains[0]){
@@ -1222,7 +1328,7 @@ public class LineFile implements Cloneable {
                     train.setTime(insertPos,Train.ARRIVE,-1);
                 }
             }
-            for(Diagram dia:lineFile.diagram){
+            for(Diagram dia:insertFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){
@@ -1295,6 +1401,24 @@ public class LineFile implements Cloneable {
             }
         }
         return null;
+    }
+//  2つの駅が同一駅かどうか
+    public boolean isSameStation(int station1,int station2){
+        if(station1==station2)
+        {
+            return true;
+        }
+        if(getStation(station1).brunchCoreStationIndex==station2){
+            return true;
+        }
+        if(getStation(station2).brunchCoreStationIndex==station1){
+            return true;
+        }
+        if(getStation(station2).brunchCoreStationIndex==getStation(station1).brunchCoreStationIndex&&getStation(station1).brunchCoreStationIndex>=0){
+            return true;
+        }
+        return false;
+
     }
 
 }

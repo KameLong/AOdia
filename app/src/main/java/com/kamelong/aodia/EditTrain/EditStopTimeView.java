@@ -1,11 +1,6 @@
 package com.kamelong.aodia.EditTrain;
 
 import android.content.Context;
-import android.text.InputFilter;
-import android.view.View;
-import android.widget.Toast;
-
-import com.kamelong.tool.SDlog;
 
 public class EditStopTimeView extends EditTimeView {
 

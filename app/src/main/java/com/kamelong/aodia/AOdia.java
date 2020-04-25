@@ -13,15 +13,20 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaIO.FileSaveFragment;
+import com.kamelong.aodia.AOdiaIO.FileSelectFromRouteID;
 import com.kamelong.aodia.AOdiaIO.FileSelectorFragment;
 import com.kamelong.aodia.DiagramFragment.DiagramFragment;
 import com.kamelong.aodia.EditStation.EditStationFragment;
 import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
+import com.kamelong.aodia.KLdatabase.KLdetabase;
+import com.kamelong.aodia.KLdatabase.SearchFragment;
+import com.kamelong.aodia.SearchSystem.StationSearchFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.StationTimeTable.StationTimeTableFragment;
 import com.kamelong.aodia.TimeTable.TimeTableFragment;
 import com.kamelong.aodia.detabase.AOdiaDetabase;
 import com.kamelong.aodia.loadGTFS.SelectRouteFragment;
+import com.kamelong.aodia.routeMap.RouteMapFragment;
 import com.kamelong.tool.SDlog;
 
 import java.io.File;
@@ -45,6 +50,7 @@ public class AOdia {
     public static final String DIRECTION = "direction";
     public static final String TRAIN_INDEX="trainIndex";
     public static final String STATION_INDEX = "stationIndex";
+    public static final String ROUTE_ID="routeID";
 
     public static final String FILE_NAME="fileName";
 
@@ -189,6 +195,7 @@ public class AOdia {
                 lineFile.filePath=path;
 
             }
+            lineFile.setRouteID(new KLdetabase(activity));
             lineFiles.add(lineFile);
             lineFilesIndex.add(0,lineFile);
             lineFileExpand.put(lineFile,true);
@@ -197,6 +204,10 @@ public class AOdia {
             SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
             SDlog.log(e);
         }
+    }
+    public void openRouteMap(){
+        RouteMapFragment fragment=new RouteMapFragment();
+        openFragment(fragment);
     }
 
     /**
@@ -424,6 +435,7 @@ public class AOdia {
             try {
                 SDlog.log("tempSave loadTemp");
                 LineFile file = new LineFile(new File(activity.getFilesDir() + "/temp.oud2"));
+                file.setRouteID(new KLdetabase(activity));
                 file.filePath = filePath;
                 lineFiles.add(file);
                 lineFilesIndex.add(file);
@@ -475,6 +487,28 @@ public class AOdia {
             e.printStackTrace();
             SDlog.toast("バックアップファイルを保存できませんでした");
         }
+
+    }
+
+    /**
+     * routeIDからファイルを検索するfragment
+     */
+//    public void openFileSelectFromRouteIDFragment(String routeID){
+//        FileSelectFromRouteID fragment = new FileSelectFromRouteID();
+//        Bundle args = new Bundle();
+//        args.putString(ROUTE_ID, routeID);
+//        fragment.setArguments(args);
+//        openFragment(fragment);
+//
+//    }
+
+
+    public void openSearchFragment(String word){
+        StationSearchFragment fragment=new StationSearchFragment();
+        Bundle args = new Bundle();
+        args.putString(StationSearchFragment.SEARCH_WORD, word);
+        fragment.setArguments(args);
+        openFragment(fragment);
 
     }
 

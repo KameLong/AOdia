@@ -18,6 +18,7 @@ import java.util.ArrayList;
  */
 public class Station implements Cloneable{
     public LineFile lineFile;
+    public String stationID="";
     /**
      * 駅名
      */
@@ -199,6 +200,9 @@ public class Station implements Cloneable{
         switch (title){
             case "Ekimei":
                 name=value;
+                break;
+            case "stationID":
+                stationID=value;
                 break;
             case "EkimeiJikokuRyaku":
                 shortName=value;
@@ -404,16 +408,16 @@ public class Station implements Cloneable{
 
     private String getTimeTableStyleOuDia(){
         int result=0;
-        if(showArrival[1]){
+        if(showArrivalCustom[1]){
             result+=8;
         }
-        if(showDeparture[1]){
+        if(showDepartureCustom[1]){
             result+=4;
         }
-        if(showArrival[0]){
+        if(showArrivalCustom[0]){
             result+=2;
         }
-        if(showDeparture[0]){
+        if(showDepartureCustom[0]){
             result+=1;
         }
         switch (result){
@@ -497,6 +501,7 @@ public class Station implements Cloneable{
     void saveToFile(PrintWriter out){
         out.println("Eki.");
         out.println("Ekimei="+name);
+        out.println("stationID="+stationID);
         if(shortName.length()!=0){
             out.println("EkimeiJikokuRyaku="+shortName);
         }
@@ -582,6 +587,7 @@ public class Station implements Cloneable{
     void saveToOuDiaFile(PrintWriter out){
         out.println("Eki.");
         out.println("Ekimei="+name);
+        out.println("stationID="+stationID);
         out.println("Ekijikokukeisiki="+getTimeTableStyleOuDia());
         if(bigStation){
             out.println("Ekikibo=Ekikibo_Syuyou");
