@@ -25,4 +25,8 @@ public abstract class AOdiaFragmentCustom extends Fragment implements AOdiaFragm
         }
         super.onViewCreated(view, savedInstanceState);
     }
+
+    private String getStringR(int resourceID){
+        return getMainActivity().getString(resourceID);
+    }
 }

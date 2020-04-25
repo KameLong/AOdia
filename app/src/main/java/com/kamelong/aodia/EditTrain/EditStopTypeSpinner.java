@@ -11,14 +11,15 @@ import android.widget.ArrayAdapter;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.kamelong.OuDia.Train;
+import com.kamelong.aodia.R;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
 public class EditStopTypeSpinner extends AppCompatSpinner {
-
     public int stationIndex;
     public Train train;
     public OnTrainChangeListener listener;
@@ -28,12 +29,7 @@ public class EditStopTypeSpinner extends AppCompatSpinner {
         this.stationIndex=stationIndex;
         this.train=train;
 
-
-        List<String>stopList=new ArrayList<>();
-        stopList.add("    ：運行無し");
-        stopList.add("○：停車");
-        stopList.add("レ：通過");
-        stopList.add(" || ：経由無し");
+        List<String>stopList= Arrays.asList(getResources().getStringArray(R.array.StopTypeSpinner));
         setBackground(null);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stopList);
         dataAdapter.setDropDownViewResource( android.R.layout.simple_spinner_item);
@@ -69,9 +65,7 @@ public class EditStopTypeSpinner extends AppCompatSpinner {
         canvas.drawLine(0,getHeight()-1,getWidth(),getHeight()-1, TimeTableDefaultView.blackPaint);
         canvas.drawText(this.getSelectedItem().toString().split("：")[0],5*density,getHeight()-7*density,paint);
     }
-
     public void setOnTrainChangeListener(OnTrainChangeListener listener){
         this.listener=listener;
     }
-
 }

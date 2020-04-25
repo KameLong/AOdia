@@ -2,13 +2,18 @@ package com.kamelong.aodia.EditTrain;
 
 import android.content.Context;
 
-public class EditStopTimeView extends EditTimeView {
+/**
+ * 停車時間を表示するためのView
+ * TrainTimeEditFragmentで使用
+ */
+public class StopTimeView extends TimeView {
 
-    public EditStopTimeView(Context context,int time) {
+    public StopTimeView(Context context, int time) {
         super(context,time);
     }
     @Override
     protected String timeInt2String(int time){
+        //「mm ss」形式で表示
         if(time<0)return"";
         int ss=time%60;
         time=time/60;

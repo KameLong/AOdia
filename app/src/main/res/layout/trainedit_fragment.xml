@@ -554,12 +554,12 @@
     </LinearLayout>
 
 </ScrollView>
-    <com.kamelong.aodia.EditTrain.EditTimeView2
+    <com.kamelong.aodia.EditTrain.EditTimeView
         android:id="@+id/editTimeLayout"
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </com.kamelong.aodia.EditTrain.EditTimeView2>
+    </com.kamelong.aodia.EditTrain.EditTimeView>
 </RelativeLayout>

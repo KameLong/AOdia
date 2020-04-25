@@ -22,7 +22,7 @@ import java.io.File
 class FileSelectFromRouteID(activity:MainActivity,routeID:String,fileSeleter:OnFileSelect): Dialog(activity) ,OpenDirectory{
     init {
         setContentView(R.layout.fileselect_from_routeid)
-        val directory= File(activity!!.getExternalFilesDir(null).absolutePath+"/OuDiaDataBase")
+        val directory= File(activity!!.getExternalFilesDir(null)?.absolutePath+"/OuDiaDataBase")
         if(!directory.exists()){
             directory.mkdir()
         }

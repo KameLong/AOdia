@@ -50,10 +50,8 @@ public class LineFile implements Cloneable {
     public int diagramStartTime=3600*3;
     /**
      ダイヤグラムの既定の駅間幅。
-
      列車設定のない駅間の、ダイヤグラムビュー上での
      縦方向の幅を『ダイヤグラムエンティティY座標』単位(秒)で指定します。
-
      既定値は 60 です。
      */
     public int stationSpaceDefault =60;
@@ -921,7 +919,6 @@ public class LineFile implements Cloneable {
         }
 
     }
-
     /**
      * 新しいTrainTypeを挿入します
      * 全ての列車の列車種別を書き換えます
@@ -951,9 +948,8 @@ public class LineFile implements Cloneable {
      * 列車種別を削除する
      * return =false:路線内にこの種別を使っているやつがいるから削除できない
      * true:削除成功
+     * false:削除に失敗
      *
-     * @param type
-     * @return
      */
     public boolean deleteTrainType(TrainType type) {
         int index = trainType.indexOf(type);
@@ -990,11 +986,14 @@ public class LineFile implements Cloneable {
 
     /**
      * 駅を追加します。
-     * 駅が追加されると、所属列車のstationTimeが更新されます。
+     * 駅が追加されると、このLineFileに所属する列車のstationTimeが更新されます。
      * brunch=trueの時、新規駅を通過する列車は経由なしになります。
+     *
+     * index:挿入駅index
      */
     public void addStation(int index,Station newStation,boolean brunch){
         if(index<0||index>=getStationNum()){
+
             index=getStationNum();
         }
         for(Station s:station){
@@ -1402,7 +1401,7 @@ public class LineFile implements Cloneable {
         }
         return null;
     }
-//  2つの駅が同一駅かどうか
+    //  2つの駅が同一駅かどうか
     public boolean isSameStation(int station1,int station2){
         if(station1==station2)
         {

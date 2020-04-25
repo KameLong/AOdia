@@ -1,12 +1,12 @@
 package com.kamelong.aodia.EditTrain;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -24,6 +24,9 @@ import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
+import com.kamelong2.aodia.TimeTable.EditTrain.OnTimeChangeListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +34,22 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class TrainTimeEditFragment extends Fragment implements OnTrainChangeListener {
-    public Train train;
-    public OnTrainChangeListener trainChangeListener;
-    public OnFragmentCloseListener fragmentCloseListener;
+/**
+ * 列車時刻を編集するためのFragment
+ */
+public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListener,OnTrainChangeListener {
+    private OnTrainChangeListener trainChangeListener;
+    private OnFragmentCloseListener fragmentCloseListener;
     private int diaNumber;
     private LineFile lineFile;
-    View fragmentContainer;
-    public MainActivity getMainActivity(){
+    public Train train;
+    private View fragmentContainer;
+
+    private int focusStation=-1;
+    private int focusAD=-1;
+
+
+    private MainActivity getMainActivity(){
         return (MainActivity)getActivity();
     }
     public <T extends View> T findViewById(int id){
@@ -46,11 +57,12 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {//まずBundleを確認し、fileNum,diaIndex,directを更新する
             Bundle bundle = getArguments();
+            assert bundle != null;
             int fileNum = bundle.getInt(AOdia.FILE_INDEX);
             diaNumber = bundle.getInt(AOdia.DIA_INDEX);
             int direction = bundle.getInt(AOdia.DIRECTION);
@@ -58,7 +70,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
 
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
             train = lineFile.getTrain(diaNumber, direction, trainNum);
-
         }
         catch (Exception e) {
             SDlog.log(e);
@@ -71,7 +82,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
 
     private void init(){
         if(train==null){
-            Toast.makeText(getContext(),"原因不明のエラーが発生しました。列車が見つかりません。(TrainTimeEditFragment onViewCreated)",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getMainActivity().getString(R.string.undefined_error)+getMainActivity().getString(R.string.eroor_trainNotFound)+"(TrainTimeEditFragment onViewCreated)",Toast.LENGTH_LONG).show();
             return;
         }
         //列車名
@@ -105,7 +116,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         });
         //号数
         final EditText trainCount = findViewById(R.id.countNumber);
-        trainCount.setText(train.count + "号");
+        trainCount.setText(train.count + getMainActivity().getString(R.string.count));
         trainCount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -146,7 +157,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         Spinner typeSpinner = findViewById(R.id.typeSpinner);
         List<String> typeList = new ArrayList<String>();
         for (TrainType trainType:lineFile.getTrainType()) {
-            typeList.add(trainType.getName());
+            typeList.add(trainType.name);
         }
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item, typeList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -167,7 +178,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         });
         Spinner outerStartSpinner=findViewById(R.id.outerStartName);
         List<String> outerStartName = new ArrayList<String>();
-        outerStartName.add("設定なし");
+        outerStartName.add(getMainActivity().getString(R.string.outerStationNull));
         if(train.getStartStation()>=0) {
             for (OuterTerminal terminal : lineFile.getStation(train.getStartStation()).outerTerminals) {
                 outerStartName.add(terminal.outerTerminalName);
@@ -175,14 +186,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         }
         ArrayAdapter<String> outerStartAdapter = new ArrayAdapter<String>(getMainActivity(), android.R.layout.simple_spinner_item,outerStartName);
         outerStartAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        outerStartSpinner.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if(outerStartName.size()==1){
-//                    SDlog.toast("路線外始発駅が設定されていません。「駅編集」から路線外始発駅を追加してください");
-//                }
-//            }
-//        });
         outerStartSpinner.setAdapter(outerStartAdapter);
         outerStartSpinner.setSelection(train.getOuterStartStation()+1);
         outerStartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -202,7 +205,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         });
         Spinner outerEndSpinner=findViewById(R.id.outerEndName);
         List<String> outerEndName = new ArrayList<String>();
-        outerEndName.add("設定なし");
+        outerEndName.add(getMainActivity().getString(R.string.outerStationNull));
         if(train.getEndStation()>=0) {
 
             for (OuterTerminal terminal : lineFile.getStation(train.getEndStation()).outerTerminals) {
@@ -213,15 +216,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         outerEndAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         outerEndSpinner.setAdapter(outerEndAdapter);
         outerEndSpinner.setSelection(train.getOuterEndStation()+1);
-//        outerEndSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if(outerEndName.size()==1){
-//                    SDlog.toast("路線外終着駅が設定されていません。「駅編集」から路線外終着駅を追加してください");
-//                }
-//
-//            }
-//        });
+
 
         outerEndSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -276,8 +271,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         });
 
 
-
-
         //閉じるボタン
         (findViewById(R.id.editSubmit)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -288,6 +281,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
                         trainChangeListener.allTrainChange();
                     }
                     getMainActivity().getSupportFragmentManager().beginTransaction().remove(TrainTimeEditFragment.this).commit();
+                    if(fragmentCloseListener!=null){
+                        fragmentCloseListener.fragmentClose();
+                    }
                 }catch (Exception e){
                     SDlog.log(e);
                 }
@@ -297,16 +293,95 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
             }
         });
     }
-    private void initTimeView(){
+    private void upDateDepAriTimeView(){
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
+        for (int i = 0; i < lineFile.getStationNum(); i++) {
+            final int stationIndex = train.getStationIndex(i);
+            TimeView depTime = (TimeView) departureTimeLayout.getChildAt(i);
+            depTime.setTime(train.getDepTime(stationIndex));
+            TimeView ariTime = (TimeView) arrivalTimeLayout.getChildAt(i);
+            ariTime.setTime(train.getAriTime(stationIndex));
+        }
+
+    }
+    private void initDepAtiTimeView() {
+        final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
+        final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
+        departureTimeLayout.removeAllViews();
+        arrivalTimeLayout.removeAllViews();
+        for (int i = 0; i < lineFile.getStationNum(); i++) {
+            final int stationIndex = train.getStationIndex(i);
+            //発車時刻
+            TimeView depTime = new TimeView(getMainActivity(),  train.getDepTime(stationIndex));
+            depTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final TimeView view=(TimeView)v;
+                    for(int stationIndex=0;stationIndex<lineFile.getStationNum();stationIndex++){
+                        ((TimeView)departureTimeLayout.getChildAt(stationIndex)).setCheck(false);
+                        ((TimeView)arrivalTimeLayout.getChildAt(stationIndex)).setCheck(false);
+                    }
+                    view.setCheck(true);
+
+                    EditTimeView editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
+                    editText.setOnTimeChangedLister(TrainTimeEditFragment.this);
+                    editText.setVisibility(VISIBLE);
+                    editText.setValues(train,stationIndex,0);
+                    editText.setOnCloseEditTimeViewListener(new OnCloseEditTimeViewListener() {
+                        @Override
+                        public void onClosed() {
+                            view.setCheck(false);
+                        }
+                    });
+                    ((MainActivity)getContext()).findViewById(R.id.editTimeLayout).setVisibility(VISIBLE);
+
+
+                }
+            });
+            departureTimeLayout.addView(depTime);
+            if(focusStation==i&&focusAD==Train.DEPART){
+                depTime.setBackgroundColor(Color.YELLOW);
+            }
+
+
+            //着時刻
+            TimeView ariTime = new TimeView(getMainActivity(), train.getAriTime(stationIndex));
+            ariTime.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final TimeView view=(TimeView)v;
+
+                    for(int stationIndex=0;stationIndex<lineFile.getStationNum();stationIndex++){
+                        ((TimeView)departureTimeLayout.getChildAt(stationIndex)).setCheck(false);
+                        ((TimeView)arrivalTimeLayout.getChildAt(stationIndex)).setCheck(false);
+                    }
+                    view.setCheck(true);
+
+                    EditTimeView editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
+                    editText.setOnTimeChangedLister(TrainTimeEditFragment.this);
+                    editText.setVisibility(VISIBLE);
+                    editText.setValues(train,stationIndex,1);
+                    ((MainActivity)getContext()).findViewById(R.id.editTimeLayout).setVisibility(VISIBLE);
+                    editText.setOnCloseEditTimeViewListener(new OnCloseEditTimeViewListener() {
+                        @Override
+                        public void onClosed() {
+                            v.setBackgroundColor(Color.WHITE);
+                        }
+                    });
+                    v.setBackgroundColor(Color.YELLOW);
+                }
+            });
+            arrivalTimeLayout.addView(ariTime);
+
+        }
+    }
+    private void initStopTimeView(){
         final LinearLayout stopTimeLayout = findViewById(R.id.stopTimeLayout);
         final LinearLayout stopTypeLayout = findViewById(R.id.stopTypeLayout);
         final LinearLayout stopNumberLayout = findViewById(R.id.stopNumerLayout);
         final LinearLayout stationNameLayout= findViewById(R.id.stationNameLayout);
 
-        departureTimeLayout.removeAllViews();
-        arrivalTimeLayout.removeAllViews();
         stopTypeLayout.removeAllViews();
         stopTimeLayout.removeAllViews();
         stopNumberLayout.removeAllViews();
@@ -327,40 +402,12 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
 
             stationNameLayout.addView(stationNameView);
 
-            //発車時刻
-            EditTimeView depTime = new EditTimeView(getMainActivity(),  train.getDepTime(stationIndex));
-            depTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
-                    editText.setOnTrainChangedLister(TrainTimeEditFragment.this);
-                    editText.setVisibility(VISIBLE);
-                    editText.setValues(train,stationIndex,0);
-                    ((MainActivity)getContext()).findViewById(R.id.editTimeLayout).setVisibility(VISIBLE);
-                }
-            });
-            departureTimeLayout.addView(depTime);
-
-
-            //着時刻
-            EditTimeView ariTime = new EditTimeView(getMainActivity(), train.getAriTime(stationIndex));
-            ariTime.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditTimeView2 editText=((MainActivity)getContext()).findViewById(R.id.editTimeLayout);
-                    editText.setOnTrainChangedLister(TrainTimeEditFragment.this);
-                    editText.setVisibility(VISIBLE);
-                    editText.setValues(train,stationIndex,1);
-                    ((MainActivity)getContext()).findViewById(R.id.editTimeLayout).setVisibility(VISIBLE);
-                }
-            });
-            arrivalTimeLayout.addView(ariTime);
-            EditTimeView stopTime=null;
+            TimeView stopTime=null;
             //発着時刻
             if (train.timeExist(stationIndex,0) && train.timeExist(stationIndex,1)) {
-                stopTime = new EditStopTimeView(getMainActivity(), train.getDepTime(stationIndex) - train.getAriTime(stationIndex));
+                stopTime = new StopTimeView(getMainActivity(), train.getDepTime(stationIndex) - train.getAriTime(stationIndex));
             } else {
-                stopTime= new EditStopTimeView(getMainActivity(), -1);
+                stopTime= new StopTimeView(getMainActivity(), -1);
             }
             stopTimeLayout.addView(stopTime);
             EditTrainStopSpinner stopView = new EditTrainStopSpinner(getMainActivity(), stationIndex, lineFile, train);
@@ -380,80 +427,17 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            EditTimeView2 editText=findViewById(R.id.editTimeLayout);
+            EditTimeView editText=findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
             init();
-            initTimeView();
+            initDepAtiTimeView();
+            initStopTimeView();
             nessTimeCreate();
 
-//            final EditText operationName = (EditText) findViewById(R.id.operationName);
-//            operationName.setText(train.operationName);
-//            operationName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//                @Override
-//                public void onFocusChange(View view, boolean b) {
-//                    if (!b) {
-//                        train.operationName = operationName.getEditableText().toString();
-//                    }
-//                }
-//            });
-//            operationName.setEnabled(train.leaveYard);
-//
-//            ToggleButton leaveYead = (ToggleButton) findViewById(R.id.leaveYard);
-//            leaveYead.setChecked(train.leaveYard);
-//            leaveYead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                    train.leaveYard = b;
-//                    operationName.setEnabled(b);
-//                }
-//            });
-//            ToggleButton goYead = (ToggleButton) findViewById(R.id.goYard);
-//            goYead.setChecked(train.goYard);
-//            goYead.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                @Override
-//                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                    train.goYard = b;
-//                }
-//            });
-//
-//            Button beforeButton = (Button) findViewById(R.id.beforeTrain);
-//            beforeTrain = lineFile.diagram.get(diaIndex).beforeOperation(train);
-//            if (beforeTrain == null) {
-//                beforeButton.setText("前運用無し");
-//                beforeButton.setEnabled(false);
-//            } else {
-//                beforeButton.setText(beforeTrain.number + "\n" + timeInt2String4(beforeTrain.getADTime(train.startStation())) + "着");
-//                beforeButton.setEnabled(true);
-//            }
-//            beforeButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    getAOdiaActivity().openTrainEdit(diaIndex, beforeTrain);
-//
-//                }
-//            });
-//
-//            Button nextButton = (Button) findViewById(R.id.nextTrain);
-//            nextTrain = lineFile.diagram.get(diaIndex).nextOperation(train);
-//            if (nextTrain == null) {
-//                nextButton.setText("前運用無し");
-//                nextButton.setEnabled(false);
-//            } else {
-//                nextButton.setText(nextTrain.number + "\n" + timeInt2String4(nextTrain.getDATime(train.endStation())) + "発");
-//                nextButton.setEnabled(true);
-//
-//            }
-//            nextButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    getAOdiaActivity().openTrainEdit(diaIndex, nextTrain);
-//
-//                }
-//            });
 
         }catch (Exception e){
             SDlog.log(e);
-            SDlog.toast("原因不明のエラーが発生しました。"+e.getMessage());
+            SDlog.toast(getMainActivity().getString(R.string.undefined_error)+e.getMessage());
         }
     }
 
@@ -464,37 +448,37 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         }
         betweenStationTimeLayout.removeAllViews();
         int size = 0;
-        int depTime = -1;
-        EditBetweenTimeView nessTime=null;
+        int time = -1;
+        BetweenTimeView nessTime=null;
         for (int i = 0; i < lineFile.getStationNum(); i++) {
             nessTime=null;
             int stationIndex = train.getStationIndex(i);
             size++;
             if (train.timeExist(stationIndex,1)) {
-                if (depTime >= 0) {
-                    nessTime = new EditBetweenTimeView(getMainActivity(), train.getAriTime(stationIndex) - depTime,  size);
+                if (time >= 0) {
+                    nessTime = new BetweenTimeView(getMainActivity(), train.getAriTime(stationIndex) - time,  size);
                 }
-                depTime = -1;
+                time = train.getAriTime(stationIndex);
                 size = 0;
-            }
-            if (train.timeExist(stationIndex,0)) {
-                if (depTime >= 0) {
-                    nessTime = new EditBetweenTimeView(getMainActivity(), train.getDepTime(stationIndex) - depTime, size);
+            }else if (train.timeExist(stationIndex,0)) {
+                if (time >= 0) {
+                    nessTime = new BetweenTimeView(getMainActivity(), train.getDepTime(stationIndex) - time, size);
                 } else {
                     if (size != 0) {
-                        nessTime = new EditBetweenTimeView(getMainActivity(), -1, size - 1);
+                        nessTime = new BetweenTimeView(getMainActivity(), -1, size - 1);
                     }
                 }
-                depTime = train.getDepTime(stationIndex);
+            }
+            if (train.timeExist(stationIndex,0)) {
+                time = train.getDepTime(stationIndex);
                 size = 0;
             }
             if(nessTime!=null) {
                 betweenStationTimeLayout.addView(nessTime);
-
             }
 
         }
-        nessTime = new EditBetweenTimeView(getMainActivity(), -1, size);
+        nessTime = new BetweenTimeView(getMainActivity(), -1, size);
         betweenStationTimeLayout.addView(nessTime);
     }
 
@@ -506,10 +490,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
     public void setOnFragmentCloseListener(OnFragmentCloseListener listener) {
         fragmentCloseListener = listener;
     }
-
-
-
-
     public static String timeInt2String4(int time) {
         if (time < 0) return "";
         time = time / 60;
@@ -519,22 +499,35 @@ public class TrainTimeEditFragment extends Fragment implements OnTrainChangeList
         return String.format("%02d", hh) + " " + String.format("%02d", mm);
     }
 
+
+
+
+    @Override
+    public void onTimeChanged(int station, int AD) {
+        final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
+        final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
+        if(AD==Train.DEPART){
+            ((TimeView)departureTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
+        }else{
+            ((TimeView)arrivalTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
+        }
+        initDepAtiTimeView();
+        initStopTimeView();
+        nessTimeCreate();
+    }
+
     @Override
     public void trainChanged(Train train) {
         init();
-        initTimeView();
+        upDateDepAriTimeView();
+        initStopTimeView();
         nessTimeCreate();
-        if(trainChangeListener!=null){
-            trainChangeListener.trainChanged(train);
-        }
+
+
     }
+
     @Override
     public void allTrainChange() {
-        init();
-        initTimeView();
-        nessTimeCreate();
-        if(trainChangeListener!=null){
-            trainChangeListener.allTrainChange();
-        }
+
     }
 }

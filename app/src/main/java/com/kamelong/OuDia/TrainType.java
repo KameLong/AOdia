@@ -32,7 +32,6 @@ public class TrainType implements Cloneable {
     /**
      時刻表ビューで、この列車種別の時刻を表示するための時刻表フォント。
      範囲は、 0 以上、 JIKOKUHYOUFONT_COUNT 未満です。
-
      - 0：『時刻表ビュー 1』
      - 1: 『時刻表ビュー 2』
      - 2: 『時刻表ビュー 3』
@@ -40,7 +39,6 @@ public class TrainType implements Cloneable {
     public int fontIndex=0;
     /**
      時刻表背景色、ダイヤのプロパティにおいて、背景色パターンが種別色の場合に参照されます。
-
      規定値は、白。
      */
     public Color timeTableBackColor=new Color("#FFFFFF");

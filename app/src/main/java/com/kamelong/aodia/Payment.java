@@ -76,11 +76,11 @@ public class Payment {
             }
             // BILLING_RESPONSE_RESULT_USER_CANCELED
             else if(response == 1) {
-                alert("購入できませんでした");
+                alert(activity.getString(R.string.cant_buy));
             }
             // BILLING_RESPONSE_RESULT_ITEM_ALREADY_OWNED
             else if(response == 7){
-                alert("既に購入している");
+                alert(activity.getString(R.string.already_buy));
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -99,16 +99,16 @@ public class Payment {
                     JSONObject jo = new JSONObject(purchaseData);
                     String productId = jo.getString("productId");
 
-                    alert("寄付して頂きありがとうございます（カメロング）");
+                    alert(activity.getString(R.string.buy_thanks));
                     // 購入成功後すぐに消費する
                     // use();
                 }
                 catch (JSONException e) {
-                    alert("Failed to parse purchase data.");
+                    alert(activity.getString(R.string.purchase_error));
                     e.printStackTrace();
                 }
             } else {
-                alert("購入に失敗しました");
+                alert(activity.getString(R.string.purchase_fail));
             }
         }
     }
@@ -157,7 +157,6 @@ public class Payment {
                     String purchaseData = purchaseDataList.get(i);
                     JSONObject object = new JSONObject(purchaseData);
                     String productId = object.getString("productId");
-                    String purchaseToken = object.getString("purchaseToken");
                     if(productId.equals(id)){
                         return true;
                     }
@@ -166,7 +165,7 @@ public class Payment {
             }
         }catch(Exception e) {
             e.printStackTrace();
-            alert("購入チェック時にエラーが発生しました");
+            alert(activity.getString(R.string.purchase_fail));
         }
         return false;
     }

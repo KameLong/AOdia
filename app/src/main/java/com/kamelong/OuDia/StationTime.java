@@ -293,6 +293,17 @@ public class StationTime implements Cloneable{
      * @return 発時刻
      */
     public int getDepTime() {
+        if(depTime<0){
+            return -1;
+        }
+        if(depTime>train.lineFile.diagramStartTime+24*3600){
+            depTime=depTime-24*3600;
+            return getDepTime();
+        }
+        if(depTime<train.lineFile.diagramStartTime){
+            depTime=depTime+24*3600;
+            return getDepTime();
+        }
         return depTime;
     }
     /**
@@ -319,6 +330,17 @@ public class StationTime implements Cloneable{
      * @return 着時刻
      */
     public int getAriTime() {
+        if(ariTime<0){
+            return -1;
+        }
+        if(ariTime>train.lineFile.diagramStartTime+24*3600){
+            ariTime=ariTime-24*3600;
+            return getAriTime();
+        }
+        if(ariTime<train.lineFile.diagramStartTime){
+            ariTime=ariTime+24*3600;
+            return getAriTime();
+        }
         return ariTime;
     }
 
