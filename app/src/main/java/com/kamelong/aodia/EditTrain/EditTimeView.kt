@@ -151,10 +151,10 @@ class EditTimeView : LinearLayout {
         if (train.timeExist(stationIndex, AD)) {
             train.setTime(stationIndex, AD, train.getTime(stationIndex, AD) + change)
         }
-        if (AD == 1 && (findViewById<View>(R.id.after) as CheckBox).isChecked) {
+        if (AD == 1 && (findViewById<View>(R.id.after) as CheckBox).isChecked&&train.timeExist(stationIndex,0)) {
             train.setTime(stationIndex, 0, train.getTime(stationIndex, 0) + change)
         }
-        if (AD == 0 && (findViewById<View>(R.id.before) as CheckBox).isChecked) {
+        if (AD == 0 && (findViewById<View>(R.id.before) as CheckBox).isChecked&&train.timeExist(stationIndex,1)) {
             train.setTime(stationIndex, 1, train.getTime(stationIndex, 1) + change)
         }
         if (train.direction == 0 && (findViewById<View>(R.id.before) as CheckBox).isChecked || train.direction == 1 && (findViewById<View>(R.id.after) as CheckBox).isChecked) {

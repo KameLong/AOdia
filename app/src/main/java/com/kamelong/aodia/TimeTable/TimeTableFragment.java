@@ -149,7 +149,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             trains=lineFile.getDiagram(diaIndex).trains[direction];
 
             for (Train train :trains) {
-                if(lineFile.trainType.showInTimeTable) {
+                if(lineFile.trainType.get(train.type).showInTimeTable){
                     TrainNameView trainNameView = new TrainNameView(getActivity(), this, options, train);
                     trainNameLinea.addView(trainNameView);
                 }
@@ -157,7 +157,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
             trainTimeLinear.removeAllViews();
             for (Train train :trains) {
-                if(lineFile.trainType.showInTimeTable) {
+                if(lineFile.trainType.get(train.type).showInTimeTable){
                     TrainTimeView trainTimeView = new TrainTimeView(getActivity(), options, lineFile,train,direction,this);
                     trainTimeLinear.addView(trainTimeView);
                 }
@@ -319,7 +319,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         for(int i=0;i<trainNameLinea.getChildCount();i++){
             TrainNameView nameView=(TrainNameView)trainNameLinea.getChildAt(i);
             if(nameView.selected){
-                copyTrain.add(trains.get(i));
+                copyTrain.add(nameView.train);
                 nameView.setSelected(false);
             }
         }
@@ -353,7 +353,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                     for (int i = 0; i < trainNameLinea.getChildCount(); i++) {
                         TrainNameView nameView = (TrainNameView) trainNameLinea.getChildAt(i);
                         if (nameView.selected) {
-                            pasteIndex = i;
+                            pasteIndex = trains.indexOf(nameView.train);
                             break;
                         }
                     }

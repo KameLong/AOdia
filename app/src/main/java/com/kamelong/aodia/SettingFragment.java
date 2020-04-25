@@ -198,9 +198,6 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
     @Override
     public void onResume() {
         super.onResume();
-        Payment payment=((MainActivity)getContext()).payment;
-        (findPreference("aaa")).setEnabled(!payment.buyCheck("010"));
-        ((CheckBoxPreference) findPreference("aaa")).setChecked(payment.buyCheck("010"));
     }
 
     @Override
