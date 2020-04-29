@@ -9,6 +9,8 @@
       <module fileurl="file://$PROJECT_DIR$/app/AndroidProject.AOdia.app.iml" filepath="$PROJECT_DIR$/app/AndroidProject.AOdia.app.iml" group="AOdia/app" />
       <module fileurl="file://$PROJECT_DIR$/ProgramingProject-AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProject-AOdia.iml" />
       <module fileurl="file://$PROJECT_DIR$/ProgramingProject.AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProject.AOdia.iml" group="AOdia" />
+      <module fileurl="file://$PROJECT_DIR$/ProgramingProjects.AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProjects.AOdia.iml" group="AOdia" />
+      <module fileurl="file://$PROJECT_DIR$/app/ProgramingProjects.AOdia.app.iml" filepath="$PROJECT_DIR$/app/ProgramingProjects.AOdia.app.iml" group="AOdia/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

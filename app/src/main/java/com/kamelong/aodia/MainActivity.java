@@ -247,7 +247,7 @@ public class MainActivity extends FragmentActivity {
     private void createSample(){
         File sample=new File(getExternalFilesDir(null), "sample.oud");
         if(sample.exists()){
-//            return;
+            return;
         }
         try{
             InputStream input=getAssets().open("sample.oud");

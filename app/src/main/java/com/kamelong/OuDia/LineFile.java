@@ -1142,65 +1142,73 @@ public class LineFile implements Cloneable {
      * 組み入れ路線の始発終着駅が組み入れ駅と同じ場合は、２路線の駅を共通化します。
      */
     public void addLineFile(int insertPos,LineFile other){
-        LineFile insertFile=other.clone();
-        //挿入先の駅名
+        LineFile lineFile=other.clone();
         String stationName=getStation(insertPos).name;
         int type=0;
-        //挿入路線の0番目の駅名が挿入先の駅名の時
-        if(insertFile.getStation(0).name.equals(stationName)){
+        if(lineFile.getStation(0).name.equals(stationName)){
             for(int i=0;i<insertPos;i++){
-                insertFile.addStation(i,getStation(i).clone(insertFile),true);
+                lineFile.addStation(i,getStation(i).clone(lineFile),true);
             }
             for(int i=insertPos;i<getStationNum();i++){
-                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
+                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
             }
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+i,insertFile.getStation(i+insertPos).clone(this),true);
+                this.addStation(insertPos+i,lineFile.getStation(i+insertPos).clone(this),true);
 
             }
             //分岐駅の処理
-            for(Diagram dia:diagram){
-                for(Train train:dia.trains[0]){
-                    if(train.getStartStation()!=insertPos+other.getStationNum()) {
-                        train.setStopType(insertPos , train.getStopType(insertPos+ other.getStationNum()));
-                        train.setTime(insertPos, Train.ARRIVE, train.getTime(insertPos + other.getStationNum(), Train.ARRIVE, true));
-                        train.setTime(insertPos + other.getStationNum(), Train.ARRIVE, -1);
-                    }
-                    if (!(insertPos+other.getStationNum()+1 <getStationNum()&&train.getStopType(insertPos+other.getStationNum()+1) != StationTime.STOP_TYPE_NOSERVICE)){
-                        for (int i = insertPos+1 ; i < insertPos + other.getStationNum()+1 ; i++) {
-                            train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+            for(Diagram dia:diagram) {
+                for (Train train : dia.trains[0]) {
+                    //本線側列車で分岐駅を通るもの
+                    if (train.getStopType(insertPos + other.getStationNum()) == StationTime.STOP_TYPE_STOP || train.getStopType(insertPos + other.getStationNum()) == StationTime.STOP_TYPE_PASS) {
+                        //本線当駅始発の列車は関係ない
+                        if(train.getStartStation()!=insertPos + other.getStationNum() ){
+                            train.setStopType(insertPos, train.getStopType(insertPos + other.getStationNum()));
+                            train.setTime(insertPos, Train.ARRIVE, train.getTime(insertPos + other.getStationNum(), Train.ARRIVE, true));
+                            train.setTime(insertPos + other.getStationNum(), Train.ARRIVE, -1);
+                            if (insertPos + other.getStationNum() + 1 < lineFile.getStationNum()) {
+                                //当駅止まりの列車は経由なしにしない
+                                if (train.getStopType(insertPos + other.getStationNum() + 1) == StationTime.STOP_TYPE_NOSERVICE) {
+                                    for (int i = insertPos + 1; i < insertPos + other.getStationNum() + 1; i++) {
+                                        train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                                    }
+                                }
+                            }
+
                         }
+
                     }
 
                 }
-                for(Train train:dia.trains[1]){
-                    if(train.getEndStation()!=insertPos+other.getStationNum()) {
-                        train.setStopType(insertPos , train.getStopType(insertPos)+ other.getStationNum());
-                        train.setTime(insertPos, Train.DEPART, train.getTime(insertPos + other.getStationNum(), Train.DEPART, true));
-                        train.setTime(insertPos + other.getStationNum(), Train.DEPART, -1);
-                    }
-                    if (!(insertPos+other.getStationNum()+1 <getStationNum()&&train.getStopType(insertPos+other.getStationNum()+1) != StationTime.STOP_TYPE_NOSERVICE)){
-                        for (int i = insertPos+1 ; i < insertPos + other.getStationNum()+1 ; i++) {
-                            train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                for (Train train : dia.trains[1]) {
+                    if (train.getStopType(insertPos + other.getStationNum()) == StationTime.STOP_TYPE_STOP || train.getStopType(insertPos + other.getStationNum()) == StationTime.STOP_TYPE_PASS) {
+                        //本線当駅終着の列車は関係ない
+                        if (train.getEndStation() != insertPos + other.getStationNum()) {
+                            train.setStopType(insertPos, train.getStopType(insertPos + other.getStationNum()));
+                            train.setTime(insertPos, Train.DEPART, train.getTime(insertPos + other.getStationNum(), Train.DEPART, true));
+                            train.setTime(insertPos + other.getStationNum(), Train.DEPART, -1);
+                            if (insertPos + other.getStationNum() + 1 < lineFile.getStationNum()) {
+                                if (train.getStopType(insertPos + other.getStationNum() + 1) == StationTime.STOP_TYPE_NOSERVICE) {
+                                    for (int i = insertPos + 1; i < insertPos + other.getStationNum() + 1; i++) {
+                                        train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
-            for(Diagram dia:insertFile.diagram){
+            for(Diagram dia:lineFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){
                         frag=true;
                         for(Train train:dia.trains[0]){
-                            if(train.getEndStation()>=0&&train.getEndStation()>insertPos) {
-                                dia2.addTrain(0, -1, train.clone(this));
-                            }
+                            dia2.addTrain(0,-1,train.clone(this));
                         }
                         for(Train train:dia.trains[1]){
-                            if(train.getStartStation()>=0&&train.getStartStation()>insertPos) {
-                                dia2.addTrain(1, -1, train.clone(this));
-                            }
+                            dia2.addTrain(1,-1,train.clone(this));
                         }
                         break;
                     }
@@ -1225,19 +1233,17 @@ public class LineFile implements Cloneable {
                 deleteStation(insertPos+other.getStationNum());
             }
         }
-        //挿入元路線最後の駅がオリジナルの挿入駅名の時
-        else if(insertFile.getStation(insertFile.getStationNum()-1).name.equals(stationName)){
+        else if(lineFile.getStation(lineFile.getStationNum()-1).name.equals(stationName)){
             for(int i=0;i<=insertPos;i++){
-                insertFile.addStation(i,getStation(i).clone(insertFile),true);
+                lineFile.addStation(i,getStation(i).clone(lineFile),true);
             }
             for(int i=insertPos+1;i<getStationNum();i++){
-                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
+                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
             }
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+1+i,insertFile.getStation(i+insertPos+1).clone(this),true);
+                this.addStation(insertPos+1+i,lineFile.getStation(i+insertPos+1).clone(this),true);
             }
-            //分岐駅処理
             for(Diagram dia:diagram){
                 for(Train train:dia.trains[0]){
                     if(train.getEndStation()!=insertPos) {
@@ -1245,10 +1251,12 @@ public class LineFile implements Cloneable {
                         train.setTime(insertPos + other.getStationNum(), Train.DEPART, train.getTime(insertPos, Train.DEPART, true));
                         train.setTime(insertPos, Train.DEPART, -1);
                     }
-                    if (!(insertPos >0&&train.getStopType(insertPos-1) != StationTime.STOP_TYPE_NOSERVICE)){
+                    if (insertPos >0) {
+                        if (train.getStopType(insertPos-1) == StationTime.STOP_TYPE_NOSERVICE) {
                             for (int i = insertPos ; i < insertPos + other.getStationNum() ; i++) {
                                 train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
                             }
+                        }
                     }
 
                 }
@@ -1258,27 +1266,25 @@ public class LineFile implements Cloneable {
                         train.setTime(insertPos + other.getStationNum(), Train.ARRIVE, train.getTime(insertPos, Train.ARRIVE, true));
                         train.setTime(insertPos, Train.ARRIVE, -1);
                     }
-                    if (!(insertPos >0&&train.getStopType(insertPos-1) != StationTime.STOP_TYPE_NOSERVICE)) {
+                    if (insertPos >0) {
+                        if (train.getStopType(insertPos-1) == StationTime.STOP_TYPE_NOSERVICE) {
                             for (int i = insertPos ; i < insertPos + other.getStationNum() ; i++) {
                                 train.setStopType(i, StationTime.STOP_TYPE_NOSERVICE);
                             }
+                        }
                     }
                 }
             }
-            for(Diagram dia:insertFile.diagram){
+            for(Diagram dia:lineFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){
                         frag=true;
                         for(Train train:dia.trains[0]){
-                            if(train.getStartStation()>=0&&train.getStartStation()<insertPos+other.getStationNum()) {
-                                dia2.addTrain(0, -1, train.clone(this));
-                            }
+                            dia2.addTrain(0,-1,train.clone(this));
                         }
                         for(Train train:dia.trains[1]){
-                            if(train.getEndStation()>=0&&train.getEndStation()<insertPos+other.getStationNum()) {
-                                dia2.addTrain(1, -1, train.clone(this));
-                            }
+                            dia2.addTrain(1,-1,train.clone(this));
                         }
                         break;
                     }
@@ -1305,15 +1311,15 @@ public class LineFile implements Cloneable {
         }
         else{
             for(int i=0;i<=insertPos;i++){
-                insertFile.addStation(i,getStation(i).clone(insertFile),true);
+                lineFile.addStation(i,getStation(i).clone(lineFile),true);
             }
             for(int i=insertPos;i<getStationNum();i++){
-                insertFile.addStation(insertFile.getStationNum(),getStation(i).clone(insertFile),true);
+                lineFile.addStation(lineFile.getStationNum(),getStation(i).clone(lineFile),true);
             }
             this.addStation(insertPos+1,getStation(insertPos).clone(this),true);
 
             for(int i=0;i<other.getStationNum();i++){
-                this.addStation(insertPos+1+i,insertFile.getStation(i+insertPos+1).clone(this),true);
+                this.addStation(insertPos+1+i,lineFile.getStation(i+insertPos+1).clone(this),true);
             }
             for(Diagram dia:diagram){
                 for(Train train:dia.trains[0]){
@@ -1327,7 +1333,7 @@ public class LineFile implements Cloneable {
                     train.setTime(insertPos,Train.ARRIVE,-1);
                 }
             }
-            for(Diagram dia:insertFile.diagram){
+            for(Diagram dia:lineFile.diagram){
                 boolean frag=false;
                 for(Diagram dia2:diagram){
                     if(dia.name.equals(dia2.name)){

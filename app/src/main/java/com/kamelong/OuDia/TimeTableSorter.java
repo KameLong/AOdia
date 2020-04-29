@@ -1,6 +1,6 @@
 package com.kamelong.OuDia;
 
-import com.kamelong.tool.SDlog;
+import com.kamelong2.aodia.SDlog;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -150,12 +150,11 @@ public class TimeTableSorter {
             }
             return result;
         }catch (Exception e){
-//            SDlog.toast(e.toString());
             SDlog.log(e);
         }
         result=new ArrayList<>();
-        for(Train train :trainList){
-            result.add(train);
+        for (int i : sortBefore) {
+            result.add(trainList[i]);
         }
         return result;
     }
@@ -165,16 +164,18 @@ public class TimeTableSorter {
      */
     public void sortUp(int stationIndex)throws Exception{
         loopNum++;
-        if(loopNum>20){
+        if(loopNum>50){
             SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
-            return;
+            throw new Exception("並び替えエラー："+lineFile.name);
         }
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
 
             for (; stationIndex >=0; stationIndex--) {
                 //上り方向に探索
-
+                if (sorted[stationIndex]) {
+                    skip = false;
+                }
                 if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
                     //この駅が分岐駅設定されている場合
                     if (lineFile.getStation(stationIndex).brunchCoreStationIndex > stationIndex) {
@@ -182,9 +183,7 @@ public class TimeTableSorter {
                         skip = true;
                     }
                 }
-                if (sorted[stationIndex]) {
-                    skip = false;
-                }
+
                 if (!sorted[stationIndex]) {
                     //この駅がまだソートされていないとき
                     if(skip) {
@@ -253,24 +252,24 @@ public class TimeTableSorter {
      */
     public void sortDown(int stationIndex)throws Exception{
         loopNum++;
-        if(loopNum>20){
+        if(loopNum>50){
             SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
-            return;
+            throw new Exception("並び替えエラー："+lineFile.name);
         }
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false
 
             for (; stationIndex < lineFile.getStationNum(); stationIndex++) {
                 //下り方向に探索
+                if (sorted[stationIndex]) {
+                    skip = false;
+                }
                 if (lineFile.getStation(stationIndex).brunchCoreStationIndex >= 0) {
                     //この駅が分岐駅設定されている場合
                     if (lineFile.getStation(stationIndex).brunchCoreStationIndex < stationIndex) {
                         //上から分岐する場合はソート対象外
                         skip = true;
                     }
-                }
-                if (sorted[stationIndex]) {
-                    skip = false;
                 }
 
                 if (!sorted[stationIndex]) {

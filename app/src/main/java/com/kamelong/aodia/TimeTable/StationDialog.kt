@@ -149,7 +149,6 @@ class StationDialog(private val activity: MainActivity, internal var lineFile: L
                         connectList.add(connectLine)
                     }
                 }
-                //接続路線について
                 for(route in connectList){
 
                     val routeView=RouteView(activity,route,object:OnRouteViewClicked{
