@@ -598,6 +598,8 @@ public class LineFile implements Cloneable {
         PrintWriter out = new PrintWriter
                 (new BufferedWriter(new OutputStreamWriter
                         (new FileOutputStream(new File(fileName)),"Shift-JIS")));
+
+
         out.println("FileType=OuDia.1.02");
         out.println("Rosen.");
         out.println("Rosenmei="+name);
@@ -644,6 +646,8 @@ public class LineFile implements Cloneable {
 
         out.close();
     }
+
+
 
     @Override
     public LineFile clone(){

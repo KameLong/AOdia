@@ -22,6 +22,15 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PICK" />
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/oud"/>
+                <data android:mimeType="text/oud2"/>
+            </intent-filter>
         </activity>
         <activity
             android:name="com.kamelong2.aodia.AOdiaActivity"

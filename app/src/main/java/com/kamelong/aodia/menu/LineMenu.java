@@ -2,12 +2,17 @@ package com.kamelong.aodia.menu;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 
 import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.Diagram;
@@ -17,6 +22,13 @@ import com.kamelong.aodia.LineFileEditDialog;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
+import com.kamelong.tool.ShiftJISBufferedReader;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Created by kame on 2017/01/24.
@@ -69,7 +81,32 @@ public class LineMenu extends LinearLayout{
             findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    aodia.openSaveFragment(lineFile);
+
+                    Intent uploadIntent = ShareCompat.IntentBuilder.from(activity)
+                             .setType("application/oud")
+                            .getIntent()
+                            .setPackage("com.google.android.apps.docs");
+                    uploadIntent.putExtra(Intent.EXTRA_SUBJECT,new File(lineFile.filePath).getName());
+                    try{
+                        lineFile.saveToOuDiaFile(activity.getCacheDir()+"/temp.oud");
+                        ShiftJISBufferedReader buf=new ShiftJISBufferedReader(new File(activity.getCacheDir()+"/temp.oud"));
+                        String line = buf.readLine();
+                        StringBuilder sb = new StringBuilder();
+                        while(line != null){
+                            sb.append(line).append("\n");
+                            line = buf.readLine();
+                        }
+                        Uri contentUri = FileProvider.getUriForFile(context, "com.kamelong.aodia", new File(activity.getCacheDir()+"/temp.oud"));
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                        shareIntent.setType("text/plain");
+                        activity.startActivity(uploadIntent);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    System.out.println("test");
+
+//                    aodia.openSaveFragment(lineFile);
                 }
             });
             findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {

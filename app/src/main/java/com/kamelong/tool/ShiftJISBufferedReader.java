@@ -2,8 +2,13 @@ package com.kamelong.tool;
 
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 /*
  * Copyright (c) 2019 KameLong
@@ -17,6 +22,9 @@ import java.io.Reader;
  */
 
 public class ShiftJISBufferedReader extends BufferedReader {
+    public ShiftJISBufferedReader(File file) throws FileNotFoundException, UnsupportedEncodingException {
+        super(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
+    }
     public ShiftJISBufferedReader(Reader in) {
         super(in);
     }

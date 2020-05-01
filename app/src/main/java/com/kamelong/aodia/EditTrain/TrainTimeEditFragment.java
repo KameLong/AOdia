@@ -293,6 +293,11 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
             }
         });
     }
+
+    /**
+     * 発着時刻の更新を行います。
+     * Viewを作成するとき。初期操作はに亜hinitDepAriTimeViewを使ってください。
+     */
     private void upDateDepAriTimeView(){
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
@@ -340,9 +345,6 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
                 }
             });
             departureTimeLayout.addView(depTime);
-            if(focusStation==i&&focusAD==Train.DEPART){
-                depTime.setBackgroundColor(Color.YELLOW);
-            }
 
 
             //着時刻
@@ -366,10 +368,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
                     editText.setOnCloseEditTimeViewListener(new OnCloseEditTimeViewListener() {
                         @Override
                         public void onClosed() {
-                            v.setBackgroundColor(Color.WHITE);
+                            view.setCheck(false);
                         }
                     });
-                    v.setBackgroundColor(Color.YELLOW);
                 }
             });
             arrivalTimeLayout.addView(ariTime);
@@ -511,7 +512,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         }else{
             ((TimeView)arrivalTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
         }
-        initDepAtiTimeView();
+        upDateDepAriTimeView();
         initStopTimeView();
         nessTimeCreate();
     }
@@ -519,7 +520,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
     @Override
     public void trainChanged(Train train) {
         init();
-        upDateDepAriTimeView();
+        initDepAtiTimeView();
         initStopTimeView();
         nessTimeCreate();
 
