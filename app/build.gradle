@@ -8,8 +8,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 339
-        versionName "3.3.7"
+        versionCode 340
+        versionName "3.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -43,14 +43,14 @@ dependencies {
     implementation 'com.google.android:flexbox:1.1.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.preference:preference:1.1.1'
     testImplementation 'junit:junit:4.12'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.android.billingclient:billing:2.1.0'
-    implementation 'com.android.billingclient:billing-ktx:2.1.0'
+    implementation 'com.android.billingclient:billing:2.2.0'
+    implementation 'com.android.billingclient:billing-ktx:2.2.0'
 
 }
 repositories {

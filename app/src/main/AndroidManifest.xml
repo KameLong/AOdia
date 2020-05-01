@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kamelong.aodia">
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="com.android.vending.BILLING" />
     <application
@@ -22,15 +22,19 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
-                <action android:name="android.intent.action.PICK" />
-                <action android:name="android.intent.action.GET_CONTENT" />
-                <action android:name="android.intent.action.EDIT" />
-                <action android:name="android.intent.action.OPEN_DOCUMENT" />
+                <action android:name="android.intent.action.EDIT"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/oud"/>
                 <data android:mimeType="text/oud2"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/*"/>
+            </intent-filter>
+
         </activity>
         <activity
             android:name="com.kamelong2.aodia.AOdiaActivity"
@@ -39,7 +43,15 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme">
         </activity>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.kamelong.aodia.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

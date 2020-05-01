@@ -1,6 +1,7 @@
 package com.kamelong.aodia;
 
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -162,6 +163,12 @@ public class AOdia {
         }
         SDlog.log("この形式のファイルは読めません");
     }
+    /**
+     * ファイルを開く
+     */
+    public void openUri(ContentResolver contentResolver,Uri uri, String path) {
+        openOuDiaFile(contentResolver,uri,path);
+    }
 
     /**
      * GTFS形式のファイルを開く
@@ -194,6 +201,25 @@ public class AOdia {
             if(path!=null){
                 lineFile.filePath=path;
 
+            }
+            lineFile.setRouteID(new KLdetabase(activity));
+            lineFiles.add(lineFile);
+            lineFilesIndex.add(0,lineFile);
+            lineFileExpand.put(lineFile,true);
+            openTimeTable(lineFile, 0, 0);
+        }catch (Exception e){
+            SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
+            SDlog.log(e);
+        }
+    }
+    /**
+     * OuDia形式のファイルを開く
+     */
+    private void openOuDiaFile(ContentResolver contentResolver,Uri uri,String path){
+        try {
+            LineFile lineFile = new LineFile(contentResolver,uri);
+            if(path!=null){
+                lineFile.filePath=path;
             }
             lineFile.setRouteID(new KLdetabase(activity));
             lineFiles.add(lineFile);

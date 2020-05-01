@@ -2,13 +2,19 @@ package com.kamelong.aodia;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -61,6 +67,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent=getIntent();
         payment=new Payment(this);
         SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
@@ -100,6 +107,34 @@ public class MainActivity extends FragmentActivity {
         //AOdia起動
         aodiaData.openHelp();
         aodiaData.loadTempData();
+        System.out.println("intent action:"+intent.getAction());
+        if(intent.getAction()!=null&&(intent.getAction().equals(Intent.ACTION_EDIT)||intent.getAction().equals(Intent.ACTION_VIEW))){
+            System.out.println();
+            try {
+                System.out.println("intent data:"+intent.getData());
+                Uri uri=intent.getData();
+                if(uri.toString().startsWith("content")){
+                    aodiaData.openUri(getContentResolver(),uri,null);
+                }else{
+                    String path=intent.getData().getEncodedPath();
+                    System.out.println("intent path1:"+path);
+                    if(path.startsWith("/downloads")){
+                        path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+path.substring(10);
+                    }
+                    System.out.println("intent path2:"+path);
+                    File file = new File(path);
+
+                    aodiaData.openFile(file);
+
+                }
+            }catch (NullPointerException e){
+                e.printStackTrace();
+                SDlog.toast("ファイルを開くことができません.");
+            }catch (Exception e){
+                e.printStackTrace();
+                SDlog.toast("ファイルを開くことができません.");
+            }
+        }
         //メイン画面にあるボタン設定
         findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +238,8 @@ public class MainActivity extends FragmentActivity {
 
 
     }
+
+
     @NonNull
     public AOdia getAOdia(){
         return aodiaData;

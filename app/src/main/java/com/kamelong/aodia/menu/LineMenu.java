@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -82,31 +83,9 @@ public class LineMenu extends LinearLayout{
                 @Override
                 public void onClick(View view) {
 
-                    Intent uploadIntent = ShareCompat.IntentBuilder.from(activity)
-                             .setType("application/oud")
-                            .getIntent()
-                            .setPackage("com.google.android.apps.docs");
-                    uploadIntent.putExtra(Intent.EXTRA_SUBJECT,new File(lineFile.filePath).getName());
-                    try{
-                        lineFile.saveToOuDiaFile(activity.getCacheDir()+"/temp.oud");
-                        ShiftJISBufferedReader buf=new ShiftJISBufferedReader(new File(activity.getCacheDir()+"/temp.oud"));
-                        String line = buf.readLine();
-                        StringBuilder sb = new StringBuilder();
-                        while(line != null){
-                            sb.append(line).append("\n");
-                            line = buf.readLine();
-                        }
-                        Uri contentUri = FileProvider.getUriForFile(context, "com.kamelong.aodia", new File(activity.getCacheDir()+"/temp.oud"));
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                        shareIntent.setType("text/plain");
-                        activity.startActivity(uploadIntent);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    System.out.println("test");
 
-//                    aodia.openSaveFragment(lineFile);
+
+                    aodia.openSaveFragment(lineFile);
                 }
             });
             findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {

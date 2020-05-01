@@ -1,6 +1,9 @@
 package com.kamelong.OuDia;
 
 
+import android.content.ContentResolver;
+import android.net.Uri;
+
 import com.kamelong.aodia.KLdatabase.KLdetabase;
 import com.kamelong.tool.Color;
 import com.kamelong.tool.Font;
@@ -11,11 +14,13 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
@@ -261,6 +266,16 @@ public class LineFile implements Cloneable {
         checkBorderStation();
         System.out.println("読み込み終了");
 
+    }
+
+    public LineFile(ContentResolver contentResolver, Uri uri) throws Exception {
+        BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(contentResolver.openInputStream(uri),"Shift-JIS"));
+        version=br.readLine().split("=",-1)[1];
+        if(version.startsWith("OuDia.")){
+            loadDiaFile(br);
+        }else{
+            loadDiaFile(new BufferedReader(new InputStreamReader(contentResolver.openInputStream(uri),"Shift-JIS")));
+        }
     }
 
     /**

@@ -34,11 +34,11 @@ import java.util.ArrayList;
 /**
  * 端末内にファイルを保存するためのView
  */
-public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
+public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
     public String currentDirectoryPath="";
     public LineFile lineFile=null;
 
-    public FileSaveFromSystem(Context context) {
+    public FileSaveToSystem(Context context) {
         this(context,null);
     }
 
@@ -55,8 +55,12 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
         this.lineFile=lineFile;
         System.out.println("path:"+lineFile.filePath);
         try {
-            ((EditText) findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/") + 1, lineFile.filePath.lastIndexOf(".")));
-            openDirectory(lineFile.filePath.substring(0,lineFile.filePath.lastIndexOf("/")));
+            if(lineFile.filePath.length()!=0) {
+                ((EditText) findViewById(R.id.fileName)).setText(lineFile.filePath.substring(lineFile.filePath.lastIndexOf("/") + 1, lineFile.filePath.lastIndexOf(".")));
+                openDirectory(lineFile.filePath.substring(0, lineFile.filePath.lastIndexOf("/")));
+            }else{
+                ((EditText) findViewById(R.id.fileName)).setText(lineFile.name);
+            }
         }catch (Exception e){
             SDlog.log(e);
         }
@@ -166,7 +170,7 @@ public class FileSaveFromSystem extends LinearLayout implements OpenDirectory{
             }
         });
     }
-    public FileSaveFromSystem(Context context, AttributeSet attr){
+    public FileSaveToSystem(Context context, AttributeSet attr){
         super(context,attr);
         LayoutInflater.from(context).inflate(R.layout.filesave_terminal, this);
         //ルートディレクトリ選択スピナー

@@ -24,19 +24,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.kamelong.aodia.AOdiaIO.FileSaveFromSystem
+                <com.kamelong.aodia.AOdiaIO.FileSaveToSystem
                     android:id="@+id/tab1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                </com.kamelong.aodia.AOdiaIO.FileSaveFromSystem>
-
-                <FrameLayout
+                </com.kamelong.aodia.AOdiaIO.FileSaveToSystem>
+                <com.kamelong.aodia.AOdiaIO.FileSaveToGoogleDrive
                     android:id="@+id/tab2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"/>
+                    android:layout_height="match_parent">
 
+                </com.kamelong.aodia.AOdiaIO.FileSaveToGoogleDrive>
                 <FrameLayout
                     android:id="@+id/tab3"
                     android:layout_width="match_parent"

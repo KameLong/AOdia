@@ -66,12 +66,18 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
                     .setIndicator(getString(R.string.FileInTheDevice))
                     .setContent(R.id.tab1);
             tabHost.addTab(spec);
+            spec = tabHost.newTabSpec("Tab2")
+                    .setIndicator("Google Drive")
+                    .setContent(R.id.tab2);
+            tabHost.addTab(spec);
 
             tabHost.setCurrentTab(0);
 
             try {
-                FileSaveFromSystem fileSaveFromSystem=getActivity().findViewById(R.id.tab1);
+                FileSaveToSystem fileSaveFromSystem=getActivity().findViewById(R.id.tab1);
                 fileSaveFromSystem.setLineFile(lineFile);
+                FileSaveToGoogleDrive fileSaveToGoogleDrive=getActivity().findViewById(R.id.tab2);
+                fileSaveToGoogleDrive.setLineFile(lineFile);
 
             } catch (Exception e) {
                 SDlog.log(e);

@@ -4,37 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     >
-
-    <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/baseDirectory"
-            android:textColor="@android:color/black" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.86" />
-
-    </LinearLayout>
-
     <TextView
-        android:id="@+id/pathView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text=""
+        android:text="Google Driveに保存する"
         android:textColor="@android:color/black" />
 
     <LinearLayout
@@ -42,14 +18,12 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:orientation="vertical">
-
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:id="@+id/savestyle">
-
             <TextView
                 android:text="保存形式"
                 android:layout_width="wrap_content"
@@ -57,7 +31,6 @@
                 android:textColor="#000"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="15dp" />
-
             <RadioButton
                 android:text="oud形式"
                 android:layout_width="wrap_content"
@@ -95,23 +68,20 @@
                 android:textColor="#000"
                 android:textSize="14dp" />
 
-            <Button
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="0"
-                android:text="保存" />
+
 
         </LinearLayout>
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="0"
+            android:text="Google Driveに保存" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/fileList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp" />
+
 
 </LinearLayout>
