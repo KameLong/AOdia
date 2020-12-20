@@ -77,14 +77,19 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+        String log="";
         try {
             Bundle bundle = getArguments();
             lineFile = getAOdia().getLineFile(bundle.getInt(AOdia.FILE_INDEX, 0));
+            log+="lineFile:"+bundle.getInt(AOdia.FILE_INDEX)+",";
+            log+=lineFile.name+".";
             diaIndex = bundle.getInt(AOdia.DIA_INDEX, 0);
             direction = bundle.getInt(AOdia.DIRECTION, 0);
+            log+="station:"+bundle.getInt(AOdia.STATION_INDEX)+".";
             station = lineFile.getStation(bundle.getInt(AOdia.STATION_INDEX, 0));
         } catch (Exception e) {
             SDlog.log(e);
+            SDlog.log(new Exception(log));
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         return contentView;

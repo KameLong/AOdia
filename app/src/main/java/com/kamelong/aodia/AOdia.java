@@ -217,14 +217,14 @@ public class AOdia {
      */
     private void openOuDiaFile(ContentResolver contentResolver,Uri uri,String path){
         try {
-            LineFile lineFile = new LineFile(contentResolver,uri);
-            if(path!=null){
-                lineFile.filePath=path;
+            LineFile lineFile = new LineFile(contentResolver, uri);
+            if (path != null) {
+                lineFile.filePath = path;
             }
             lineFile.setRouteID(new KLdetabase(activity));
             lineFiles.add(lineFile);
-            lineFilesIndex.add(0,lineFile);
-            lineFileExpand.put(lineFile,true);
+            lineFilesIndex.add(0, lineFile);
+            lineFileExpand.put(lineFile, true);
             openTimeTable(lineFile, 0, 0);
         }catch (Exception e){
             SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
@@ -252,13 +252,6 @@ public class AOdia {
         calendar.setTimeInMillis(System.currentTimeMillis());
         String month=calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONTH);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
-        if(!pref.getBoolean(month,false)){
-            if(activity.payment.buyCheck("010")||activity.payment.buyCheck("012")){
-                //pass
-            }else{
-                openPay2Fragment();
-            }
-        }
 
 
     }
@@ -480,10 +473,7 @@ public class AOdia {
         PayFragment fragment = new PayFragment();
         openFragment(fragment);
     }
-    public void openPay2Fragment(){
-        Pay2Fragment fragment = new Pay2Fragment();
-        openFragment(fragment);
-    }
+
 
     public void saveData(){
 

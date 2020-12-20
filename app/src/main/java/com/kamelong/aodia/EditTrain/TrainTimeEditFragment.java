@@ -1,6 +1,5 @@
 package com.kamelong.aodia.EditTrain;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,13 +61,14 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
 
         try {//まずBundleを確認し、fileNum,diaIndex,directを更新する
             Bundle bundle = getArguments();
-            assert bundle != null;
+            assert bundle != null:"bundle is null";
             int fileNum = bundle.getInt(AOdia.FILE_INDEX);
             diaNumber = bundle.getInt(AOdia.DIA_INDEX);
             int direction = bundle.getInt(AOdia.DIRECTION);
             int trainNum = bundle.getInt(AOdia.TRAIN_INDEX);
 
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
+            assert lineFile!=null:"lineFile is null. lineFileCount="+getMainActivity().getAOdia().getLineFileList().size()+".lineFIleIndex="+fileNum;
             train = lineFile.getTrain(diaNumber, direction, trainNum);
         }
         catch (Exception e) {
@@ -296,7 +296,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
 
     /**
      * 発着時刻の更新を行います。
-     * Viewを作成するとき。初期操作はに亜hinitDepAriTimeViewを使ってください。
+     * Viewを作成するとき。初期操作はinitDepAriTimeViewを使ってください。
      */
     private void upDateDepAriTimeView(){
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
@@ -310,7 +310,8 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         }
 
     }
-    private void initDepAtiTimeView() {
+    private void initDepAriTimeView() {
+        assert lineFile!=null:"lineFile is null";
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
         departureTimeLayout.removeAllViews();
@@ -431,7 +432,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
             EditTimeView editText=findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
             init();
-            initDepAtiTimeView();
+            initDepAriTimeView();
             initStopTimeView();
             nessTimeCreate();
 
@@ -520,15 +521,18 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
     @Override
     public void trainChanged(Train train) {
         init();
-        initDepAtiTimeView();
+        initDepAriTimeView();
         initStopTimeView();
         nessTimeCreate();
-
 
     }
 
     @Override
     public void allTrainChange() {
+        init();
+        initDepAriTimeView();
+        initStopTimeView();
+        nessTimeCreate();
 
     }
 }

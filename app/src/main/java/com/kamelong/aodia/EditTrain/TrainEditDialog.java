@@ -8,6 +8,7 @@ import android.view.View;
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
+import com.kamelong.tool.SDlog;
 
 public class TrainEditDialog extends Dialog {
     private OnTrainChangeListener listener;
@@ -39,6 +40,10 @@ public class TrainEditDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 int trainIndex=timetable.getTrainIndex(train.direction,train);
+                if(trainIndex<0){
+                    SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
+                    return;
+                }
                 for(int i=trainIndex;i<timetable.getTrainNum(train.direction);i++){
                     Train other=timetable.getTrain(train.direction,i);
                     if(other.getStartStation()==stationIndex){

@@ -131,30 +131,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
                 return false;
             }
         });
-        try {
-            findPreference("011").setOnPreferenceChangeListener(
-                    new Preference.OnPreferenceChangeListener() {
-                        @Override
-                        public boolean onPreferenceChange(Preference preference, Object o) {
 
-                            if(payment.buyCheck("011")){
-                                ((CheckBoxPreference) preference).setChecked(true);
-                                ((CheckBoxPreference) preference).setEnabled(false);
-                            }else{
-                                payment.buy("011");
-                                if(payment.buyCheck("011")){
-                                    ((CheckBoxPreference) preference).setChecked(true);
-                                    ((CheckBoxPreference) preference).setEnabled(false);
-                                }
-                            }
-                            return false;
-                        }
-
-                    });
-
-        }catch(Exception e){
-            SDlog.log(e);
-        }
 
 //        final CheckBoxPreference a=findPreference("aaa");
 //        a.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {

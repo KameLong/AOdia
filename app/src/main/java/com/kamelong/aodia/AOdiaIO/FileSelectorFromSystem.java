@@ -89,6 +89,7 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                     File directory = new File(currentDirectoryPath);
                     try {
                         File[] files = directory.listFiles();
+                        assert  files!=null:directory.getPath();
                         String[]filePath=new String[files.length];
                         ArrayList<String>[] stationList=new ArrayList[files.length];
                         for(int i=0;i<files.length;i++){
