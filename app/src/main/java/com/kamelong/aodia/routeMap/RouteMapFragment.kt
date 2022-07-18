@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.kamelong.OuDia.LineFile
 import com.kamelong.aodia.AOdiaFragmentCustom
 import com.kamelong.aodia.MainActivity
@@ -17,7 +19,7 @@ class RouteMapFragment: AOdiaFragmentCustom() {
     private var webView:WebView? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        webView = WebView(activity)
+        webView = WebView(activity as FragmentActivity)
 
         val ws=webView!!.settings
         ws.javaScriptEnabled=true

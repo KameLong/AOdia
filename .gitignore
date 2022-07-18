@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 *.iml
 .gradle
 /local.properties
@@ -23,6 +23,7 @@
 bin/
 gen/
 out/
+app/release/
 
 # Gradle files
 .gradle/
@@ -49,4 +50,4 @@ captures/
 
 # Keystore files
 *.jks
->>>>>>> origin/master
+

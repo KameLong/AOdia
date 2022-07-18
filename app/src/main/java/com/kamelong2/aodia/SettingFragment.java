@@ -35,14 +35,12 @@ AOdia is free software: you can redistribute it and/or modify
  * 個々で定義したPreferenceのリソースを設定します
  */
 public class SettingFragment extends PreferenceFragmentCompat {
-    Payment payment;
         @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        payment=((AOdiaActivity)getActivity()).payment;
 
         addPreferencesFromResource(R.xml.old_activity_settings);
         final CheckBoxPreference useBeta=findPreference("useBeta");

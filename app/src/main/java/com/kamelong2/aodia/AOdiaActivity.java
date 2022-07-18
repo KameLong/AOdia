@@ -43,7 +43,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class AOdiaActivity extends FragmentActivity {
-    public Payment payment=null;
     public ArrayList<DiaFile>diaFiles=new ArrayList<>();
     public ArrayList<Integer>diaFilesIndex=new ArrayList<>();
 
@@ -71,7 +70,6 @@ public class AOdiaActivity extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        payment=new Payment(this);
         SDlog.setActivity(this);
         setContentView(R.layout.old_activity_main);
         setting();
@@ -188,7 +186,6 @@ public class AOdiaActivity extends FragmentActivity {
     }
     @Override
     public void onDestroy(){
-        payment.close();
         super.onDestroy();
     }
     private void createSample(){

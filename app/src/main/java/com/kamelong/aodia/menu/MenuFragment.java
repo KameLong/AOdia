@@ -95,17 +95,17 @@ public class MenuFragment extends AOdiaFragmentCustom {
 
 //            layout.addView(searchView);
 
-            Button routeMap = new Button(activity);
-            routeMap.setText("路線図");
-            routeMap.setBackgroundColor(Color.TRANSPARENT);
-            routeMap.setGravity(Gravity.START);
-            routeMap.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().openRouteMap();
-
-                }
-            });
+//            Button routeMap = new Button(activity);
+//            routeMap.setText("路線図");
+//            routeMap.setBackgroundColor(Color.TRANSPARENT);
+//            routeMap.setGravity(Gravity.START);
+//            routeMap.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    getAOdia().openRouteMap();
+//
+//                }
+//            });
 //            layout.addView(routeMap);
 
 
@@ -167,17 +167,6 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
             layout.addView(userhelp);
-            Button openPay = new Button(activity);
-            openPay.setText("開発者に寄付する");
-            openPay.setBackgroundColor(Color.TRANSPARENT);
-            openPay.setGravity(Gravity.START);
-            openPay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().openPayFragment();
-                }
-            });
-                layout.addView(openPay);
         }catch(Exception e){
             SDlog.log(e);
         }

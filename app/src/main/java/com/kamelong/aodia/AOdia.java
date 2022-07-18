@@ -469,10 +469,6 @@ public class AOdia {
             }
         }
     }
-    public void openPayFragment(){
-        PayFragment fragment = new PayFragment();
-        openFragment(fragment);
-    }
 
 
     public void saveData(){

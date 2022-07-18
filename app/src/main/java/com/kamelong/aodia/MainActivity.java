@@ -46,7 +46,6 @@ import java.util.Calendar;
 
 public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
-    public Payment payment=null;
     private AOdia aodiaData=new AOdia(this);
     private boolean saveLoop=true;
 
@@ -68,7 +67,6 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent=getIntent();
-        payment=new Payment(this);
         SDlog.setActivity(this);
         setContentView(R.layout.activity_main);
         //メニュー設定
@@ -316,7 +314,6 @@ public class MainActivity extends FragmentActivity {
     }
     @Override
     public void onDestroy(){
-        payment.close();
         super.onDestroy();
     }
 
@@ -343,25 +340,6 @@ public class MainActivity extends FragmentActivity {
         }else{
             findViewById(R.id.backFragment).setVisibility(View.INVISIBLE);
 
-        }
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == 1001) {
-            if (resultCode == RESULT_OK) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                String month=calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONTH);
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-                pref.edit().putBoolean(month,true).apply();
-
-
-                SDlog.toast("寄付して頂きありがとうございます（カメロング）");
-                    payment.use();
-            } else {
-                SDlog.toast("購入に失敗しました");
-            }
         }
     }
 

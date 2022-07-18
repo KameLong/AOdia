@@ -55,7 +55,6 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
             e.printStackTrace();
         }
 
-        final Payment payment=((MainActivity)getContext()).payment;
 
         addPreferencesFromResource(R.xml.activity_settings);
         findPreference("textsize").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
