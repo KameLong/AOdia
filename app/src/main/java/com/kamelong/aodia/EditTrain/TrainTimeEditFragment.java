@@ -23,7 +23,6 @@ import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
-import com.kamelong2.aodia.TimeTable.EditTrain.OnTimeChangeListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -66,6 +65,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
             diaNumber = bundle.getInt(AOdia.DIA_INDEX);
             int direction = bundle.getInt(AOdia.DIRECTION);
             int trainNum = bundle.getInt(AOdia.TRAIN_INDEX);
+            if(trainNum<0){
+                return fragmentContainer;
+            }
 
             lineFile = getMainActivity().getAOdia().getLineFile(fileNum);
             assert lineFile!=null:"lineFile is null. lineFileCount="+getMainActivity().getAOdia().getLineFileList().size()+".lineFIleIndex="+fileNum;
@@ -311,7 +313,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
 
     }
     private void initDepAriTimeView() {
-        assert lineFile!=null:"lineFile is null";
+        if(lineFile==null||train==null){
+            return;
+        }
+
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
         departureTimeLayout.removeAllViews();

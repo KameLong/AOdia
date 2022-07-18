@@ -64,7 +64,7 @@ public class EditStationFragment extends AOdiaFragmentCustom {
         } catch (Exception e) {
             SDlog.log(e);
             SDlog.toast("駅編集の際にエラーが発生しました");
-            getFragmentManager().beginTransaction().remove(this).commit();
+            getAOdia().killFragment(this);
             return fragmentContainer;
         }
     }

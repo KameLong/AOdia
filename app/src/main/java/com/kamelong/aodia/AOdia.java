@@ -228,7 +228,7 @@ public class AOdia {
             openTimeTable(lineFile, 0, 0);
         }catch (Exception e){
             SDlog.toast("ファイルを開く際に問題が発生しました。開発者までご連絡ください。\n"+e.toString());
-            SDlog.log(e);
+            SDlog.log(new Exception("openOuDiaFile(ContentResolver contentResolver,Uri uri,String path)  uri="+uri.getPath()));
         }
     }
     public void openRouteMap(){
@@ -349,6 +349,9 @@ public class AOdia {
         }catch (Exception e){
             return null;
         }
+    }
+    public int getLineFileIndex(LineFile lineFile){
+        return lineFiles.indexOf(lineFile);
     }
     public ArrayList<LineFile>getLineFileList(){
         return lineFilesIndex;

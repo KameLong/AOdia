@@ -70,9 +70,6 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             lineIndex = bundle.getInt(AOdia.FILE_INDEX, 0);
             direction = bundle.getInt(AOdia.DIRECTION, 0);
             editTrainIndex = bundle.getInt(AOdia.TRAIN_INDEX, -1);
-        } catch (Exception e) {
-            SDlog.log(e);
-        }
         if(savedInstanceState!=null){
             editTrainIndex = savedInstanceState.getInt(AOdia.TRAIN_INDEX, -1);
         }
@@ -87,6 +84,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                 return gesture.onTouchEvent(event);
             }
         });
+        } catch (Exception e) {
+            getAOdia().killFragment(this);
+            SDlog.log(e);
+        }
         return fragmentContainer;
     }
 
@@ -149,7 +150,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             trains=lineFile.getDiagram(diaIndex).trains[direction];
 
             for (Train train :trains) {
-                if(lineFile.trainType.get(train.type).showInTimeTable){
+                if(lineFile.getTrainType(train.type).showInTimeTable){
                     TrainNameView trainNameView = new TrainNameView(getActivity(), this, options, train);
                     trainNameLinea.addView(trainNameView);
                 }
@@ -271,7 +272,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         findViewById(R.id.bottomContents2).setVisibility(View.VISIBLE);
         TrainTimeEditFragment fragment=new TrainTimeEditFragment();
         Bundle args=new Bundle();
-        args.putInt(AOdia.FILE_INDEX, lineIndex);
+        args.putInt(AOdia.FILE_INDEX, getAOdia().getLineFileIndex(lineFile));
         args.putInt(AOdia.DIA_INDEX, diaIndex);
         args.putInt(AOdia.DIRECTION, direction);
         args.putInt(AOdia.TRAIN_INDEX, trains.indexOf(train));

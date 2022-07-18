@@ -89,7 +89,6 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                     File directory = new File(currentDirectoryPath);
                     try {
                         File[] files = directory.listFiles();
-                        assert  files!=null:directory.getPath();
                         String[]filePath=new String[files.length];
                         ArrayList<String>[] stationList=new ArrayList[files.length];
                         for(int i=0;i<files.length;i++){
@@ -103,7 +102,7 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                         ((MainActivity) context).getAOdia().database.addStation(stationList, filePath);
                         //データベースに駅名を登録する
                     }catch (Exception e){
-                        SDlog.log(e);
+                        SDlog.log(new Exception("FileSelectorFromSystem onFocusChange:directory="+directory.getPath()));
                     }
                 }else{
                     openDirectory(currentDirectoryPath);

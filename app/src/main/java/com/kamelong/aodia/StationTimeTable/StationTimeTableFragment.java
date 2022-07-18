@@ -18,6 +18,7 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.StationTime;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragmentCustom;
+import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 
@@ -81,15 +82,15 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
         try {
             Bundle bundle = getArguments();
             lineFile = getAOdia().getLineFile(bundle.getInt(AOdia.FILE_INDEX, 0));
-            log+="lineFile:"+bundle.getInt(AOdia.FILE_INDEX)+",";
-            log+=lineFile.name+".";
+            if(lineFile==null){
+                ((MainActivity)getActivity()).getAOdia().killFragment(this);
+                return contentView;
+            }
             diaIndex = bundle.getInt(AOdia.DIA_INDEX, 0);
             direction = bundle.getInt(AOdia.DIRECTION, 0);
-            log+="station:"+bundle.getInt(AOdia.STATION_INDEX)+".";
             station = lineFile.getStation(bundle.getInt(AOdia.STATION_INDEX, 0));
         } catch (Exception e) {
             SDlog.log(e);
-            SDlog.log(new Exception(log));
         }
         contentView = inflater.inflate(R.layout.station_timetable, container, false);
         return contentView;
@@ -100,6 +101,11 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
         super.onViewCreated(view, savedInstanceState);
 
         if (lineFile == null||station==null) {
+            getAOdia().killFragment(this);
+            return;
+        }
+        if(lineFile.getStationNum()==0){
+            SDlog.toast("駅数が0です");
             getAOdia().killFragment(this);
             return;
         }
@@ -161,7 +167,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
                 hour = hour + 3;
             }
             String min = "" + (train.getPredictionTime(stationIndex) / 60) % 60;
-            int color = lineFile.trainType.get(train.type).textColor.getAndroidColor();
+            int color = lineFile.getTrainType(train.type).textColor.getAndroidColor();
             if (train.getStopType(stationIndex) != StationTime.STOP_TYPE_STOP) {
                 color = Color.rgb(150, 150, 150);
             }
@@ -290,6 +296,9 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
      */
     private void addStationLegend() {
         int stationIndex = lineFile.station.indexOf(station);
+        if(stationIndex<0){
+            return;
+        }
         String result = "\n行先：";
 
 

@@ -14,22 +14,25 @@ public class SimpleOuDia {
     public ArrayList<String>stationName=new ArrayList<>();
 
     public SimpleOuDia(File file)throws Exception{
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        BufferedReader br=null;
         String version="";
         try {
+            br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             version = br.readLine().split("=", -1)[1];
         }catch (NullPointerException e){
-            br.close();
+            if(br!=null){
+                br.close();
+            }
             return;
         }
-        try {
-            double v = 1.02;
+        double v = 1;
             try {
                 v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
             } catch (Exception e) {
-                e.printStackTrace();
+                return;
             }
 
+        try {
             if (version.startsWith("OuDia.") || v < 1.03) {
                 loadShiftJis(file);
             } else {
@@ -54,6 +57,7 @@ public class SimpleOuDia {
         }
     }
     private void loadDiaFile(BufferedReader br)throws Exception{
+
         String line="";
         br.readLine();//Rosen.
         name=br.readLine().split("=",-1)[1];

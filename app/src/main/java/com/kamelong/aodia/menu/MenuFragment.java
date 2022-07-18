@@ -156,17 +156,17 @@ public class MenuFragment extends AOdiaFragmentCustom {
                 }
             });
             layout.addView(openHelp);
-            Button userhelp = new Button(activity);
-            userhelp.setText("ユーザーヘルプを開く");
-            userhelp.setBackgroundColor(Color.TRANSPARENT);
-            userhelp.setGravity(Gravity.START);
-            userhelp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().openUserHelp();
-                }
-            });
-            layout.addView(userhelp);
+//            Button userhelp = new Button(activity);
+//            userhelp.setText("ユーザーヘルプを開く");
+//            userhelp.setBackgroundColor(Color.TRANSPARENT);
+//            userhelp.setGravity(Gravity.START);
+//            userhelp.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    getAOdia().openUserHelp();
+//                }
+//            });
+//            layout.addView(userhelp);
         }catch(Exception e){
             SDlog.log(e);
         }

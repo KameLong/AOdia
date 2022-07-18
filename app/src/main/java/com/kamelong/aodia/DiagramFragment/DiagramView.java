@@ -213,7 +213,7 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
             }
             try {
                 if (train.getStopType(j) == 1 &&
-                        lineFile.trainType.get(train.type).stopmark &&
+                        lineFile.getTrainType(train.type).stopmark &&
                         j!=train.getTimeStartStation()&&
                         j!=train.getTimeEndStation()&&
                         trainPath.get(trainPath.size() - 4).equals(trainPath.get(trainPath.size() - 6))) {
@@ -573,7 +573,7 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
     private void drawTrainNumber(Canvas canvas){
         for(int direct=0;direct<2;direct++){
             if((direct==0&& options.showDownTrain)||(direct==1&& options.showUpTrain)) {
-                for(int i = 0; i< lineFile.getTrainNum(diaIndex,direct); i++){
+                for(int i = 0; i< diagramPath[direct].size(); i++){
                     int pathNum=-1;
                     for(int j=0;j+3<diagramPath[direct].get(i).size();j=j+2){
                         if(diagramPath[direct].get(i).get(j+1)!=diagramPath[direct].get(i).get(j+3)){

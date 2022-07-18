@@ -44,7 +44,7 @@ import java.util.UUID;
 
 public class SDlog {
     private static boolean able = false;
-    private static Activity activity;
+    public static Activity activity;
     private static Handler handler;
 
 
@@ -80,7 +80,7 @@ public class SDlog {
                     pref.edit().putString("userID",UUID.randomUUID().toString()).apply();
                 }
                 PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-               final String logName=activity.getCacheDir()+"/"+getNowDate()+"_"+packageInfo.versionName+"_"+pref.getString("userID","")+".log";
+               final String logName=activity.getCacheDir()+"/"+packageInfo.versionName+"_"+pref.getString("userID","")+getNowDate()+"_"+".log";
 
 
                 new Thread(new Runnable() {

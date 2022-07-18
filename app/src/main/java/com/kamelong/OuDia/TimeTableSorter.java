@@ -1,6 +1,7 @@
 package com.kamelong.OuDia;
 
-import com.kamelong2.aodia.SDlog;
+
+import com.kamelong.tool.SDlog;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

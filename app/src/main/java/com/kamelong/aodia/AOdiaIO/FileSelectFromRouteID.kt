@@ -15,7 +15,6 @@ import com.kamelong.aodia.AOdiaFragmentCustom
 import com.kamelong.aodia.MainActivity
 import com.kamelong.aodia.R
 import com.kamelong.tool.SDlog
-import com.kamelong2.aodia.SDlog.activity
 import java.io.File
 
 

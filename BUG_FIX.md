@@ -1,0 +1,5 @@
+com.kamelong.aodia.TimeTable.TimeTableFragment
+  openTrainEditFragment(Train train)
+中でlineIndexを使ってEditFragmentを作っているが、
+lineIndexは後で　LineFileを閉じている可能性があるため、
+再度Indexを取得するように変更

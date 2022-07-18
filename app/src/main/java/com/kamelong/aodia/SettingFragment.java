@@ -120,16 +120,6 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
         });
         final CheckBoxPreference sendLog=findPreference("send_log");
         sendLog.setChecked(PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("send_log",false));
-        final CheckBoxPreference useBeta=findPreference("useOld");
-        useBeta.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                useBeta.setChecked(false);
-                Intent intent = new Intent(getContext(), com.kamelong2.aodia.AOdiaActivity.class);
-                startActivity(intent);
-                return false;
-            }
-        });
 
 
 //        final CheckBoxPreference a=findPreference("aaa");

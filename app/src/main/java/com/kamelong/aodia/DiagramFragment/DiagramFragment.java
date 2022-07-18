@@ -290,7 +290,10 @@ public class DiagramFragment extends AOdiaFragmentCustom {
      */
     private void scrollTo() {
         try {
-            final FrameLayout diagramFrame = getActivity().findViewById(R.id.diagramFrame);
+            if(getActivity()==null||diagramView==null){
+                return;
+            }
+            FrameLayout diagramFrame =getActivity().findViewById(R.id.diagramFrame);
             if (autoScroll) {
 
                 final int width = diagramFrame.getWidth();

@@ -44,18 +44,6 @@
 
                 </com.kamelong.aodia.AOdiaIO.FileSelectorFromSystem>
 
-                <!--                <FrameLayout-->
-                <!--                    android:id="@+id/tab3"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="match_parent"-->
-                <!--                    android:orientation="vertical">-->
-
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/textView3"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:text="TextView" />-->
-                <!--                </FrameLayout>-->
             </FrameLayout>
 
         </LinearLayout>

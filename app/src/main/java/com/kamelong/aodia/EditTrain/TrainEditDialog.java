@@ -26,6 +26,12 @@ public class TrainEditDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 int trainIndex=timetable.getTrainIndex(train.direction,train);
+                if(trainIndex<0){
+                    SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
+                    TrainEditDialog.this.dismiss();
+                    return;
+                }
+
                 timetable.addTrain(train.direction,trainIndex+1,train.clone(train.lineFile));
                 timetable.getTrain(train.direction,trainIndex).endAtThisStation(stationIndex);
                 timetable.getTrain(train.direction,trainIndex+1).startAtThisStation(stationIndex);
@@ -42,6 +48,7 @@ public class TrainEditDialog extends Dialog {
                 int trainIndex=timetable.getTrainIndex(train.direction,train);
                 if(trainIndex<0){
                     SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
+                    TrainEditDialog.this.dismiss();
                     return;
                 }
                 for(int i=trainIndex;i<timetable.getTrainNum(train.direction);i++){

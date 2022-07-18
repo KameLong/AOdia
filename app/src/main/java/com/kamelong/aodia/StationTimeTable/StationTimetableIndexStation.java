@@ -37,6 +37,9 @@ AOdia is free software: you can redistribute it and/or modify
 public class StationTimetableIndexStation extends LinearLayout {
     public StationTimetableIndexStation(final MainActivity activity, LineFile lineFile, int stationIndex) {
         super(activity);
+        if(lineFile==null){
+            return;
+        }
         try {
             LayoutInflater.from(activity).inflate(R.layout.station_timetable_index_onestation, this);
             ((TextView) findViewById(R.id.stationName)).setText(lineFile.station.get(stationIndex).name);
@@ -46,7 +49,6 @@ public class StationTimetableIndexStation extends LinearLayout {
                 StationTimetableIndexDia stationTimetableIndexDia = new StationTimetableIndexDia(activity, lineFile, stationIndex, i);
                 diaList.addView(stationTimetableIndexDia);
             }
-            final String directory = lineFile.filePath.substring(0, lineFile.filePath.lastIndexOf('/'));
 
         } catch (Exception e) {
             SDlog.log(e);

@@ -89,6 +89,7 @@ public class LineFile implements Cloneable {
      * 列車種別一覧
      */
     public ArrayList<TrainType>trainType=new ArrayList<>();
+
     /**
      * ダイヤ一覧
      */
@@ -248,12 +249,15 @@ public class LineFile implements Cloneable {
 
 
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-        version=br.readLine().split("=",-1)[1];
-        double v=1.02;
+        double v=0;
         try {
+            version=br.readLine().split("=",-1)[1];
             v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
         }catch(Exception e){
             e.printStackTrace();
+        }
+        if(v==0){
+            return;
         }
 
         if(version.startsWith("OuDia.")||v<1.03){
@@ -531,6 +535,7 @@ public class LineFile implements Cloneable {
         try {
             new File(fileName).createNewFile();
         }catch(IOException e){
+            SDlog.toast("ファイル保存時にエラーが発生しました。"+e.toString());
             throw new IOException("errorFile:"+fileName);
         }
         FileOutputStream fos = new FileOutputStream(fileName);
@@ -803,10 +808,14 @@ public class LineFile implements Cloneable {
     /**
      * TrainType取得
      */
-    public TrainType getTrainType(int index) {
-        return trainType.get(index);
-    }
+    public TrainType getTrainType(int index){
+        try{
+            return trainType.get(index);
+        }catch(Exception e){
+            return trainType.get(0);
 
+        }
+    }
     /**
      * ダイヤグラムに含まれる駅数を返します
      * @return
