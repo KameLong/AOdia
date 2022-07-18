@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AOdia.iml" filepath="$PROJECT_DIR$/AOdia.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/AOdia-app.iml" filepath="$PROJECT_DIR$/app/AOdia-app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/AOdia.app.iml" filepath="$PROJECT_DIR$/app/AOdia.app.iml" group="AOdia/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AndroidProject-AOdia.iml" filepath="$PROJECT_DIR$/.idea/modules/AndroidProject-AOdia.iml" group="AOdia" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AndroidProject-AOdia-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AndroidProject-AOdia-app.iml" group="AOdia/app" />
-      <module fileurl="file://$PROJECT_DIR$/AndroidProject.AOdia.iml" filepath="$PROJECT_DIR$/AndroidProject.AOdia.iml" group="AOdia" />
-      <module fileurl="file://$PROJECT_DIR$/app/AndroidProject.AOdia.app.iml" filepath="$PROJECT_DIR$/app/AndroidProject.AOdia.app.iml" group="AOdia/app" />
-      <module fileurl="file://$PROJECT_DIR$/ProgramingProject-AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProject-AOdia.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ProgramingProject.AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProject.AOdia.iml" group="AOdia" />
-      <module fileurl="file://$PROJECT_DIR$/ProgramingProjects.AOdia.iml" filepath="$PROJECT_DIR$/ProgramingProjects.AOdia.iml" group="AOdia" />
-      <module fileurl="file://$PROJECT_DIR$/app/ProgramingProjects.AOdia.app.iml" filepath="$PROJECT_DIR$/app/ProgramingProjects.AOdia.app.iml" group="AOdia/app" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/AOdia.iml" filepath="$PROJECT_DIR$/.idea/modules/AOdia.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AOdia.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AOdia.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AOdia.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AOdia.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AOdia.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AOdia.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AOdia.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AOdia.app.unitTest.iml" />
     </modules>
   </component>
 </project>
