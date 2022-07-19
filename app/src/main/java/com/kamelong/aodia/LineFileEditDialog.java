@@ -18,51 +18,43 @@ public class LineFileEditDialog extends Dialog {
         ((EditText)findViewById(R.id.startTime)).setText(startTime);
         ((EditText)findViewById(R.id.moveSecond1)).setText(""+lineFile.secondShift[0]);
         ((EditText)findViewById(R.id.moveSecond2)).setText(""+lineFile.secondShift[1]);
-        findViewById(R.id.OkButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                lineFile.name=editName.getEditableText().toString();
-                try{
-                    String startTime=((EditText)findViewById(R.id.startTime)).getText().toString();
-                    lineFile.diagramStartTime=Integer.parseInt(startTime.split(":")[0])*3600+Integer.parseInt(startTime.split(":")[1])*60;
-                }catch (Exception e){
-                    e.printStackTrace();
-                    SDlog.toast("ダイヤ起点時刻の入力が正しくありません。0:00形式で入力してください");
-                    return;
-                }
-                try{
-                    String second1=((EditText)findViewById(R.id.moveSecond1)).getText().toString();
-                    if(Integer.parseInt(second1)<0){
-                        throw new Exception();
-                    }
-                    lineFile.secondShift[0]=Integer.parseInt(second1);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    SDlog.toast("秒移動量1の入力が正しくありません。0以上の整数を入力してください");
-                    return;
-                }
-                try{
-                    String second2=((EditText)findViewById(R.id.moveSecond2)).getText().toString();
-                    if(Integer.parseInt(second2)<0){
-                        throw new Exception();
-                    }
-                    lineFile.secondShift[1]=Integer.parseInt(second2);
-                }catch (Exception e){
-                    e.printStackTrace();
-                    SDlog.toast("秒移動量2の入力が正しくありません。0以上の整数を入力してください");
-                    return;
-                }
-
-                LineFileEditDialog.this.dismiss();
-
+        findViewById(R.id.OkButton).setOnClickListener(v -> {
+            lineFile.name=editName.getEditableText().toString();
+            try{
+                String startTime1 =((EditText)findViewById(R.id.startTime)).getText().toString();
+                lineFile.diagramStartTime=Integer.parseInt(startTime1.split(":")[0])*3600+Integer.parseInt(startTime1.split(":")[1])*60;
+            }catch (Exception e){
+                e.printStackTrace();
+                SDlog.toast("ダイヤ起点時刻の入力が正しくありません。0:00形式で入力してください");
+                return;
             }
-        });
-        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LineFileEditDialog.this.dismiss();
+            try{
+                String second1=((EditText)findViewById(R.id.moveSecond1)).getText().toString();
+                if(Integer.parseInt(second1)<0){
+                    throw new Exception();
+                }
+                lineFile.secondShift[0]=Integer.parseInt(second1);
+            }catch (Exception e){
+                e.printStackTrace();
+                SDlog.toast("秒移動量1の入力が正しくありません。0以上の整数を入力してください");
+                return;
             }
+            try{
+                String second2=((EditText)findViewById(R.id.moveSecond2)).getText().toString();
+                if(Integer.parseInt(second2)<0){
+                    throw new Exception();
+                }
+                lineFile.secondShift[1]=Integer.parseInt(second2);
+            }catch (Exception e){
+                e.printStackTrace();
+                SDlog.toast("秒移動量2の入力が正しくありません。0以上の整数を入力してください");
+                return;
+            }
+
+            LineFileEditDialog.this.dismiss();
+
         });
+        findViewById(R.id.cancelButton).setOnClickListener(v -> LineFileEditDialog.this.dismiss());
 
     }
 }

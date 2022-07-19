@@ -3,10 +3,6 @@ package com.kamelong.aodia.EditTrain;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.widget.TextView;
-
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 

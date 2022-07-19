@@ -23,7 +23,7 @@
             android:id="@+id/textView17"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/directoryName"
+            android:text="@string/"
             android:textColor="#000"
             android:textSize="18dp" />
 

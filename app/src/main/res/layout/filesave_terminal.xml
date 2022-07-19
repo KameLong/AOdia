@@ -51,7 +51,7 @@
             android:id="@+id/savestyle">
 
             <TextView
-                android:text="保存形式"
+                android:text="@string/saveExt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#000"
@@ -59,13 +59,13 @@
                 android:layout_marginEnd="15dp" />
 
             <RadioButton
-                android:text="oud形式"
+                android:text="@string/extOud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/oud" />
 
             <RadioButton
-                android:text="oud2形式"
+                android:text="@string/extOud2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/oud2" />
@@ -102,7 +102,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_weight="0"
-                android:text="保存" />
+                android:text="@string/save" />
 
         </LinearLayout>
 

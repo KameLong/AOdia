@@ -74,12 +74,9 @@ public class StationInfoDialog extends Dialog {
             } else {
                 beforeStationButton.setVisibility(View.INVISIBLE);
             }
-            beforeStationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    stationIndex = stationIndex - (1 - 2 * direction);
-                    StationInfoDialog.this.init();
-                }
+            beforeStationButton.setOnClickListener(view -> {
+                stationIndex = stationIndex - (1 - 2 * direction);
+                StationInfoDialog.this.init();
             });
             Button afterStationButton = findViewById(R.id.afterStationButton);
             if (stationIndex + (1 - 2 * direction) >= 0 && stationIndex + (1 - 2 * direction) < lineFile.getStationNum()) {
@@ -88,28 +85,19 @@ public class StationInfoDialog extends Dialog {
             } else {
                 afterStationButton.setVisibility(View.INVISIBLE);
             }
-            afterStationButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    stationIndex = stationIndex + (1 - 2 * direction);
-                    StationInfoDialog.this.init();
-                }
+            afterStationButton.setOnClickListener(view -> {
+                stationIndex = stationIndex + (1 - 2 * direction);
+                StationInfoDialog.this.init();
             });
             Button downTimetable = findViewById(R.id.downTimeTableButton);
-            downTimetable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openStationTimeTable(lineFile, diaIndex, Train.DOWN, stationIndex);
-                    StationInfoDialog.this.dismiss();
-                }
+            downTimetable.setOnClickListener(view -> {
+                aodia.openStationTimeTable(lineFile, diaIndex, Train.DOWN, stationIndex);
+                StationInfoDialog.this.dismiss();
             });
             Button upTimetable = findViewById(R.id.upTimeTableButton);
-            upTimetable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openStationTimeTable(lineFile, diaIndex, Train.UP, stationIndex);
-                    StationInfoDialog.this.dismiss();
-                }
+            upTimetable.setOnClickListener(view -> {
+                aodia.openStationTimeTable(lineFile, diaIndex, Train.UP, stationIndex);
+                StationInfoDialog.this.dismiss();
             });
         } catch (Exception e) {
             SDlog.log(e);
@@ -121,12 +109,9 @@ public class StationInfoDialog extends Dialog {
         Button sortButton = findViewById(R.id.sortButton);
         sortButton.setVisibility(View.VISIBLE);
 
-        sortButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onSortCicked(stationIndex);
-                StationInfoDialog.this.dismiss();
-            }
+        sortButton.setOnClickListener(view -> {
+            listener.onSortCicked(stationIndex);
+            StationInfoDialog.this.dismiss();
         });
 
     }

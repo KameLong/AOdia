@@ -66,7 +66,6 @@ public abstract class DiagramDefaultView extends View {
 
     /**
      * 文字サイズを変更する。
-     * @param size
      */
     public static void setTextSize(int size) {
         textSize=size;
@@ -104,8 +103,6 @@ public abstract class DiagramDefaultView extends View {
 
     /**
      * 与えられた文字が英語か日本語かどうか
-     * @param c
-     * @return
      */
     static boolean charIsEng(char c){
         return c<256;

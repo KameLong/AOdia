@@ -3,9 +3,7 @@ package com.kamelong.OuDia;
 
 import com.kamelong.tool.SDlog;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 /*
@@ -66,7 +64,6 @@ public class TimeTableSorter {
     /**
      * 列車番号を(数字)+(アルファベットなど)と分離する
      * まずはアルファベットでソートして、その後数字でソートする
-     * @return
      */
     public ArrayList<Train>sortType(){
         ArrayList<TrainTypeSorter>sorter=new ArrayList<>();
@@ -83,7 +80,6 @@ public class TimeTableSorter {
     /**
      * 列車番号を(数字)+(アルファベットなど)と分離する
      * まずはアルファベットでソートして、その後数字でソートする
-     * @return
      */
     public ArrayList<Train>sortName(){
         ArrayList<TrainNameSorter>sorter=new ArrayList<>();
@@ -100,7 +96,6 @@ public class TimeTableSorter {
     /**
      * 列車番号を(数字)+(アルファベットなど)と分離する
      * まずはアルファベットでソートして、その後数字でソートする
-     * @return
      */
     public ArrayList<Train>sortRemark(){
         ArrayList<TrainRemarkSorter>sorter=new ArrayList<>();
@@ -401,7 +396,7 @@ public class TimeTableSorter {
         }
 
     }
-    class TrainNumberSorter implements Comparable<TrainNumberSorter>{
+    static class TrainNumberSorter implements Comparable<TrainNumberSorter>{
         Train train;
         String name="";
         int number=0;
@@ -436,7 +431,7 @@ public class TimeTableSorter {
 
         }
     }
-    class TrainTypeSorter implements Comparable<TrainTypeSorter>{
+    static class TrainTypeSorter implements Comparable<TrainTypeSorter>{
         Train train;
         public TrainTypeSorter(Train train){
             this.train=train;
@@ -446,7 +441,7 @@ public class TimeTableSorter {
             return this.train.type-o.train.type;
         }
     }
-    class TrainNameSorter implements Comparable<TrainNameSorter>{
+    static class TrainNameSorter implements Comparable<TrainNameSorter>{
         Train train;
         public TrainNameSorter(Train train){
             this.train=train;
@@ -459,7 +454,7 @@ public class TimeTableSorter {
             return this.train.name.compareTo(o.train.name);
         }
     }
-    class TrainRemarkSorter implements Comparable<TrainRemarkSorter>{
+    static class TrainRemarkSorter implements Comparable<TrainRemarkSorter>{
         Train train;
         public TrainRemarkSorter(Train train){
             this.train=train;

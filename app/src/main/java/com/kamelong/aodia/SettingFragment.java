@@ -1,6 +1,5 @@
 package com.kamelong.aodia;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -57,66 +56,54 @@ public class SettingFragment extends PreferenceFragmentCompat implements AOdiaFr
 
 
         addPreferencesFromResource(R.xml.activity_settings);
-        findPreference("textsize").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try{
+        findPreference("textsize").setOnPreferenceChangeListener((preference, newValue) -> {
+            try{
 
 
-                    TimeTableDefaultView.setTextSize(Integer.parseInt((String) newValue));
-                    DiagramDefaultView.setTextSize(Integer.parseInt((String) newValue));
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    pref.edit().putString("textsize",(String) newValue).apply();
-                }catch (NumberFormatException e){
-                    SDlog.toast("数字を入力してください");
-                }
-
-                return false;
+                TimeTableDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                DiagramDefaultView.setTextSize(Integer.parseInt((String) newValue));
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                pref.edit().putString("textsize",(String) newValue).apply();
+            }catch (NumberFormatException e){
+                SDlog.toast("数字を入力してください");
             }
+
+            return false;
         });
-        findPreference("timetableStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try{
+        findPreference("timetableStationWidth").setOnPreferenceChangeListener((preference, newValue) -> {
+            try{
 
-                    TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    pref.edit().putString("timetableStationWidth",(String) newValue).apply();
-                }catch (NumberFormatException e){
-                    SDlog.toast("数字を入力してください");
-                }
-                return false;
+                TimeTableDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                pref.edit().putString("timetableStationWidth",(String) newValue).apply();
+            }catch (NumberFormatException e){
+                SDlog.toast("数字を入力してください");
             }
+            return false;
         });
-        findPreference("diagramStationWidth").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try{
-                    DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    pref.edit().putString("diagramStationWidth",(String) newValue).apply();
+        findPreference("diagramStationWidth").setOnPreferenceChangeListener((preference, newValue) -> {
+            try{
+                DiagramDefaultView.setStationWidth(Integer.parseInt((String) newValue));
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                pref.edit().putString("diagramStationWidth",(String) newValue).apply();
 
-                }catch (NumberFormatException e){
-                    SDlog.toast("数字を入力してください");
-                }
-                return false;
+            }catch (NumberFormatException e){
+                SDlog.toast("数字を入力してください");
             }
+            return false;
         });
 
         final CheckBoxPreference resetDatabase=findPreference("resetDatabase");
-        resetDatabase.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try{
-                    getActivity().deleteDatabase(AOdiaDetabase.DETABASE_NAME);
-                    ((MainActivity)getActivity()).getAOdia().database=new AOdiaDetabase(getContext());
-                    SDlog.toast("内部データの削除を行いました");
-                }catch(Exception  e){
-                    SDlog.toast("内部データの削除に失敗しました");
-                }
-                resetDatabase.setChecked(false);
-                return false;
+        resetDatabase.setOnPreferenceChangeListener((preference, newValue) -> {
+            try{
+                getActivity().deleteDatabase(AOdiaDetabase.DETABASE_NAME);
+                ((MainActivity)getActivity()).getAOdia().database=new AOdiaDetabase(getContext());
+                SDlog.toast("内部データの削除を行いました");
+            }catch(Exception  e){
+                SDlog.toast("内部データの削除に失敗しました");
             }
+            resetDatabase.setChecked(false);
+            return false;
         });
         final CheckBoxPreference sendLog=findPreference("send_log");
         sendLog.setChecked(PreferenceManager.getDefaultSharedPreferences(getContext()).getBoolean("send_log",false));

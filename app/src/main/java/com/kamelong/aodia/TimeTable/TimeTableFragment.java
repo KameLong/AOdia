@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kamelong.aodia.AOdia;
-import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.AOdiaFragmentCustom;
@@ -29,7 +28,6 @@ import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.StationTimeTable.OnSortButtonClickListener;
-import com.kamelong.aodia.StationTimeTable.StationInfoDialog;
 import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
@@ -78,12 +76,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
         //タッチジェスチャーを実装
         final GestureDetector gesture = new GestureDetector(getActivity(), this);
-        fragmentContainer.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
+        fragmentContainer.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
         } catch (Exception e) {
             getAOdia().killFragment(this);
             SDlog.log(e);
@@ -212,16 +205,13 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             //run内で使うためにfinal化
             final int mscrollX=scrollX;
             final int mscrollY=scrollY;
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        trainTimeLinear.scrollTo(mscrollX, mscrollY);
-                        trainNameLinear.scrollTo(mscrollX, 0);
-                        stationNameLinear.scrollTo(0, mscrollY);
-                    }catch(Exception e){
-                        SDlog.log(e);
-                    }
+            handler.post(() -> {
+                try {
+                    trainTimeLinear.scrollTo(mscrollX, mscrollY);
+                    trainNameLinear.scrollTo(mscrollX, 0);
+                    stationNameLinear.scrollTo(0, mscrollY);
+                }catch(Exception e){
+                    SDlog.log(e);
                 }
             });
         } catch (Exception e) {
@@ -298,19 +288,16 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         editTrain=train;
 
         fragment.setOnTrainChangeListener(this);
-        fragment.setOnFragmentCloseListener(new OnFragmentCloseListener() {
-            @Override
-            public void fragmentClose() {
-                if(editTrain!=null){
-                    for(int i=0;i< trainNameLinear.getChildCount();i++){
-                        if(((TrainNameView)trainNameLinear.getChildAt(i)).train==editTrain){
-                            ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(i).setBackgroundColor(Color.rgb(255,255,255));
-                            ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(i).setBackgroundColor(Color.rgb(255,255,255));
-                        }
+        fragment.setOnFragmentCloseListener(() -> {
+            if(editTrain!=null){
+                for(int i=0;i< trainNameLinear.getChildCount();i++){
+                    if(((TrainNameView)trainNameLinear.getChildAt(i)).train==editTrain){
+                        ((LinearLayout) findViewById(R.id.trainTimeLinear)).getChildAt(i).setBackgroundColor(Color.rgb(255,255,255));
+                        ((LinearLayout) findViewById(R.id.trainNameLinear)).getChildAt(i).setBackgroundColor(Color.rgb(255,255,255));
                     }
                 }
-                editTrain=null;
             }
+            editTrain=null;
         });
     }
     public void trainCopy(){
@@ -347,6 +334,8 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             dialog.setTrainPasteDialogInterface(new TrainPasteDialogInterface() {
                 @Override
                 public void onOkClicked(int shiftTime) {
+                    try{
+
                     TimeTableFragment.this.shiftTime=shiftTime;
                     shiftTime2=shiftTime;
                     LinearLayout trainNameLinea = findViewById(R.id.trainNameLinear);
@@ -377,6 +366,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                     SDlog.toast("列車を貼り付けました");
                     if(pasteIndex<trains.size()) {
                         ((TrainNameView) trainNameLinea.getChildAt(pasteIndex)).selected = true;
+                    }
+                    }catch(Exception e){
+                        SDlog.log(e);
                     }
                 }
                 @Override
@@ -573,28 +565,25 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
         //flingを開始
         final float flingV = -v1;
         fling = true;
-        new Thread(new Runnable() {
-            @Override
-            //別スレッドでflingし続ける。fling=falseになると停止
-            public void run() {
-                float flingSpeed = flingV;
-                while (fling) {
-                    try {
-                        if (flingSpeed > 0) {
-                            flingSpeed = flingSpeed - 100;
-                        } else {
-                            flingSpeed = flingSpeed + 100;
-                        }
-                        if (Math.abs(flingSpeed) < 100) {
-                            fling = false;
-                            return;
-                        }
-                        TimeTableFragment.this.scrollBy((int) (flingSpeed * 16 / 1000f), 0);
-                        Thread.sleep(16);
-                    } catch (Exception e) {
-                        fling = false;
-                        SDlog.log(e);
+        //別スレッドでflingし続ける。fling=falseになると停止
+        new Thread(() -> {
+            float flingSpeed = flingV;
+            while (fling) {
+                try {
+                    if (flingSpeed > 0) {
+                        flingSpeed = flingSpeed - 100;
+                    } else {
+                        flingSpeed = flingSpeed + 100;
                     }
+                    if (Math.abs(flingSpeed) < 100) {
+                        fling = false;
+                        return;
+                    }
+                    TimeTableFragment.this.scrollBy((int) (flingSpeed * 16 / 1000f), 0);
+                    Thread.sleep(16);
+                } catch (Exception e) {
+                    fling = false;
+                    SDlog.log(e);
                 }
             }
         }).start();
@@ -631,13 +620,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             if (station >= 0 && station < lineFile.getStationNum()) {
                 StationDialog dialog = new StationDialog((MainActivity) getActivity(), lineFile, diaIndex, direction, station, TimeTableFragment.this);
                 dialog.show();
-                dialog.setOnSortListener(new OnSortButtonClickListener() {
-                    @Override
-                    public void onSortCicked(int stationIndex) {
-                        lineFile.sortTrain(diaIndex, direction, stationIndex);
-                        TimeTableFragment.this.allTrainChange();
+                dialog.setOnSortListener(stationIndex -> {
+                    lineFile.sortTrain(diaIndex, direction, stationIndex);
+                    TimeTableFragment.this.allTrainChange();
 
-                    }
                 });
                 return true;
             }

@@ -96,68 +96,57 @@ public class DatabaseListAdapter extends BaseAdapter {
             ArrayAdapter<String> stationAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, stationNameList);
             stationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             stationSpinner.setAdapter(stationAdapter);
-            convertView.findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    try {
-                        final String url = "https://kamelong.com/OuDiaDataBase/files/" + jsonArray.get(position).getString("url");
-                        final Handler handler = view.getHandler();
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
+            convertView.findViewById(R.id.download).setOnClickListener(view -> {
+                try {
+                    final String url = "https://kamelong.com/OuDiaDataBase/files/" + jsonArray.get(position).getString("url");
+                    final Handler handler = view.getHandler();
+                    new Thread(() -> {
+                        try {
+                            URL downloadURL = new URL(url);
+                            HttpURLConnection download = null;
+                            download = (HttpURLConnection) downloadURL.openConnection();
+                            download.connect();
+                            final DataInputStream DATA_INPUT = new DataInputStream(download.getInputStream());
+                            // 書き込み用ストリーム
+                            try {
+                                final FileOutputStream FILE_OUTPUT = new FileOutputStream(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/", "-") + ".oud");
+                                final DataOutputStream DATA_OUT = new DataOutputStream(FILE_OUTPUT);
+
+                                // 読み込みデータ単位
+                                final byte[] BUFFER = new byte[4096];
+                                // 読み込んだデータを一時的に格納しておく変数
+                                int readByte = 0;
+
+                                // ファイルを読み込む
+                                while ((readByte = DATA_INPUT.read(BUFFER)) != -1) {
+                                    DATA_OUT.write(BUFFER, 0, readByte);
+                                }
+                                // 各ストリームを閉じる
+                                DATA_INPUT.close();
+                                FILE_OUTPUT.close();
+                                DATA_INPUT.close();
+                                download.getInputStream().close();
+                            } catch (Exception e) {
+                                SDlog.log(e);
+                                SDlog.toast("原因不明のエラーが発生しました");
+                                return;
+                            }
+
+                            handler.post(() -> {
                                 try {
-                                    URL downloadURL = new URL(url);
-                                    HttpURLConnection download = null;
-                                    download = (HttpURLConnection) downloadURL.openConnection();
-                                    download.connect();
-                                    final DataInputStream DATA_INPUT = new DataInputStream(download.getInputStream());
-                                    // 書き込み用ストリーム
-                                    try {
-                                        final FileOutputStream FILE_OUTPUT = new FileOutputStream(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/","-") + ".oud");
-                                        final DataOutputStream DATA_OUT = new DataOutputStream(FILE_OUTPUT);
-
-                                        // 読み込みデータ単位
-                                        final byte[] BUFFER = new byte[4096];
-                                        // 読み込んだデータを一時的に格納しておく変数
-                                        int readByte = 0;
-
-                                        // ファイルを読み込む
-                                        while ((readByte = DATA_INPUT.read(BUFFER)) != -1) {
-                                            DATA_OUT.write(BUFFER, 0, readByte);
-                                        }
-                                        // 各ストリームを閉じる
-                                        DATA_INPUT.close();
-                                        FILE_OUTPUT.close();
-                                        DATA_INPUT.close();
-                                        download.getInputStream().close();
-                                    } catch (Exception e) {
-                                        SDlog.log(e);
-                                        SDlog.toast("原因不明のエラーが発生しました");
-                                        return;
-                                    }
-
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                ((MainActivity) context).getAOdia().openFile(new File(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/","-") + ".oud"));
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
+                                    ((MainActivity) context).getAOdia().openFile(new File(context.getExternalFilesDir(null).getPath() + "/" + jsonArray.get(position).getString("lineName").replace("/", "-") + ".oud"));
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                            }
-                        }).start();
-                        System.out.println(url);
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                    System.out.println(url);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             });
 

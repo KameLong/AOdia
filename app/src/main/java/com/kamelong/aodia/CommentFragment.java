@@ -69,17 +69,14 @@ public class CommentFragment extends AOdiaFragmentCustom {
         }
         try {
             ((EditText) fragmentContainer.findViewById(R.id.commentText)).setText(lineFile.comment.replace("\\n", "\n"));
-            fragmentContainer.findViewById(R.id.editButton).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        String comment = ((EditText) fragmentContainer.findViewById(R.id.commentText)).getText().toString().replace("\n", "\\n");
-                        lineFile.comment = comment;
-                        ((MainActivity) getActivity()).getAOdia().killFragment(CommentFragment.this);
-                    } catch (Exception e) {
-                        SDlog.toast("コメントの変更ができませんでした");
-                        SDlog.log(e);
-                    }
+            fragmentContainer.findViewById(R.id.editButton).setOnClickListener(v -> {
+                try {
+                    String comment = ((EditText) fragmentContainer.findViewById(R.id.commentText)).getText().toString().replace("\n", "\\n");
+                    lineFile.comment = comment;
+                    ((MainActivity) getActivity()).getAOdia().killFragment(CommentFragment.this);
+                } catch (Exception e) {
+                    SDlog.toast("コメントの変更ができませんでした");
+                    SDlog.log(e);
                 }
             });
 

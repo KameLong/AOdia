@@ -14,7 +14,6 @@ import com.kamelong.OuDia.Train;
 import com.kamelong.aodia.R;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class EditStopTypeSpinner extends AppCompatSpinner {
 
         List<String>stopList= Arrays.asList(getResources().getStringArray(R.array.StopTypeSpinner));
         setBackground(null);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stopList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, stopList);
         dataAdapter.setDropDownViewResource( android.R.layout.simple_spinner_item);
         this.setAdapter(dataAdapter);
         this.setSelection(train.getStopType(stationIndex));

@@ -45,29 +45,26 @@ public class EditStationActionDialog extends Dialog {
         endAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         endSpiner.setAdapter(endAdapter);
 
-        findViewById(R.id.makeSubFile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //路線の切り出しを行います
+        findViewById(R.id.makeSubFile).setOnClickListener(v -> {
+            //路線の切り出しを行います
 
-                int startStation=startSpiner.getSelectedItemPosition();
-                int endStation=endSpiner.getSelectedItemPosition();
-                if(startStation>=endStation){
-                    SDlog.toast("終着駅が始発駅より前方にあります。路線の切り出しができません");
-                    return;
-                }
-                LineFile newLine=lineFile.clone();
-                //同一路線を複製してから不要駅切り取り
-                newLine.makeSubLine(startStation,endStation,((CheckBox)findViewById(R.id.userOuter)).isChecked());
-                if(((CheckBox)findViewById(R.id.reverse1)).isChecked()){
-                    newLine.reverse();
-                }
-                newLine.name="(切り出し)"+newLine.name;
-                ((MainActivity)context).getAOdia().addLineFile(newLine);
-                ((MainActivity)context).getAOdia().openTimeTable(newLine,0,0);
-                dismiss();
-
+            int startStation=startSpiner.getSelectedItemPosition();
+            int endStation=endSpiner.getSelectedItemPosition();
+            if(startStation>=endStation){
+                SDlog.toast("終着駅が始発駅より前方にあります。路線の切り出しができません");
+                return;
             }
+            LineFile newLine=lineFile.clone();
+            //同一路線を複製してから不要駅切り取り
+            newLine.makeSubLine(startStation,endStation,((CheckBox)findViewById(R.id.userOuter)).isChecked());
+            if(((CheckBox)findViewById(R.id.reverse1)).isChecked()){
+                newLine.reverse();
+            }
+            newLine.name="(切り出し)"+newLine.name;
+            ((MainActivity)context).getAOdia().addLineFile(newLine);
+            ((MainActivity)context).getAOdia().openTimeTable(newLine,0,0);
+            dismiss();
+
         });
 
         ArrayList<String>insertStation=new ArrayList<>();
@@ -94,29 +91,26 @@ public class EditStationActionDialog extends Dialog {
         insertAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         insertSpiner.setAdapter(insertAdapter);
 
-        findViewById(R.id.insertButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //路線組み入れ
-                int insertStation=insertSpiner.getSelectedItemPosition();
-                LineFile insertFile=((MainActivity)context).getAOdia().getLineFileList().get(lineSpiner.getSelectedItemPosition()).clone();
-                if(((CheckBox)findViewById(R.id.reverse2)).isChecked()){
-                    insertFile.reverse();
-                }
-                if(lineFile.getStationNum()==0||insertFile.getStationNum()==0){
-                    SDlog.toast("駅数0の路線を組み入れに用いることはできません。");
-                    return;
-                }
-
-                if(insertFile==lineFile){
-                    SDlog.toast("組み入れ元と組み入れ先は異なるファイルである必要があります");
-                    return;
-                }
-                lineFile.addLineFile(insertStation,insertFile);
-                ((MainActivity)context).getAOdia().openTimeTable(lineFile,0,0);
-
-                dismiss();
+        findViewById(R.id.insertButton).setOnClickListener(v -> {
+            //路線組み入れ
+            int insertStation1 =insertSpiner.getSelectedItemPosition();
+            LineFile insertFile=((MainActivity)context).getAOdia().getLineFileList().get(lineSpiner.getSelectedItemPosition()).clone();
+            if(((CheckBox)findViewById(R.id.reverse2)).isChecked()){
+                insertFile.reverse();
             }
+            if(lineFile.getStationNum()==0||insertFile.getStationNum()==0){
+                SDlog.toast("駅数0の路線を組み入れに用いることはできません。");
+                return;
+            }
+
+            if(insertFile==lineFile){
+                SDlog.toast("組み入れ元と組み入れ先は異なるファイルである必要があります");
+                return;
+            }
+            lineFile.addLineFile(insertStation1,insertFile);
+            ((MainActivity)context).getAOdia().openTimeTable(lineFile,0,0);
+
+            dismiss();
         });
     }
 }

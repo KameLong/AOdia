@@ -16,61 +16,46 @@ public class TrainEditDialog extends Dialog {
         super(context);
         this.listener=listener;
         setContentView(R.layout.trainedit_train_dialog);
-        findViewById(R.id.splitButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        findViewById(R.id.splitButton).setOnClickListener(v -> {
 
-            }
         });
-        findViewById(R.id.splitButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int trainIndex=timetable.getTrainIndex(train.direction,train);
-                if(trainIndex<0){
-                    SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
-                    TrainEditDialog.this.dismiss();
-                    return;
-                }
-
-                timetable.addTrain(train.direction,trainIndex+1,train.clone(train.lineFile));
-                timetable.getTrain(train.direction,trainIndex).endAtThisStation(stationIndex);
-                timetable.getTrain(train.direction,trainIndex+1).startAtThisStation(stationIndex);
+        findViewById(R.id.splitButton).setOnClickListener(v -> {
+            int trainIndex=timetable.getTrainIndex(train.direction,train);
+            if(trainIndex<0){
+                SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
                 TrainEditDialog.this.dismiss();
-                if(listener!=null){
-                    listener.allTrainChange();
-                }
+                return;
+            }
+
+            timetable.addTrain(train.direction,trainIndex+1,train.clone(train.lineFile));
+            timetable.getTrain(train.direction,trainIndex).endAtThisStation(stationIndex);
+            timetable.getTrain(train.direction,trainIndex+1).startAtThisStation(stationIndex);
+            TrainEditDialog.this.dismiss();
+            if(listener!=null){
+                listener.allTrainChange();
             }
         });
         findViewById(R.id.conbineButton).setEnabled(train.getEndStation()==stationIndex);
-        findViewById(R.id.conbineButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int trainIndex=timetable.getTrainIndex(train.direction,train);
-                if(trainIndex<0){
-                    SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
-                    TrainEditDialog.this.dismiss();
-                    return;
-                }
-                for(int i=trainIndex;i<timetable.getTrainNum(train.direction);i++){
-                    Train other=timetable.getTrain(train.direction,i);
-                    if(other.getStartStation()==stationIndex){
-                        train.conbine(other);
-                        timetable.deleteTrain(other);
-                    }
-                }
-                if(listener!=null){
-                    listener.allTrainChange();
-                }
+        findViewById(R.id.conbineButton).setOnClickListener(v -> {
+            int trainIndex=timetable.getTrainIndex(train.direction,train);
+            if(trainIndex<0){
+                SDlog.toast("エラー：時刻表内にこの列車が見つかりません。");
                 TrainEditDialog.this.dismiss();
+                return;
             }
-        });
-        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TrainEditDialog.this.dismiss();
-
+            for(int i=trainIndex;i<timetable.getTrainNum(train.direction);i++){
+                Train other=timetable.getTrain(train.direction,i);
+                if(other.getStartStation()==stationIndex){
+                    train.conbine(other);
+                    timetable.deleteTrain(other);
+                }
             }
+            if(listener!=null){
+                listener.allTrainChange();
+            }
+            TrainEditDialog.this.dismiss();
         });
+        findViewById(R.id.cancelButton).setOnClickListener(v -> TrainEditDialog.this.dismiss());
 
     }
 }

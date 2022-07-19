@@ -153,7 +153,6 @@ public class Train implements Cloneable {
 
     /**
      * Ekijikoku行の読み込みを行う
-     * @param value
      */
     private void setOuDiaTime(String[] value) {
         stationTimes=new ArrayList<>();
@@ -174,7 +173,6 @@ public class Train implements Cloneable {
 
     /**
      * OuDia2ndの番線行の読み込みを行う。
-     * @param value
      */
     private void setOuDiaTrack(String[] value) {
         for (int i = 0; i < value.length && i < stationTimes.size(); i++) {
@@ -184,7 +182,6 @@ public class Train implements Cloneable {
 
     /**
      * OuDiaSecond形式で保存します
-     * @param out
      */
     void saveToFile(PrintWriter out){
         out.println("Ressya.");
@@ -255,7 +252,6 @@ public class Train implements Cloneable {
     /**
      * OuDia形式の駅時刻行を作成します。
      * @param secondFrag trueの時oudia2nd形式に対応します。
-     * @return
      */
     private String getEkijikokuOudia(boolean secondFrag) {
         StringBuilder result = new StringBuilder();
@@ -333,7 +329,6 @@ public class Train implements Cloneable {
 
     /**
      * 列車の始発駅を返す。もし、全ての駅で運行されていなければ-1を返す
-     * @return
      */
     public int getStartStation(){
         if(direction==0){
@@ -358,7 +353,6 @@ public class Train implements Cloneable {
     }
     /**
      * 列車の時刻が存在する最初の駅を返す。もし、全ての駅で運行されていなければ-1を返す
-     * @return
      */
     public int getTimeStartStation(){
         if(direction==0){
@@ -375,7 +369,6 @@ public class Train implements Cloneable {
     }
     /**
      * 列車の種着駅を返す。もし、全ての駅で運行されていなければ-1を返す
-     * @return
      */
     public int getEndStation(){
         if(direction==1){
@@ -400,7 +393,6 @@ public class Train implements Cloneable {
     }
     /**
      * 列車の種着駅を返す。もし、全ての駅で運行されていなければ-1を返す
-     * @return
      */
     public int getTimeEndStation(){
         if(direction==1){
@@ -660,7 +652,6 @@ public class Train implements Cloneable {
 
     /**
      * 全駅の時刻をshift秒移動させる
-     * @param shift
      */
     public void shiftTime(int shift){
         for(StationTime time:stationTimes){
@@ -671,7 +662,6 @@ public class Train implements Cloneable {
 
     /**
      * 当駅始発にする
-     * @param stationIndex
      */
     public void startAtThisStation(int stationIndex){
         if(direction==0){
@@ -688,7 +678,6 @@ public class Train implements Cloneable {
     }
     /**
      * 当駅止めにする
-     * @param stationIndex
      */
     public void endAtThisStation(int stationIndex){
         if(direction==0){
@@ -706,7 +695,6 @@ public class Train implements Cloneable {
     /**
      * 列車を結合する
      * 結合駅の出発時刻はotherのものを用いる
-     * @param other
      */
     public void conbine(Train other){
         int endStation=this.getEndStation();

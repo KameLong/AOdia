@@ -10,31 +10,19 @@ package com.kamelong.tool;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Handler;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -55,13 +43,7 @@ public class SDlog {
 
     public static void toast(String string) {
         if (activity != null) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity, string, Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            handler.post(() -> Toast.makeText(activity, string, Toast.LENGTH_SHORT).show());
         }
     }
     public static String getNowDate(){
@@ -83,20 +65,17 @@ public class SDlog {
                final String logName=activity.getCacheDir()+"/"+packageInfo.versionName+"_"+pref.getString("userID","")+getNowDate()+"_"+".log";
 
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            PrintWriter pw = new PrintWriter(logName);
-                            pw.println(packageInfo.versionName);
-                            e.printStackTrace(pw);
-                            pw.close();
-                            Send(logName);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-
+                new Thread(() -> {
+                    try {
+                        PrintWriter pw = new PrintWriter(logName);
+                        pw.println(packageInfo.versionName);
+                        e.printStackTrace(pw);
+                        pw.close();
+                        Send(logName);
+                    }catch (Exception e1){
+                        e1.printStackTrace();
                     }
+
                 }).start();
             }
 
@@ -119,7 +98,7 @@ public class SDlog {
         try {
             HttpURLConnection con;
             OutputStream op;
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String bnd = "abcdrghijklmnopqrstuvwxyzabcdefghijklmn";
             int wLength;
             //対象ファイル

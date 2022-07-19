@@ -20,7 +20,6 @@ public class LineNameView extends TimeTableDefaultView{
      * onDraw.
      * 路線名とダイヤ名を表示してから、
      * 設定画面の列車名の表示のフラグを確認し、"列車名"の表示を行う
-     * @param canvas
      */
     public void onDraw(Canvas canvas){
         int startLine=0;

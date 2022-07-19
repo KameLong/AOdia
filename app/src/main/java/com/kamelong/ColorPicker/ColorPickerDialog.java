@@ -25,13 +25,13 @@ public class ColorPickerDialog extends Dialog {
     public Color color;
     public Color startColor;
 
-    public ColorPickerLisetener lisetener=null;
-    public void setColorPickerListener(ColorPickerLisetener listener){
-        this.lisetener=listener;
+    public ColorPickerListener listener =null;
+    public void setColorPickerListener(ColorPickerListener listener){
+        this.listener =listener;
     }
-    public ColorPickerDialog(Context context,ColorPickerLisetener lisetener,Color startColor) {
+    public ColorPickerDialog(Context context, ColorPickerListener listener, Color startColor) {
         this(context);
-        setColorPickerListener(lisetener);
+        setColorPickerListener(listener);
         this.startColor=startColor;
         this.color=startColor;
         onColorChanged();
@@ -159,35 +159,24 @@ public class ColorPickerDialog extends Dialog {
 
             }
         });
-        colorPickerView.subscribe(new ColorObserver() {
-            @Override
-            public void onColor(int color, boolean fromUser, boolean shouldPropagate) {
-                ColorPickerDialog.this.color=new Color(color);
-                onColorChanged();
+        colorPickerView.subscribe((color, fromUser, shouldPropagate) -> {
+            ColorPickerDialog.this.color=new Color(color);
+            onColorChanged();
 
-            }
         });
-        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                color=startColor;
-                onColorChanged();
-                dismiss();
-            }
+        findViewById(R.id.button3).setOnClickListener(v -> dismiss());
+        findViewById(R.id.button4).setOnClickListener(v -> {
+            color=startColor;
+            onColorChanged();
+            dismiss();
         });
     }
     public Color getColor(){
         return  new Color(colorPickerView.getColor());
     }
     public void onColorChanged(){
-        if(lisetener!=null){
-            lisetener.colorChanged(color);
+        if(listener !=null){
+            listener.colorChanged(color);
         }
         if(rSeek.getProgress()!=color.getRed()) {
             rSeek.setProgress(color.getRed());

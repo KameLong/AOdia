@@ -232,13 +232,13 @@ public class Station implements Cloneable{
                 }
                 break;
             case "BrunchCoreEkiIndex":
-                brunchCoreStationIndex=Integer.valueOf(value);
+                brunchCoreStationIndex=Integer.parseInt(value);
                 break;
             case "BrunchOpposite":
                 brunchOpposite=value.equals("1");
                 break;
             case "LoopOriginEkiIndex":
-                loopOriginStationIndex=Integer.valueOf(value);
+                loopOriginStationIndex=Integer.parseInt(value);
                 break;
             case "LoopOpposite":
                 loopOpposite=value.equals("1");
@@ -253,7 +253,7 @@ public class Station implements Cloneable{
                 showDiagramTrack=value.equals("1");
                 break;
             case "NextEkiDistance":
-                nextStationDistance=Integer.valueOf(value);
+                nextStationDistance=Integer.parseInt(value);
                 break;
             case "JikokuhyouTrackOmit":
                 omitTrack=value.equals("1");
@@ -290,7 +290,6 @@ public class Station implements Cloneable{
     }
     /**
      * oudiaファイルの文字列形式からtimetableStyleを読み込みます
-     * @param str
      */
     private void setTimeTableStyle(String str){
         switch (str){
@@ -436,7 +435,6 @@ public class Station implements Cloneable{
 
     /**
      * oudiaファイルの文字列形式からDiagramRessyajouhouHyoujiを読み込みます
-     * @param value
      */
     private void setShowDiagramInfo(int direction,String value){
         switch (value){
@@ -452,7 +450,6 @@ public class Station implements Cloneable{
     /**
      * OuDia2ndで廃止されたborder変数ですが、
      * 2ndの形式からborder情報を復元します
-     * @return
      */
     public boolean getBorder(){
         if(border)return true;
@@ -697,7 +694,6 @@ public class Station implements Cloneable{
 
     /**
      * 路線外駅名を返します
-     * @return
      */
     public String getOuterStationTimeTableName(int index){
         try {
@@ -784,7 +780,6 @@ public class Station implements Cloneable{
 
     /**
      * 路線外始終着駅を追加します
-     * @param terminal
      */
     public void addOuterTerminal(OuterTerminal terminal) {
         outerTerminals.add(terminal);
@@ -872,8 +867,6 @@ return deleteOuterTerminal(index);
 
     /**
      * オブジェクトを逆転させる
-     * @param task
-     * @param <T>
      */
     private static <T> void reverse(T[] task){
         T temp=task[0];
@@ -884,7 +877,6 @@ return deleteOuterTerminal(index);
 
     /**
      * boolean  型の配列を逆転させる
-     * @param task
      */
     private static void reverse(boolean[] task){
         boolean temp=task[0];

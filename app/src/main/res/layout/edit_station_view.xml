@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:paddingLeft="10dp"
-            android:text="番号"
+            android:text="@string/Number"
             android:textColor="@android:color/black" />
 
         <EditText

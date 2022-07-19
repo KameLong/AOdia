@@ -2,6 +2,6 @@ package com.kamelong.ColorPicker;
 
 import com.kamelong.tool.Color;
 
-public interface ColorPickerLisetener {
+public interface ColorPickerListener {
     void colorChanged(Color color);
 }

@@ -38,7 +38,7 @@ public class EditTrainStopSpinner extends AppCompatSpinner {
             stopList.add(station.getTrackName(i));
         }
         setBackground(null);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stopList);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, stopList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.setAdapter(dataAdapter);
         setSelection(train.getStopTrack(stationIndex));

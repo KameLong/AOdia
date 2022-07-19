@@ -48,30 +48,27 @@ public class FileListAdapter extends BaseAdapter {
         File directory = new File(directoryPath);
         try {
             File[] files = directory.listFiles();
-            Comparator<File> comparator = new Comparator<File>() {
-                @Override
-                //ファイルの比較方法　ソートに使う
-                public int compare(File o1, File o2) {
-                    if(o1.isDirectory()){
-                        if(o2.isDirectory()){
-                            return o1.getName().compareTo(o2.getName());
-                        }
-                        return -1;
-                    }
-                    if(!o1.getName().endsWith("oud")&&!o1.getName().endsWith("oud2")){
-                        if(!o2.isDirectory()&&!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
-                            return o1.getName().compareTo(o2.getName());
-                        }
-                        return 1;
-                    }
+            //ファイルの比較方法　ソートに使う
+            Comparator<File> comparator = (o1, o2) -> {
+                if(o1.isDirectory()){
                     if(o2.isDirectory()){
-                        return 1;
+                        return o1.getName().compareTo(o2.getName());
                     }
-                    if(!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
-                        return -1;
-                    }
-                    return o1.getName().compareTo(o2.getName());
+                    return -1;
                 }
+                if(!o1.getName().endsWith("oud")&&!o1.getName().endsWith("oud2")){
+                    if(!o2.isDirectory()&&!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                    return 1;
+                }
+                if(o2.isDirectory()){
+                    return 1;
+                }
+                if(!o2.getName().endsWith("oud")&&!o2.getName().endsWith("oud2")){
+                    return -1;
+                }
+                return o1.getName().compareTo(o2.getName());
             };
 
             Arrays.sort(files,comparator);
@@ -129,25 +126,19 @@ public class FileListAdapter extends BaseAdapter {
             //ファイル削除操作
             ImageView deleteButton=convertView.findViewById(R.id.deleteDiagram);
             deleteButton.setVisibility(View.VISIBLE);
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    System.out.println(fileList.get(position).getPath());
-                    new AlertDialog.Builder(activity)
-                            .setTitle("ファイル削除")
-                            .setMessage(fileList.get(position).getName()+"を削除します")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(!fileList.get(position).delete()){
-                                        Toast.makeText(activity,"ファイルを削除できませんでした",Toast.LENGTH_LONG).show();
-                                    }
-                                    selector.openDirectory(directoryPath);
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                }
+            deleteButton.setOnClickListener(view -> {
+                System.out.println(fileList.get(position).getPath());
+                new AlertDialog.Builder(activity)
+                        .setTitle("ファイル削除")
+                        .setMessage(fileList.get(position).getName()+"を削除します")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            if (!fileList.get(position).delete()) {
+                                Toast.makeText(activity, "ファイルを削除できませんでした", Toast.LENGTH_LONG).show();
+                            }
+                            selector.openDirectory(directoryPath);
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             });
         }else if (position == 0) {
             ImageView fileIcon = convertView.findViewById(R.id.fileIcon);
@@ -158,28 +149,22 @@ public class FileListAdapter extends BaseAdapter {
             fileIcon.setImageResource(R.drawable.fileselector_folder_icon);
             ImageView deleteButton=convertView.findViewById(R.id.deleteDiagram);
             deleteButton.setVisibility(View.VISIBLE);
-            deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(fileList.get(position).listFiles().length!=0){
-                        SDlog.toast(activity.getString(R.string.errorDirectoryIsNotEnpty));
-                        return;
-                    }
-                    new AlertDialog.Builder(activity)
-                            .setTitle("フォルダ削除")
-                            .setMessage("フォルダ（"+fileList.get(position).getName()+")を削除します")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if(!fileList.get(position).delete()){
-                                        Toast.makeText(activity,"フォルダを削除できませんでした",Toast.LENGTH_LONG).show();
-                                    }
-                                    selector.openDirectory(directoryPath);
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
+            deleteButton.setOnClickListener(view -> {
+                if(fileList.get(position).listFiles().length!=0){
+                    SDlog.toast(activity.getString(R.string.errorDirectoryIsNotEnpty));
+                    return;
                 }
+                new AlertDialog.Builder(activity)
+                        .setTitle("フォルダ削除")
+                        .setMessage("フォルダ（"+fileList.get(position).getName()+")を削除します")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            if (!fileList.get(position).delete()) {
+                                Toast.makeText(activity, "フォルダを削除できませんでした", Toast.LENGTH_LONG).show();
+                            }
+                            selector.openDirectory(directoryPath);
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             });
 
         }

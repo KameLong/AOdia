@@ -64,7 +64,6 @@ public class StationTime implements Cloneable{
 
     /**
      * @param train コピー先の親列車
-     * @return
      */
     public StationTime clone(Train train) {
 
@@ -125,7 +124,6 @@ public class StationTime implements Cloneable{
     /**
      * OuDia2ndV1までの発着番線読み込み
      * 運用機能は無視する
-     * @param value
      */
     void setTrack(String value){
         try {
@@ -147,8 +145,6 @@ public class StationTime implements Cloneable{
     /**
      * 秒単位の数値で表現された時刻を、文字列に変換します。
      * 秒部分が0の時は秒部分が省略されます。
-     * @param time
-     * @return
      */
     public static String timeIntToOuDiaString(int time){
         if (time < 0) return "";
@@ -346,7 +342,6 @@ public class StationTime implements Cloneable{
 
     /**
      * 着時刻設定、時刻の正規化を行います
-     * @param time
      */
     public void setAriTime(int time) {
         if (time < 0) {

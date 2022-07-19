@@ -91,8 +91,6 @@ public class LabelView extends View {
 
     /**
      * ビューの幅を求める
-     * @param measureSpec
-     * @return
      */
     private int measureWidth(int measureSpec) {
         int result = 0;

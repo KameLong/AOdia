@@ -102,5 +102,21 @@
     <string name="buy_thanks">寄付して頂きありがとうございます（カメロング）</string>
     <string name="purchase_error">購入処理でエラーが発生しました。</string>
     <string name="purchase_fail">購入に失敗しました</string>
+    <string name="TrainTypeName">種別名：</string>
+    <string name="StopSetting">番線設定</string>
+    <string name="Number">番号</string>
+    <string name="save_to_GoogleDrive">Google Driveに保存する</string>
+    <string name="saveExt">保存形式</string>
+    <string name="extOud">oud形式</string>
+    <string name="extOud2">oud2形式</string>
+    <string name="save">保存</string>
+    <string name="propaty_lineFile">路線ファイルのプロパティ</string>
+    <string name="lineName">路線名</string>
+    <string name="disgram_starttime">ダイヤ起点時刻</string>
+    <string name="moving_sec_1">秒移動量1</string>
+    <string name="moving_sec_2">秒移動量2</string>
+    <string name="sendLog_message">AOdia内でエラーが発生した際、開発者にエラーログを送信する事を許可しますか？\n\n\nエラーログは、アプリ改善に役立つため、できるだけ多くの人からデータ提供を受けたいと思います(AOdia開発者：カメロング)\n\nこの項目は設定から変更することができます。</string>
+    <string name="accept">許可する</string>
+    <string name="not_accept">許可しない</string>
 
 </resources>

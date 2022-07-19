@@ -4,9 +4,34 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.19844124700239807" />
+        <entry key="../../../.gradle/caches/transforms-3/d108f6f4ae2035f105d35634ff8d943e/transformed/jetified-colorpicker-1.1.6/res/layout/top_defaults_view_color_picker_popup.xml" value="0.165625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/color_picker.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/comment_framgent.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/diagram.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/diagram_edit.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/edit_station.xml" value="0.14375" />
+        <entry key="app/src/main/res/layout/edit_station_fragment.xml" value="0.14375" />
         <entry key="app/src/main/res/layout/edit_station_view.xml" value="0.28854166666666664" />
+        <entry key="app/src/main/res/layout/filesave_database.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/filesave_googledrive.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/filesave_terminal.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fileselect_file_view_routeid.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fileselect_from_routeid.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fileselector.xml" value="3.0" />
+        <entry key="app/src/main/res/layout/fileselector_database.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/fileselector_file_list.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/linefile_edit.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/open_gtfs.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/open_gtfs_route.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/search_framgent.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/search_route_view.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/search_station_view.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/sendlog.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/station_edit_action_dialog.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout/trainedit_train_dialog.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/traintype_edit_view.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/menu/main.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/xml/activity_settings.xml" value="0.21822916666666667" />
       </map>
     </option>
@@ -19,7 +44,7 @@
   </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />
-    <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
+    <option name="myDefaultNotNull" value="androidx.annotation.NonNull" />
     <option name="myNullables">
       <value>
         <list size="13">

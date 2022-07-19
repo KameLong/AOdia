@@ -14,13 +14,11 @@ import com.kamelong.OuDia.Station;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
 import com.kamelong.aodia.AOdiaIO.FileSaveFragment;
-import com.kamelong.aodia.AOdiaIO.FileSelectFromRouteID;
 import com.kamelong.aodia.AOdiaIO.FileSelectorFragment;
 import com.kamelong.aodia.DiagramFragment.DiagramFragment;
 import com.kamelong.aodia.EditStation.EditStationFragment;
 import com.kamelong.aodia.EditTrainType.EditTrainTypeFragment;
 import com.kamelong.aodia.KLdatabase.KLdetabase;
-import com.kamelong.aodia.KLdatabase.SearchFragment;
 import com.kamelong.aodia.SearchSystem.StationSearchFragment;
 import com.kamelong.aodia.StationTimeTable.StationInfoIndexFragment;
 import com.kamelong.aodia.StationTimeTable.StationTimeTableFragment;
@@ -289,7 +287,6 @@ public class AOdia {
     /**
      * 列車種別編集画面
      *
-     * @param lineFile
      */
     public void openEditTrainType(LineFile lineFile) {
         EditTrainTypeFragment fragment = new EditTrainTypeFragment();
@@ -368,7 +365,6 @@ public class AOdia {
     /**
      * 指定LineFileを閉じる
      * 閉じる前にlineFileを使っているFragmentを消す
-     * @param lineFile
      */
     public void killLineFile(LineFile lineFile){
         killFragment(lineFile);

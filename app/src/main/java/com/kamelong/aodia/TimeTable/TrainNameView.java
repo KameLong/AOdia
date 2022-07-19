@@ -71,12 +71,7 @@ public class TrainNameView extends TimeTableDefaultView {
         this.fragment=fragment;
 
         setClickable(true);
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gesture.onTouchEvent(event);
-            }
-        });
+        this.setOnTouchListener((v, event) -> gesture.onTouchEvent(event));
     }
     public void onDraw(Canvas canvas){
         int startLine=0;
@@ -139,12 +134,12 @@ public class TrainNameView extends TimeTableDefaultView {
             char[] str =value.toCharArray();
             int lineNum = 1;
             int space = heightSpace;
-            for (int i = 0; i < str.length; i++) {
+            for (char c : str) {
                 if (space <= 0) {
                     space = heightSpace;
                     lineNum++;
                 }
-                if (!charIsEng(str[i])) {
+                if (!charIsEng(c)) {
                     space--;
                 }
                 space--;
@@ -152,23 +147,23 @@ public class TrainNameView extends TimeTableDefaultView {
             space = heightSpace;
             int startX = (int) ((getWidth() - lineNum * textSize*1.2f) / 2 + (lineNum-1) * textSize*1.2f);
             int startY = startLine;
-            for (int i = 0; i < str.length; i++) {
+            for (char c : str) {
                 if (space <= 0) {
                     space = heightSpace;
-                    startX = startX - (int)(textSize*1.2f);
+                    startX = startX - (int) (textSize * 1.2f);
                     startY = startLine;
                 }
-                if (charIsEng(str[i])) {
+                if (charIsEng(c)) {
                     space--;
                     canvas.save();
-                    canvas.rotate(90,0,0);
-                    drawText(canvas,String.valueOf(str[i]), startY+2,(int)( -startX-(textSize*0.2f)), textPaint,false);
+                    canvas.rotate(90, 0, 0);
+                    drawText(canvas, String.valueOf(c), startY + 2, (int) (-startX - (textSize * 0.2f)), textPaint, false);
                     canvas.restore();
-                    startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                    startY = startY + (int) textPaint.measureText(String.valueOf(c));
                 } else {
                     space = space - 2;
-                    startY = startY +textSize;
-                    drawText(canvas,String.valueOf(str[i]), startX, startY, textPaint,false);
+                    startY = startY + textSize;
+                    drawText(canvas, String.valueOf(c), startX, startY, textPaint, false);
                 }
 
             }

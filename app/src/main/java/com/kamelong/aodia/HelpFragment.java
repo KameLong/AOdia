@@ -77,25 +77,16 @@ public class HelpFragment extends AOdiaFragmentCustom {
         helpView.setWebChromeClient(new WebChromeClient(){
 
         });
-        helpView.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    if(helpView.canGoBack())helpView.goBack();
-                    return true;
-                }
-                return false;
+        helpView.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if(helpView.canGoBack())helpView.goBack();
+                return true;
             }
+            return false;
         });
         helpView.loadUrl("file:///android_asset/help/ViewTutorial/index.html");
 
-        helpView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent,
-                                        String contentDisposition, String mimetype, long contentLength) {
-                oudiaUrlLoad(url);
-            }
-        });
+        helpView.setDownloadListener((url, userAgent, contentDisposition, mimetype, contentLength) -> oudiaUrlLoad(url));
         return helpView;
     }
 

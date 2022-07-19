@@ -72,77 +72,65 @@ public class EditTrainTypeFragment extends AOdiaFragmentCustom {
         super.onStart();
         init();
         final FloatingActionButton copyButton = fragmentContainer.findViewById(R.id.copyButton);
-        copyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
-                ArrayList<TrainType> copyTrainType = new ArrayList<>();
-                for (int i = 0; i < lineFile.trainType.size(); i++) {
-                    if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
-                        copyTrainType.add(lineFile.getTrainType().get(i));
-                    }
+        copyButton.setOnClickListener(v -> {
+            LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
+            ArrayList<TrainType> copyTrainType = new ArrayList<>();
+            for (int i = 0; i < lineFile.trainType.size(); i++) {
+                if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
+                    copyTrainType.add(lineFile.getTrainType().get(i));
                 }
-                getAOdia().copyTrainType = copyTrainType;
-                SDlog.toast("列車種別をコピーしました");
             }
+            getAOdia().copyTrainType = copyTrainType;
+            SDlog.toast("列車種別をコピーしました");
         });
         final FloatingActionButton deleteButton = fragmentContainer.findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
-                ArrayList<TrainType> deleteType = new ArrayList<>();
-                for (int i = 0; i < lineFile.trainType.size(); i++) {
-                    if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
-                        deleteType.add(lineFile.getTrainType().get(i));
-                    }
+        deleteButton.setOnClickListener(v -> {
+            LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
+            ArrayList<TrainType> deleteType = new ArrayList<>();
+            for (int i = 0; i < lineFile.trainType.size(); i++) {
+                if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
+                    deleteType.add(lineFile.getTrainType().get(i));
                 }
-                for (TrainType type : deleteType) {
-                    if (lineFile.deleteTrainType(type)) {
-
-                    } else {
-                        SDlog.toast(type.name + ":路線内で使われているため、削除できません");
-                        break;
-                    }
-                }
-                init();
             }
+            for (TrainType type : deleteType) {
+                if (lineFile.deleteTrainType(type)) {
+
+                } else {
+                    SDlog.toast(type.name + ":路線内で使われているため、削除できません");
+                    break;
+                }
+            }
+            init();
         });
         final FloatingActionButton pasteButton = fragmentContainer.findViewById(R.id.pasteButton);
-        pasteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
-                ArrayList<TrainType> copyTrainType = getAOdia().copyTrainType;
-                int i = 0;
-                for (i = 0; i < lineFile.trainType.size(); i++) {
-                    if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
-                        break;
-                    }
+        pasteButton.setOnClickListener(v -> {
+            LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
+            ArrayList<TrainType> copyTrainType = getAOdia().copyTrainType;
+            int i = 0;
+            for (i = 0; i < lineFile.trainType.size(); i++) {
+                if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
+                    break;
                 }
-                for (TrainType type : copyTrainType) {
-                    lineFile.addTrainType(i, type.clone());
-                    i++;
-                }
-                SDlog.toast("列車種別を貼り付けました");
-                init();
             }
+            for (TrainType type : copyTrainType) {
+                lineFile.addTrainType(i, type.clone());
+                i++;
+            }
+            SDlog.toast("列車種別を貼り付けました");
+            init();
         });
         final FloatingActionButton addButton = fragmentContainer.findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
-                ArrayList<TrainType> copyTrainType = getAOdia().copyTrainType;
-                int i = 0;
-                for (i = 0; i < lineFile.trainType.size(); i++) {
-                    if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
-                        break;
-                    }
+        addButton.setOnClickListener(v -> {
+            LinearLayout typeListLinear = fragmentContainer.findViewById(R.id.typeListLinear);
+            ArrayList<TrainType> copyTrainType = getAOdia().copyTrainType;
+            int i = 0;
+            for (i = 0; i < lineFile.trainType.size(); i++) {
+                if (((EditTrainTypeView) typeListLinear.getChildAt(i)).checked) {
+                    break;
                 }
-                lineFile.addTrainType(i, new TrainType());
-                init();
             }
+            lineFile.addTrainType(i, new TrainType());
+            init();
         });
     }
 

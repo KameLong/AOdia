@@ -13,7 +13,6 @@ import com.kamelong.aodia.AOdiaFragmentCustom
 import com.kamelong.aodia.MainActivity
 import com.kamelong.aodia.R
 import com.kamelong.tool.SDlog
-import kotlinx.android.synthetic.main.routemap_fragment.view.*
 
 class RouteMapFragment: AOdiaFragmentCustom() {
     private var webView:WebView? = null

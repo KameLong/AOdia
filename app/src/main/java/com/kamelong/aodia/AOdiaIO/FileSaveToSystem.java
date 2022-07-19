@@ -73,101 +73,95 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
         }
 
 
-        findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("/")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("\\")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(":")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("*")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("?")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("!")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("<")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(">")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
-                    return;
-                }
-                if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("|")){
-                    SDlog.toast("ファイル名に使用できない文字が含まれています。");
-                    return;
-                }
-                String savePath=currentDirectoryPath+"/"+ ((EditText)findViewById(R.id.fileName)).getText();
-
-                if(saveStyle.getCheckedRadioButtonId()==R.id.oud2){
-                    savePath+=".oud2";
-                }else{
-                    savePath+=".oud";
-                }
-                if(new File(savePath).isDirectory()){
-                    SDlog.toast("このファイル名はディレクトリで既に存在しています。ここに保存できません");
-                    return;
-                }
-                final String savePath2 = savePath;
-                if(new File(savePath).exists()){
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("警告")
-                            .setMessage("ファイルを上書きしますか？")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    try {
-                                        if (saveStyle.getCheckedRadioButtonId()==R.id.oud2) {
-                                            lineFile.saveToFile(savePath2);
-                                        } else {
-                                            lineFile.saveToOuDiaFile(savePath2);
-                                        }
-
-                                        SDlog.toast("ファイルを保存しました。");
-                                        openDirectory(currentDirectoryPath);
-
-                                    } catch (Exception e) {
-                                        SDlog.log(e);
-                                        SDlog.toast("ファイルの保存に失敗しました。");
-                                    }
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                    return;
-                }
-                try {
-                    if (saveStyle.getCheckedRadioButtonId()==R.id.oud2) {
-                        lineFile.saveToFile(savePath);
-                    } else {
-                        lineFile.saveToOuDiaFile(savePath);
-                    }
-
-                    SDlog.toast("ファイルを保存しました。");
-                    openDirectory(currentDirectoryPath);
-
-                }catch (Exception e){
-                    SDlog.log(e);
-                    SDlog.toast(savePath+"にファイルを保存する事ができませんでした。このフォルダに対するアクセス権限がない可能性があります。");
-                }
-
-
+        findViewById(R.id.saveButton).setOnClickListener(v -> {
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("/")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
             }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("\\")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(":")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("*")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("?")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("!")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。(\\/:*?!<>|)");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("<")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains(">")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                return;
+            }
+            if(((EditText)findViewById(R.id.fileName)).getText().toString().contains("|")){
+                SDlog.toast("ファイル名に使用できない文字が含まれています。");
+                return;
+            }
+            String savePath=currentDirectoryPath+"/"+ ((EditText)findViewById(R.id.fileName)).getText();
+
+            if(saveStyle.getCheckedRadioButtonId()==R.id.oud2){
+                savePath+=".oud2";
+            }else{
+                savePath+=".oud";
+            }
+            if(new File(savePath).isDirectory()){
+                SDlog.toast("このファイル名はディレクトリで既に存在しています。ここに保存できません");
+                return;
+            }
+            final String savePath2 = savePath;
+            if(new File(savePath).exists()){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("警告")
+                        .setMessage("ファイルを上書きしますか？")
+                        .setPositiveButton("OK", (dialog, which) -> {
+                            try {
+                                if (saveStyle.getCheckedRadioButtonId() == R.id.oud2) {
+                                    lineFile.saveToFile(savePath2);
+                                } else {
+                                    lineFile.saveToOuDiaFile(savePath2);
+                                }
+
+                                SDlog.toast("ファイルを保存しました。");
+                                openDirectory(currentDirectoryPath);
+
+                            } catch (Exception e) {
+                                SDlog.log(e);
+                                SDlog.toast("ファイルの保存に失敗しました。");
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                return;
+            }
+            try {
+                if (saveStyle.getCheckedRadioButtonId()==R.id.oud2) {
+                    lineFile.saveToFile(savePath);
+                } else {
+                    lineFile.saveToOuDiaFile(savePath);
+                }
+
+                SDlog.toast("ファイルを保存しました。");
+                openDirectory(currentDirectoryPath);
+
+            }catch (Exception e){
+                SDlog.log(e);
+                SDlog.toast(savePath+"にファイルを保存する事ができませんでした。このフォルダに対するアクセス権限がない可能性があります。");
+            }
+
+
         });
     }
     public FileSaveToSystem(Context context, AttributeSet attr){
@@ -212,16 +206,13 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
         });
         openDirectory(rootFolderList[0].getPath());//初期設定
         final RadioGroup saveStyle=findViewById(R.id.savestyle);
-        saveStyle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.oud:
-                        ((TextView)findViewById(R.id.textView4)).setText(".oud");
-                        break;
-                    case R.id.oud2:
-                        ((TextView)findViewById(R.id.textView4)).setText(".oud2");
-                }
+        saveStyle.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId){
+                case R.id.oud:
+                    ((TextView)findViewById(R.id.textView4)).setText(".oud");
+                    break;
+                case R.id.oud2:
+                    ((TextView)findViewById(R.id.textView4)).setText(".oud2");
             }
         });
 
@@ -244,13 +235,11 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
                 fileListView.setAdapter(adapter);
                 ((TextView)findViewById(R.id.pathView)).setText(file.getPath());
 
-                fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        try {
-                            openDirectory(adapter.getItem(position).getPath());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                fileListView.setOnItemClickListener((parent, view, position, id) -> {
+                    try {
+                        openDirectory(adapter.getItem(position).getPath());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
             } else if (file.exists()) {

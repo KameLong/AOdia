@@ -61,89 +61,61 @@ public class TimeTableOptions {
             preference.edit().putString("lineTimetableWidth", "5").apply();
         }
         //メインボタン
-        this.container.findViewById(R.id.fabTrainTime).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTrainTimeOption();
-            }
-        });
+        this.container.findViewById(R.id.fabTrainTime).setOnClickListener(v -> openTrainTimeOption());
         showPassTime=preference.getBoolean("timetableShowPass",false);
         //通過駅
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowPass),showPassTime);
-        this.container.findViewById(R.id.fabShowPass).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPassTime=!showPassTime;
-                preference.edit().putBoolean("timetableShowPass",showPassTime).apply();
-                checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowPass),showPassTime);
-                fragment.invalidate();
-            }
+        this.container.findViewById(R.id.fabShowPass).setOnClickListener(v -> {
+            showPassTime=!showPassTime;
+            preference.edit().putBoolean("timetableShowPass",showPassTime).apply();
+            checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowPass),showPassTime);
+            fragment.invalidate();
         });
         //秒表示
         showSecond=preference.getBoolean("timetableShowSecond",false);
 
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowSeconds),showSecond);
-        this.container.findViewById(R.id.fabShowSeconds).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSecond=!showSecond;
-                preference.edit().putBoolean("timetableShowSecond",showSecond).apply();
-                checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowSeconds),showSecond);
-                fragment.invalidate();
-            }
+        this.container.findViewById(R.id.fabShowSeconds).setOnClickListener(v -> {
+            showSecond=!showSecond;
+            preference.edit().putBoolean("timetableShowSecond",showSecond).apply();
+            checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowSeconds),showSecond);
+            fragment.invalidate();
         });
         //列車名
         showTrainName=preference.getBoolean("timetableShowName",false);
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowTrainName),showTrainName);
-        this.container.findViewById(R.id.fabShowTrainName).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTrainName=!showTrainName;
-                preference.edit().putBoolean("timetableShowName",showTrainName).apply();
-                checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowTrainName),showTrainName);
-                fragment.invalidate();
-            }
+        this.container.findViewById(R.id.fabShowTrainName).setOnClickListener(v -> {
+            showTrainName=!showTrainName;
+            preference.edit().putBoolean("timetableShowName",showTrainName).apply();
+            checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowTrainName),showTrainName);
+            fragment.invalidate();
         });
         //始終点
         showStartStation=preference.getBoolean("timetableShowStart",false);
         showEndStation=showStartStation;
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabStartEnd),showStartStation);
-        this.container.findViewById(R.id.fabStartEnd).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showStartStation=!showStartStation;
-                showEndStation=showStartStation;
-                preference.edit().putBoolean("timetableShowStart",showStartStation).apply();
+        this.container.findViewById(R.id.fabStartEnd).setOnClickListener(v -> {
+            showStartStation=!showStartStation;
+            showEndStation=showStartStation;
+            preference.edit().putBoolean("timetableShowStart",showStartStation).apply();
 
-                checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabStartEnd),showStartStation);
-                fragment.invalidate();
+            checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabStartEnd),showStartStation);
+            fragment.invalidate();
 
-            }
         });
         //備考
         showRemark=preference.getBoolean("timetableShowRemark",false);
         checkFab((FloatingActionButton) this.container.findViewById(R.id.fabShowRemark),showRemark);
-        this.container.findViewById(R.id.fabShowRemark).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showRemark=!showRemark;
-                preference.edit().putBoolean("timetableShowRemark",showRemark).apply();
-                checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowRemark),showRemark);
-                fragment.invalidate();
-            }
+        this.container.findViewById(R.id.fabShowRemark).setOnClickListener(v -> {
+            showRemark=!showRemark;
+            preference.edit().putBoolean("timetableShowRemark",showRemark).apply();
+            checkFab((FloatingActionButton) TimeTableOptions.this.container.findViewById(R.id.fabShowRemark),showRemark);
+            fragment.invalidate();
         });
-        this.container.findViewById(R.id.fabFilter).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TrainTypeFilter dialog=new TrainTypeFilter((MainActivity) activity,fragment.getLineFile(),fragment);
-                dialog.show();
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        fragment.allTrainChange();
-                    }
-                });
-            }
+        this.container.findViewById(R.id.fabFilter).setOnClickListener(v -> {
+            TrainTypeFilter dialog=new TrainTypeFilter((MainActivity) activity,fragment.getLineFile(),fragment);
+            dialog.show();
+            dialog.setOnDismissListener(dialog1 -> fragment.allTrainChange());
         });
 
         //編集
@@ -154,37 +126,19 @@ public class TimeTableOptions {
             this.container.findViewById(R.id.fabTrainEdit).getBackground().setColorFilter(ContextCompat.getColor(activity, android.R.color.darker_gray), PorterDuff.Mode.SRC_ATOP);
         }
 
-        this.container.findViewById(R.id.fabTrainEdit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openTrainEdit();
-                if (trainEdit) {
-                    container.findViewById(R.id.fabTrainEdit).getBackground().setColorFilter(ContextCompat.getColor(activity, android.R.color.holo_green_dark), PorterDuff.Mode.SRC_ATOP);
-                } else {
-                    container.findViewById(R.id.fabTrainEdit).getBackground().setColorFilter(ContextCompat.getColor(activity, android.R.color.darker_gray), PorterDuff.Mode.SRC_ATOP);
-                }
-                fragment.invalidate();
+        this.container.findViewById(R.id.fabTrainEdit).setOnClickListener(v -> {
+            openTrainEdit();
+            if (trainEdit) {
+                container.findViewById(R.id.fabTrainEdit).getBackground().setColorFilter(ContextCompat.getColor(activity, android.R.color.holo_green_dark), PorterDuff.Mode.SRC_ATOP);
+            } else {
+                container.findViewById(R.id.fabTrainEdit).getBackground().setColorFilter(ContextCompat.getColor(activity, android.R.color.darker_gray), PorterDuff.Mode.SRC_ATOP);
             }
+            fragment.invalidate();
         });
         //編集
-        this.container.findViewById(R.id.fabTrainCopy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.trainCopy();
-            }
-        });
-        this.container.findViewById(R.id.fabTrainPaste).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.trainPaste();
-            }
-        });
-        this.container.findViewById(R.id.fabTrainCut).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment.trainCut();
-            }
-        });
+        this.container.findViewById(R.id.fabTrainCopy).setOnClickListener(v -> fragment.trainCopy());
+        this.container.findViewById(R.id.fabTrainPaste).setOnClickListener(v -> fragment.trainPaste());
+        this.container.findViewById(R.id.fabTrainCut).setOnClickListener(v -> fragment.trainCut());
 
 
     }
@@ -193,7 +147,7 @@ public class TimeTableOptions {
         showDetailOption=!showDetailOption;
         int fabSize = container.findViewById(R.id.fabTrainTime).getWidth();
         if(showDetailOption) {
-            ArrayList<Animator> animatorList = new ArrayList<Animator>();
+            ArrayList<Animator> animatorList = new ArrayList<>();
             //アニメーションを追加していく
 
             addAnimation(animatorList, container.findViewById(R.id.fabTrainTime), 0, -fabSize, 0, -fabSize, 1, 1);
@@ -225,7 +179,7 @@ public class TimeTableOptions {
             // アニメーションを開始します
             animatorSet.start();
         }else{
-            ArrayList<Animator> animatorList = new ArrayList<Animator>();
+            ArrayList<Animator> animatorList = new ArrayList<>();
             //アニメーションを追加していく
             addAnimation(animatorList, container.findViewById(R.id.fabTrainTime), -fabSize, 0, -fabSize, 0, 1, 1);
 
@@ -260,7 +214,7 @@ public class TimeTableOptions {
         trainEdit=!trainEdit;
         int fabSize = container.findViewById(R.id.fabTrainTime).getWidth();
         if(trainEdit) {
-            ArrayList<Animator> animatorList = new ArrayList<Animator>();
+            ArrayList<Animator> animatorList = new ArrayList<>();
             //アニメーションを追加していく
 
 
@@ -275,7 +229,7 @@ public class TimeTableOptions {
             // アニメーションを開始します
             animatorSet.start();
         }else{
-            ArrayList<Animator> animatorList = new ArrayList<Animator>();
+            ArrayList<Animator> animatorList = new ArrayList<>();
             //アニメーションを追加していく
             addAnimation(animatorList, container.findViewById(R.id.frameTrainCopy), -2*fabSize, -1*fabSize, -3*fabSize,-2*fabSize, 1, 0);
             addAnimation(animatorList, container.findViewById(R.id.frameTrainPaste), -1*fabSize,-1*fabSize , -3*fabSize,-2*fabSize, 1, 0);
@@ -295,14 +249,6 @@ public class TimeTableOptions {
      * animatorのリストを与えることで、そこに新しくアニメーションンを追加する
      * X、Y方向への平行移動、透明度の変更を行う
      *
-     * @param animators
-     * @param view
-     * @param startTranslationX
-     * @param endTranslationX
-     * @param startTranslationY
-     * @param endTranslationY
-     * @param startAlpfa
-     * @param endAlpfa
      */
     private void addAnimation(ArrayList<Animator> animators, View view, int startTranslationX, int endTranslationX,
                               int startTranslationY, int endTranslationY, float startAlpfa, float endAlpfa) {
@@ -319,8 +265,6 @@ public class TimeTableOptions {
      * checkedの場合は背景色をandroid.R.color.holo_blue_lightにし
      * uncheckedの場合は背景色をandroid.R.color.darker_grayにする
      *
-     * @param fab
-     * @param check
      */
     private void checkFab(FloatingActionButton fab, boolean check) {
         if (check) {

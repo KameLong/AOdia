@@ -123,50 +123,45 @@ public class SelectRouteFragment extends AOdiaFragmentCustom {
 
             routeList.setAdapter(adapter);
 
-            routeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    try {
+            routeList.setOnItemClickListener((parent, view1, position, id) -> {
+                try {
 //                        openDirectory(adapter.getItem(position).getPath());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             });
             FloatingActionButton openAsOuDia=getMainActivity().findViewById(R.id.openAsOuDia);
-            openAsOuDia.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    File file=new File(getMainActivity().getFilesDir()+"/fromGTFS");
-                    if(file.isFile()){
-                        SDlog.log(getMainActivity().getFilesDir()+"/fromGTFS"+"にファイルが既に存在するため、GTFSからoudiaに変換できません");
-                        return;
-                    }
-                    if(!file.isDirectory()){
-                        file.mkdir();
-                    }
-                    String lineName="";
-                    if(adapter.downRoutes.size()>0){
-                        lineName=adapter.downRoutes.get(0).route_name;
-                    }else if(adapter.upRoutes.size()>0){
-                        lineName=adapter.upRoutes.get(0).route_name;
-                    }else{
-                        SDlog.toast("路線を選択してください");
-                        return;
-                    }
-                    ArrayList<String> downList=new ArrayList<>();
-                    ArrayList<String> upList=new ArrayList<>();
-                    for(Route route:adapter.downRoutes){
-                        downList.add(route.route_id);
-                    }
-                    for(Route route:adapter.upRoutes){
-                        upList.add(route.route_id);
-                    }
-
-                    GTFS2OuDia converter=new GTFS2OuDia(gtfs,file.getPath(),lineName);
-                    converter.setRouteID(new ArrayList[]{downList,upList});
-                    LineFile lineFile=converter.makeOudiaFile();
-                    getAOdia().addLineFile(lineFile);
+            openAsOuDia.setOnClickListener(v -> {
+                File file=new File(getMainActivity().getFilesDir()+"/fromGTFS");
+                if(file.isFile()){
+                    SDlog.log(getMainActivity().getFilesDir()+"/fromGTFS"+"にファイルが既に存在するため、GTFSからoudiaに変換できません");
+                    return;
                 }
+                if(!file.isDirectory()){
+                    file.mkdir();
+                }
+                String lineName="";
+                if(adapter.downRoutes.size()>0){
+                    lineName=adapter.downRoutes.get(0).route_name;
+                }else if(adapter.upRoutes.size()>0){
+                    lineName=adapter.upRoutes.get(0).route_name;
+                }else{
+                    SDlog.toast("路線を選択してください");
+                    return;
+                }
+                ArrayList<String> downList=new ArrayList<>();
+                ArrayList<String> upList=new ArrayList<>();
+                for(Route route:adapter.downRoutes){
+                    downList.add(route.route_id);
+                }
+                for(Route route:adapter.upRoutes){
+                    upList.add(route.route_id);
+                }
+
+                GTFS2OuDia converter=new GTFS2OuDia(gtfs,file.getPath(),lineName);
+                converter.setRouteID(new ArrayList[]{downList,upList});
+                LineFile lineFile=converter.makeOudiaFile();
+                getAOdia().addLineFile(lineFile);
             });
 
 

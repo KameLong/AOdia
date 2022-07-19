@@ -14,13 +14,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
@@ -410,8 +408,6 @@ public class LineFile implements Cloneable {
     /**
      * OuDia形式の1行を読み込みます。
      * Rosen.とDispProp.に関する情報をここで読み込みます。
-     * @param title
-     * @param value
      */
     protected void setValue(String title,String value){
         switch(title){
@@ -527,8 +523,6 @@ public class LineFile implements Cloneable {
     /**
      * OuDiaSecond形式で保存します。
      * 現在はOuDiaSecond.1.07形式で保存します。保存形式は今後のアップデートで変更する可能性があります。
-     * @param fileName
-     * @throws Exception
      */
     public void saveToFile(String fileName) throws Exception {
         convertToOud2();
@@ -611,8 +605,6 @@ public class LineFile implements Cloneable {
     /**
      * OuDia形式で保存します。
      * 現在はOuDia.1.02形式で保存します。保存形式は今後のアップデートで変更する可能性があります。
-     * @param fileName
-     * @throws Exception
      */
     public void saveToOuDiaFile(String fileName) throws Exception {
         PrintWriter out = new PrintWriter
@@ -818,7 +810,6 @@ public class LineFile implements Cloneable {
     }
     /**
      * ダイヤグラムに含まれる駅数を返します
-     * @return
      */
     public int getStationNum(){
         return station.size();
@@ -839,7 +830,6 @@ public class LineFile implements Cloneable {
      * 最短所要時間を更新したい場合はcalcStationTime()を呼び出してください。
      *
      * なお、駅数が変化した場合はcalcStationTimeが呼ばれます
-     * @return
      */
     public ArrayList<Integer>getStationTime(){
         if(stationTime.size()!=station.size()){

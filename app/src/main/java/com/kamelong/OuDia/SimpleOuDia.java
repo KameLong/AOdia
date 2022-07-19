@@ -46,14 +46,11 @@ public class SimpleOuDia {
 
     }
     private void loadShiftJis(File file)throws Exception{
-        BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file),"Shift-JIS"));
-        try {
+        try (BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(new FileInputStream(file), "Shift-JIS"))) {
             String nouse = br.readLine();
             loadDiaFile(br);//version info
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
-        }finally {
-            br.close();
         }
     }
     private void loadDiaFile(BufferedReader br)throws Exception{

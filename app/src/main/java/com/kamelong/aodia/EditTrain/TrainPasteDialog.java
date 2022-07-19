@@ -20,28 +20,22 @@ public class TrainPasteDialog extends Dialog {
         setTitle("列車貼り付けオプション");
         ((EditText)findViewById(R.id.secondEdit)).setText("0");
         ((EditText)findViewById(R.id.minitesEdit)).setText("0");
-        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(trainPasteDialogInterface!=null) {
-                    trainPasteDialogInterface.onCancelClicked();
-                }
+        findViewById(R.id.cancelButton).setOnClickListener(v -> {
+            if(trainPasteDialogInterface!=null) {
+                trainPasteDialogInterface.onCancelClicked();
             }
         });
-        findViewById(R.id.okButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(trainPasteDialogInterface!=null) {
-                    try {
-                        int time = Integer.parseInt(((EditText) findViewById(R.id.minitesEdit)).getEditableText().toString());
-                        time *= 60;
-                        time += Integer.parseInt(((EditText) findViewById(R.id.secondEdit)).getEditableText().toString());
+        findViewById(R.id.okButton).setOnClickListener(v -> {
+            if(trainPasteDialogInterface!=null) {
+                try {
+                    int time = Integer.parseInt(((EditText) findViewById(R.id.minitesEdit)).getEditableText().toString());
+                    time *= 60;
+                    time += Integer.parseInt(((EditText) findViewById(R.id.secondEdit)).getEditableText().toString());
 
 
-                        trainPasteDialogInterface.onOkClicked(time);
-                    }catch (NumberFormatException e){
-                        SDlog.toast(context.getResources().getString(R.string.UserInputNumberFormatException));
-                    }
+                    trainPasteDialogInterface.onOkClicked(time);
+                }catch (NumberFormatException e){
+                    SDlog.toast(context.getResources().getString(R.string.UserInputNumberFormatException));
                 }
             }
         });

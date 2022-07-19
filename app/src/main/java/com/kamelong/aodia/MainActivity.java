@@ -2,19 +2,15 @@ package com.kamelong.aodia;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -42,7 +38,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 
 public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
@@ -84,14 +79,11 @@ public class MainActivity extends FragmentActivity {
             public void onDrawerStateChanged(int newState) { }
         });
         Button openDrawer=findViewById(R.id.Button2);
-        openDrawer.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if(menuLayout.isDrawerOpen(GravityCompat.START)){
-                    closeMenu();
-                }else{
-                    openMenu();
-                }
+        openDrawer.setOnClickListener(view -> {
+            if(menuLayout.isDrawerOpen(GravityCompat.START)){
+                closeMenu();
+            }else{
+                openMenu();
             }
         });
         menuFragment=new MenuFragment();
@@ -125,46 +117,25 @@ public class MainActivity extends FragmentActivity {
                     aodiaData.openFile(file);
 
                 }
-            }catch (NullPointerException e){
-                e.printStackTrace();
-                SDlog.toast("ファイルを開くことができません.");
-            }catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
                 SDlog.toast("ファイルを開くことができません.");
             }
         }
         //メイン画面にあるボタン設定
-        findViewById(R.id.backFragment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aodiaData.backFragment();
-            }
-        });
-        findViewById(R.id.proceedFragment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aodiaData.proceedFragment();
-            }
-        });
-        findViewById(R.id.killFragment).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                aodiaData.killFragment();
-            }
-        });
+        findViewById(R.id.backFragment).setOnClickListener(v -> aodiaData.backFragment());
+        findViewById(R.id.proceedFragment).setOnClickListener(v -> aodiaData.proceedFragment());
+        findViewById(R.id.killFragment).setOnClickListener(v -> aodiaData.killFragment());
         saveLoop=true;
         //自動保存機能開始
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(saveLoop){
-                    try{
-                        Thread.sleep(1000*100);//10秒ごとに保存
-                        MainActivity.this.getAOdia().saveData();
+        new Thread(() -> {
+            while(saveLoop){
+                try{
+                    Thread.sleep(1000*100);//10秒ごとに保存
+                    MainActivity.this.getAOdia().saveData();
 
-                    }catch (Exception e){
-                        SDlog.log(e);
-                    }
+                }catch (Exception e){
+                    SDlog.log(e);
                 }
             }
         }).start();
@@ -172,37 +143,31 @@ public class MainActivity extends FragmentActivity {
         storagePermission();
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         final Handler handler=new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String url = "http://kamelong.com/aodia/AOdiaInfoVersion.html";
-                    URL obj = new URL(url);
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-                    con.setRequestMethod("GET");
-                    int responseCode = con.getResponseCode();
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        //お知らせ機能
-                        InputStream is = con.getInputStream();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        final int version=Integer.parseInt(br.readLine());
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                int savedVersion=pref.getInt("showDialogVersion",-1);
-                                if(savedVersion!=version){
-                                    Dialog dialog=new InfoDialog(MainActivity.this);
-                                    dialog.show();
-                                    pref.edit().putInt("showDialogVersion",version).apply();
-                                }
-                            }
-                        });
-                    } else {
-                        //何もしない
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+        new Thread(() -> {
+            try {
+                String url = "http://kamelong.com/aodia/AOdiaInfoVersion.html";
+                URL obj = new URL(url);
+                HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                con.setRequestMethod("GET");
+                int responseCode = con.getResponseCode();
+                if (responseCode == HttpURLConnection.HTTP_OK) {
+                    //お知らせ機能
+                    InputStream is = con.getInputStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    final int version=Integer.parseInt(br.readLine());
+                    handler.post(() -> {
+                        int savedVersion = pref.getInt("showDialogVersion", -1);
+                        if (savedVersion != version) {
+//                            Dialog dialog = new InfoDialog(MainActivity.this);
+//                            dialog.show();
+                            pref.edit().putInt("showDialogVersion", version).apply();
+                        }
+                    });
+                } else {
+                    //何もしない
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
         //エラーを開発者に通知させる
@@ -222,13 +187,13 @@ public class MainActivity extends FragmentActivity {
         try {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             final String textSize = pref.getString("textsize", "30");
-            TimeTableDefaultView.setTextSize(Integer.valueOf(textSize));
-            DiagramDefaultView.setTextSize(Integer.valueOf(textSize));
+            TimeTableDefaultView.setTextSize(Integer.parseInt(textSize));
+            DiagramDefaultView.setTextSize(Integer.parseInt(textSize));
 
             final String diagramStationWidth = pref.getString("diagramStationWidth", "5");
-            DiagramDefaultView.setStationWidth(Integer.valueOf(diagramStationWidth));
+            DiagramDefaultView.setStationWidth(Integer.parseInt(diagramStationWidth));
             final String timetableStationWidth = pref.getString("timetableStationWidth", "5");
-            TimeTableDefaultView.setStationWidth(Integer.valueOf(timetableStationWidth));
+            TimeTableDefaultView.setStationWidth(Integer.parseInt(timetableStationWidth));
         }catch (Exception e){
             SDlog.log(e);
         }
@@ -261,7 +226,6 @@ public class MainActivity extends FragmentActivity {
      */
     /**
      * 任意のFragmentをcontainerに開きます。
-     * @param fragment
      */
     public void openFragment(AOdiaFragment fragment){
         //もしメニューが開いていたら閉じる

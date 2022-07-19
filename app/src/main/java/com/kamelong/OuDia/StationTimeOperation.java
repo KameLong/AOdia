@@ -335,7 +335,6 @@ public class StationTimeOperation implements Cloneable{
 
     /**
      * OuDia2ndV2形式の運用情報を読み込みます
-     * @param value
      */
     void setValue(String value){
             String[] values=value.split("\\$",-1);

@@ -2,18 +2,12 @@ package com.kamelong.aodia.menu;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Environment;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.core.app.ShareCompat;
-import androidx.core.content.FileProvider;
 
 import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.Diagram;
@@ -23,17 +17,7 @@ import com.kamelong.aodia.LineFileEditDialog;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
-import com.kamelong.tool.ShiftJISBufferedReader;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-/**
- * Created by kame on 2017/01/24.
- */
 /*
  *     This file is part of AOdia.
 
@@ -79,44 +63,22 @@ public class LineMenu extends LinearLayout{
             lineContLinear.setOrientation(VERTICAL);
             View v= ((Activity)getContext()).getLayoutInflater().inflate(R.layout.menu_line_buttons, lineButtonLinear);
             addView(lineButtonLinear);
-            findViewById(R.id.saveButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-
-                    aodia.openSaveFragment(lineFile);
-                }
+            findViewById(R.id.saveButton).setOnClickListener(view -> aodia.openSaveFragment(lineFile));
+            findViewById(R.id.closeButton).setOnClickListener(view -> {
+                aodia.killLineFile(lineFile);
+                activity.openMenu();
             });
-            findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.killLineFile(lineFile);
-                    activity.openMenu();
-                }
-            });
-            findViewById(R.id.upButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.upDiaFile(lineFile);
-                }
-            });
+            findViewById(R.id.upButton).setOnClickListener(view -> aodia.upDiaFile(lineFile));
             if(aodia.getLineFileList().indexOf(lineFile)==0){
                 findViewById(R.id.upButton).setVisibility(INVISIBLE);
             }
-            findViewById(R.id.hidden).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.lineFileExpand.put(lineFile,false);
-                    closeMenu();
-                }
+            findViewById(R.id.hidden).setOnClickListener(view -> {
+                aodia.lineFileExpand.put(lineFile,false);
+                closeMenu();
             });
-            findViewById(R.id.expand).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.lineFileExpand.put(lineFile,true);
-                    openMenu();
-                }
+            findViewById(R.id.expand).setOnClickListener(view -> {
+                aodia.lineFileExpand.put(lineFile,true);
+                openMenu();
             });
             if(aodia.lineFileExpand.get(lineFile)){
                 openMenu();
@@ -128,13 +90,10 @@ public class LineMenu extends LinearLayout{
             titleButton.setBackgroundColor(Color.TRANSPARENT);
             titleButton.setGravity(Gravity.START);
             titleButton.setGravity(Gravity.CENTER_VERTICAL);
-            titleButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LineFileEditDialog dialog=new LineFileEditDialog(context,lineFile);
-                    dialog.show();
-                    ((MainActivity)getContext()).closeMenu();
-                }
+            titleButton.setOnClickListener(view -> {
+                LineFileEditDialog dialog=new LineFileEditDialog(context,lineFile);
+                dialog.show();
+                ((MainActivity)getContext()).closeMenu();
             });
             float density=getContext().getResources().getDisplayMetrics().density;
 
@@ -146,12 +105,7 @@ public class LineMenu extends LinearLayout{
             LinearLayout.LayoutParams margin1 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
             margin1.setMargins((int)(10*density), 0, 0, 0);
             station.setLayoutParams(margin1);
-            station.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openEditStation(lineFile);
-                }
-            });
+            station.setOnClickListener(view -> aodia.openEditStation(lineFile));
             lineContLinear.addView(station);
             Button trainType = new Button(context);
             trainType.setText(activity.getString(R.string.editTrainType));
@@ -160,12 +114,7 @@ public class LineMenu extends LinearLayout{
             trainType.setTextColor(Color.BLACK);
             trainType.setLayoutParams(margin1);
 
-            trainType.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openEditTrainType(lineFile);
-                }
-            });
+            trainType.setOnClickListener(view -> aodia.openEditTrainType(lineFile));
             lineContLinear.addView(trainType);
             Button timetable = new Button(context);
             timetable.setText(activity.getString(R.string.stationTimeTable));
@@ -173,12 +122,7 @@ public class LineMenu extends LinearLayout{
             timetable.setBackgroundColor(Color.TRANSPARENT);
             timetable.setTextColor(Color.BLACK);
             timetable.setLayoutParams(margin1);
-            timetable.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openStationTimeTableIndex(lineFile);
-                }
-            });
+            timetable.setOnClickListener(view -> aodia.openStationTimeTableIndex(lineFile));
             lineContLinear.addView(timetable);
 
             LinearLayout.LayoutParams margin2 = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
@@ -196,13 +140,10 @@ public class LineMenu extends LinearLayout{
 
                 diaTitle.setLayoutParams(margin1);
                 diaTitle.setTextColor(Color.GRAY);
-                diaTitle.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        DiagramEditDialog dialog=new DiagramEditDialog(context,lineFile,diagram);
-                        dialog.show();
-                        ((MainActivity)getContext()).closeMenu();
-                    }
+                diaTitle.setOnClickListener(view -> {
+                    DiagramEditDialog dialog=new DiagramEditDialog(context,lineFile,diagram);
+                    dialog.show();
+                    ((MainActivity)getContext()).closeMenu();
                 });
                 Button downButton = new Button(context);
                 downButton.setText(activity.getString(R.string.downwardTimeTable));
@@ -213,13 +154,7 @@ public class LineMenu extends LinearLayout{
 
                 downButton.setLayoutParams(margin2);
 
-                downButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        aodia.openTimeTable(lineFile,diagramIndex,0);
-
-                    }
-                });
+                downButton.setOnClickListener(v13 -> aodia.openTimeTable(lineFile,diagramIndex,0));
                 Button upButton = new Button(context);
                 upButton.setText(activity.getString(R.string.upwardTimeTable));
                 upButton.setGravity(Gravity.START);
@@ -230,13 +165,7 @@ public class LineMenu extends LinearLayout{
                 upButton.setBackgroundColor(Color.TRANSPARENT);
 
 
-                upButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        aodia.openTimeTable(lineFile,diagramIndex,1);
-
-                    }
-                });
+                upButton.setOnClickListener(v12 -> aodia.openTimeTable(lineFile,diagramIndex,1));
                 Button diagramButton = new Button(context);
                 diagramButton.setText(activity.getString(R.string.diagram));
                 diagramButton.setGravity(Gravity.START);
@@ -246,13 +175,7 @@ public class LineMenu extends LinearLayout{
                 diagramButton.setBackgroundColor(Color.TRANSPARENT);
 
 
-                diagramButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        aodia.openDiagram(lineFile,diagramIndex);
-
-                    }
-                });
+                diagramButton.setOnClickListener(v1 -> aodia.openDiagram(lineFile,diagramIndex));
 
                 lineContLinear.addView(diaTitle);
                 lineContLinear.addView(downButton);
@@ -267,12 +190,7 @@ public class LineMenu extends LinearLayout{
             comment.setBackgroundColor(Color.TRANSPARENT);
             comment.setTextColor(Color.BLACK);
             comment.setLayoutParams(margin1);
-            comment.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openComment(lineFile);
-                }
-            });
+            comment.setOnClickListener(view -> aodia.openComment(lineFile));
             lineContLinear.addView(comment);
             addView(lineContLinear);
             if(aodia.lineFileExpand.get(lineFile)){

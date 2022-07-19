@@ -1,9 +1,9 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 android {
-    compileSdkVersion 32
+    compileSdk 32
     defaultConfig {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
@@ -32,27 +32,25 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-    buildToolsVersion = '29.0.3'
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-
-    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.preference:preference:1.1.1'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-
-}
-repositories {
-    mavenCentral()
-    jcenter()
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
 }

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_weight="0"
-            android:text="種別名："
+            android:text="@string/TrainTypeName"
             android:textColor="@android:color/black"
             android:textSize="16dp" />
 

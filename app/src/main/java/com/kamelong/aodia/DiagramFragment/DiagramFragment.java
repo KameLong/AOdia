@@ -165,28 +165,25 @@ public class DiagramFragment extends AOdiaFragmentCustom {
                     if (e2.getPointerCount() == 1) {
                         final float flingV = -v1;
                         fling = true;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                float flingSpeed = flingV;
-                                while (fling) {
-                                    try {
-                                        if (flingSpeed > 0) {
-                                            flingSpeed = flingSpeed - 100;
-                                        } else {
-                                            flingSpeed = flingSpeed + 100;
-                                        }
-                                        if (Math.abs(flingSpeed) < 100) {
-                                            fling = false;
-                                            return;
-                                        }
-
-                                        DiagramFragment.this.scrollBy(flingSpeed / 60, 0);
-
-                                        Thread.sleep(16);
-                                    } catch (Exception e) {
-                                        fling = false;
+                        new Thread(() -> {
+                            float flingSpeed = flingV;
+                            while (fling) {
+                                try {
+                                    if (flingSpeed > 0) {
+                                        flingSpeed = flingSpeed - 100;
+                                    } else {
+                                        flingSpeed = flingSpeed + 100;
                                     }
+                                    if (Math.abs(flingSpeed) < 100) {
+                                        fling = false;
+                                        return;
+                                    }
+
+                                    DiagramFragment.this.scrollBy(flingSpeed / 60, 0);
+
+                                    Thread.sleep(16);
+                                } catch (Exception e) {
+                                    fling = false;
                                 }
                             }
                         }).start();
@@ -241,7 +238,6 @@ public class DiagramFragment extends AOdiaFragmentCustom {
         }
         try {
             setting = new DiagramOptions((MainActivity) getActivity(), this, lineFile, diaIndex);
-            setting.create(this);
             FrameLayout stationFrame = view.findViewById(R.id.station);
             FrameLayout timeFrame = view.findViewById(R.id.time);
             FrameLayout diaFrame = view.findViewById(R.id.diagramFrame);
@@ -256,16 +252,14 @@ public class DiagramFragment extends AOdiaFragmentCustom {
 
 
             scrollTo();
+            setting.create(this);
 
         } catch (Exception e) {
             SDlog.log(e);
         }
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                //このViewのタッチジェスチャーを保存
-                return gesture.onTouchEvent(event);
-            }
+        view.setOnTouchListener((v, event) -> {
+            //このViewのタッチジェスチャーを保存
+            return gesture.onTouchEvent(event);
         });
 
     }
@@ -294,6 +288,9 @@ public class DiagramFragment extends AOdiaFragmentCustom {
                 return;
             }
             FrameLayout diagramFrame =getActivity().findViewById(R.id.diagramFrame);
+            if(diagramFrame==null){
+                return;
+            }
             if (autoScroll) {
 
                 final int width = diagramFrame.getWidth();
@@ -326,19 +323,16 @@ public class DiagramFragment extends AOdiaFragmentCustom {
             }
             final int mScrollX = setting.scrollX;
             final int mScrollY = setting.scrollY;
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    //UI処理
-                    try {
-                        diagramFrame.scrollTo(mScrollX - diagramView.getScrollX(), mScrollY - diagramView.getScrollY());
-                        stationView.scrollTo(0, mScrollY);
-                        timeView.scrollTo(mScrollX, 0);
-                    } catch (Exception e) {
-                        SDlog.log(e);
-                    }
-                    return;
+            handler.post(() -> {
+                //UI処理
+                try {
+                    diagramFrame.scrollTo(mScrollX - diagramView.getScrollX(), mScrollY - diagramView.getScrollY());
+                    stationView.scrollTo(0, mScrollY);
+                    timeView.scrollTo(mScrollX, 0);
+                } catch (Exception e) {
+                    SDlog.log(e);
                 }
+                return;
             });
         } catch (Exception e) {
             SDlog.log(e);
@@ -389,33 +383,27 @@ public class DiagramFragment extends AOdiaFragmentCustom {
 
     }
     public void autoScroll(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // マルチスレッドにしたい処理 ここから
-                autoScroll=true;
-                while(autoScroll){//see stopAutoScroll()
+        new Thread(() -> {
+            // マルチスレッドにしたい処理 ここから
+            autoScroll=true;
+            while(autoScroll){//see stopAutoScroll()
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                final FrameLayout diagramFrame = getActivity().findViewById(R.id.diagramFrame);
-                                if(diagramFrame==null){
-                                    autoScroll=false;
-                                }
-                            }catch (Exception e){
-                                autoScroll=false;
-                            }
-                            scrollTo();
-                            diagramView.invalidate();
-                        }
-                    });
+                handler.post(() -> {
                     try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        SDlog.log(e);
+                        final FrameLayout diagramFrame = getActivity().findViewById(R.id.diagramFrame);
+                        if (diagramFrame == null) {
+                            autoScroll = false;
+                        }
+                    } catch (Exception e) {
+                        autoScroll = false;
                     }
+                    scrollTo();
+                    diagramView.invalidate();
+                });
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    SDlog.log(e);
                 }
             }
         }).start();

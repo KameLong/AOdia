@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:background="#DFF"
                 android:paddingLeft="5dp"
-                android:text="番線設定"
+                android:text="@string/StopSetting"
                 android:textColor="@android:color/black" />
 
             <LinearLayout

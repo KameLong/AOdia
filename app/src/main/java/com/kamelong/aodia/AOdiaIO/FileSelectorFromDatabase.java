@@ -51,117 +51,94 @@ public class FileSelectorFromDatabase extends LinearLayout {
         final Button openButton = findViewById(R.id.openButton);
         final Button closeButton = findViewById(R.id.closeButton);
         //LinearLayout(R.id.title)をタッチしても検索部分を開閉できるようにする
-        findViewById(R.id.title).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (openButton.getVisibility() == View.VISIBLE) {
-                    openButton.callOnClick();
-                } else {
+        findViewById(R.id.title).setOnClickListener(view -> {
+            if (openButton.getVisibility() == View.VISIBLE) {
+                openButton.callOnClick();
+            } else {
 
-                    closeButton.callOnClick();
-                }
+                closeButton.callOnClick();
             }
         });
-        openButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openButton.setVisibility(View.GONE);
-                closeButton.setVisibility(View.VISIBLE);
-                findViewById(R.id.search).setVisibility(View.VISIBLE);
-            }
+        openButton.setOnClickListener(view -> {
+            openButton.setVisibility(View.GONE);
+            closeButton.setVisibility(View.VISIBLE);
+            findViewById(R.id.search).setVisibility(View.VISIBLE);
         });
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openButton.setVisibility(View.VISIBLE);
-                closeButton.setVisibility(View.GONE);
-                findViewById(R.id.search).setVisibility(View.GONE);
+        closeButton.setOnClickListener(view -> {
+            openButton.setVisibility(View.VISIBLE);
+            closeButton.setVisibility(View.GONE);
+            findViewById(R.id.search).setVisibility(View.GONE);
 
-            }
         });
         Button startSearch = findViewById(R.id.startSearch);
-        startSearch.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("StaticFieldLeak")
-            @Override
-            public void onClick(View view) {
-                final String stationName = ((EditText) findViewById(R.id.stationInput)).getText().toString();
-                final String keyword = ((EditText) findViewById(R.id.keywordInput)).getText().toString();
-                final boolean andSearch = ((CheckBox) findViewById(R.id.andCheck)).isChecked();
-                final String startYear = ((EditText) findViewById(R.id.startYear)).getText().toString();
-                final String endYear = ((EditText) findViewById(R.id.endYear)).getText().toString();
-                final Handler handler = getHandler();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String url = "https://kamelong.com/OuDiaDataBase/api/apiv1.php";
-                            url += "?stationName=" + stationName;
-                            url += "&keyword=" + keyword;
-                            url += "&startYear=" + startYear;
-                            url += "&endYear=" + endYear;
-                            if (andSearch) {
-                                url += "&andSearch=" + "1";
-                            }
-                            System.out.println(url);
-
-
-                            URL con = new URL(url);
-                            HttpsURLConnection connection = (HttpsURLConnection) con.openConnection();
-                            connection.setRequestMethod("GET");
-                            connection.setRequestProperty("Content-Type", "application/json");
-                            connection.setRequestProperty("Accept", "application/json");
-                            connection.setDoInput(true);
-                            connection.setDoOutput(true);
-                            connection.connect();
-                            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                // 通信に成功した
-                                // テキストを取得する
-                                final InputStream in = connection.getInputStream();
-                                String encoding = connection.getContentEncoding();
-                                if (null == encoding) {
-                                    encoding = "UTF-8";
-                                }
-                                final InputStreamReader inReader = new InputStreamReader(in, encoding);
-                                final BufferedReader bufReader = new BufferedReader(inReader);
-                                String line = bufReader.readLine();
-                                final JSONObject json = new JSONObject(line);
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            if (!json.has("lineData")) {
-                                                json.put("lineData", new JSONArray());
-                                            }
-                                            openData(json.getJSONArray("lineData"));
-                                            ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + json.getJSONArray("lineData").length() + "件です");
-                                        } catch (JSONException e) {
-                                            //
-                                            openData(new JSONArray());
-                                            ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + 0 + "件です");
-                                            e.printStackTrace();
-                                        }
-                                        findViewById(R.id.closeButton).callOnClick();
-                                        return;
-                                    }
-                                });
-                                bufReader.close();
-                                inReader.close();
-                                in.close();
-                            } else {
-                                SDlog.toast("検索エラー" + connection.getResponseCode());
-                            }
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+        startSearch.setOnClickListener(view -> {
+            final String stationName = ((EditText) findViewById(R.id.stationInput)).getText().toString();
+            final String keyword = ((EditText) findViewById(R.id.keywordInput)).getText().toString();
+            final boolean andSearch = ((CheckBox) findViewById(R.id.andCheck)).isChecked();
+            final String startYear = ((EditText) findViewById(R.id.startYear)).getText().toString();
+            final String endYear = ((EditText) findViewById(R.id.endYear)).getText().toString();
+            final Handler handler = getHandler();
+            new Thread(() -> {
+                try {
+                    String url = "https://kamelong.com/OuDiaDataBase/api/apiv1.php";
+                    url += "?stationName=" + stationName;
+                    url += "&keyword=" + keyword;
+                    url += "&startYear=" + startYear;
+                    url += "&endYear=" + endYear;
+                    if (andSearch) {
+                        url += "&andSearch=" + "1";
                     }
-                }).start();
+                    System.out.println(url);
 
-            }
+
+                    URL con = new URL(url);
+                    HttpsURLConnection connection = (HttpsURLConnection) con.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty("Content-Type", "application/json");
+                    connection.setRequestProperty("Accept", "application/json");
+                    connection.setDoInput(true);
+                    connection.setDoOutput(true);
+                    connection.connect();
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        // 通信に成功した
+                        // テキストを取得する
+                        final InputStream in = connection.getInputStream();
+                        String encoding = connection.getContentEncoding();
+                        if (null == encoding) {
+                            encoding = "UTF-8";
+                        }
+                        final InputStreamReader inReader = new InputStreamReader(in, encoding);
+                        final BufferedReader bufReader = new BufferedReader(inReader);
+                        String line = bufReader.readLine();
+                        final JSONObject json = new JSONObject(line);
+                        handler.post(() -> {
+                            try {
+                                if (!json.has("lineData")) {
+                                    json.put("lineData", new JSONArray());
+                                }
+                                openData(json.getJSONArray("lineData"));
+                                ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + json.getJSONArray("lineData").length() + "件です");
+                            } catch (JSONException e) {
+                                //
+                                openData(new JSONArray());
+                                ((TextView) findViewById(R.id.statesText)).setText("検索結果は" + 0 + "件です");
+                                e.printStackTrace();
+                            }
+                            findViewById(R.id.closeButton).callOnClick();
+                            return;
+                        });
+                        bufReader.close();
+                        inReader.close();
+                        in.close();
+                    } else {
+                        SDlog.toast("検索エラー" + connection.getResponseCode());
+                    }
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
+
+            }).start();
+
         });
 
     }

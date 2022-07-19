@@ -213,9 +213,7 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      */
     public int[] getPositionData(String filePath, int diaNum, int key) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = null;
-        try {
-            cursor = db.query(TABLE_LINEDATA, null, FILE_PATH + " = ? AND " + DIA_NUM + " = ?", new String[]{filePath, "" + diaNum}, null, null, null);
+        try (Cursor cursor = db.query(TABLE_LINEDATA, null, FILE_PATH + " = ? AND " + DIA_NUM + " = ?", new String[]{filePath, "" + diaNum}, null, null, null)) {
             if (cursor.getCount() == 0) {
                 throw new Exception("no data in lineData");
             }
@@ -256,10 +254,6 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
                 default:
                     return null;
             }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
         }
     }
 
@@ -269,7 +263,6 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * データベースに同名のファイルが記録されている場合はそれを削除したのち
      * 引数のファイルが追加される。
      *
-     * @param filePath
      * @see #getHistory()
      */
     public void addHistory(String filePath) {
@@ -314,8 +307,6 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * TABLE_STATIONに新しい駅データを付け加える。
      * 駅名とそのファイルパスをセットにして追加する。
      *
-     * @param stationName
-     * @param filePath
      */
     private void addStation(SQLiteDatabase db, ArrayList<String> stationName, String filePath) {
         try{
@@ -338,8 +329,6 @@ public class AOdiaDetabase extends SQLiteOpenHelper {
      * TABLE_STATIONに新しい駅データを付け加える。
      * 駅名とそのファイルパスをセットにして追加する。
      *
-     * @param stationName
-     * @param filePath
      */
     public void addStation(ArrayList<String>[] stationName, String[] filePath) {
         final SQLiteDatabase db= getWritableDatabase();

@@ -12,10 +12,10 @@
     //メニュー
     <string name="app_name">AOdia</string>
     <string name="menu">MENU</string>
-    <string name="newFile">　create new file</string>
-    <string name="openFile">　open a file</string>
-    <string name="openHelp">　open help</string>
-    <string name="options">　options</string>
+    <string name="newFile">create new file</string>
+    <string name="openFile">open a file</string>
+    <string name="openHelp">open help</string>
+    <string name="options">options</string>
     <string name="editStation">station</string>
     <string name="editTrainType">type of train</string>
     <string name="stationTimeTable">timetable of station</string>
@@ -63,8 +63,8 @@
     <string name="diagramDelete">delete timetable</string>
 
     /ファイルオープン
-    <string name="FileInTheDevice">a file　in \n device</string>
-    <string name="OuDiaDatabase">OuDia\ndatabase</string>
+    <string name="FileInTheDevice">a file in \n device</string>
+    <string name="OuDiaDatabase">WEB database\n(JP only)</string>
     <string name="history">history</string>
     <string name="baseDirectory">base directory</string>
     <string name="searchInsideDirectory">search from\nfile\'s or station\'s name</string>
@@ -76,6 +76,18 @@
     //コメント
     <string name="comment">comment</string>
     <string name="submit">submit</string>
+    <string name="sendLog_message">Do you want to allow developers to send error logs when an error occurs in AOdia? Since the error log is useful for improving the app, we would like to receive data from as many people as possible (AOdia developer: Kamelong) This item can be changed from the settings.</string>
+    <string name="accept">ACCEPT</string>
+    <string name="not_accept">DENY</string>
+    <string name="TrainTypeName">" "</string>
+    <string name="newDirectory">New directory</string>
+    <string name="extOud">oud</string>
+    <string name="extOud2">oud2</string>
+    <string name="save">save</string>
+    <string name="lineName">Name of Line</string>
+    <string name="disgram_starttime">Start time for diagram</string>
+    <string name="moving_sec_1">time edit sec1</string>
+    <string name="moving_sec_2">time edit sec2</string>
 
 </resources>
 

@@ -22,7 +22,6 @@ import com.kamelong.aodia.SearchSystem.OnRouteViewClicked
 import com.kamelong.aodia.SearchSystem.RouteView
 import com.kamelong.aodia.StationTimeTable.OnSortButtonClickListener
 import com.kamelong.tool.SDlog
-import kotlinx.android.synthetic.main.diagram.*
 import java.io.File
 
 /**

@@ -119,8 +119,6 @@ public class DiagramOptions {
      * checkedの場合は背景色をandroid.R.color.holo_blue_lightにし
      * uncheckedの場合は背景色をandroid.R.color.darker_grayにする
      *
-     * @param fab
-     * @param check
      */
     private void checkFab(FloatingActionButton fab, boolean check) {
         if (check) {
@@ -180,14 +178,6 @@ public class DiagramOptions {
      * animatorのリストを与えることで、そこに新しくアニメーションンを追加する
      * X、Y方向への平行移動、透明度の変更を行う
      *
-     * @param animators
-     * @param view
-     * @param startTranslationX
-     * @param endTranslationX
-     * @param startTranslationY
-     * @param endTranslationY
-     * @param startAlpfa
-     * @param endAlpfa
      */
     private void addAnimation(ArrayList<Animator> animators, View view, int startTranslationX, int endTranslationX,
                               int startTranslationY, int endTranslationY, float startAlpfa, float endAlpfa) {
@@ -203,7 +193,6 @@ public class DiagramOptions {
     /**
      * DiagramFragmentが与えられた時にダイヤ詳細設定ボタンについて
      *
-     * @param f
      */
     public void create(DiagramFragment f) {
         fragment = f;
@@ -218,163 +207,134 @@ public class DiagramOptions {
         findViewById(R.id.autoScroll).setVisibility(View.VISIBLE);
 
         FloatingActionButton fabDiagram = findViewById(R.id.fabDiagram);
-        fabDiagram.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fabDiagramVisible) {
-                    int fabSize = findViewById(R.id.fitFrame).getWidth();
+        fabDiagram.setOnClickListener(view -> {
+            if (fabDiagramVisible) {
+                int fabSize = findViewById(R.id.fitFrame).getWidth();
 
-                    ArrayList<Animator> animatorList = new ArrayList<Animator>();
-                    //アニメーションを追加していく
-                    addAnimation(animatorList, findViewById(R.id.settingFrame), -fabSize, 0, -fabSize, 0, 1, 1);
+                ArrayList<Animator> animatorList = new ArrayList<>();
+                //アニメーションを追加していく
+                addAnimation(animatorList, findViewById(R.id.settingFrame), -fabSize, 0, -fabSize, 0, 1, 1);
 
-                    addAnimation(animatorList, findViewById(R.id.upFrame), -2 * fabSize, 0, -2 * fabSize, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.stopFrame), -fabSize, 0, -2 * fabSize, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.downFrame), 0, 0, -2 * fabSize, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.FinelyFrame), -2 * fabSize, 0, -fabSize, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.roughFrame), -2 * fabSize, 0, 0, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.nameFrame), -fabSize, 0, 0, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.fitFrame), 0, 0, 0, 0, 1, 0);
-                    addAnimation(animatorList, findViewById(R.id.autoFrame), 0, 0, -fabSize, 0, 1, 0);
-                    final AnimatorSet animatorSet = new AnimatorSet();
-                    // リストのAnimatorを順番に実行します
-                    animatorSet.playTogether(animatorList);
-                    // アニメーションを開始します
-                    animatorSet.start();
-                    fabDiagramVisible = false;
-                } else {
+                addAnimation(animatorList, findViewById(R.id.upFrame), -2 * fabSize, 0, -2 * fabSize, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.stopFrame), -fabSize, 0, -2 * fabSize, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.downFrame), 0, 0, -2 * fabSize, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.FinelyFrame), -2 * fabSize, 0, -fabSize, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.roughFrame), -2 * fabSize, 0, 0, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.nameFrame), -fabSize, 0, 0, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.fitFrame), 0, 0, 0, 0, 1, 0);
+                addAnimation(animatorList, findViewById(R.id.autoFrame), 0, 0, -fabSize, 0, 1, 0);
+                final AnimatorSet animatorSet = new AnimatorSet();
+                // リストのAnimatorを順番に実行します
+                animatorSet.playTogether(animatorList);
+                // アニメーションを開始します
+                animatorSet.start();
+                fabDiagramVisible = false;
+            } else {
 
-                    fabDiagramVisible = true;
-                    int fabSize = findViewById(R.id.fitFrame).getWidth();
-                    ArrayList<Animator> animatorList = new ArrayList<Animator>();
-                    //アニメーションを追加していく
+                fabDiagramVisible = true;
+                int fabSize = findViewById(R.id.fitFrame).getWidth();
+                ArrayList<Animator> animatorList = new ArrayList<>();
+                //アニメーションを追加していく
 
-                    addAnimation(animatorList, findViewById(R.id.settingFrame), 0, -fabSize, 0, -fabSize, 1, 1);
+                addAnimation(animatorList, findViewById(R.id.settingFrame), 0, -fabSize, 0, -fabSize, 1, 1);
 
-                    addAnimation(animatorList, findViewById(R.id.upFrame), 0, -2 * fabSize, 0, -2 * fabSize, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.stopFrame), 0, -fabSize, 0, -2 * fabSize, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.downFrame), 0, 0, 0, -2 * fabSize, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.FinelyFrame), 0, -2 * fabSize, 0, -fabSize, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.roughFrame), 0, -2 * fabSize, 0, 0, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.nameFrame), 0, -fabSize, 0, 0, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.fitFrame), 0, 0, 0, 0, 0, 1);
-                    addAnimation(animatorList, findViewById(R.id.autoFrame), 0, 0, 0, -fabSize, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.upFrame), 0, -2 * fabSize, 0, -2 * fabSize, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.stopFrame), 0, -fabSize, 0, -2 * fabSize, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.downFrame), 0, 0, 0, -2 * fabSize, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.FinelyFrame), 0, -2 * fabSize, 0, -fabSize, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.roughFrame), 0, -2 * fabSize, 0, 0, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.nameFrame), 0, -fabSize, 0, 0, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.fitFrame), 0, 0, 0, 0, 0, 1);
+                addAnimation(animatorList, findViewById(R.id.autoFrame), 0, 0, 0, -fabSize, 0, 1);
 
-                    final AnimatorSet animatorSet = new AnimatorSet();
-                    // リストのAnimatorを順番に実行します
-                    animatorSet.playTogether(animatorList);
-                    // アニメーションを開始します
-                    animatorSet.start();
-                }
+                final AnimatorSet animatorSet = new AnimatorSet();
+                // リストのAnimatorを順番に実行します
+                animatorSet.playTogether(animatorList);
+                // アニメーションを開始します
+                animatorSet.start();
             }
         });
 
         //オートスクロールについての処理
         //処理の後はbuttonInitを呼び出してボタンを再構成する
         FloatingActionButton fabAuto = findViewById(R.id.autoScroll);
-        fabAuto.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                autoScrollState=(autoScrollState+1)%3;
-                switch(autoScrollState){
-                    case 0:
-                        break;
-                    case 1:
-                        fragment.autoScroll();//スクロール開始
-                        break;
-                    case 2:
-                        fragment.stopAutoScroll();//スクロール終了
-                        break;
-                }
-                //diagramFrameを再構成
-                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                DiagramOptions.this.buttonInit();
+        fabAuto.setOnClickListener(view -> {
+            autoScrollState=(autoScrollState+1)%3;
+            switch(autoScrollState){
+                case 0:
+                    break;
+                case 1:
+                    fragment.autoScroll();//スクロール開始
+                    break;
+                case 2:
+                    fragment.stopAutoScroll();//スクロール終了
+                    break;
             }
+            //diagramFrameを再構成
+            ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+            DiagramOptions.this.buttonInit();
         });
         //時間軸を細かくする
         FloatingActionButton fabFinely = findViewById(R.id.fabFinely);
-        fabFinely.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if(verticalAxis<7){
-                    verticalAxis++;
-                    diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
-                    //Viewの再描画
-                    ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                    ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
-                }
+        fabFinely.setOnClickListener(view -> {
+            if(verticalAxis<7){
+                verticalAxis++;
+                diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
+                //Viewの再描画
+                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+                ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
             }
         });
         //時間軸を粗くする
         FloatingActionButton fabRough = findViewById(R.id.fabRough);
-        fabRough.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if(verticalAxis>0){
-                    verticalAxis--;
-                    diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
+        fabRough.setOnClickListener(view -> {
+            if(verticalAxis>0){
+                verticalAxis--;
+                diagramPreference.edit().putInt("diagramVerticalAxis",verticalAxis).apply();
 
-                    ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                    ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
-                }
+                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+                ((FrameLayout)findViewById(R.id.time)).getChildAt(0).invalidate();
             }
         });
         //下り時刻表の表示を変える
         FloatingActionButton fabDown = findViewById(R.id.fabDown);
-        fabDown.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                showDownTrain=!showDownTrain;
-                diagramPreference.edit().putBoolean("diagramShowDown",showDownTrain).apply();
-                //Viewと詳細設定ボタンの再描画
-                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                DiagramOptions.this.buttonInit();
+        fabDown.setOnClickListener(view -> {
+            showDownTrain=!showDownTrain;
+            diagramPreference.edit().putBoolean("diagramShowDown",showDownTrain).apply();
+            //Viewと詳細設定ボタンの再描画
+            ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+            DiagramOptions.this.buttonInit();
 
-            }
         });
         //上り時刻表の表示を変える
         FloatingActionButton fabUp = findViewById(R.id.fabUp);
-        fabUp.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                showUpTrain=!showUpTrain;
-                diagramPreference.edit().putBoolean("diagramShowUp",showUpTrain).apply();
-                //Viewと詳細設定ボタンの再描画
-                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                DiagramOptions.this.buttonInit();
-            }
+        fabUp.setOnClickListener(view -> {
+            showUpTrain=!showUpTrain;
+            diagramPreference.edit().putBoolean("diagramShowUp",showUpTrain).apply();
+            //Viewと詳細設定ボタンの再描画
+            ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+            DiagramOptions.this.buttonInit();
         });
         //停車表示を変える
         FloatingActionButton fabStop = findViewById(R.id.fabStop);
-        fabStop.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                showTrainStop=!showTrainStop;
-                diagramPreference.edit().putBoolean("diagramShowStop",showTrainStop).apply();
-                //Viewと詳細設定ボタンの再描画
-                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-                DiagramOptions.this.buttonInit();
-            }
+        fabStop.setOnClickListener(view -> {
+            showTrainStop=!showTrainStop;
+            diagramPreference.edit().putBoolean("diagramShowStop",showTrainStop).apply();
+            //Viewと詳細設定ボタンの再描画
+            ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
+            DiagramOptions.this.buttonInit();
         });
         //ダイヤの上下をそろえる
         FloatingActionButton fabFit = findViewById(R.id.fabFit);
-        fabFit.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                fragment.fitVertical();
-            }
-        });
+        fabFit.setOnClickListener(view -> fragment.fitVertical());
         //列車番号・列車名の表示を切り替える
         FloatingActionButton fabNumber = findViewById(R.id.fabNumber);
-        fabNumber.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                numberState=(numberState+1)%4;
-                diagramPreference.edit().putInt("diagramNumberState",numberState).apply();
+        fabNumber.setOnClickListener(view -> {
+            numberState=(numberState+1)%4;
+            diagramPreference.edit().putInt("diagramNumberState",numberState).apply();
 
-                DiagramOptions.this.buttonInit();
-                ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
-            }
+            DiagramOptions.this.buttonInit();
+            ((FrameLayout)findViewById(R.id.diagramFrame)).getChildAt(0).invalidate();
         });
         buttonInit();
 

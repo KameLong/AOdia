@@ -9,7 +9,7 @@
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="AOdia内でエラーが発生した際、開発者にエラーログを送信する事を許可しますか？\n\n\nエラーログは、アプリ改善に役立つため、できるだけ多くの人からデータ提供を受けたいと思います(AOdia開発者：カメロング)\n\nこの項目は設定から変更することができます。"
+        android:text="@string/sendLog_message"
         android:textColor="#000"
         android:textSize="16dp" />
 
@@ -23,13 +23,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="許可する" />
+            android:text="@string/accept" />
 
         <Button
             android:id="@+id/decrine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="許可しない" />
+            android:text="@string/not_accept" />
     </LinearLayout>
 </LinearLayout>

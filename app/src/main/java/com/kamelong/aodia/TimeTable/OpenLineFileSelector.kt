@@ -5,7 +5,6 @@ import android.widget.Button
 import android.widget.LinearLayout
 import com.kamelong.OuDia.Train
 import com.kamelong.aodia.MainActivity
-import kotlinx.android.synthetic.main.old_train_acrtion_dialog.view.*
 
 class OpenLineFileSelector(activity:MainActivity,listener:OnLineFileOpenSelect):Dialog(activity){
     init{

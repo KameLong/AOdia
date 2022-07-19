@@ -60,16 +60,14 @@ public class FileSelectorFragment extends AOdiaFragmentCustom {
                     .setContent(R.id.tab2);
             tabHost.addTab(spec);
 
-            spec = tabHost.newTabSpec("Tab3")
-                    .setIndicator(getString(R.string.history))
-                    .setContent(R.id.tab3);
-            tabHost.addTab(spec);
+//            spec = tabHost.newTabSpec("Tab3")
+//                    .setIndicator(getString(R.string.history))
+//                    .setContent(R.id.tab3);
+//            tabHost.addTab(spec);
 
             tabHost.setCurrentTab(0);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            SDlog.log(e);
         }
 
     }

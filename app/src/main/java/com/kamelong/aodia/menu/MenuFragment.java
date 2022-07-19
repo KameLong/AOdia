@@ -54,12 +54,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
         try {
 
             layout.removeAllViews();
-            getActivity().findViewById(R.id.menuButton).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    count++;
-                }
-            });
+            getActivity().findViewById(R.id.menuButton).setOnClickListener(v -> count++);
 
 
             LinearLayout fileOpenLayout=new LinearLayout(activity);
@@ -68,13 +63,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
             newFile.setText(getString(R.string.newFile));
             newFile.setBackgroundColor(Color.TRANSPARENT);
             newFile.setGravity(Gravity.START);
-            newFile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().makeNewLineFile();
-
-                }
-            });
+            newFile.setOnClickListener(view -> getAOdia().makeNewLineFile());
             layout.addView(newFile);
 
 
@@ -117,13 +106,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
             openFile.setText(getString(R.string.openFile));
             openFile.setBackgroundColor(Color.TRANSPARENT);
             openFile.setGravity(Gravity.START);
-            openFile.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    aodia.openFileSelect();
-
-                }
-            });
+            openFile.setOnClickListener(view -> aodia.openFileSelect());
             layout.addView(openFile);
 
             for (LineFile lineFile : aodia.getLineFileList()) {
@@ -138,23 +121,13 @@ public class MenuFragment extends AOdiaFragmentCustom {
             openSetting.setText(getString(R.string.options));
             openSetting.setBackgroundColor(Color.TRANSPARENT);
             openSetting.setGravity(Gravity.START);
-            openSetting.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().openSetting();
-                }
-            });
+            openSetting.setOnClickListener(view -> getAOdia().openSetting());
             layout.addView(openSetting);
             Button openHelp = new Button(activity);
             openHelp.setText(getString(R.string.openHelp));
             openHelp.setBackgroundColor(Color.TRANSPARENT);
             openHelp.setGravity(Gravity.START);
-            openHelp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getAOdia().openHelp();
-                }
-            });
+            openHelp.setOnClickListener(view -> getAOdia().openHelp());
             layout.addView(openHelp);
 //            Button userhelp = new Button(activity);
 //            userhelp.setText("ユーザーヘルプを開く");

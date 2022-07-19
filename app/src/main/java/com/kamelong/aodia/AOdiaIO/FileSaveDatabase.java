@@ -41,49 +41,43 @@ public class FileSaveDatabase extends ScrollView {
         this.lineFile = lineFile;
         ((EditText) findViewById(R.id.mailAddress)).setText(preferences.getString("email", ""));
         ((EditText) findViewById(R.id.userName)).setText(preferences.getString("name", ""));
-        findViewById(R.id.textView7).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.lisenceFrame).setVisibility(VISIBLE);
+        findViewById(R.id.textView7).setOnClickListener(v -> {
+            findViewById(R.id.lisenceFrame).setVisibility(VISIBLE);
 //                ((WebView)findViewById(R.id.lisenceView)).loadUrl();
-            }
         });
 
         ((TextView) findViewById(R.id.textView8)).setText(lineFile.name);
-        findViewById(R.id.submitButton).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!((CheckBox) findViewById(R.id.checkbox)).isChecked()) {
-                    SDlog.toast("利用規約に同意してください");
-                    return;
-                }
-                String mail = ((EditText) findViewById(R.id.mailAddress)).getText().toString();
-                if (!mail.contains("@") || mail.split("@")[0].length() == 0 || mail.split("@")[1].length() == 0 || mail.split("@", -1).length != 2) {
-                    SDlog.toast("メールアドレスを正しく入力してください");
-                    return;
-                }
-                preferences.edit().putString("email", mail).apply();
-                String[] keywords = ((EditText) findViewById(R.id.keywords)).getText().toString().split(" ");
-                String name = ((EditText) findViewById(R.id.userName)).getText().toString();
-                if (name.length() == 0) {
-                    SDlog.toast("ニックネームを正しく入力してください");
-                    return;
-                }
-                preferences.edit().putString("name", name).apply();
-                int year = 0;
-                try {
-                    year = Integer.parseInt(((EditText) findViewById(R.id.time)).getText().toString());
-                } catch (Exception e) {
-                    SDlog.toast("年代を正しく入力してください");
-                    return;
-                }
-                if (year < 100 || year > 9999) {
-                    SDlog.toast("年代を正しく入力してください");
-                    return;
-                }
-
-
+        findViewById(R.id.submitButton).setOnClickListener(v -> {
+            if (!((CheckBox) findViewById(R.id.checkbox)).isChecked()) {
+                SDlog.toast("利用規約に同意してください");
+                return;
             }
+            String mail = ((EditText) findViewById(R.id.mailAddress)).getText().toString();
+            if (!mail.contains("@") || mail.split("@")[0].length() == 0 || mail.split("@")[1].length() == 0 || mail.split("@", -1).length != 2) {
+                SDlog.toast("メールアドレスを正しく入力してください");
+                return;
+            }
+            preferences.edit().putString("email", mail).apply();
+            String[] keywords = ((EditText) findViewById(R.id.keywords)).getText().toString().split(" ");
+            String name = ((EditText) findViewById(R.id.userName)).getText().toString();
+            if (name.length() == 0) {
+                SDlog.toast("ニックネームを正しく入力してください");
+                return;
+            }
+            preferences.edit().putString("name", name).apply();
+            int year = 0;
+            try {
+                year = Integer.parseInt(((EditText) findViewById(R.id.time)).getText().toString());
+            } catch (Exception e) {
+                SDlog.toast("年代を正しく入力してください");
+                return;
+            }
+            if (year < 100 || year > 9999) {
+                SDlog.toast("年代を正しく入力してください");
+                return;
+            }
+
+
         });
 
     }

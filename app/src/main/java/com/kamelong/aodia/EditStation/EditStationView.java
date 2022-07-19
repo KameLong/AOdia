@@ -24,39 +24,25 @@ public class EditStationView extends LinearLayout {
         try {
             LayoutInflater.from(context).inflate(R.layout.edit_station_view, this);
             final CheckBox checkBox=findViewById(R.id.checkBox);
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    checked=isChecked;
-                }
-            });
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> checked=isChecked);
             ((TextView) findViewById(R.id.stationIndex)).setText(stationIndex + "");
-            findViewById(R.id.expandButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    findViewById(R.id.expandButton).setVisibility(GONE);
-                    findViewById(R.id.closeButton).setVisibility(VISIBLE);
-                    ((LinearLayout) findViewById(R.id.stationLinear)).addView(new EditStationInfoView(context, station, lineFile));
-                }
+            findViewById(R.id.expandButton).setOnClickListener(view -> {
+                findViewById(R.id.expandButton).setVisibility(GONE);
+                findViewById(R.id.closeButton).setVisibility(VISIBLE);
+                ((LinearLayout) findViewById(R.id.stationLinear)).addView(new EditStationInfoView(context, station, lineFile));
             });
-            findViewById(R.id.closeButton).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    findViewById(R.id.expandButton).setVisibility(VISIBLE);
-                    findViewById(R.id.closeButton).setVisibility(GONE);
-                    ((LinearLayout) findViewById(R.id.stationLinear)).removeViewAt(1);
-                }
+            findViewById(R.id.closeButton).setOnClickListener(view -> {
+                findViewById(R.id.expandButton).setVisibility(VISIBLE);
+                findViewById(R.id.closeButton).setVisibility(GONE);
+                ((LinearLayout) findViewById(R.id.stationLinear)).removeViewAt(1);
             });
             final EditText stationNameEdit = findViewById(R.id.stationName);
-            stationNameEdit.setOnFocusChangeListener(new OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View view, boolean b) {
-                    if (stationNameEdit.getEditableText().toString().length() == 0) {
-                        stationNameEdit.setText(station.name);
-                        return;
-                    }
-                    station.name = stationNameEdit.getEditableText().toString();
+            stationNameEdit.setOnFocusChangeListener((view, b) -> {
+                if (stationNameEdit.getEditableText().toString().length() == 0) {
+                    stationNameEdit.setText(station.name);
+                    return;
                 }
+                station.name = stationNameEdit.getEditableText().toString();
             });
             stationNameEdit.setText(station.name);
 

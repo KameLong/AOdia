@@ -31,12 +31,7 @@ public class RouteViewAdaper extends BaseAdapter {
         for(Map.Entry<String,Route> entry:gtfs.route.entrySet()){
             routes.add(entry.getValue());
         }
-        routes.sort(new Comparator<Route>() {
-            @Override
-            public int compare(Route o1, Route o2) {
-                return o1.route_name.compareTo(o2.route_name);
-            }
-        });
+        routes.sort((o1, o2) -> o1.route_name.compareTo(o2.route_name));
 
     }
 
@@ -66,32 +61,26 @@ public class RouteViewAdaper extends BaseAdapter {
 
             final CheckBox downCheck=convertView.findViewById(R.id.asDownRoute);
             final CheckBox upCheck=convertView.findViewById(R.id.asUpRoute);
-            downCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-                        downRoutes.add(getItem(position));
-                        if(upCheck.isChecked()){
-                            upCheck.setChecked(false);
-                        }
-
-                    }else{
-                        downRoutes.remove(getItem(position));
+            downCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if(isChecked){
+                    downRoutes.add(getItem(position));
+                    if(upCheck.isChecked()){
+                        upCheck.setChecked(false);
                     }
+
+                }else{
+                    downRoutes.remove(getItem(position));
                 }
             });
-            upCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked){
-                        upRoutes.add(getItem(position));
-                        if(downCheck.isChecked()){
-                            downCheck.setChecked(false);
-                        }
-
-                    }else{
-                        upRoutes.remove(getItem(position));
+            upCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if(isChecked){
+                    upRoutes.add(getItem(position));
+                    if(downCheck.isChecked()){
+                        downCheck.setChecked(false);
                     }
+
+                }else{
+                    upRoutes.remove(getItem(position));
                 }
             });
         }catch (Exception e){

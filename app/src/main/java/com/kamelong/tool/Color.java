@@ -36,7 +36,6 @@ public class Color implements Cloneable{
      * #rrggbb
      * #aarrggbb
      * の形式に対応
-     * @param str
      */
     public Color(String str){
         if(str.startsWith("#")){
@@ -64,7 +63,6 @@ public class Color implements Cloneable{
 
     /**
      * Androidの32bitカラーより作成
-     * @param color
      */
     public Color(int color){
         alpha = (color >> 24) & 0xff; // or color >>> 24
@@ -81,7 +79,6 @@ public class Color implements Cloneable{
     }
     /**
      * HTML形式の色情報を出力する
-     * @return
      */
     public String getHTMLColor(){
         String result ="#"+String.format("%02X",red);
@@ -92,7 +89,6 @@ public class Color implements Cloneable{
 
     /**
      * Android形式の色情報を出力する
-     * @return
      */
     public int getAndroidColor(){
         int result=alpha<<24;
@@ -104,7 +100,6 @@ public class Color implements Cloneable{
 
     /**
      * OuDiaの色形式で出力する
-     * @return
      */
     public String getOudiaString(){
         String result="00";
@@ -116,7 +111,6 @@ public class Color implements Cloneable{
 
     /**
      * OuDiaの色形式を入力する
-     * @param value
      */
     public void setOuDiaColor(String value){
         if(value.length()==8) {

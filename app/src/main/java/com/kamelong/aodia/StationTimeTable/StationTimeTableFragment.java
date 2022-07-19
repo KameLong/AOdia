@@ -130,13 +130,10 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             title = title + station.name + "駅　時刻表(" + lineFile.diagram.get(diaIndex).name + ")\n" + directS + "　" + lineFile.station.get((1 - direction) * (lineFile.getStationNum() - 1)).name + "方面";
             TextView titleView = (TextView) findViewById(R.id.titleView);
             titleView.setText(title);
-            titleView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    StationInfoDialog dialog = new StationInfoDialog(getActivity(), lineFile, diaIndex, direction, lineFile.station.indexOf(station));
-                    dialog.show();
+            titleView.setOnClickListener(view1 -> {
+                StationInfoDialog dialog = new StationInfoDialog(getActivity(), lineFile, diaIndex, direction, lineFile.station.indexOf(station));
+                dialog.show();
 
-                }
             });
             flexBoxIds = new int[]{R.id.hour3, R.id.hour4, R.id.hour5, R.id.hour6, R.id.hour7, R.id.hour8, R.id.hour9, R.id.hour10, R.id.hour11, R.id.hour12, R.id.hour13, R.id.hour14,
                     R.id.hour15, R.id.hour16, R.id.hour17, R.id.hour18, R.id.hour19, R.id.hour20, R.id.hour21, R.id.hour22, R.id.hour23, R.id.hour24, R.id.hour1, R.id.hour2};
@@ -262,7 +259,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
     private ArrayList<Integer> makeTrainArray() {
         int stationIndex = lineFile.station.indexOf(station);
         SharedPreferences spf = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        ArrayList<Integer> trainList = new ArrayList<Integer>();
+        ArrayList<Integer> trainList = new ArrayList<>();
         for (int i = 0; i < lineFile.getTrainNum(diaIndex, direction); i++) {
             Train train=lineFile.getTrain(diaIndex, direction, i);
             if (train.getPredictionTime(stationIndex) >= 0) {
@@ -303,15 +300,8 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
 
         List<Map.Entry<String,Integer>> entries =
-                new ArrayList<Map.Entry<String,Integer>>(subNameCount.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<String,Integer>>() {
-
-            @Override
-            public int compare(
-                    Map.Entry<String,Integer> entry1, Map.Entry<String,Integer> entry2) {
-                return entry2.getValue().compareTo(entry1.getValue());
-            }
-        });
+                new ArrayList<>(subNameCount.entrySet());
+        Collections.sort(entries, (entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
 
 
         String directS = "";

@@ -41,18 +41,8 @@ public class StationTimetableIndexDia extends LinearLayout {
         try {
             View layout = LayoutInflater.from(activity).inflate(R.layout.station_timetable_index_onedia, this);
             ((TextView) findViewById(R.id.diaName)).setText(lineFile.diagram.get(diaNum).name);
-            (findViewById(R.id.downButton)).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.getAOdia().openStationTimeTable(lineFile, diaNum, Train.DOWN, stationNum);
-                }
-            });
-            (findViewById(R.id.upButton)).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    activity.getAOdia().openStationTimeTable(lineFile, diaNum, Train.UP, stationNum);
-                }
-            });
+            (findViewById(R.id.downButton)).setOnClickListener(view -> activity.getAOdia().openStationTimeTable(lineFile, diaNum, Train.DOWN, stationNum));
+            (findViewById(R.id.upButton)).setOnClickListener(view -> activity.getAOdia().openStationTimeTable(lineFile, diaNum, Train.UP, stationNum));
 
         } catch (Exception e) {
             SDlog.log(e);

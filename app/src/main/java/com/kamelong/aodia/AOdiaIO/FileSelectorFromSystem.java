@@ -82,31 +82,28 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
 
         //検索システム実装
         SearchView searchView=findViewById(R.id.stationSearch);
-        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b){
-                    File directory = new File(currentDirectoryPath);
-                    try {
-                        File[] files = directory.listFiles();
-                        String[]filePath=new String[files.length];
-                        ArrayList<String>[] stationList=new ArrayList[files.length];
-                        for(int i=0;i<files.length;i++){
-                            if(!files[i].isFile()){
-                                continue;
-                            }
-                            SimpleOuDia simpleOudia=new SimpleOuDia(files[i]);
-                            filePath[i]=files[i].getPath();
-                            stationList[i]=simpleOudia.stationName;
+        searchView.setOnQueryTextFocusChangeListener((view, b) -> {
+            if(b){
+                File directory = new File(currentDirectoryPath);
+                try {
+                    File[] files = directory.listFiles();
+                    String[]filePath=new String[files.length];
+                    ArrayList<String>[] stationList=new ArrayList[files.length];
+                    for(int i=0;i<files.length;i++){
+                        if(!files[i].isFile()){
+                            continue;
                         }
-                        ((MainActivity) context).getAOdia().database.addStation(stationList, filePath);
-                        //データベースに駅名を登録する
-                    }catch (Exception e){
-                        SDlog.log(new Exception("FileSelectorFromSystem onFocusChange:directory="+directory.getPath()));
+                        SimpleOuDia simpleOudia=new SimpleOuDia(files[i]);
+                        filePath[i]=files[i].getPath();
+                        stationList[i]=simpleOudia.stationName;
                     }
-                }else{
-                    openDirectory(currentDirectoryPath);
+                    ((MainActivity) context).getAOdia().database.addStation(stationList, filePath);
+                    //データベースに駅名を登録する
+                }catch (Exception e){
+                    SDlog.log(new Exception("FileSelectorFromSystem onFocusChange:directory="+directory.getPath()));
                 }
+            }else{
+                openDirectory(currentDirectoryPath);
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -131,13 +128,11 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
 
                     fileListView.setAdapter(adapter);
 
-                    fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            try {
-                                openDirectory(adapter.getItem(position).getPath());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                    fileListView.setOnItemClickListener((parent, view, position, id) -> {
+                        try {
+                            openDirectory(adapter.getItem(position).getPath());
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     });
                 }catch (Exception e){
@@ -166,13 +161,11 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                 fileListView.setAdapter(adapter);
                 ((TextView)findViewById(R.id.pathView)).setText(file.getPath());
 
-                fileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        try {
-                            openDirectory(adapter.getItem(position).getPath());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                fileListView.setOnItemClickListener((parent, view, position, id) -> {
+                    try {
+                        openDirectory(adapter.getItem(position).getPath());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
             } else if (file.exists()) {

@@ -82,8 +82,6 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
             } catch (Exception e) {
                 SDlog.log(e);
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         } catch (RuntimeException e) {
             e.printStackTrace();
         }

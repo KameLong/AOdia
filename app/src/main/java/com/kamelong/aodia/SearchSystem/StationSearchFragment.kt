@@ -13,7 +13,6 @@ import com.kamelong.aodia.KLdatabase.KLdetabase
 import com.kamelong.aodia.MainActivity
 import com.kamelong.aodia.R
 import com.kamelong.tool.SDlog
-import kotlinx.android.synthetic.main.search_framgent.*
 
 class StationSearchFragment():AOdiaFragmentCustom(){
     companion object{

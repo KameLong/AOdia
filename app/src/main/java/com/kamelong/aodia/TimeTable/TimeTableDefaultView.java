@@ -57,7 +57,6 @@ public abstract class TimeTableDefaultView extends View {
     /**
      * 文字サイズを変更する。
      * staticな関数なので、ここで変更したものはKLViewを継承したすべてのViewで適用される。
-     * @param size
      */
     public static void setTextSize(int size) {
         textSize=size;

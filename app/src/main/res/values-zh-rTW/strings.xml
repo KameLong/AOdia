@@ -1,0 +1,7 @@
+<resources>
+    <string name="sendLog_message">當 AOdia 發生錯誤時，您希望開發人員發送錯誤日誌嗎？ 由於錯誤日誌對改進應用程序很有用，我們希望從盡可能多的人那裡接收數據（AOdia 開發人員：Kamelong） 可以從設置中更改此項目。</string>
+    <string name="accept">ACCEPT</string>
+    <string name="not_accept">DENY</string>
+    <string name="extOud">oud</string>
+    <string name="extOud2">oud2</string>
+</resources>

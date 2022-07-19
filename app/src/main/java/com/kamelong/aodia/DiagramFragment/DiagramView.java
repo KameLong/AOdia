@@ -7,22 +7,13 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.OuDia.Train;
 import com.kamelong.OuDia.TrainType;
-import com.kamelong.aodia.EditTrain.OnTrainChangeListener;
-import com.kamelong.aodia.EditTrain.TrainTimeEditFragment;
-import com.kamelong.aodia.MainActivity;
-import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
@@ -95,8 +86,8 @@ public class DiagramView extends DiagramDefaultView{
     }
 public void makeDiagramPath(Train train,int direct,int trainIndex){
     //この列車のdiagramPath
-    ArrayList<Integer> trainPath=new ArrayList<Integer>();
-    ArrayList<Integer> trainStopMark=new ArrayList<Integer>();
+    ArrayList<Integer> trainPath= new ArrayList<>();
+    ArrayList<Integer> trainStopMark= new ArrayList<>();
     if(trainIndex<0){
         try {
             Thread.sleep(10);
@@ -248,8 +239,8 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
      */
     public void makeDiagramPath(){
         //makeDiagramData
-        diagramPath[0]=new  ArrayList<ArrayList<Integer>>();
-        diagramPath[1]=new  ArrayList<ArrayList<Integer>>();
+        diagramPath[0]= new ArrayList<>();
+        diagramPath[1]= new ArrayList<>();
         stopMark[0]=new ArrayList<>();
         stopMark[1]=new ArrayList<>();
 
@@ -265,8 +256,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
 
     /**
      * floatのArrayListをArrayに変換する
-     * @param list
-     * @return
      */
     public  float[] toArr(List<Integer> list){
         // List<Integer> -> int[]
@@ -284,7 +273,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
     /**
      * 駅軸を描画する
      *
-     * @param canvas
      */
     private void drawStationLine(Canvas canvas){
         Paint paint = new Paint();
@@ -305,7 +293,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
 
     /**
      * 列車を描画する
-     * @param canvas
      */
     public void drawTrain(Canvas canvas){
         try {
@@ -392,7 +379,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
     /**
      * onDrawをオーバーライドしたもの。
      * 描画処理はこの中に記述する
-     * @param canvas
      */
     @Override
     public void onDraw(Canvas canvas){
@@ -416,7 +402,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
     /**
      * 時間軸を描画する
      * DiagramSettingのverticalAxicsの値によってダイヤ線のスタイルが異なる
-     * @param canvas
      */
     private void drawAxis(Canvas canvas){
         if(lineFile.getStationNum()==0){
@@ -576,7 +561,7 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
                 for(int i = 0; i< diagramPath[direct].size(); i++){
                     int pathNum=-1;
                     for(int j=0;j+3<diagramPath[direct].get(i).size();j=j+2){
-                        if(diagramPath[direct].get(i).get(j+1)!=diagramPath[direct].get(i).get(j+3)){
+                        if(!diagramPath[direct].get(i).get(j + 1).equals(diagramPath[direct].get(i).get(j + 3))){
                             pathNum=j;
                             break;
                         }
@@ -629,7 +614,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
 
     /**
      * 現在時刻の線を描画する
-     * @param canvas
      */
     private void drawNowTime(Canvas canvas){
         if(lineFile.getStationNum()==0){
@@ -721,8 +705,6 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
     /**
      * onMesureをオーバーライドすることで
      * このViewのサイズを設定する
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
      */
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -736,14 +718,12 @@ public void makeDiagramPath(Train train,int direct,int trainIndex){
 
     /**
      * このViewの実際の描画範囲のサイズ
-     * @return
      */
     public int getmHeight(){
         return getYsize();
     }
     /**
      * このViewの実際の描画範囲のサイズ
-     * @return
      */
 
     public int getmWidth(){

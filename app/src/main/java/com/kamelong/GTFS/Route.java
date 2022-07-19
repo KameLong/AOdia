@@ -1,8 +1,6 @@
 package com.kamelong.GTFS;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -45,12 +43,7 @@ public class Route {
             }
         }
         List<Map.Entry<String,Integer>> list=new ArrayList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return -o1.getValue()+o2.getValue();
-            }
-        });
+        Collections.sort(list, (o1, o2) -> -o1.getValue()+o2.getValue());
         return list.get(0).getKey();
     }
     public String getEndStation(){
@@ -63,12 +56,7 @@ public class Route {
             }
         }
         List<Map.Entry<String,Integer>> list=new ArrayList<>(map.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {
-            @Override
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return -o1.getValue()+o2.getValue();
-            }
-        });
+        Collections.sort(list, (o1, o2) -> -o1.getValue()+o2.getValue());
         return list.get(0).getKey();
     }
 }

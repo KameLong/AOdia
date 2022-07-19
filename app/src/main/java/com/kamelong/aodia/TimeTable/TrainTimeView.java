@@ -1,14 +1,11 @@
 package com.kamelong.aodia.TimeTable;
 
 import android.content.Context;
-import android.gesture.Gesture;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.kamelong.OuDia.LineFile;
 import com.kamelong.OuDia.Station;
@@ -145,12 +142,12 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
                 char[] str =value.toCharArray();
                 int lineNum = 1;
                 int space = heightSpace;
-                for (int i = 0; i < str.length; i++) {
+                for (char item : str) {
                     if (space <= 0) {
                         space = heightSpace;
                         lineNum++;
                     }
-                    if (!charIsEng(str[i])) {
+                    if (!charIsEng(item)) {
                         space--;
                     }
                     space--;
@@ -158,22 +155,22 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
                 space = heightSpace;
                 int startX = (int) ((getWidth() - lineNum * textSize*1.2f) / 2 + (lineNum-1) * textSize*1.2f);
                 startY = startLine;
-                for (int i = 0; i < str.length; i++) {
+                for (char c : str) {
                     if (space <= 0) {
                         space = heightSpace;
-                        startX = startX - (int)(textSize*1.2f);
+                        startX = startX - (int) (textSize * 1.2f);
                         startY = (int) (this.getHeight() - 9.1f * textSize);
                     }
-                    if (charIsEng(str[i])) {
+                    if (charIsEng(c)) {
                         space--;
                         canvas.rotate(90);
-                        canvas.drawText(String.valueOf(str[i]), startY, -startX-(textSize*0.2f), textPaint);
+                        canvas.drawText(String.valueOf(c), startY, -startX - (textSize * 0.2f), textPaint);
                         canvas.rotate(-90);
-                        startY = startY + (int) textPaint.measureText(String.valueOf(str[i]));
+                        startY = startY + (int) textPaint.measureText(String.valueOf(c));
                     } else {
                         space = space - 2;
-                        startY = startY +textSize;
-                        canvas.drawText(String.valueOf(str[i]), startX, startY, textPaint);
+                        startY = startY + textSize;
+                        canvas.drawText(String.valueOf(c), startX, startY, textPaint);
                     }
 
                 }
