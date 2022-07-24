@@ -135,7 +135,6 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
                                 }
 
                                 SDlog.toast("ファイルを保存しました。");
-                                openDirectory(currentDirectoryPath);
 
                             } catch (Exception e) {
                                 SDlog.log(e);

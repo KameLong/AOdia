@@ -8,8 +8,8 @@ android {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 346
-        versionName "3.4.6"
+        versionCode 350
+        versionName "3.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference:1.2.0'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'

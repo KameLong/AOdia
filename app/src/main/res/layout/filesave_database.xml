@@ -12,7 +12,7 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Submit" />
 
         <FrameLayout
             android:id="@+id/lisenceFrame"
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="路線名(公開されます)"
+                android:text="@string/routeNamePublic"
                 android:textColor="#000"
 
                 android:textSize="14dp" />
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="つくばエクス"
+                android:text=""
                 android:textColor="#000"
 
                 android:textSize="16dp" />
@@ -70,7 +70,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="メールアドレス(非公開です、ファイル削除の際に必要です)"
+                android:text="@string/mailAddress1"
                 android:textColor="#000" />
 
         </LinearLayout>
@@ -93,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ニックネーム(公開されます)"
+                android:text="@string/nickNamePublic"
                 android:textColor="#000" />
 
         </LinearLayout>
@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="検索キーワード(公開されます)スペース区切りで複数記述できます"
+                android:text="@string/keywordPublic"
                 android:textColor="#000" />
 
 
@@ -143,7 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="ダイヤ年代(公開されます）" />
+                android:text="@string/yearPublic" />
         </LinearLayout>
 
         <TextView
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="OuDiaデーターベースとは、AOdia製作者が運営するOuDiaファイルの共有・公開サービスです。"
+            android:text="@string/AboutOudiaDatabase"
             android:textColor="#000"
             android:textSize="14dp" />
 
@@ -160,7 +160,7 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OuDiaデータベースに保存する"
+            android:text="@string/saveToOudiaDatabase"
             android:textAlignment="center"
             android:textColor="#000"
             android:textSize="18dp" />
@@ -177,13 +177,13 @@
                 android:id="@+id/checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="利用規約に同意する" />
+                android:text="@string/AcceptOudiaDatabase" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="利用規約"
+                android:text="@string/TermOfService"
 
                 android:textColor="#30A"
                 android:textSize="16dp" />

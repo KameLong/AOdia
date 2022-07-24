@@ -29,19 +29,13 @@
                 <data android:mimeType="text/oud"/>
                 <data android:mimeType="text/oud2"/>
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="application/*"/>
             </intent-filter>
 
-        </activity>
-        <activity
-            android:name="com.kamelong2.aodia.AOdiaActivity"
-            android:label="AOdia(old)"
-            android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/AppTheme">
         </activity>
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -50,7 +44,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths">
+
+            </meta-data>
         </provider>
     </application>
 

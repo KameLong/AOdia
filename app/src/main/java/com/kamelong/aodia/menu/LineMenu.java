@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.kamelong.aodia.AOdia;
 import com.kamelong.OuDia.Diagram;
 import com.kamelong.OuDia.LineFile;
@@ -17,6 +19,8 @@ import com.kamelong.aodia.LineFileEditDialog;
 import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
+
+import java.io.File;
 
 /*
  *     This file is part of AOdia.
@@ -65,8 +69,21 @@ public class LineMenu extends LinearLayout{
             addView(lineButtonLinear);
             findViewById(R.id.saveButton).setOnClickListener(view -> aodia.openSaveFragment(lineFile));
             findViewById(R.id.closeButton).setOnClickListener(view -> {
-                aodia.killLineFile(lineFile);
-                activity.openMenu();
+            new AlertDialog.Builder(getContext())
+                    .setTitle("警告")
+                    .setMessage("路線を閉じますか？（保存していないデータは失われます）")
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        try {
+                            aodia.killLineFile(lineFile);
+                            activity.openMenu();
+
+                        } catch (Exception e) {
+                            SDlog.log(e);
+                        }
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+
             });
             findViewById(R.id.upButton).setOnClickListener(view -> aodia.upDiaFile(lineFile));
             if(aodia.getLineFileList().indexOf(lineFile)==0){

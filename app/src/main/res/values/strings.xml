@@ -118,5 +118,17 @@
     <string name="sendLog_message">AOdia内でエラーが発生した際、開発者にエラーログを送信する事を許可しますか？\n\n\nエラーログは、アプリ改善に役立つため、できるだけ多くの人からデータ提供を受けたいと思います(AOdia開発者：カメロング)\n\nこの項目は設定から変更することができます。</string>
     <string name="accept">許可する</string>
     <string name="not_accept">許可しない</string>
+    <string name="routeNamePublic">路線名(公開されます)</string>
+    <string name="mailAddress1">メールアドレス(非公開です、ファイル削除の際に必要です)</string>
+    <string name="nickNamePublic">ニックネーム(公開されます)</string>
+    <string name="keywordPublic">検索キーワード(公開されます)スペース区切りで複数記述できます</string>
+    <string name="yearPublic">ダイヤ年代(公開されます）</string>
+    <string name="AboutOudiaDatabase">OuDiaデーターベースとは、AOdia製作者が運営するOuDiaファイルの共有・公開サービスです。</string>
+    <string name="saveToOudiaDatabase">OuDiaデータベースに保存する</string>
+    <string name="AcceptOudiaDatabase">利用規約に同意する</string>
+    <string name="TermOfService">利用規約</string>
+    <string name="searchRouteFile">路線ファイル検索</string>
+    <string name="fileInDevice">スマホ内ファイル</string>
+    <string name="ResultOfDatabase">OuDiaデータベース検索結果</string>
 
 </resources>

@@ -13,7 +13,7 @@
         <entry key="app/src/main/res/layout/edit_station.xml" value="0.14375" />
         <entry key="app/src/main/res/layout/edit_station_fragment.xml" value="0.14375" />
         <entry key="app/src/main/res/layout/edit_station_view.xml" value="0.28854166666666664" />
-        <entry key="app/src/main/res/layout/filesave_database.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/filesave_database.xml" value="0.33" />
         <entry key="app/src/main/res/layout/filesave_googledrive.xml" value="0.1" />
         <entry key="app/src/main/res/layout/filesave_terminal.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fileselect_file_view_routeid.xml" value="0.1" />
@@ -29,6 +29,7 @@
         <entry key="app/src/main/res/layout/search_station_view.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout/sendlog.xml" value="0.22239583333333332" />
         <entry key="app/src/main/res/layout/station_edit_action_dialog.xml" value="0.22239583333333332" />
+        <entry key="app/src/main/res/layout/timetable_fragment.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/trainedit_train_dialog.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/traintype_edit_view.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/menu/main.xml" value="0.22239583333333332" />
