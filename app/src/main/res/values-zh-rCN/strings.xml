@@ -74,6 +74,13 @@
     <string name="UpperFolder">上层目录</string>
     <string name="comment">评论</string>
     <string name="submit">提交</string>
+    <string-array
+        name="StopTypeSpinner">
+        <item>    ：没有运行</item>
+        <item>○：停车</item>
+        <item>レ：通过</item>
+        <item> || ：没有途径</item>
+    </string-array>
     <string name="save_to_GoogleDrive">保存到Google Drive</string>
     <string name="extOud">oud</string>
     <string name="extOud2">oud2</string>
@@ -107,4 +114,6 @@
     <string name="searchRouteFile">路线文件检索</string>
     <string name="fileInDevice">手机内文件</string>
     <string name="ResultOfDatabase">OuDia数据库搜索结果</string>
+    <string name="settingTitle">全体設定</string>
+    <string name="overallSettingTitle">全体設定</string>
 </resources>
