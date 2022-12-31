@@ -476,6 +476,9 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
     public void onTimeChanged(int station, int AD) {
         final LinearLayout departureTimeLayout = findViewById(R.id.departureTimeLayout);
         final LinearLayout arrivalTimeLayout = findViewById(R.id.arrivalTimeLayout);
+        if(train.getStopType(station)==StationTime.STOP_TYPE_NOSERVICE){
+            train.setStopType(station,StationTime.STOP_TYPE_STOP);
+        }
         if(AD==Train.DEPART){
             ((TimeView)departureTimeLayout.getChildAt(station)).setTime(train.getTime(station,AD));
         }else{

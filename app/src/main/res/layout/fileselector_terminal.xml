@@ -7,6 +7,15 @@
 
     >
 
+    <Button
+        android:id="@+id/use_default_filer"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10px"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="@string/useDefaultFiler" />
+
     <LinearLayout
         android:id="@+id/layout1"
         android:layout_width="match_parent"

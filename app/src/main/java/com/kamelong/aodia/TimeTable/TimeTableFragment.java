@@ -481,6 +481,9 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
 
     @Override
     public void allTrainChange() {
+        if(!trains.get(trains.size()-1).isnull()){
+            trains.add(new Train(lineFile,direction));
+        }
         final LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
         final int scrollX = trainTimeLinear.getScrollX();
         final int scrollY = trainTimeLinear.getScrollY();

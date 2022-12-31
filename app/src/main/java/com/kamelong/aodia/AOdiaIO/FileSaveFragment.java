@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TabHost;
 
 import com.kamelong.aodia.AOdia;
@@ -57,6 +60,24 @@ public class FileSaveFragment extends AOdiaFragmentCustom {
             getAOdia().killFragment(this);
             return;
         }
+        Button useDefault=activity.findViewById(R.id.save_as_default_filer);
+        useDefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String savePath=((EditText)activity.findViewById(R.id.fileName)).getText().toString();
+                final RadioGroup saveStyle=activity.findViewById(R.id.savestyle);
+                if(saveStyle.getCheckedRadioButtonId()==R.id.oud2){
+                    savePath+=".oud2";
+                }else{
+                    savePath+=".oud";
+                }
+
+
+                ((MainActivity)getContext()).SaveSystemFiler(savePath,lineFile);
+
+            }
+        });
+
         try {
             TabHost tabHost = activity.findViewById(R.id.tabhost);
             tabHost.setup();

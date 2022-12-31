@@ -71,6 +71,8 @@
 
     //ファイルオープン
     <string name="FileInTheDevice">スマホ内の\nファイル</string>
+    <string name="useDefaultFiler">標準のファイルシステムで選ぶ\n(oudファイルが見つからない方向け)</string>
+    <string name="saveDefaultFiler">標準のファイルシステムで保存先を選ぶ</string>
     <string name="OuDiaDatabase">OuDia\nデータベース</string>
     <string name="history">履歴</string>
     <string name="baseDirectory">フォルダ選択</string>

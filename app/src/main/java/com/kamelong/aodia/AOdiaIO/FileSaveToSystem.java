@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.kamelong.OuDia.LineFile;
+import com.kamelong.aodia.MainActivity;
 import com.kamelong.aodia.R;
 import com.kamelong.tool.SDlog;
 
@@ -66,11 +68,20 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
         }
 
         final RadioGroup saveStyle=findViewById(R.id.savestyle);
-        if(lineFile.filePath.endsWith("oud2")){
             saveStyle.check(R.id.oud2);
-        }else{
-            saveStyle.check(R.id.oud);
-        }
+            saveStyle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    if(i!=R.id.oud2){
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("警告")
+                                .setMessage("oud形式で保存すると、路線外発着情報など、一部の情報が失われることがあります")
+                                .setPositiveButton("OK", (dialog, which) -> {
+                                })
+                                .show();
+                    }
+                }
+            });
 
 
         findViewById(R.id.saveButton).setOnClickListener(v -> {

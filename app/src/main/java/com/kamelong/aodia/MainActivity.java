@@ -1,20 +1,30 @@
 package com.kamelong.aodia;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -25,6 +35,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.kamelong.OuDia.LineFile;
 import com.kamelong.aodia.DiagramFragment.DiagramDefaultView;
 import com.kamelong.aodia.TimeTable.TimeTableDefaultView;
 import com.kamelong.aodia.menu.MenuFragment;
@@ -33,6 +44,7 @@ import com.kamelong.tool.SDlog;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -43,6 +55,10 @@ public class MainActivity extends FragmentActivity {
     public MenuFragment menuFragment;
     private AOdia aodiaData=new AOdia(this);
     private boolean saveLoop=true;
+    private ActivityResultLauncher openSystemFileLauncher;
+    private ActivityResultLauncher saveSystemFileLauncher;
+    private LineFile tmpSaveFile=null;
+    private String tmpFileName=null;
 
     public boolean storagePermission() {
         if (Build.VERSION.SDK_INT < 23) {
@@ -178,6 +194,45 @@ public class MainActivity extends FragmentActivity {
             perm.show();
         }
         initApp();
+        openSystemFileLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent resultData  = result.getData();
+                        if (resultData  != null) {
+                            Uri uri = resultData.getData();
+                            aodiaData.openUri(getContentResolver(),uri,null);
+                        }
+                    }
+                });
+        saveSystemFileLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent resultData  = result.getData();
+                        if (resultData  != null) {
+                            Uri uri = resultData.getData();
+                            if(tmpSaveFile!=null){
+                                try{
+                                    if(tmpFileName!=null&&tmpFileName.endsWith(".oud2")){
+                                        tmpSaveFile.saveToFile(getContentResolver(),uri);
+
+                                    }else{
+                                        tmpSaveFile.saveToOuDiaFile(getContentResolver(),uri);
+                                    }
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
+                                    SDlog.toast("原因不明エラー："+e.getLocalizedMessage());
+                                }
+                            }else{
+                                SDlog.toast("エラー　保存すべきデータが何らかの原因で失われました。処理中に別のアプリを開いた場合に発生する可能性があります。");
+                            }
+
+                        }
+                    }
+                });
+
         if(savedInstanceState!=null){
             String fragmentHash=savedInstanceState.getString("fragment");
             aodiaData.openFragment(fragmentHash);
@@ -305,6 +360,22 @@ public class MainActivity extends FragmentActivity {
             findViewById(R.id.backFragment).setVisibility(View.INVISIBLE);
 
         }
+    }
+    public void OpenSystemFiler(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        openSystemFileLauncher.launch(intent);
+
+    }
+    public void SaveSystemFiler(String fileName,LineFile lineFile){
+        tmpSaveFile=lineFile;
+        tmpFileName=fileName;
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_TITLE, fileName);
+        saveSystemFileLauncher.launch(intent);
     }
 
 

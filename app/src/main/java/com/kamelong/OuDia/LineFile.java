@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -519,20 +520,24 @@ public class LineFile implements Cloneable {
         }
     }
 
+    public void saveToFile(ContentResolver contentResolver,Uri uri) throws Exception {
+        saveToFile(contentResolver.openOutputStream(uri));
+    }
+    public void saveToOuDiaFile(ContentResolver contentResolver,Uri uri) throws Exception {
+
+        PrintWriter out = new PrintWriter
+                (new BufferedWriter(new OutputStreamWriter
+                        (contentResolver.openOutputStream(uri),"Shift-JIS")));
+
+        saveToOuDiaFile(out);
+    }
 
     /**
      * OuDiaSecond形式で保存します。
      * 現在はOuDiaSecond.1.07形式で保存します。保存形式は今後のアップデートで変更する可能性があります。
      */
-    public void saveToFile(String fileName) throws Exception {
+    public void saveToFile(OutputStream fos) throws Exception {
         convertToOud2();
-        try {
-            new File(fileName).createNewFile();
-        }catch(IOException e){
-            SDlog.toast("ファイル保存時にエラーが発生しました。"+e.toString());
-            throw new IOException("errorFile:"+fileName);
-        }
-        FileOutputStream fos = new FileOutputStream(fileName);
         //BOM付与
         fos.write(0xef);
         fos.write(0xbb);
@@ -601,15 +606,23 @@ public class LineFile implements Cloneable {
         out.println("FileTypeAppComment=AOdia V3.0a.0");
         out.close();
     }
+    public void saveToFile(String fileName) throws Exception {
+        try {
+            new File(fileName).createNewFile();
+        }catch(IOException e){
+            SDlog.toast("ファイル保存時にエラーが発生しました。"+e.toString());
+            throw new IOException("errorFile:"+fileName);
+        }
+        FileOutputStream fos = new FileOutputStream(fileName);
+        saveToFile(fos);
+        //BOM付与
+    }
 
     /**
      * OuDia形式で保存します。
      * 現在はOuDia.1.02形式で保存します。保存形式は今後のアップデートで変更する可能性があります。
      */
-    public void saveToOuDiaFile(String fileName) throws Exception {
-        PrintWriter out = new PrintWriter
-                (new BufferedWriter(new OutputStreamWriter
-                        (new FileOutputStream(new File(fileName)),"Shift-JIS")));
+    public void saveToOuDiaFile(PrintWriter out) throws Exception {
 
 
         out.println("FileType=OuDia.1.02");
@@ -657,6 +670,16 @@ public class LineFile implements Cloneable {
         out.println("FileTypeAppComment=AOdia V3.0b.1");
 
         out.close();
+    }
+    /**
+     * OuDia形式で保存します。
+     * 現在はOuDia.1.02形式で保存します。保存形式は今後のアップデートで変更する可能性があります。
+     */
+    public void saveToOuDiaFile(String fileName) throws Exception {
+        PrintWriter out = new PrintWriter
+                (new BufferedWriter(new OutputStreamWriter
+                        (new FileOutputStream(new File(fileName)),"Shift-JIS")));
+        saveToOuDiaFile(out);
     }
 
 

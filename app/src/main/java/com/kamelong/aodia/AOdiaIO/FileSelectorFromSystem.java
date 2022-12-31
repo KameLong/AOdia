@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -140,6 +141,14 @@ public class FileSelectorFromSystem extends LinearLayout implements OpenDirector
                 }
 
                 return false;
+            }
+        });
+
+        Button useDefaultButton=findViewById(R.id.use_default_filer);
+        useDefaultButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getContext()).OpenSystemFiler();
             }
         });
     }
