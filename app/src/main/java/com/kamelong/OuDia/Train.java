@@ -658,6 +658,13 @@ public class Train implements Cloneable {
             time.shiftDep(shift);
             time.shiftAri(shift);
         }
+        //issue#30 路線外時刻の移動を追加
+        if(this.getOuterStartTime()>=0){
+            this.setOuterStartTime(this.getOuterStartTime()+shift);
+        }
+        if(this.getOuterEndTime()>=0){
+            this.setOuterEndTime(this.getOuterEndTime()+shift);
+        }
     }
 
     /**
@@ -875,6 +882,7 @@ public class Train implements Cloneable {
         stationTimes.get(station).beforeOperations.get(0).intData1=outer;
     }
     public void setOuterStartTime(int time){
+        time=(time+24*3600-lineFile.diagramStartTime)%(24*3600)+ lineFile.diagramStartTime;
         int station=getStartStation();
         if(station<0){
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");
@@ -887,6 +895,7 @@ public class Train implements Cloneable {
         stationTimes.get(station).beforeOperations.get(0).time1=time;
     }
     public void setOuterEndTime(int time){
+        time=(time+24*3600-lineFile.diagramStartTime)%(24*3600)+ lineFile.diagramStartTime;
         int station=getEndStation();
         if(station<0){
             SDlog.toast("空列車に路線外始発駅を設定する事はできません");

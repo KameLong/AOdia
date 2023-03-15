@@ -379,6 +379,7 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
             });
             dialog.show();
         }else{
+            //移動貼り付け
             shiftTime2+=shiftTime;
             LinearLayout trainNameLinea = findViewById(R.id.trainNameLinear);
             int pasteIndex = -1;
