@@ -19,7 +19,7 @@ public class SimpleOuDia {
         try {
             br= new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             version = br.readLine().split("=", -1)[1];
-        }catch (NullPointerException e){
+        }catch (Exception e){
             if(br!=null){
                 br.close();
             }
