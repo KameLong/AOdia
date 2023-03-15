@@ -1,6 +1,7 @@
 package com.kamelong.OuDia;
 
 
+import com.kamelong.tool.LineFileException;
 import com.kamelong.tool.SDlog;
 
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class TimeTableSorter {
         loopNum++;
         if(loopNum>50){
             SDlog.toast("エラーこのダイヤファイルの路線分岐が複雑であるため、列車の並び替え時に無限ループに陥りました。並び替え操作を強制終了します");
-            throw new Exception("並び替えエラー："+lineFile.name);
+            throw new LineFileException("並び替えエラー："+lineFile.name,lineFile);
         }
 
             boolean skip = true;//ソート済みの路線から外れ、別の路線に入る場合skipfragがtrueになる。//ソート済み領域に戻ればskip=false

@@ -14,6 +14,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.kamelong.OuDia.LineFile;
+
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,8 +64,21 @@ public class SDlog {
                     pref.edit().putString("userID",UUID.randomUUID().toString()).apply();
                 }
                 PackageInfo packageInfo = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0);
-               final String logName=activity.getCacheDir()+"/"+packageInfo.versionName+"_"+pref.getString("userID","")+getNowDate()+"_"+".log";
+               final String logName=activity.getCacheDir()+"/"+packageInfo.versionName+"_"+pref.getString("userID","")+"_"+getNowDate()+".log";
 
+                if (e instanceof LineFileException) {
+                    new Thread(() -> {
+                        try {
+                    LineFile file=((LineFileException)e).errorFile;
+                    PrintWriter pw = new PrintWriter(logName+".oud");
+                    file.saveToOuDiaFile(pw);
+                    Send(logName+".oud");
+                        }catch (Exception e1){
+                            e1.printStackTrace();
+                        }
+                    }).start();
+
+                }
 
                 new Thread(() -> {
                     try {
