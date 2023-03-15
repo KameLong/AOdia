@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TabHost
-        android:id="@+id/tabhost"
+        android:id="@+id/tabhost_save"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,13 +25,13 @@
                 android:layout_height="match_parent">
 
                 <com.kamelong.aodia.AOdiaIO.FileSaveToSystem
-                    android:id="@+id/tab1"
+                    android:id="@+id/tab_save1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                 </com.kamelong.aodia.AOdiaIO.FileSaveToSystem>
                 <com.kamelong.aodia.AOdiaIO.FileSaveToGoogleDrive
-                    android:id="@+id/tab2"
+                    android:id="@+id/tab_save2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
