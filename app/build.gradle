@@ -3,13 +3,13 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 android {
-    compileSdk 32
+    compileSdk 33
     defaultConfig {
         applicationId "com.kamelong.aodia"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 350
-        versionName "3.5.0"
+        targetSdkVersion 33
+        versionCode 3540
+        versionName "3.5.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,7 +28,7 @@ android {
 
         release {
             minifyEnabled false
-           proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

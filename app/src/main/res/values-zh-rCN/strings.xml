@@ -114,6 +114,6 @@
     <string name="searchRouteFile">路线文件检索</string>
     <string name="fileInDevice">手机内文件</string>
     <string name="ResultOfDatabase">OuDia数据库搜索结果</string>
-    <string name="settingTitle">全体設定</string>
-    <string name="overallSettingTitle">全体設定</string>
+<!--    <string name="settingTitle">全体設定</string>-->
+<!--    <string name="overallSettingTitle">全体設定</string>-->
 </resources>
