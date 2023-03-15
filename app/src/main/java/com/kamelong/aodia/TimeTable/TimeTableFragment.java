@@ -351,10 +351,10 @@ public class TimeTableFragment extends AOdiaFragmentCustom implements OnTrainCha
                         pasteIndex=trains.size();
                     }
                     for (Train cTrain : copyTrain){
-                        lineFile.getDiagram(diaIndex).addTrain(direction,pasteIndex, cTrain.clone(lineFile));
-                        trains.get(pasteIndex).shiftTime(shiftTime);
-
-                        pasteIndex++;
+                        if(lineFile.getDiagram(diaIndex).addTrain(direction,pasteIndex, cTrain.clone(lineFile))){
+                            trains.get(pasteIndex).shiftTime(shiftTime);
+                            pasteIndex++;
+                        }
                     }
                     dialog.dismiss();
                     final LinearLayout trainTimeLinear = findViewById(R.id.trainTimeLinear);
