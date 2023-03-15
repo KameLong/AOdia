@@ -396,6 +396,10 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(lineFile==null){
+            return;
+        }
+
         try {
             EditTimeView editText=findViewById(R.id.editTimeLayout);
                 editText.setVisibility(GONE);
@@ -419,7 +423,7 @@ public class TrainTimeEditFragment extends Fragment implements OnTimeChangeListe
         betweenStationTimeLayout.removeAllViews();
         int size = 0;
         int time = -1;
-        BetweenTimeView nessTime=null;
+        BetweenTimeView nessTime;
         for (int i = 0; i < lineFile.getStationNum(); i++) {
             nessTime=null;
             int stationIndex = train.getStationIndex(i);
