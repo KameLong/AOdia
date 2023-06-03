@@ -1,15 +1,15 @@
 package com.kamelong.aodia.AOdiaIO
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.os.Environment
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.AdapterView.OnItemSelectedListener
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import com.kamelong.OuDia.LineFile
 import com.kamelong.aodia.MainActivity
@@ -41,6 +41,17 @@ class FileSaveToGoogleDrive constructor(context: Context, attr: AttributeSet? = 
             SDlog.log(e)
         }
         val saveStyle = findViewById<RadioGroup>(R.id.savestyle)
+        saveStyle.setOnCheckedChangeListener { radioGroup, i ->
+            if (i != R.id.oud2) {
+                AlertDialog.Builder(context)
+                        .setTitle("警告")
+                        .setMessage("oud形式で保存すると、発着番線、路線外発着情報など、一部の情報が失われることがあります")
+                        .setPositiveButton("OK") { dialog: DialogInterface?, which: Int -> }
+                        .show()
+            }
+        }
+
+
         if (lineFile.filePath.endsWith("oud2")) {
             saveStyle.check(R.id.oud2)
         } else {

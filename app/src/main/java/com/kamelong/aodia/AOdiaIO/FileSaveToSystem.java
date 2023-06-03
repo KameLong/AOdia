@@ -68,14 +68,18 @@ public class FileSaveToSystem extends LinearLayout implements OpenDirectory{
         }
 
         final RadioGroup saveStyle=findViewById(R.id.savestyle);
+        if (lineFile.filePath.endsWith("oud2")) {
             saveStyle.check(R.id.oud2);
+        } else {
+            saveStyle.check(R.id.oud);
+        }
             saveStyle.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
                     if(i!=R.id.oud2){
                         new AlertDialog.Builder(getContext())
                                 .setTitle("警告")
-                                .setMessage("oud形式で保存すると、路線外発着情報など、一部の情報が失われることがあります")
+                                .setMessage("oud形式で保存すると、発着番線、路線外発着情報など、一部の情報が失われることがあります")
                                 .setPositiveButton("OK", (dialog, which) -> {
                                 })
                                 .show();
