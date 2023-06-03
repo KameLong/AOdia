@@ -280,7 +280,7 @@ public class StationTime implements Cloneable{
      */
     public int getStopTrack(){
         if(stopTrack<0){
-            return train.lineFile.station.get(train.getStationIndex(train.stationTimes.indexOf(this))).stopMain[train.direction];
+            return train.lineFile.station.get(train.stationTimes.indexOf(this)).stopMain[train.direction];
         }
         return stopTrack;
     }
