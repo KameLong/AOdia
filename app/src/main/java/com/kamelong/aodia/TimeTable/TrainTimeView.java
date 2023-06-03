@@ -58,9 +58,9 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
 
             }else{
                 startLine+=textSize;
-                drawText(canvas,"・・", 1, startLine, textPaint,true);
+                drawText(canvas,"･･", 1, startLine, textPaint,true);
                 startLine+=textSize;
-                drawText(canvas,"・・", 1, startLine, textPaint,true);
+                drawText(canvas,"･･", 1, startLine, textPaint,true);
             }
             startLine+=normalSpace;
             canvas.drawLine(0, startLine , this.getWidth() - 1, startLine, blackBPaint);
@@ -120,9 +120,9 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
 
             }else{
                 startLine+=textSize;
-                drawText(canvas,"・・", 1, startLine, textPaint,true);
+                drawText(canvas,"･･", 1, startLine, textPaint,true);
                 startLine+=textSize;
-                drawText(canvas,"・・", 1, startLine, textPaint,true);
+                drawText(canvas,"･･", 1, startLine, textPaint,true);
             }
         }
         if(options.showRemark){
@@ -271,16 +271,16 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
             switch(train.getStopType(station)){
                 case 0:
                     if((train.getEndStation()-station)*(station-train.getStartStation())>0){
-                        return "| |";
+                        return "||";
                     }
-                    return "・・";
+                    return "･･";
                 case 3:
-                    return "| |";
+                    return "||";
                 case 2:
                     if(options.showPassTime&&train.timeExist(station)) {
                         textPaint.setColor(Color.GRAY);
                     }else{
-                        return "レ";
+                        return "\u202Fﾚ";
                     }
             }
             //発着表示であり、発時刻が存在せず、次の駅が運行なしや、経由なしの場合
@@ -295,11 +295,11 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
                     switch (train.getStopType(nextStation)){
                         case 0:
                             if((train.getEndStation()-station)*(station-train.getStartStation())>0){
-                                return "| |";
+                                return "||";
                             }
-                            return "・・";
+                            return "･･";
                         case 3:
-                            return "| |";
+                            return "||";
                     }
                 }
             }
@@ -337,17 +337,17 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
             switch(train.getStopType(station)){
                 case 0:
                     if((train.getEndStation()-station)*(station-train.getStartStation())>0){
-                        return "| |";
+                        return "||";
                     }
 
-                    return "・・";
+                    return "･･";
                 case 3:
-                    return "| |";
+                    return "||";
                 case 2:
                     if(options.showPassTime&&train.timeExist(station)) {
                         textPaint.setColor(Color.GRAY);
                     }else{
-                        return "レ";
+                        return "\u202Fﾚ";
                     }
             }
             //発着表示であり、着時刻が存在せず、前の駅が運行なしや、経由なしの場合
@@ -362,12 +362,12 @@ public class TrainTimeView extends TimeTableDefaultView implements GestureDetect
                     switch (train.getStopType(nextStation)){
                         case 0:
                             if((train.getEndStation()-station)*(station-train.getStartStation())>0){
-                                return "| |";
+                                return "||";
                             }
 
-                            return "・・";
+                            return "･･";
                         case 3:
-                            return "| |";
+                            return "||";
                     }
                 }
             }
