@@ -174,11 +174,11 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             String destination = lineFile.station.get(train.getEndStation()).name;
             String addInfo = "";
 
-            if (train.getStartStation() == stationIndex) {
+            if (train.getStartStation() == stationIndex&&train.getOuterStartStation()>=0) {
                 addInfo += "●";
                 existStartStation = true;
             }
-            if (train.getEndStation() == stationIndex) {
+            if (train.getEndStation() == stationIndex&&train.getOuterEndStation()>=0) {
                 addInfo += "▽";
                 existEndStation = true;
             }
