@@ -1,5 +1,7 @@
 package com.kamelong.aodia.menu;
 
+import static com.kamelong.aodia.R.id.menu_layout;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -44,7 +46,7 @@ public class MenuFragment extends AOdiaFragmentCustom {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view,savedInstanceState);
         try {
-            layout=activity.findViewById(R.id.menu_layout);
+            layout=view.findViewById(menu_layout);
             createMenu();
         }catch(Exception e){
             SDlog.log(e);
