@@ -149,7 +149,7 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
 
     private void makeTimeTable() {
         boolean existStartStation = false;
-        boolean existEndStation = true;
+        boolean existEndStation = false;
         boolean existGoOther = false;
 
         ArrayList<Integer> trainList = makeTrainArray();
@@ -174,11 +174,11 @@ public class StationTimeTableFragment extends AOdiaFragmentCustom {
             String destination = lineFile.station.get(train.getEndStation()).name;
             String addInfo = "";
 
-            if (train.getStartStation() == stationIndex&&train.getOuterStartStation()>=0) {
+            if (train.getStartStation() == stationIndex && train.getOuterStartStation()<0) {
                 addInfo += "●";
                 existStartStation = true;
             }
-            if (train.getEndStation() == stationIndex&&train.getOuterEndStation()>=0) {
+            if (train.getEndStation() == stationIndex&&train.getOuterEndStation()<0) {
                 addInfo += "▽";
                 existEndStation = true;
             }
