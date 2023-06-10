@@ -1,5 +1,6 @@
 package com.kamelong.aodia;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -90,6 +91,19 @@ public class HelpFragment extends AOdiaFragmentCustom {
         return helpView;
     }
 
+    public static int getVersionCode(Context context){
+        PackageManager pm = context.getPackageManager();
+        int versionCode = 0;
+        try{
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+        }catch(PackageManager.NameNotFoundException e){
+            e.printStackTrace();
+        }
+        return versionCode;
+    }
+
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -105,7 +119,7 @@ public class HelpFragment extends AOdiaFragmentCustom {
         try {
             PackageManager pm = getContext().getPackageManager();
             PackageInfo packageInfo = pm.getPackageInfo(getContext().getPackageName(), 0);
-            return ("AOdia v" + packageInfo.versionName + "のヘルプ");
+            return ("AOdia v" + packageInfo.versionName + "(" +getVersionCode(getActivity())+")のヘルプ");
 
 
         }catch (Exception e){
