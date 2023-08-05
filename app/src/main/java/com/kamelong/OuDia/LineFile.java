@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
@@ -273,11 +274,18 @@ public class LineFile implements Cloneable {
 
     public LineFile(ContentResolver contentResolver, Uri uri) throws Exception {
         BufferedReader br = new ShiftJISBufferedReader(new InputStreamReader(contentResolver.openInputStream(uri),"Shift-JIS"));
-        version=br.readLine().split("=",-1)[1];
-        if(version.startsWith("OuDia.")){
+        double v=0;
+        try {
+            version=br.readLine().split("=",-1)[1];
+            v = Double.parseDouble(version.substring(version.indexOf(".") + 1));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        if(version.startsWith("OuDia.")||v<1.03){
             loadDiaFile(br);
         }else{
-            loadDiaFile(new BufferedReader(new InputStreamReader(contentResolver.openInputStream(uri),"Shift-JIS")));
+            loadDiaFile(new BufferedReader(new InputStreamReader(contentResolver.openInputStream(uri), StandardCharsets.UTF_8)));
         }
     }
 
